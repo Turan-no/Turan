@@ -210,9 +210,17 @@ hr.clear {
 }
 
 /* Footer area */
+#footer {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	background: #609A43;
+	height: 20px;
+}
 #ft, #ft .content {
 	background: #508A33;
 	color: white;
+	height: 100px;
 }
 #ft .content {
 	padding: 1em;
@@ -552,7 +560,7 @@ ul#pagemenu li.modify {
 	font-weight: bolder;
 }
 div#lyricContainer {
-    height: 1em;
+    height: 1.0em;
     overflow: hidden;
     float: right;
 }
