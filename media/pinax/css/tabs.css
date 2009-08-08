@@ -8,7 +8,7 @@
 #right_tabs {
     position: absolute;
     right: 15px;
-    bottom: -1px; /* must be same thickness as tab border */
+    bottom: -2px; /* must be same thickness as tab border */
 }
 
 ul.tabs a, ul.tabs a:visited {
@@ -22,7 +22,7 @@ ul.tabs a:hover {
 ul.tabs li {
     list-style-type: none;
     display: inline;
-    background-color: #DDD; /* unselected tab colour */
+    background-color: #DEF; /* unselected tab colour */
     padding: 5px 0 4px;
     margin: 0 1px; /* to compensate for border */
 }
