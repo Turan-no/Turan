@@ -96,7 +96,7 @@ TEMPLATE_DIRS = (
 )
 
 
-DEFAULT_FROM_EMAIL = 'xt@lart.no'
+DEFAULT_FROM_EMAIL = 'xt@bash.no'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.auth",
@@ -156,7 +156,7 @@ INSTALLED_APPS = (
     'voting',
     'voting_extras',
     'tagging',
-    'bookmarks',
+#    'bookmarks',
     'blog',
     'ajax_validation',
     'photologue',

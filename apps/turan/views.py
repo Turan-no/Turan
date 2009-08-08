@@ -606,7 +606,8 @@ def cycletrip(request, object_id):
 
     object = get_object_or_404(CycleTrip, pk=object_id)
     details = object.cycletripdetail_set.all()
-    userweight = object.user.userprofile_set.all()[0].weight
+    #userweight = object.user.userprofile_set.all()[0].weight
+    userweight = object.user.get_profile().weight
     slopes = getslopes(details)
     for slope in slopes:
         delta_t = (details[slope.end].time - details[slope.start].time).seconds

@@ -43,7 +43,7 @@ def profiles(request, template_name="profiles/profiles.html", extra_context=None
         'search_terms': search_terms,
     }, **extra_context), context_instance=RequestContext(request))
 
-def profile(request, username, template_name="profiles/profile.html", extra_context=None):
+def profile(request, username, template_name="turanprofiles/profile.html", extra_context=None):
     if extra_context is None:
         extra_context = {}
     other_user = get_object_or_404(User, username=username)
