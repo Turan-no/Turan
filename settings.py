@@ -214,8 +214,8 @@ ACCOUNT_EMAIL_VERIFICATION = False
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
-CONTACT_EMAIL = "feedback@example.com"
-SITE_NAME = "Pinax"
+CONTACT_EMAIL = "xt@bash.no"
+SITE_NAME = "Turan"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "what_next"
 

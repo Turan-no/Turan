@@ -15,6 +15,8 @@ from django.core.files.storage import FileSystemStorage
 from django.utils.safestring import mark_safe
 from django.core.paginator import Paginator
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
+
 
 from datetime import timedelta, datetime
 from time import mktime
@@ -254,11 +256,25 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('turanindex'))
 
-def events(request):
+def events(request, group_slug=None, bridge=None):
     object_list = []
-    cycleqs = CycleTrip.objects.select_related()
-    hikeqs = Hike.objects.select_related()
-    exerciseqs = OtherExercise.objects.select_related()
+
+    if bridge is not None:
+        try:
+            group = bridge.get_group(group_slug)
+        except ObjectDoesNotExist:
+            raise Http404
+    else:
+        group = None
+
+    if group:
+        cycleqs = group.content_objects(CycleTrip)
+        hikeqs = group.content_objects(Hike)
+        exerciseqs = group.content_objects(OtherExercise)
+    else:
+        cycleqs = CycleTrip.objects.select_related()
+        hikeqs = Hike.objects.select_related()
+        exerciseqs = OtherExercise.objects.select_related()
 
     object_list.extend(cycleqs)
     object_list.extend(hikeqs)
