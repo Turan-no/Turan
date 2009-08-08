@@ -1,0 +1,124 @@
+{% load i18n %}
+{% if gpx_file %}
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+    <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+ 
+    <script type="text/javascript">
+        var map;
+ 
+        function resizeMapToLayerExtents(evt) {
+            //map.render("map");
+            map.zoomToExtent(evt.object.getDataExtent());
+        }
+
+        var projection = new OpenLayers.Projection("EPSG:4326");
+ 
+        function init() {
+            var lgpx = new OpenLayers.Layer.GML("{% trans "Route" %}", "{{MEDIA_URL}}turan/{{ gpx_file }}", {
+                format: OpenLayers.Format.GPX,
+                style: {strokeColor: "purple", strokeWidth: 5, strokeOpacity: 0.5, label: "Start"},
+                projection: projection,
+                
+            });
+            lgpx.events.register("loadend", this, resizeMapToLayerExtents);
+
+            map = new OpenLayers.Map ({
+                controls:[
+                    new OpenLayers.Control.Navigation(),
+                    new OpenLayers.Control.PanZoomBar(),
+                    new OpenLayers.Control.MousePosition(),
+                    //new OpenLayers.Control.Permalink('permalink'),
+                    new OpenLayers.Control.OverviewMap(),
+                    new OpenLayers.Control.LayerSwitcher(),
+                    new OpenLayers.Control.Attribution()],
+                //maxExtent: lgpx.getDataExtent(),
+                maxResolution: 59.0399,
+                numZoomLevels: 19,
+                units: 'm',
+                projection: projection,
+                displayProjection: projection
+            } );
+ 
+ 
+            layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
+            map.addLayer(layerCycleMap);
+            layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+            map.addLayer(layerMapnik);
+            layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
+            map.addLayer(layerTilesAtHome);
+
+
+            map.addLayer(lgpx);
+
+
+            {% if object.route.start_lat %} 
+                var size = new OpenLayers.Size(20,25);
+                var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+                var startlonlat = new OpenLayers.LonLat({{object.route.start_lon}},{{object.route.start_lat}}).transform(projection, map.getProjectionObject());
+                var endlonlat = new OpenLayers.LonLat({{object.route.end_lon}},{{object.route.end_lat}}).transform(projection, map.getProjectionObject());
+
+                var icon = new OpenLayers.Icon('http://www.openstreetmap.org/openlayers/img/marker.png',size,offset);
+                layerMarkers = new OpenLayers.Layer.Markers("Markers");
+                map.addLayer(layerMarkers);
+
+                layerMarkers.addMarker(new OpenLayers.Marker(startlonlat, icon));
+                layerMarkers.addMarker(new OpenLayers.Marker(endlonlat, icon.clone()));
+            {% endif %}
+/*
+            var lat=59.8;
+            var lon=5.8;
+            var lat2=59.9;
+            var lon2=5.9;
+
+
+
+            var featurecollection = {
+                    "type": "FeatureCollection", 
+                    "features": [{
+                        "geometry": {
+                            "type": "GeometryCollection", 
+                            "geometries": [
+                                {
+                                    "type": "LineString", 
+                                    "coordinates": 
+                                        [
+                                        [lon, lat], 
+                                        [lon2, lat2]
+                                        ]
+                                },
+                            ]
+                        }, 
+                        "type": "Feature", 
+                        "properties": {}    
+                    }]
+                };
+                                /*{
+                                    "type": "Polygon", 
+                                    "coordinates": 
+                                        [[[11.0878902207, 45.1602390564], 
+                                          [14.931640625, 40.9228515625], 
+                                          [0.8251953125, 41.0986328125], 
+                                          [7.63671875, 48.96484375], 
+                                          [11.0878902207, 45.1602390564]]]
+                                },
+                                {
+                                    "type":"Point", 
+                                    "coordinates":[{{ object.route.start_lon}}, {{ object.route.start_lat}}]                                    
+                                }
+                var geojson_format = new OpenLayers.Format.GeoJSON({
+                    'internalProjection': projection,
+                    'externalProjection': projection
+                });
+                var vector_layer = new OpenLayers.Layer.Vector(); 
+                map.addLayer(vector_layer);
+                vector_layer.addFeatures(geojson_format.read(featurecollection));
+
+*/
+                map.render("map");
+ 
+
+        }
+     $(document).ready(init);
+
+    </script>
+{% endif %}

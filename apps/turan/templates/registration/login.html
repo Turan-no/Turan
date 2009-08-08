@@ -1,0 +1,17 @@
+{% extends "turan/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <form action="" method="post">
+        <table>
+            <tbody>
+                <input type="hidden" name="next" value="{% url turanindex %}" />
+                {{ form }}
+                <tr>
+                    <th></th>
+                    <td><input type="submit" value="{% trans "Log in" %}" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+{% endblock %}

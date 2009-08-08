@@ -1,0 +1,101 @@
+{% extends "turan/base.html" %}
+{% load comments_tag %}
+
+{% load humanize %}
+{% load i18n %}
+{% load turan_extras %}
+{% block title %}
+{{ block.super }}
+{% trans "What matters" %}
+{% endblock %}
+{% block content %}
+
+<div class="half floatright rightcol">
+    <h1>
+        {% trans "Latest comments" %}
+    </h1>
+    <ul class="comments">
+    {% for comment in get_latest_comments %}
+        <li>
+            <img alt="Comment" src="{{MEDIA_URL}}/pinax/images/silk/icons/comment.png" />
+            <div class="header">
+                <span class="name">{{ comment.name }}</span>&nbsp;
+                {% trans "commented on a" %}
+                    <a href="{{ comment.content_object.get_absolute_url }}">
+                        {{ comment.content_object|model_verbose_name }}
+                    </a>
+                <span class="date">{{ comment.submit_date }}</span>
+            </div>
+            <div class="comment_text">{{ comment.comment }}</div>
+        </li>
+    {% endfor %}
+    </ul>
+    <img alt="{% trans "Compass" %}" style="float:right" src="{{MEDIA_URL}}turan/compass.png">
+    <h1>
+        <a href="{% url routes %}">{% trans "Routes" %}</a>
+    </h1>
+    <ul class="routes">
+    {% for object in route_list %}
+    <li>
+        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+    </li>
+    {%endfor %}
+    </ul>
+</div>
+
+<div>
+    <img alt="{% trans "Cyclist"%}" style="float:right" src="{{MEDIA_URL}}turan/cyclist.png">
+    <h1>
+        <a href="{% url cycletrips %}">{% trans "Cycle trips" %}</a>
+    </h1>
+    <ul class="trips">
+    {% for object in cycletrip_list %}
+    <li>
+    <a href="{{ object.get_absolute_url }}">{{ object.route.name|slice:":35" }}</a>, 
+        {% if object.route.distance %}
+            {{ object.route.distance|floatformat }} {% trans "km" %},
+        {% endif %}
+        {{ object.date|naturalday}}, <a href="{{object.user.get_profile.get_absolute_url }}">{{ object.user }}</a>
+    </li>
+    {%endfor %}
+    </ul>
+
+    <img alt="{% trans "Hiker"%}" style="float:right" src="{{MEDIA_URL}}turan/hiker.png">
+    <h1>
+        <a href="{% url hikes %}">{% trans "Hikes" %}</a>
+    </h1>
+    <ul class="hikes">
+    {% for object in hike_list %}
+    <li>
+    <a href="{{ object.get_absolute_url }}">{{ object.route.name|slice:":35" }}</a>, 
+        {% if object.route.distance %}
+            {{ object.route.distance|floatformat }} {% trans "km" %},
+        {% endif %}
+        {{ object.date|naturalday}}, <a href="{{object.user.get_profile.get_absolute_url }}">{{ object.user }}</a>
+    </li>
+    {%endfor %}
+    </ul>
+
+    <img alt="{% trans "Other Exercices"%}" style="float:right" src="{{MEDIA_URL}}turan/hiker.png">
+    <h1>
+        <a href="{% url hikes %}">{% trans "Other Exercices" %}</a>
+    </h1>
+    <ul class="exercies">
+    {% for object in exercise_list %}
+    <li>
+    <a href="{{ object.get_absolute_url }}">
+        {% if object.exercise_type %}{{ object.exercise_type }}
+        {% else %}
+           {% trans "Other Exercise" %}
+        {% endif %}
+    </a>, 
+        {% if object.duration %}
+           {{ object.duration}},
+        {% endif %}
+        {{ object.date|naturalday}}, <a href="{{object.user.get_profile.get_absolute_url }}">{{ object.user }}</a>
+    </li>
+    {%endfor %}
+    </ul>
+</div>
+{% endblock content %}
+

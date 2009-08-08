@@ -1,0 +1,43 @@
+{% load i18n %}
+{% ifnotequal object.cycletripdetail_set.count 0 %}
+<p style="float: right;" id="choices">{% trans "Show" %}:</p>
+<div id="tripdiv_legend{{object.id}}" style="width:100px;height:400px; float: right;"></div>
+<div id="tripdiv{{object.id}}" style="width:700px;height:400px;"></div>
+<br>
+<script id="source" language="javascript" type="text/javascript">
+$(function () {
+        var datasets = {
+        "speed": {
+            data: [{{ speedjs }}],
+            label: "{% trans "Speed" %}",
+            points: { show: false } ,
+            lines: { show: true },
+        },
+        "hr": {
+            data: [{{ hrjs }} ],
+            label: "{% trans "HR" %}",
+            yaxis: 2,
+            lines: { show: true, fill: 0.2 },
+            points: { show: false } ,
+        },
+        "cadence": {
+            data: [ {{ cadencejs }}],
+            label: "{% trans "Cadence" %}",
+            points: { show: false } ,
+            lines: { show: true },
+            },
+        "altitude":{
+            data: [ {{ altitudejs }}],
+            label: "{% trans "Altitude" %}",
+            lines: { show: true, fill: 0.3 },
+            points: { show: false } ,
+        },
+        };
+        {% include "turan/common_graph.html" %}
+
+
+
+
+});
+</script>
+{% endifnotequal %}

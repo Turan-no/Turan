@@ -1,0 +1,37 @@
+{% extends "turan/base.html" %}
+{% load i18n %}
+{% block title %}
+{{block.super}} {% trans "About" %}
+{% endblock %}
+
+{% block content %}
+<h1>About lart.no/turan</h1>
+
+<h2>Goal</h2>
+
+Turan..fatties..etc
+
+<h2><img src="/media/icons/package.png">Development</h2>
+
+<h3>Thanks to</h3>
+<div id="container">
+developers?
+<h3>
+    <img src="/media/icons/layout.png" alt="" />
+
+    Created using
+</h3>
+
+<p>lart.no/turan makes use of
+the <a href="http://www.python.org/">Python</a> programming language,
+the <a href="http://www.djangoproject.com/">Django</a> web framework,
+<a href="http://developer.yahoo.com/yui/">Yahoo! UI Library</a> for style
+sheets, and icons from
+<a href="http://www.famfamfam.com/lab/icons/silk/">FamFamFam</a>.
+Flot..openlayers..openstreetmap..jquery..
+</p>
+
+
+
+
+{% endblock %}

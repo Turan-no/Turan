@@ -1,0 +1,39 @@
+{% load i18n %}
+{% load turan_extras %}
+
+<table>
+    <tr>
+        <th>
+            {% trans "Length" %}
+        </th>
+        <th>
+            {% trans "Ascent" %}
+        </th>
+        <th>
+            {% trans "Gradient" %}
+        </th>
+        <th>
+            {% trans "Speed" %}
+        </th>
+        <th>
+            {% trans "Avg power" %}
+        </th>
+        <th>
+            {% trans "Avg HR" %}
+        </th>
+    </tr>
+    {% for slope in slopes %}
+    <tr>
+        <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
+        <td>{{slope.hdelta}} {% trans "m" %}</td>
+        <td>{{slope.gradient|floatformat}} %</td>
+        <td>{{slope.speed|floatformat}} {% trans "km/h" %}</td>
+        <td>{{slope.avg_power|floatformat}} {% trans "W" %} </td>
+        <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}
+            {% if object.user.get_profile.max_hr %}
+            ({{ slope.avg_hr|percent:object.user.get_profile.max_hr }})
+            {% endif %} </td>
+    </tr>
+    {% endfor %}
+</table>
+

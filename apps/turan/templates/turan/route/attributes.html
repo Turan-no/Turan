@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load turan_extras %}
+<ul class="route_attributes">
+    {% if object.distance %}
+    <li class="distance"><span class="label">{% trans "Distance" %}:</span> {{ object.distance }} {% trans "km" %}</li>
+    {% endif %}
+    <li class="description">
+        <span class="label">{% trans "Description" %}:</span> 
+        <p>{{ object.description }}</p>
+    </li>
+    {% if object.route_url %}
+    <li class="url"><span class="label">{% trans "URL" %}:</span> {{ object.route_url|urlize }}</li>
+    {% endif %}
+    {% if object.ascent %}
+    <li class="ascent"><span class="label">{% trans "Ascent" %}:</span> {{ object.ascent }} {% trans "m" %}
+        {% if object.distance %}
+            ({{ object.ascent|divide:object.distance }} {% trans "m/km" %})
+        {% endif %}
+    </li>
+    {% endif %}
+    {% if object.descent %}
+    <li class="descent"><span class="label">{% trans "Descent" %}:</span> {{ object.descent }} {% trans "m" %}</li>
+    {% endif %}
+</ul>

@@ -1,0 +1,54 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% block title %}
+{% trans "Cycle Trip" %}
+{% endblock %}
+{% block extra_head %}
+{{ block.super }}
+{% with object.gpx_file as gpx_file %}
+    {% include "turan/maphead.html" %}
+{% endwith %}
+{% endblock %}
+{% block extramenu %}
+{% if user.is_authenticated %}
+        <li class="right"><a href="{% url admin:turan_route_change object.id %}">{% trans "Modify" %}</a></li>
+{% endif %}
+{% endblock %}
+{% block content %}
+
+<div style="width:500px; height:500px; float: right;" id="map"></div>
+<h1>
+    <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+</h1>
+
+{% include "turan/route/attributes.html" %}
+{% include "turan/commentform.html" %}
+
+{% if object.cycletrip_set.count or object.hike_set.count %}
+<h2>{% trans "Trips on this route" %}</h2>
+<ul>
+    {% for trip in object.cycletrip_set.iterator %}
+    <li><a href="{{ trip.get_absolute_url }}">{{ trip }}</a>, {{ trip.duration }}, {{ trip.user }}</li>
+    {% endfor %}
+    {% for trip in object.hike_set.iterator %}
+    <li><a href="{{ trip.get_absolute_url }}">{{ trip }}</a>, {{ trip.duration }}, {{ trip.user }}</li>
+    {% endfor %}
+</ul>
+<h2>{% trans "Average duration"%}</h2>
+<div id="avgspeeddiv" style="width:420px;height:200px"></div>
+<script id="source" language="javascript" type="text/javascript">
+$(function () {
+        var d1 = { color: 5, data: [{{speeddataseries}}], }
+        var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0, }, }
+    $.plot($("#avgspeeddiv"), [d1], options);
+});
+</script>
+
+{% endif %}
+
+
+
+
+{% endblock content %}
+

@@ -1,0 +1,50 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% load turan_extras %}
+{% block title %} {{trip1}} {% trans "versus" %} {{ trip2}}
+{% trans "Cycle trip" %} 
+{% endblock %}
+{% block content %}
+<h1>{{trip1}} {{trip1.duration}} versus {{ trip2 }} {{trip2.duration }}</h1>
+<h2>{% trans "Speed" %}</h1>
+<div id="speediv" style="width:1000px;height:200px"></div>
+<h2>{% trans "HR" %}</h1>
+<div id="hrdiv" style="width:1000px;height:200px"></div>
+<h2>{% trans "Cadence" %}</h1>
+<div id="caddiv" style="width:1000px;height:200px"></div>
+<script id="source" language="javascript" type="text/javascript">
+    var speed1 = { data: [{{t1_speed}}],}
+    var speed2 = { data: [{{t2_speed}}],}
+    var hr1 = { data: [{{t1_hr}}],}
+    var hr2 = { data: [{{t2_hr}}],}
+    var cad1 = { data: [{{t1_cad}}],}
+    var cad2 = { data: [{{t2_cad}}],}
+    var alt = { 
+        data: [{{ alt }}], 
+        yaxis: 2, 
+        lines: {
+            fill: 0.2
+        }
+    };
+    var options = { 
+        y2axis:{ min: 0,
+                 max: {{ alt_max }},
+               },
+    };
+    $.plot($("#speediv"), [speed1, speed2, alt], options);
+    $.plot($("#hrdiv"), [hr1, hr2, alt], options);
+    $.plot($("#caddiv"), [cad1, cad2, alt], options);
+$(function () {
+});
+</script>
+{% with trip2 as object %}
+{% include "turan/cycletrip/attributes.html" %}
+{% endwith %}
+
+{% with trip1 as object %}
+{% include "turan/cycletrip/attributes.html" %}
+{% endwith %}
+
+{% endblock content %}
+

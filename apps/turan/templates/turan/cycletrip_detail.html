@@ -1,0 +1,74 @@
+{% extends "turan/event_detail.html" %}
+{% load i18n %}
+{% load turan_extras %}
+{% block title %}
+{{block.super}}
+{% trans "Cycle trip" %} {{ object }}
+{% endblock %}
+{% block extramenu %}
+{% ifequal user object.user %}
+        <li class="modify"><a href="{% url admin:turan_cycletrip_change object.id %}">{% trans "Modify" %}</a></li>
+{% endifequal %}
+{% endblock%}
+{% block content %}
+{{ block.super }}
+<div id="tabs">
+    <ul>
+        <li class="selected" id="tabs-select-1">{% trans "Graph" %}</li>
+        <li id="tabs-select-2">{% trans "Slopes" %}</li>
+    </ul>
+    <div id="tabs-1" class="graph visible">
+        {% include "turan/cycletrip/graph.html" %}
+    </div>
+    <div id="tabs-2" class="slope_tab">
+        <table>
+            <tr>
+                <th>
+                    {% trans "Length" %}
+                </th>
+                <th>
+                    {% trans "Ascent" %}
+                </th>
+                <th>
+                    {% trans "Gradient" %}
+                </th>
+                <th>
+                    {% trans "Speed" %}
+                </th>
+                <th>
+                    {% trans "Avg power" %}
+                </th>
+                <th>
+                    {% trans "Avg HR" %}
+                </th>
+            </tr>
+        {% for slope in slopes %}
+            <tr>
+                <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
+                <td>{{slope.hdelta}} {% trans "m" %}</td>
+                <td>{{slope.gradient|floatformat}} %</td>
+                <td>{{slope.speed|floatformat}} {% trans "km/h" %}</td>
+                <td>{{slope.avg_power|floatformat}} {% trans "W" %} </td>
+                <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}
+                    {% if object.user.get_profile.max_hr %}
+                    ({{ slope.avg_hr|percent:object.user.get_profile.max_hr }})
+                    {% endif %} </td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    function selectTab(evt) {
+        var id = evt.target.id;
+        id = "tabs-" + id.split('-')[2];
+        $('#tabs div.visible').removeClass('visible');
+        $('#tabs div#' + id).addClass('visible');
+        $('#tabs ul li').removeClass('selected');
+        $(this).addClass('selected');
+    }
+    $('#tabs ul li').each(function () {
+        $(this).bind("click", selectTab);
+    });
+</script>
+{% endblock %}

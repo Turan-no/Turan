@@ -1,0 +1,15 @@
+{% extends "turan/event_detail.html" %}
+{% load i18n %}
+{% block title %}
+{{block.super}}
+{% trans "Exercise" %} {{ object }}
+{% endblock %}
+{% block extramenu %}
+    {% ifequal user object.user %}
+        <li class="modify"><a href="{% url admin:turan_otherexercise_change object.id %}">{% trans "Modify" %}</a></li>
+    {% endifequal %}
+{% endblock %}
+{% block graph %}
+    {% include "turan/exercise/graph.html" %}
+{% endblock graph %}
+

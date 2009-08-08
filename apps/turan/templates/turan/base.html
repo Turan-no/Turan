@@ -1,0 +1,31 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}turan/base.css">
+<link rel="alternate" type="application/rss+xml" title="Lart.no/turan RSS feed" href="/feed/trips">
+<script language="javascript" type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.js"></script>
+<script language="javascript" type="text/javascript" src="{{MEDIA_URL}}turan/flot/excanvas.min.js"></script>
+{% endblock %}
+{% block title %}turan{% endblock %}
+
+
+{% block subnav %}
+    <ul>
+        <li class="main"><a href="{% url turanindex %}">{% trans "What matters" %}</a></li>
+        <li><a href="{% url routes %}">{% trans "Routes" %}</a></li>
+        <li><a href="{% url events %}">{% trans "Events" %}</a></li>
+        <li><a href="{% url calendar-index %}">{% trans "Calendar" %}</a></li>
+        <li><a href="{% url teams %}">{% trans "Teams" %}</a></li>
+        <li><a href="{% url statistics %}">{% trans "Statistics" %}</a></li>
+            {% if user.get_profile.id %}
+                <li class="right"><a href="{% url calendar-user user_id=user.get_profile.id %}">{% trans "My calendar" %}</a></li>
+            {% endif %}
+        {% block extramenu %}
+        {% endblock %}
+    </ul>
+{% endblock %}
+{% block body %}
+{% block content %}
+{% endblock %}
+{% endblock %}

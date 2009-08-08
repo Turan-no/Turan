@@ -1,0 +1,82 @@
+{% load humanize %}
+{% load i18n %}
+<html>
+<head>
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+    <!-- bring in the OpenStreetMap OpenLayers layers.
+         Using this hosted file will make sure we are kept up
+         to date with any necessary changes -->
+        <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+ 
+    <script type="text/javascript">
+        // Start position for the map (hardcoded here for simplicity,
+        // but maybe you want to get from URL params)
+        var lat=59.9
+        var lon=5.8
+        var zoom=10
+ 
+        //var map; //complex object of type OpenLayers.Map
+        //<bounds minlat="59.145339774" minlon="6.660875240" maxlat="64.099667324" maxlon="12.085617995"/>
+
+        function resizeMapToLayerExtents(evt) {
+            map.zoomToExtent(evt.object.getDataExtent());
+        }
+ 
+        function init() {
+            map = new OpenLayers.Map ({
+                controls:[
+                    new OpenLayers.Control.Navigation(),
+                    new OpenLayers.Control.PanZoomBar(),
+                    new OpenLayers.Control.MousePosition(),
+                    new OpenLayers.Control.Permalink('permalink'),
+                    new OpenLayers.Control.OverviewMap(),
+                    new OpenLayers.Control.LayerSwitcher(),
+                    new OpenLayers.Control.Attribution()],
+                maxExtent: new OpenLayers.Bounds(59.872147,5.75,59.91,5.9),
+                maxResolution: 59.0399,
+                numZoomLevels: 19,
+                units: 'm',
+                projection: new OpenLayers.Projection("EPSG:4326"),
+                displayProjection: new OpenLayers.Projection("EPSG:4326")
+            } );
+ 
+ 
+            // Define the map layer
+            // Note that we use a predefined layer that will be
+            // kept up to date with URL changes
+            // Here we define just one layer, but providing a choice
+            // of several layers is also quite simple
+            // Other defined layers are OpenLayers.Layer.OSM.Mapnik, OpenLayers.Layer.OSM.Maplint and OpenLayers.Layer.OSM.CycleMap
+            //layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+            //map.addLayer(layerMapnik);
+            //layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
+            //map.addLayer(layerTilesAtHome);
+            layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
+            map.addLayer(layerCycleMap);
+            //layerMarkers = new OpenLayers.Layer.Markers("Markers");
+            //map.addLayer(layerMarkers);
+ 
+            // Add the Layer with GPX Track
+            var lgpx = new OpenLayers.Layer.GML("Test", "/media/turan/09071305.gpx", {
+                format: OpenLayers.Format.GPX,
+                style: {strokeColor: "green", strokeWidth: 5, strokeOpacity: 0.5},
+                projection: new OpenLayers.Projection("EPSG:4326")
+            });
+            lgpx.events.register("loadend", this, resizeMapToLayerExtents);
+            map.addLayer(lgpx);
+ 
+            var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+            map.setCenter (lonLat); //, zoom);
+ 
+            var size = new OpenLayers.Size(21,25);
+            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+            var icon = new OpenLayers.Icon('http://www.openstreetmap.org/openlayers/img/marker.png',size,offset);
+            //layerMarkers.addMarker(new OpenLayers.Marker(lonLat,icon));
+            map.render("map");
+        }
+    </script>
+<body onload="init();">
+    <!-- define a DIV into which the map will appear. Make it take up the whole window -->
+    <div style="width:90%; height:90%" id="map"></div>
+</body>
+</html>

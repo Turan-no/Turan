@@ -1,0 +1,12 @@
+{% extends "turan/base.html" %}
+{% load i18n %}
+{% block content %}
+<h1>{% trans "Registration"%}</h1>
+<form method="POST">
+<table>
+{{ form.as_table }}
+</table>
+<input type="submit" value="{% trans "Submit" %}">
+</form>
+
+{% endblock %}

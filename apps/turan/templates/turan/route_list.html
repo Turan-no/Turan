@@ -1,0 +1,61 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% block title %}
+{{ block.super }}
+{% trans "Routes" %}
+{% endblock %}
+{% block content %}
+
+<h1>
+    {% trans "Routes" %}
+</h1>
+
+<ul class="buttons">
+    <li>
+    <a href="{% url route_new %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="Add route" />
+        Add route
+    </a>
+    </li>
+</ul>
+
+<table>
+    <tr>
+        <th>
+            {% trans "Name" %}
+        </th>
+        <th>{% trans "Distance" %}</th>
+        <th>
+            {% trans "Description" %}
+        </th>
+        <th>
+            {% trans "Cycle Trip count" %}
+        </th>
+        <th>
+            {% trans "Hike count" %}
+        </th>
+        <th>
+            {% trans "Route plot" %}
+        </th>
+    </tr>
+{% for object in object_list %}
+<tr class="{% cycle 'odd' 'even' %}">
+    <td>
+        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+    </td>
+    <td class="number">{{ object.distance }} km</td>
+    <td>{{ object.description }}</td>
+    <td class="number">{{ object.cycletrip_set.count }}</td>
+    <td class="number">{{ object.hike_set.count }}</td>
+    <td>
+        {% if object.gpx_file %}
+            <object  type="image/svg+xml" data="{{ object.get_svg_url }}"></object>
+        {% endif %}
+    </td>
+</tr>
+
+{%endfor %}
+</table>
+{% endblock content %}
+

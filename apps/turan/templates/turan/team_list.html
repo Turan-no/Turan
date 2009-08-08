@@ -1,0 +1,60 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% block title %}
+{% trans "Teams" %}
+{% endblock %}
+{% block content %}
+
+<h1>
+    {% trans "Teams" %}
+</h1>
+<table>
+    <tr>
+        <th>
+            {% trans "Name" %}
+        </th>
+        <th>
+            {% trans "Description" %}
+        </th>
+        <th>
+            {% trans "Slogan" %}
+        </th>
+        <th>
+            {% trans "Logo" %}
+        </th>
+        <th>
+            {% trans "URL" %}
+        </th>
+        <th>
+            {% trans "Members" %}
+        </th>
+    </tr>
+{% for object in object_list %}
+<tr>
+    <td>
+        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+    </td>
+    <td>
+        {{ object.description }}
+    </td>
+    <td>
+        {{ object.slogan }}
+    </td>
+    <td>
+        <img alt="{% trans "Logo" %}" src="{{MEDIA_URL}}turan/{{object.logo}}">
+    </td>
+    <td>
+        {{ object.url|urlize}}
+    </td>
+    <td>
+        {% for member in object.members.iterator %}
+        {{ member }}
+        {% endfor %}
+
+    </td>
+</tr>
+{%endfor %}
+</table>
+{% endblock content %}
+

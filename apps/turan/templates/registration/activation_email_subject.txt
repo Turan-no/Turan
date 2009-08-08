@@ -1,0 +1,1 @@
+{% load i18n %}{% blocktrans with site.name as site_name %}Your registration on {{ site_name }}{% endblocktrans %}

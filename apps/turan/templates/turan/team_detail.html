@@ -1,0 +1,41 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% block title %}
+{{block.super}}
+{{ object }}
+{% endblock %}
+{% block content %}
+
+<img style="float: right" alt="{% trans "Logo" %}" src="{{MEDIA_URL}}turan/{{object.logo}}">
+<h1>
+    <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+</h1>
+<ul class="team">
+    <li>{{ object.description }}</li>
+    <li>{{ object.slogan }}</li>
+    <li>{{ object.url|urlize }}</li>
+    <li>
+        <ul class="members hlist">
+        {% for member in object.members.iterator %}
+        <li class="half">
+            <img src="{% url generate_tshirt %}?user={{ member.pk }}&team={{ object.pk }}" alt="Tshirt" />
+            <h4>{{ member }}</h4>
+            <ul>
+                <li>
+                <span class="label">{% trans "Function" %}:</span>
+                <span>{% for membership in member.teammembership_set.iterator %}
+
+                    {% ifequal membership.team_id object.id %}
+                        {{ membership.role }}
+                    {% endifequal %}
+                    {% endfor %}
+                </span>
+                </li>
+            </ul>
+        {% endfor %}
+        </ul>
+    </li>
+</ul>
+{% endblock content %}
+

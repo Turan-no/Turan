@@ -1,0 +1,17 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% block title %}
+{{ block.super }}
+{% trans "Calendar" %}
+{% endblock %}
+{% block content %}
+
+<h1>
+    {% trans "Calendar" %}
+</h1>
+<div class="right">
+</div>
+{{ calendar }}
+{% endblock content %}
+

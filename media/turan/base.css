@@ -1,0 +1,731 @@
+html {
+}
+
+body {
+	font-family: Trebuchet MS, Tahoma, Verdana;
+	text-align: left;
+    padding: 0;
+    background: #fff;
+    margin: 0;
+}
+
+/* Grid layout */
+.content {
+	margin-left: auto;
+	margin-right: auto;
+	min-width: 750px;
+	width: 76em;
+    background: #fff;
+}
+
+/* Headers */
+h1 {
+	font-size: 197%;
+	font-weight: bolder;
+	margin: 0;
+}
+h2 {
+	font-size: 182%;
+	font-weight: bolder;
+	margin: 0.5em 0 0.5em;
+}
+h3 {
+	font-size: 130%;
+	font-weight: normal;
+	margin: 1em 0 0.5em;
+}
+
+/* Tables */
+table {
+	margin: 0.5em 0;
+	width: 100%;
+}
+table tr th {
+    background: #ddd;
+}
+table tr.even {
+	border-top: 1px solid #fcfcfc;
+	border-bottom: 1px solid #eee;
+}
+table tr.even {
+    background: #f8f8f8;
+}
+table th, table td {
+	border: 0;
+	padding: 0.5em;
+}
+table th {
+	font-weight: bold;
+	text-align: left;
+}
+table td img {
+	vertical-align: bottom;
+}
+
+table .number {
+	text-align: right;
+}
+
+
+/* Forms */
+form input, form textarea {
+	border: 1px solid #bbb;
+	color: black;
+	font-size: 123.1%;
+	padding: 0.2em;
+}
+form#new_set {
+	text-align: right;
+}
+form#new_set input#id_name {
+	margin-right: 5px;
+	width: 8em;
+}
+form#edit_set ul {
+	margin: 0;
+}
+form#edit_set ul li {
+	list-style-type: none;
+	margin-left: 0;
+	padding: 0.2em;
+}
+form#feedback textarea {
+	width: 40em;
+}
+
+/* Text */
+p, ul {
+	font-size: 108%;
+}
+em {
+	font-style: italic;
+}
+ul {
+	margin-left: 0;
+}
+ul li {
+	list-style-type: square;
+	margin-left: 1.5em;
+}
+
+/* Links */
+a {
+	background: transparent;
+	color: #204a87;
+	text-decoration: underline;
+}
+a:hover {
+	color: #933;
+}
+
+/* Images */
+img {
+	border: 0;
+}
+
+/* Clearing ruler */
+hr.clear {
+	clear: both;
+	margin: 0;
+	visibility: hidden;
+}
+
+/* Header area */
+#hd, #hd .content {
+	background: url(/site_media/turan/header2.0.png);
+	color: white;
+}
+#hd .content {
+	padding: 1em;
+	height: 6em;
+}
+#hd a {
+	background: transparent;
+	color: #000;
+	text-decoration: none;
+}
+#hd #title {
+	float: left;
+}
+#hd h1 a:hover {
+	text-decoration: none;
+}
+#hd #sitemenu {
+	float: right;
+    margin: 10px 10px 0 0;
+}
+#hd #sitemenu a:hover {
+	text-decoration: underline;
+}
+#hd #sitemenu ul {
+	margin: 0;
+}
+#hd #sitemenu ul li {
+	display: inline;
+	list-style-type: none;
+	margin: 0;
+	padding-left: 1em;
+}
+
+#bd {
+    background: url(/site_media/turan/bg_white.jpg);
+}
+
+#bd .content {
+	padding: 1em;
+}
+
+/* Cloud area */
+#cloud, #cloud .content {
+	background: #60aA53;
+	color: white;
+}
+#cloud .content {
+	line-height: 1.5em;
+	padding: 1em;
+}
+#cloud .content {
+	color: white;
+}
+#cloud h2, #cloud ul {
+	font-size: 100%;
+}
+#cloud h2 {
+	display: inline;
+	font-weight: bold;
+}
+#cloud ul, #cloud ul li {
+	display: inline;
+	margin: 0;
+}
+#cloud a {
+	background: transparent;
+	color: white;
+	margin-right: 0.5em;
+	text-decoration: none;
+	white-space: nowrap;
+}
+#cloud a:hover {
+	text-decoration: underline;
+}
+
+/* Footer area */
+#ft, #ft .content {
+	background: #508A33;
+	color: white;
+}
+#ft .content {
+	padding: 1em;
+}
+#ft a {
+	background: transparent;
+	color: white;
+	text-decoration: none;
+}
+#ft a:hover {
+	text-decoration: underline;
+}
+#ft ul {
+	font-size: 100%;
+	margin: 0;
+}
+#ft ul li {
+	display: inline;
+	list-style-type: none;
+	margin: 0;
+	padding-right: 1em;
+}
+
+/* Timeframe and navigation menu */
+.menu {
+	margin: 0.5em 0;
+	width: 100%;
+	height: 2em;
+}
+.menu ul {
+	font-size: 100%;
+	margin: 0;
+}
+.menu ul li {
+	display: inline;
+	list-style-type: none;
+	margin: 0;
+}
+.menu .navigation {
+	float: left;
+}
+.menu .timeframe {
+	float: right;
+}
+
+ul.episode {
+	clear: left;
+}
+div.content h1 {
+	clear: left;
+}
+span.episodesave {
+	float: right;
+	padding: 0 5px;
+}
+ul.col2 li {
+	float: left;
+	width: 450px;
+}
+li.episode {
+	list-style-type: none;
+	padding: 0 15px 0 0;
+}
+.episode {
+	margin: 0;
+}
+.episode h3 {
+	margin: 0;
+}
+h1 a
+{ 
+	background: transparent;
+	color: black;
+	text-decoration: none;
+}
+.episode h3 a,
+.episode h3 a:visited {
+	background: transparent;
+	color: black;
+	text-decoration: none;
+}
+.episode h3 span .episodepub {
+	color: #666;
+}
+.episodepub {
+    text-decoration: none;
+    font-size: 1em;
+}
+.episode img.episodeimg {
+	background: white;
+	border: 2px solid #ddd;
+	padding: 0.5em;
+    margin-right: 1em;
+    width: 85px;
+    height: 48px;
+    float: left;
+}
+.episode p {
+	margin: 0.5em;
+}
+.episode span.episodetext {
+	font-style: italic;
+}
+.episode p.episodemeta {
+	background: transparent;
+	color: #666;
+	font-size: 93%;
+}
+.episode p.episodemeta a, .episode p.episodemeta a:hover {
+	background: transparent;
+	color: #666;
+	text-decoration: none;
+}
+
+/* Message panels */
+.info, .success, .warning, .notice, .error {
+	border: 2px solid black;
+	padding: 0.8em;
+	margin: 0.5em 0;
+	width: 30em;
+}
+.info h3, .success h3, .warning h3, .notice h3, .error h3 {
+	margin: 0 0 0.5em 0;
+}
+.info {
+	background: #eeeeec;
+	border-color: #d3d7cf;
+	color: black;
+}
+.success {
+	background: #e6efc2;
+	border-color: #c6d880;
+	color: #529214;
+}
+.warning, .notice {
+	background: #fff6bf;
+	border-color: #ffd324;
+	color: #817134;
+}
+.error {
+	background: #fbe3e4;
+	border-color: #fbc2c4;
+	color: #d12f19;
+}
+
+/* Emphasizing */
+.title {
+	font-weight: bolder;
+}
+
+/* Alignment */
+.floatleft {
+	float: left;
+	margin-right: 1em;
+}
+.floatright {
+	float: right;
+	margin-left: 1em;
+}
+.alignleft {
+	text-align: left;
+}
+.alignright {
+	text-align: right;
+}
+.aligncenter {
+	text-align: center;
+}
+
+/* Buttons
+ * from http://particletree.com/features/rediscovering-the-button-element/ */
+.buttons a, .buttons button {
+	margin: 0 5px 0 0;
+	background-color: #f5f5f5;
+	border: 1px solid #dedede;
+	border-top: 1px solid #eee;
+	border-left: 1px solid #eee;
+	font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+	line-height: 130%;
+	text-decoration: none;
+	font-weight: bold;
+	color: #565656;
+	cursor: pointer;
+	padding: 4px 5px 4px 5px; /* Links */
+}
+.buttons button {
+	width: auto;
+	overflow: visible;
+	padding: 2px 5px 1px 5px; /* IE6 */
+}
+.buttons button[type] {
+	padding: 3px 5px 3px 5px; /* Firefox */
+	line-height: 17px; /* Safari */
+}
+*: first-child+html button[type] {
+	padding: 2px 5px 1px 5px; /* IE7 */
+}
+.buttons button img, .buttons a img {
+	margin: 0 0px -3px 0 !important;
+	padding: 0;
+	border: none;
+	width: 16px;
+	height: 16px;
+}
+/* Standard buttons */
+.buttons a:hover, button:hover {
+	background-color: #dff4ff;
+	border: 1px solid #c2e1ef;
+	color: #336699;
+}
+.buttons a:active {
+	background-color: #6299c5;
+	border: 1px solid #6299c5;
+	color: #fff;
+}
+/* Positive buttons */
+.buttons a.positive, button.positive {
+	color: #529214;
+}
+.buttons a.positive:hover, button.positive:hover {
+	background-color: #E6EFC2;
+	border: 1px solid #C6D880;
+	color: #529214;
+}
+.buttons a.positive:active {
+	background-color: #529214;
+	border: 1px solid #529214;
+	color: #fff;
+}
+/* Negative buttons */
+.buttons a.negative, button.negative {
+	color: #d12f19;
+}
+.buttons a.negative:hover, button.negative:hover {
+	background: #fbe3e4;
+	border: 1px solid #fbc2c4;
+	color: #d12f19;
+}
+.buttons a.negative:active {
+	background-color: #d12f19;
+	border: 1px solid #d12f19;
+	color: #fff;
+}
+/* Inactive buttons */
+.buttons a.inactive, button.inactive {
+	color: #c0c0c0;
+	cursor: default;
+}
+.buttons a.inactive:hover, button.inactive:hover {
+	background: #f5f5f5;
+	border: 1px solid #dedede;
+	border-top: 1px solid #eee;
+	border-left: 1px solid #eee;
+	color: #c0c0c0;
+}
+.buttons a.inactive:active {
+	background-color: #f5f5f5;
+	border: 1px solid #dedede;
+	border-top: 1px solid #eee;
+	border-left: 1px solid #eee;
+	color: #c0c0c0;
+}
+
+.buttons li {
+    list-style-type: none;
+    margin: 0;
+}
+
+ul li ul { 
+    padding-left: 10px; 
+    border-left: 2px solid silver; 
+    margin: 5px 0 10px 0;
+}
+ul.comments {
+    width: 450px;
+}
+ul.comments img {
+    float: left;
+}
+ul.comments span.date {
+    float: right;
+    color: #bbb;
+}
+ul.comments span.name {
+    float: left;
+}
+ul.comments div.header {
+    font-weight: bold;
+    margin: 1px 0 0 19px;
+}
+ul.comments li div.comment_text {
+    font-size: 1.2em;
+    clear: left;
+    padding: 5px;
+    background: #eee;
+}
+ul.comments li {
+    font-size: 0.8em;
+    margin: 6px 0 0 0;
+    list-style-type: none;
+    border-top: 2px solid silver;
+    padding: 2px 0;
+}
+.label {
+    font-weight: bold;
+}
+
+ul.trip_attributes li {
+    padding: 1px 0;
+}
+
+ul#pagemenu {
+    background: #d0d0d9;
+    border-top: 1px solid silver;
+    height: 21px;
+    border-bottom: 1px solid #999;
+    margin: 0;
+}
+
+ul#pagemenu li {
+    list-style-type: none;
+    padding-right: 15px;
+    float: left;
+    padding-top: 1px;
+}
+
+ul#pagemenu li.right {
+    float: right;
+}
+ul#pagemenu li.modify {
+    float: right;
+    list-style-image: url('/site_media/pinax/images/silk/icons/wrench.png');
+}
+#pagemenu a:hover {
+	background: transparent;
+	color: #000;
+	font-weight: bolder;
+}
+div#lyricContainer {
+    height: 1em;
+    overflow: hidden;
+    float: right;
+}
+pre#footerLyrics {
+    margin-top: 0em;
+    color: #eee;
+}
+
+.third {
+    width: 33.3%;
+    margin: 0;
+}
+.half {
+    width: 50%;
+    margin: 0;
+}
+
+ul.trip_attributes li {
+}
+ul.trip_attributes {
+	background: #eee;
+	border-bottom: 1px solid black;
+	border-top: 1px solid black;
+    padding-left: 1em;
+    width: 458px;
+    margin: 0;
+    margin-top: -1px;
+}
+li.duration {
+    list-style-image: url('/site_media/pinax/images/silk/icons/clock.png');
+}
+li.heart {
+    list-style-image: url('/site_media/pinax/images/silk/icons/heart.png');
+}
+li.comment {
+    list-style-image: url('/site_media/pinax/images/silk/icons/comment.png');
+}
+p {
+    padding: 3px 12px;
+    margin: 0;
+}
+li.cadence {
+    list-style-image: url('/site_media/pinax/images/silk/icons/cog.png');
+}
+li.url {
+    list-style-image: url('/site_media/pinax/images/silk/icons/link.png');
+}
+li.date {
+    list-style-image: url('/site_media/pinax/images/silk/icons/date.png');
+}
+li.time {
+    list-style-image: url('/site_media/pinax/images/silk/icons/time_go.png');
+}
+li.speed {
+    list-style-image: url('/site_media/pinax/images/silk/icons/lightning_go.png');
+}
+li.person {
+    list-style-image: url('/site_media/pinax/images/silk/icons/user_suit.png');
+}
+li.person img {
+    float: right;
+    margin: -1px 0 0 8px;
+}
+li.route {
+    list-style-image: url('/site_media/pinax/images/silk/icons/map.png');
+}
+li.distance {
+    list-style-image: url('/site_media/pinax/images/silk/icons/sum.png');
+}
+li.description {
+    list-style-image: url('/site_media/pinax/images/silk/icons/textfield.png');
+}
+li.ascent {
+    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_up.png');
+}
+li.descent {
+    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_down.png')
+}
+span.motto {
+    float: right;
+    font-style: italic;
+    font-size: 1.5em;
+}
+
+.hlist li {
+    float: left;
+    list-style-type: none;
+}
+.team .members li {
+    margin: 10px 0;
+}
+.team .members img {
+    width: 220px;
+    float: left;
+}
+
+.pinax/images/silk/icons {
+	border: none;
+	padding-right: 8px;
+}
+
+.mon,.tue,.wed,.thu,.fri,.sat,.sun {
+    background: #eee;
+}
+.monfilled, .tuefilled, .wedfilled, .frifilled, .thufilled, .satfilled, .sunfilled {
+    background: #ccc;
+}
+.montoday, .tuetoday, .wedtoday, .thutoday, .fritoday, .sattoday, .suntoday {
+    background: green;
+}
+
+.rightcol {
+    margin-left: 12px;
+}
+div.graph {
+	background: #eee;
+	border-bottom: 1px solid black;
+	border-top: 1px solid black;
+}
+div.map {
+    width: 500px;
+    height: 500px;
+    border: 1px black solid;
+}
+div.mapcontainer {
+    float: right;
+}
+
+.toplist ol li.first {
+    list-style-image: url(/site_media/pinax/images/silk/icons/medal_gold_3.png);
+    font-size: 1.2em;
+}
+.toplist ol li.second {
+    list-style-image: url(/site_media/pinax/images/silk/icons/medal_silver_2.png);
+    font-size: 1.15em;
+}
+.toplist ol li.third {
+    list-style-image: url(/site_media/pinax/images/silk/icons/medal_bronze_1.png);
+    font-size: 1.1em;
+}
+#tabs>div {
+    display: none;
+}
+#tabs>div.visible {
+    display: block;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+#tabs>ul {
+    overflow: hidden;
+    margin: 5px 0 0 3px;
+}
+#tabs>ul>li {
+    float: left;
+    width: 100px;
+    height: 20px;
+    list-style-type: none;
+    margin: 2px 2px 0 2px;
+    padding: 3px;
+    background-color: #ccc;
+    cursor: pointer;
+}
+#tabs>ul>li.selected {
+    background-color: #eee;
+    font-weight: bold;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+}
+
+span.current {
+    float: right;
+}

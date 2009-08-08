@@ -1,0 +1,24 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% block title %}
+{{block.super}}
+{% endblock %}
+{% block extra_head %}
+{{ block.super }}
+
+{% with object.route.gpx_file as gpx_file %}
+    {% include "turan/maphead.html" %}
+{% endwith %}
+{% endblock %}
+{% block content %}
+{% if object.route.gpx_file %}
+    <div class="mapcontainer"><div class="map" id="map"></div></div>
+{% endif %}
+{% include "turan/cycletrip/attributes.html" %}
+{% include "turan/commentform.html" %}
+<hr class="clear">
+{% block graph %}
+{% endblock %}
+{% endblock content %}
+

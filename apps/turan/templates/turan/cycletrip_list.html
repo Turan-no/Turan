@@ -1,0 +1,45 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% block title %}
+{% trans "Cycle trips" %}
+{% endblock %}
+{% block content %}
+
+<h1>
+    {% trans "Cycle trips" %}
+</h1>
+<table>
+    <tr>
+        <th>
+            {% trans "User" %}
+        </th>
+        <th>
+            {% trans "Date" %}
+        </th>
+        <th>
+            {% trans "Name" %}
+        </th>
+        <th>
+            {% trans "Distance" %}
+        </th>
+    </tr>
+{% for object in object_list %}
+<tr>
+    <td>
+        {{ object.user }}
+    </td>
+    <td>
+        {{ object.date }}
+    </td>
+    <td>
+        <a href="{{ object.get_absolute_url }}">{{ object.route.name }}</a>
+    </td>
+    <td>
+        {{ object.route.distance|floatformat }} {% trans "km" %}
+    </td>
+</tr>
+{%endfor %}
+</table>
+{% endblock content %}
+
