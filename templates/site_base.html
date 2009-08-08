@@ -6,6 +6,9 @@
 {% load svn_app_version %}
 
 {% block extra_head_base %}
+    <script language="javascript" type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.js"></script>
+    <script language="javascript" type="text/javascript" src="{{MEDIA_URL}}turan/flot/excanvas.min.js"></script>
     <link rel="stylesheet" href="{{ MEDIA_URL }}pinax/css/topics.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/site_tabs.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/social_project.css" />
@@ -31,13 +34,13 @@
     </form>
 {% endblock %}
 
-{% block logo_link_image %}<pre style="color: white; margin-left: 100px;">
+{% block logo_link_image %}<span style="display: block; white-space: pre; font: 100%/1 monospace; color: white; margin-left: 100px;">
                 ________   _ _____ _____ ___ _            
        ,-.O    |__   ___| | |  _  |  _  |   | |    _O_,     
     ,-p\.(6,.     | | | |_| | |/ /  |_| | | | |   ´_|     _.,~^
    ( '--\--` )    | | |     | |\ \  | | | |   |     /,~'´^
 ~~~ `-' ° `-' ~~~~~~~~~~~( som tælle )~~~~~~~~~-.-'´^
-</pre>{% endblock %}
+</span>{% endblock %}
 {% block right_tabs %}
         <ul class="tabs">{% spaceless %}
             <li id="tab_turan"><a href="{% url turanindex %}">{% trans "Turan" %}</a></li>
