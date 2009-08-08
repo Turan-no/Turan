@@ -175,9 +175,6 @@ class Hike(Event):
         verbose_name = _("Hike")
         verbose_name_plural = _("Hikes")
 
-class Teamsport(Event):
-    pass
-
 class ExerciseType(models.Model):
 
     name = models.CharField(max_length=40)
