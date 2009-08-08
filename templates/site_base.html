@@ -38,20 +38,16 @@
    ( '--\--` )    | | |     | |\ \  | | | |   |     /,~'´^
 ~~~ `-' ° `-' ~~~~~~~~~~~( som tælle )~~~~~~~~~-.-'´^
 </pre>{% endblock %}
-{% block left_tabs %}
+{% block right_tabs %}
         <ul class="tabs">{% spaceless %}
             <li id="tab_turan"><a href="{% url turanindex %}">{% trans "Turan" %}</a></li>
-        {% endspaceless %}</ul>
-{% endblock %}
-{% block right_tabs %}
     {% if user.is_authenticated %}
-        <ul class="tabs">{% spaceless %}
             <li id="tab_profile"><a href="{% url profile_detail user %}">{% trans "Profile" %}</a></li>
             <li id="tab_photos"><a href="{% url photos %}">{% trans "Photos" %}</a></li>
             <li id="tab_tribes"><a href="{% url tribe_list %}">{% trans "Tribes" %}</a></li>
             <li id="tab_inbox"><a href="{% url messages_inbox %}">{% trans "Inbox" %} ({{ combined_inbox_count }})</a></li>
-        {% endspaceless %}</ul>
     {% endif %}
+        {% endspaceless %}</ul>
 {% endblock %}
 
 {% block footer %}
