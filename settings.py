@@ -171,7 +171,7 @@ INSTALLED_APPS = (
 # TUUURAN
     'turan',
     'rosetta',
-    'south',
+    #'south',
     
     # internal (for now)
     'analytics',
