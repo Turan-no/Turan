@@ -34,13 +34,13 @@
     </form>
 {% endblock %}
 
-{% block logo_link_image %}<span style="display: block; white-space: pre; font: 100%/1 monospace; color: white; margin-left: 100px;">
+{% block logo_link_image %}<pre id="logo">
                 ________   _ _____ _____ ___ _            
        ,-.O    |__   ___| | |  _  |  _  |   | |    _O_,     
     ,-p\.(6,.     | | | |_| | |/ /  |_| | | | |   ´_|     _.,~^
    ( '--\--` )    | | |     | |\ \  | | | |   |     /,~'´^
 ~~~ `-' ° `-' ~~~~~~~~~~~( som tælle )~~~~~~~~~-.-'´^
-</span>{% endblock %}
+</pre>{% endblock %}
 {% block right_tabs %}
         <ul class="tabs">{% spaceless %}
             <li id="tab_turan"><a href="{% url turanindex %}">{% trans "Turan" %}</a></li>

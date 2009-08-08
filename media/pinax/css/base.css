@@ -2,8 +2,12 @@ body {
     background-color: #FFF;
     margin: 0;
 }
-pre {
+pre#logo {
+    color: #fff;
     margin: 0;
+    padding: 7px 0 0 100px;
+    font-size: 90%;
+    line-height: 100%;
 }
 html, body {
     height: 100%;
