@@ -2,6 +2,9 @@ body {
     background-color: #FFF;
     margin: 0;
 }
+pre {
+    margin: 0;
+}
 html, body {
     height: 100%;
 }
