@@ -264,7 +264,7 @@ hr.clear {
 	margin: 0;
 }
 .menu .navigation {
-	float: left;
+	float: right;
 }
 .menu .timeframe {
 	float: right;
@@ -742,5 +742,6 @@ div.mapcontainer {
 }
 
 span.current {
+    padding-right: 10px;
     float: right;
 }

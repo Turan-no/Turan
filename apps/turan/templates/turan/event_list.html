@@ -6,13 +6,6 @@
 {% endblock %}
 {% block content %}
 
-<h1>
-    {% trans "Events" %}
-</h1>
-
-    <span class="current">
-        {% trans "Page" %} {{ events.number }} {% trans "of" %} {{ events.paginator.num_pages }}.
-    </span>
 <div class="menu">
 <div class="navigation">
     <ul class="buttons">
@@ -32,6 +25,14 @@
         {% endif %}
     </ul>
 </div>
+<span class="current">
+    {% trans "Page" %} {{ events.number }} {% trans "of" %} {{ events.paginator.num_pages }}
+</span>
+
+<h1>
+    {% trans "Events" %}
+</h1>
+
 </div>
 <table>
     <tr>
