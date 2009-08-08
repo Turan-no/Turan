@@ -1,7 +1,7 @@
 
 from south.db import db
 from django.db import models
-from lortal.turan.models import *
+from turansite.apps.turan.models import *
 
 class Migration:
     

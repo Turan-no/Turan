@@ -1,4 +1,5 @@
 from models import *
+from turanprofiles.models import Profile
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect
 from django.utils.translation import ugettext_lazy as _
@@ -319,7 +320,7 @@ def statistics(request):
     total_avg_speed = stats_dict['avg_speed__avg']
     longest_trip = stats_dict['route__distance__max']
 
-    userstats = UserProfile.objects.annotate( \
+    userstats = Profile.objects.annotate( \
             avg_avg_speed = Avg('user__cycletrip__avg_speed'), \
             max_avg_speed = Max('user__cycletrip__avg_speed'), \
             max_speed = Max('user__cycletrip__max_speed'), \
@@ -340,7 +341,7 @@ def statistics(request):
     ascentsums = userstats.filter(sum_ascent__gt=0).order_by('sum_ascent').reverse()
 
     validroutes = Route.objects.filter(ascent__gt=0).filter(distance__gt=0)
-    climbstats = UserProfile.objects.filter(user__cycletrip__route__in=validroutes).annotate( \
+    climbstats = Profile.objects.filter(user__cycletrip__route__in=validroutes).annotate( \
             distance = Sum('user__cycletrip__route__distance'), \
             height = Sum('user__cycletrip__route__ascent') \
             )
@@ -349,7 +350,7 @@ def statistics(request):
         u.avgclimb = u.height/u.distance
     climbstats = sorted(climbstats, key=lambda x: -x.avgclimb)
 
-    hikestats = UserProfile.objects.annotate( \
+    hikestats = Profile.objects.annotate( \
             hike_avg_avg_speed = Avg('user__hike__avg_speed'), \
             hike_max_avg_speed = Max('user__hike__avg_speed'), \
             hike_max_speed = Max('user__hike__max_speed'), \
@@ -369,7 +370,7 @@ def statistics(request):
     hike_energysums = hikestats.filter(hike_sum_energy__gt=0).order_by('hike_sum_energy').reverse()
     hike_ascentsums = hikestats.filter(hike_sum_ascent__gt=0).order_by('hike_sum_ascent').reverse()
 
-    hike_climbstats = UserProfile.objects.filter(user__hike__route__in=validroutes).annotate( \
+    hike_climbstats = Profile.objects.filter(user__hike__route__in=validroutes).annotate( \
             distance = Sum('user__hike__route__distance'), \
             height = Sum('user__hike__route__ascent') \
             )

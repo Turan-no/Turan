@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
-from models import Route, CycleTrip, Hike, Team, OtherExercise
+from models import Route, CycleTrip, Hike, OtherExercise
 from views import index, upload_eventdetails, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, route_new, calendar, cycletrip, json_tripdetail
 
 urlpatterns = patterns('',
@@ -40,8 +40,8 @@ urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^exercise/(?P<object_id>\d+)', 'object_detail', { 'queryset': OtherExercise.objects.select_related(), }, name='exercise'),
     url(r'^upload/eventdetails/(?P<object_id>\d+)/(?P<event_type>\w+)/', upload_eventdetails, name='upload_eventdetails'),
 
-    url(r'^team/?$', 'object_list', { 'queryset': Team.objects.select_related(), }, name='teams'),
-    url(r'^team/(?P<object_id>\d+)', 'object_detail', { 'queryset': Team.objects.select_related(), }, name='team'),
+#    url(r'^team/?$', 'object_list', { 'queryset': Team.objects.select_related(), }, name='teams'),
+#    url(r'^team/(?P<object_id>\d+)', 'object_detail', { 'queryset': Team.objects.select_related(), }, name='team'),
 
 
 )

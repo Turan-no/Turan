@@ -7,6 +7,11 @@ from django.template.defaultfilters import slugify
 from django.core.files.storage import FileSystemStorage
 from django.db.models.signals import pre_save, post_save
 from django.conf import settings
+from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
+from django.core.files.base import ContentFile
+
+
 
 from datetime import datetime
 
@@ -81,35 +86,35 @@ class Route(models.Model):
         verbose_name = _("Route")
         verbose_name_plural = _("Routes")
 
-class Team(models.Model):
-    name = models.CharField(max_length=160, help_text=_('Team name'))
-    description = models.TextField(help_text=_('info'))
-    slogan = models.TextField(blank=True, help_text=_('No pain - no gain'))
-    logo = models.ImageField(upload_to='team_logos', blank=True, storage=gpxstore)
-    url = models.URLField(blank=True)
-
-    members = models.ManyToManyField(User, through='TeamMembership')
-
-    def get_absolute_url(self):
-        return reverse('team', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = _("Team")
-        verbose_name_plural = _("Teams")
-        ordering = ('name',)
-
-class TeamMembership(models.Model):
-    user = models.ForeignKey(User)
-    team = models.ForeignKey(Team)
-    date_joined = models.DateField()
-    role = models.CharField(max_length=64, help_text=_('i.e. Captain'))
-
-    class Meta:
-        verbose_name = _("Team Membership")
-        verbose_name_plural = _("Team Memberships")
+#class Team(models.Model):
+#    name = models.CharField(max_length=160, help_text=_('Team name'))
+#    description = models.TextField(help_text=_('info'))
+#    slogan = models.TextField(blank=True, help_text=_('No pain - no gain'))
+#    logo = models.ImageField(upload_to='team_logos', blank=True, storage=gpxstore)
+#    url = models.URLField(blank=True)
+#
+#    members = models.ManyToManyField(User, through='TeamMembership')
+#
+#    def get_absolute_url(self):
+#        return reverse('team', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
+#
+#    def __unicode__(self):
+#        return self.name
+#
+#    class Meta:
+#        verbose_name = _("Team")
+#        verbose_name_plural = _("Teams")
+#        ordering = ('name',)
+#
+#class TeamMembership(models.Model):
+#    user = models.ForeignKey(User)
+#    team = models.ForeignKey(Team)
+#    date_joined = models.DateField()
+#    role = models.CharField(max_length=64, help_text=_('i.e. Captain'))
+#
+#    class Meta:
+#        verbose_name = _("Team Membership")
+#        verbose_name_plural = _("Team Memberships")
 
 class Event(models.Model):
 
@@ -128,6 +133,11 @@ class Event(models.Model):
     kcal = models.IntegerField(blank=True, default=0)
 
     sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.tcx, .hrm, .gmd)'))
+
+    object_id = models.IntegerField(null=True)
+    content_type = models.ForeignKey(ContentType, null=True)
+    group = generic.GenericForeignKey("object_id", "content_type")
+
 
 
     def __unicode__(self):

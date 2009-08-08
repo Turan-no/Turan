@@ -77,6 +77,12 @@ friends_blogs_kwargs = {
 }
 
 
+if 'rosetta' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('',
+    url(r'^rosetta/', include('rosetta.urls')),
+)
+
+
 
 from bookmarks.models import Bookmark
 

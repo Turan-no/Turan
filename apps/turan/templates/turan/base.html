@@ -16,7 +16,6 @@
         <li><a href="{% url routes %}">{% trans "Routes" %}</a></li>
         <li><a href="{% url events %}">{% trans "Events" %}</a></li>
         <li><a href="{% url calendar-index %}">{% trans "Calendar" %}</a></li>
-        <li><a href="{% url teams %}">{% trans "Teams" %}</a></li>
         <li><a href="{% url statistics %}">{% trans "Statistics" %}</a></li>
             {% if user.get_profile.id %}
                 <li class="right"><a href="{% url calendar-user user_id=user.get_profile.id %}">{% trans "My calendar" %}</a></li>
