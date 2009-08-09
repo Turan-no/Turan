@@ -659,3 +659,9 @@ def cycletrip(request, object_id):
     cadencejs = tripdetail_js('cycletrip', object_id, 'cadence')
     altitudejs = tripdetail_js('cycletrip', object_id, 'altitude')
     return render_to_response('turan/cycletrip_detail.html', locals(), context_instance=RequestContext(request))
+
+def json_serializer(request, queryset, root_name = None):
+    if root_name == None:
+        root_name = queryset.model._meta.verbose_name_plural
+    return HttpResponse(serializers.serialize('json', queryset, indent=4), mimetype='text/javascript')
+

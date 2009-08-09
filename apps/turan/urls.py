@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
 from models import Route, CycleTrip, Hike, OtherExercise
-from views import index, upload_eventdetails, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, route_new, calendar, cycletrip, json_tripdetail, TripsFeed
+from views import index, upload_eventdetails, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, route_new, calendar, cycletrip, json_tripdetail, TripsFeed, json_serializer
+from threadedcomments.models import ThreadedComment as Comment
 
 feeds = {
     'trips': TripsFeed,
@@ -24,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^calendar/(?P<year>\d+)/(?P<month>\d+)', calendar, name='calendar'),
     url(r'^calendar/', calendar, name='calendar-index'),
 
+    url(r'^json/comment/random/?$', json_serializer, { 'queryset': Comment.objects.order_by('?')[:10] }, name='json_comments'),
     url(r'json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/(?P<start>\d+)/(?P<stop>\d+)', json_tripdetail, name='json_tripdetail-startstop'),
     url(r'json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/?$', json_tripdetail, name='json_tripdetail'),
 
