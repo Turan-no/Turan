@@ -10,5 +10,8 @@
      {% if user.get_profile.name %}<b>{% trans "Name" %}</b>: {{ user.get_profile.name }}{% endif %}<br />
      {% if user.get_profile.about %}<b>{% trans "About" %}</b>: {{ user.get_profile.about }}{% endif %}<br />
      {% if user.get_profile.location%}<b>{% trans "Location" %}</b>: {{ user.get_profile.location }}{% endif %}<br />
-     {% if user.get_profile.website %}<b>{% trans "Website" %}</b>: <a href="{{ user.get_profile.website }}">{{ user.get_profile.website }}</a>{% endif %}
+     {% if user.get_profile.height %}<b>{% trans "Height" %}</b>: {{ user.get_profile.height }}{% endif %}
+     {% if user.get_profile.weight %}<b>{% trans "Weight" %}</b>: {{ user.get_profile.weight }}{% endif %}
+     {% if user.get_profile.motto %}<b>{% trans "Motto" %}</b>: {{ user.get_profile.motto }}{% endif %}
+     {% if user.get_profile.cycle %}<b>{% trans "Cycle" %}</b>: {{ user.get_profile.cycle }}{% endif %}
 </div>
