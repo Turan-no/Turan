@@ -1,11 +1,15 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
 from models import Route, CycleTrip, Hike, OtherExercise
-from views import index, upload_eventdetails, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, route_new, calendar, cycletrip, json_tripdetail
+from views import index, upload_eventdetails, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, route_new, calendar, cycletrip, json_tripdetail, TripsFeed
 
+feeds = {
+    'trips': TripsFeed,
+}
 urlpatterns = patterns('',
 #    url(r'^profile/(?P<object_id>\d+)', profile, name='profile'),
-    url(r'^events', events, name='events'),
+    url(r'^events/?$', events, name='events'),
+    url(r'^events/user/(?P<username>\w+)', events, name='events'),
     url(r'^statistics', statistics, name='statistics'),
     url(r'^generate/tshirt', generate_tshirt, name='generate_tshirt'),
     url(r'^trip/compare/(?P<trip1>\d+)/(?P<trip2>\d+)', trip_compare, name='trip_compare'),
@@ -24,6 +28,9 @@ urlpatterns = patterns('',
     url(r'json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/?$', json_tripdetail, name='json_tripdetail'),
 
     url(r'^$', index, name='turanindex'),
+
+# The RSS Feeds
+    (r'^feed/(?P<url>.*)/?$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 )
 urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^route/?$', 'object_list', { 'queryset': Route.objects.select_related().order_by('name'), }, name='routes'),
@@ -42,7 +49,6 @@ urlpatterns += patterns('django.views.generic.list_detail',
 
 #    url(r'^team/?$', 'object_list', { 'queryset': Team.objects.select_related(), }, name='teams'),
 #    url(r'^team/(?P<object_id>\d+)', 'object_detail', { 'queryset': Team.objects.select_related(), }, name='team'),
-
 
 )
 urlpatterns += patterns('django.views.generic.simple',
