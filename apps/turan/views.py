@@ -664,5 +664,5 @@ def json_serializer(request, queryset, root_name = None, relations = (), extras 
     if root_name == None:
         root_name = queryset.model._meta.verbose_name_plural
     #hardcoded relations and extras while testing
-    return HttpResponse(serializers.serialize('json', queryset, indent=4, relations=('content_object'), extras=('content_object.get_absolute_url')), mimetype='text/javascript')
+    return HttpResponse(serializers.serialize('json', queryset, indent=4, relations=relations, extras=extras), mimetype='text/javascript')
 
