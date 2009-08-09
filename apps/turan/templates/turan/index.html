@@ -46,7 +46,7 @@
     </ul>
 </div>
 
-<div>
+<div class="leftcol">
     <img alt="{% trans "Cyclist"%}" style="float:right" src="{{MEDIA_URL}}turan/cyclist.png">
     <h1>
         <a href="{% url cycletrips %}">{% trans "Cycle trips" %}</a>
@@ -70,12 +70,13 @@
     </h1>
     <ul class="hikes">
     {% for object in hike_list %}
-    <li>
+    <li class="{% cycle "even" "odd" %}">
+    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
     <a href="{{ object.get_absolute_url }}">{{ object.route.name|slice:":35" }}</a>, 
         {% if object.route.distance %}
             {{ object.route.distance|floatformat }} {% trans "km" %},
         {% endif %}
-        {{ object.date|naturalday}}, <a href="{{object.user.get_profile.get_absolute_url }}">{{ object.user }}</a>
+        {{ object.date|naturalday}}
     </li>
     {%endfor %}
     </ul>
@@ -86,7 +87,8 @@
     </h1>
     <ul class="exercies">
     {% for object in exercise_list %}
-    <li>
+    <li class="{% cycle "even" "odd" %}">
+    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
     <a href="{{ object.get_absolute_url }}">
         {% if object.exercise_type %}{{ object.exercise_type }}
         {% else %}
@@ -96,7 +98,7 @@
         {% if object.duration %}
            {{ object.duration}},
         {% endif %}
-        {{ object.date|naturalday}}, <a href="{{object.user.get_profile.get_absolute_url }}">{{ object.user }}</a>
+        {{ object.date|naturalday}}
     </li>
     {%endfor %}
     </ul>

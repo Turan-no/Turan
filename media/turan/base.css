@@ -589,6 +589,9 @@ li.descent {
 .rightcol {
     margin-left: 12px;
 }
+.leftcol {
+    float: left;
+}
 div.graph {
 	background: #eee;
 	border-bottom: 1px solid black;
@@ -651,6 +654,9 @@ div.mapcontainer {
 span.current {
     padding-right: 10px;
     float: right;
+}
+ul.trips {
+    display: inline;
 }
 li.even {
 	border-top: 1px solid #fcfcfc;

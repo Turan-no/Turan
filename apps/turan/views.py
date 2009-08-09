@@ -122,10 +122,10 @@ def datetime2jstimestamp(obj):
 def index(request):
     ''' Index view for Turan '''
 
-    route_list = Route.objects.all().order_by('-created').order_by('name')[:15]
-    cycletrip_list = CycleTrip.objects.all().order_by('-date')[:15]
-    hike_list = Hike.objects.all().order_by('-date')[:15]
-    exercise_list = OtherExercise.objects.all().order_by('-date')[:15]
+    route_list = Route.objects.all().order_by('-created').order_by('name')[:10]
+    cycletrip_list = CycleTrip.objects.all().order_by('-date')[:5]
+    hike_list = Hike.objects.all().order_by('-date')[:5]
+    exercise_list = OtherExercise.objects.all().order_by('-date')[:5]
     comment_list = Comment.objects.order_by('-submit_date')[:5]
 
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))

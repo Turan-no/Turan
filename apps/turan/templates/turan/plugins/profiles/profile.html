@@ -3,7 +3,7 @@
 {% load humanize %}
 {% load threadedcommentstags %}
 
-<h2>{% trans "Cycle Trips" %}</h2>
+<h2><a href="{% url events username=owner.username %}">{% trans "Cycle Trips" %}</a></h2>
 
     {% if owner.cycletrip_set.all %}
         <div class="gg">
