@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     url(r'^calendar/(?P<year>\d+)/(?P<month>\d+)', calendar, name='calendar'),
     url(r'^calendar/', calendar, name='calendar-index'),
 
-    url(r'^json/comment/random/?$', json_serializer, { 'queryset': Comment.objects.order_by('?')[:10] }, name='json_comments'),
+    url(r'^json/comment/random/?$', json_serializer, { 'queryset': Comment.objects.order_by('?')[:10], 'relations': ('content_object'), 'extras': ('content_object.get_absolute_url') }, name='json_comments'),
     url(r'json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/(?P<start>\d+)/(?P<stop>\d+)', json_tripdetail, name='json_tripdetail-startstop'),
     url(r'json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/?$', json_tripdetail, name='json_tripdetail'),
 

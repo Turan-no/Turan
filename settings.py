@@ -13,6 +13,10 @@ PINAX_THEME = 'default'
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+SERIALIZATION_MODULES = {
+    'json': 'wadofstuff.django.serializers.json'
+}
+
 # tells Pinax to serve media through django.views.static.serve.
 SERVE_MEDIA = DEBUG
 
