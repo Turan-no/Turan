@@ -1,5 +1,6 @@
 {% extends "turan/base.html" %}
-{% load comments_tag %}
+{% load threadedcommentstags %}
+{% load avatar_tags %}
 
 {% load humanize %}
 {% load i18n %}
@@ -15,18 +16,20 @@
         {% trans "Latest comments" %}
     </h1>
     <ul class="comments">
-    {% for comment in get_latest_comments %}
+    {% get_latest_comments 5 as comments %}
+    {% for comment in comments %}
         <li>
-            <img alt="Comment" src="{{MEDIA_URL}}/pinax/images/silk/icons/comment.png" />
             <div class="header">
-                <span class="name">{{ comment.name }}</span>&nbsp;
+                <div class="avatar">{% avatar comment.user 40 %}</div>
+                <img alt="Comment" src="{{MEDIA_URL}}/pinax/images/silk/icons/comment.png" />
+                <span class="name">{{ comment.user }}</span>&nbsp;
                 {% trans "commented on a" %}
                     <a href="{{ comment.content_object.get_absolute_url }}">
                         {{ comment.content_object|model_verbose_name }}
                     </a>
-                <span class="date">{{ comment.submit_date }}</span>
+                <span class="date">{{ comment.date_submitted|naturalday }}</span>
             </div>
-            <div class="comment_text">{{ comment.comment }}</div>
+            <div class="comment_text">{{ comment.comment|urlize|linebreaks }}</div>
         </li>
     {% endfor %}
     </ul>
