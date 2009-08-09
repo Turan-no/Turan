@@ -35,11 +35,15 @@
     </ul>
     <img alt="{% trans "Compass" %}" style="float:right" src="{{MEDIA_URL}}turan/compass.png">
     <h1>
-        <a href="{% url routes %}">{% trans "Routes" %}</a>
+        <a href="{% url routes %}">{% trans "Most popular routes" %}</a>
     </h1>
     <ul class="routes">
     {% for object in route_list %}
-    <li>
+    <li class="{% cycle "even" "odd" %}">
+        {% if object.gpx_file %}
+            <object width="50" height="50" type="image/svg+xml" data="{{ object.get_svg_url }}"></object>
+        {% endif %}
+
         <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
     </li>
     {%endfor %}

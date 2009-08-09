@@ -667,3 +667,7 @@ li.even {
 li.odd {
 	list-style-type: none;
 }
+ul.routes li.routes {
+	list-style-type: none;
+}
+
