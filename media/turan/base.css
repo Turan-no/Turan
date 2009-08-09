@@ -108,6 +108,10 @@ ul li {
 	margin-left: 1.5em;
 }
 
+#subnav a {
+	font-size: 75%;
+}
+
 /* Links */
 a {
 	background: transparent;
@@ -226,7 +230,7 @@ hr.clear {
 	margin: 0;
 }
 .menu .navigation {
-	float: left;
+	float: right;
 }
 .menu .timeframe {
 	float: right;
@@ -453,8 +457,11 @@ h1 a
 .buttons li {
     list-style-type: none;
     margin: 0;
+    padding: 0;
 }
-
+ul {
+    padding: 0;
+}
 ul li ul { 
     padding-left: 10px; 
     border-left: 2px solid silver; 
@@ -691,5 +698,6 @@ div.mapcontainer {
 }
 
 span.current {
+    padding-right: 10px;
     float: right;
 }
