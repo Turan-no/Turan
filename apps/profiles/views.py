@@ -7,12 +7,15 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 
+from time import mktime
+from datetime import timedelta
+
 from friends.forms import InviteFriendForm
 from friends.models import FriendshipInvitation, Friendship
 
 from microblogging.models import Following
 
-from profiles.models import Profile
+from profiles.models import Profile, UserProfileDetail
 from profiles.forms import ProfileForm
 
 from avatar.templatetags.avatar_tags import avatar
@@ -22,6 +25,10 @@ if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
 else:
     notification = None
+
+def datetime2jstimestamp(obj):
+    ''' Helper to generate js timestamp for usage in flot '''
+    return mktime(obj.timetuple())*1000
 
 def profiles(request, template_name="profiles/profiles.html", extra_context=None):
     if extra_context is None:
@@ -129,9 +136,55 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     else:
         profile_form = None
 
+    total_duration = timedelta()
+    total_distance = 0
+    total_avg_speed = 0
+    nr_trips = 0
+    longest_trip = 0
+    avg_length = 0
+    avg_duration = 0
+
+    bmidataseries = ''
+    bmiline = ''
+    pulsedataseries = ""
+    tripdataseries = ""
+    avgspeeddataseries = ""
+    height = float(other_user.get_profile().height)/100
+    weightqs = other_user.get_profile().userprofiledetail_set.filter(weight__isnull=False).order_by('time')
+    for wtuple in weightqs.values_list('time', 'weight'):
+        bmidataseries += '[%s, %s],' % (datetime2jstimestamp(wtuple[0]), wtuple[1]/(height*height))
+        bmiline += '[%s, 25],' %datetime2jstimestamp(wtuple[0])
+
+    pulseqs = other_user.get_profile().userprofiledetail_set.filter(resting_hr__isnull=False).order_by('time')
+    for hrtuple in pulseqs.values_list('time', 'resting_hr'):
+        pulsedataseries += '[%s, %s],' % (datetime2jstimestamp(hrtuple[0]), hrtuple[1])
+    cycleqs = other_user.cycletrip_set.order_by('date')
+    for trip in cycleqs:
+        tripdataseries += '[%s, %s],' % ( nr_trips, trip.route.distance)
+
+        if trip.route.distance > longest_trip:
+            longest_trip = trip.route.distance
+
+        if trip.duration:
+            total_duration += trip.duration
+        total_distance += trip.route.distance
+        if trip.avg_speed:
+            # only increase counter if trip has speed
+            avgspeeddataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed)
+            total_avg_speed += trip.avg_speed
+            nr_trips += 1
+    if total_avg_speed:
+        total_avg_speed = total_avg_speed/nr_trips
+
     return render_to_response(template_name, dict({
         "profile_form": profile_form,
         "is_me": is_me,
+        'bmidataseries': bmidataseries,
+        'bmiline': bmiline,
+        'tripdataseries': tripdataseries,
+        'avgspeeddataseries': avgspeeddataseries,
+        'tripdataseries': tripdataseries,
+        'pulsedataseries': pulsedataseries,
         "is_friend": is_friend,
         "is_following": is_following,
         "other_user": other_user,
