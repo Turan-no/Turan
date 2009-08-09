@@ -175,7 +175,7 @@ INSTALLED_APPS = (
     
     # internal (for now)
     'analytics',
-    'turanprofiles',
+    'profiles',
     'staticfiles',
     'account',
     'signup_codes',
@@ -189,7 +189,8 @@ INSTALLED_APPS = (
 
 )
 
-GPX_STORAGE = '/var/www/lart.no/media/turan'
+GPX_STORAGE = '/home/lart.no/media/turan'
+#DEFAULT_FILE_STORAGE = GPX_STORAGE
 
 
 ABSOLUTE_URL_OVERRIDES = {
@@ -205,7 +206,7 @@ MARKUP_CHOICES = (
 )
 WIKI_MARKUP_CHOICES = MARKUP_CHOICES
 
-AUTH_PROFILE_MODULE = 'turanprofiles.Profile'
+AUTH_PROFILE_MODULE = 'profiles.Profile'
 NOTIFICATION_LANGUAGE_MODULE = 'account.Account'
 
 ACCOUNT_OPEN_SIGNUP = True

@@ -1,0 +1,52 @@
+{% load i18n %}
+{% load tagging_tags %}
+{% load humanize %}
+{% load threadedcommentstags %}
+
+<h2>{% trans "Cycle Trips" %}</h2>
+
+    {% if owner.cycletrip_set.all %}
+        <div class="clearfix">
+            <ul>
+        {% for trip in owner.cycletrip_set.all %}
+            <li>
+                <a href="{{ trip.get_absolute_url }}">{{ trip }}</a>, {{ trip.date|naturalday }}
+            </li>
+        {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+       {% trans "No cycle trips added yet." %}
+    {% endif %}
+
+<h2>{% trans "Hikes" %}</h2>
+
+    {% if owner.hike_set.all %}
+        <div class="clearfix">
+            <ul>
+        {% for trip in owner.hike_set.all %}
+            <li>
+                <a href="{{ trip.get_absolute_url }}">{{ trip }}</a>, {{ trip.date|naturalday }}
+            </li>
+        {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+       {% trans "No hikes added yet." %}
+    {% endif %}
+
+<h2>{% trans "Other Exercises" %}</h2>
+
+    {% if owner.otherexercise_set.all %}
+        <div class="clearfix">
+            <ul>
+        {% for trip in owner.otherexercise_set.all %}
+            <li>
+                <a href="{{ trip.get_absolute_url }}">{{ trip }}</a>, {{ trip.date|naturalday }}
+            </li>
+        {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+       {% trans "No other exercises added yet." %}
+    {% endif %}

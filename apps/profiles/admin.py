@@ -1,5 +1,5 @@
 from django.contrib import admin
-from turanprofiles.models import Profile, UserProfileDetail
+from profiles.models import Profile, UserProfileDetail
 
 class ProfileAdmin(admin.ModelAdmin):
     exclude = ('user',)
@@ -29,7 +29,7 @@ class UserProfileDetailAdmin(admin.ModelAdmin):
     def formfield_for_dbfield(self, dbfield, **kwargs):
         if dbfield.name == 'userprofile':
           kwargs['queryset'] = Profile.objects.filter(user=self.request.user)
-        return super(ProfileDetailAdmin, self).formfield_for_dbfield(dbfield, **kwargs)
+        return super(UserProfileDetailAdmin, self).formfield_for_dbfield(dbfield, **kwargs)
 
     def save_model(self, request, obj, form, change):
         obj.user = request.user
