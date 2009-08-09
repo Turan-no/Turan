@@ -350,7 +350,8 @@ def statistics(request):
             sum_distance = Sum('user__cycletrip__route__distance'), \
             sum_duration = Sum('user__cycletrip__duration'), \
             sum_energy = Sum('user__cycletrip__kcal'), \
-            sum_ascent = Sum('user__cycletrip__route__ascent') \
+            sum_ascent = Sum('user__cycletrip__route__ascent'), \
+            avg_avg_hr = Avg('user__cycletrip__avg_hr') \
             )
 
     maxavgspeeds = userstats.filter(max_avg_speed__gt=0.0).order_by('max_avg_speed').reverse()
@@ -361,16 +362,24 @@ def statistics(request):
     dursums = userstats.filter(sum_duration__gt=0).order_by('sum_duration').reverse()
     energysums = userstats.filter(sum_energy__gt=0).order_by('sum_energy').reverse()
     ascentsums = userstats.filter(sum_ascent__gt=0).order_by('sum_ascent').reverse()
+    avgavghrs = userstats.filter(max_hr__gt=0)
+
+    for u in avgavghrs:
+        u.avgavghrpercent = float(u.avg_avg_hr)/u.max_hr*100
+    avgavghrs = sorted(avgavghrs, key=lambda x:-x.avgavghrpercent)
 
     validroutes = Route.objects.filter(ascent__gt=0).filter(distance__gt=0)
     climbstats = Profile.objects.filter(user__cycletrip__route__in=validroutes).annotate( \
             distance = Sum('user__cycletrip__route__distance'), \
-            height = Sum('user__cycletrip__route__ascent') \
+            height = Sum('user__cycletrip__route__ascent'),  \
+            duration = Sum('user__cycletrip__duration') \
             )
 
     for u in climbstats:
         u.avgclimb = u.height/u.distance
+        u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
     climbstats = sorted(climbstats, key=lambda x: -x.avgclimb)
+    climbstatsbytime = sorted(climbstats, key=lambda x:-x.avgclimbperhour)
 
     hikestats = Profile.objects.annotate( \
             hike_avg_avg_speed = Avg('user__hike__avg_speed'), \
@@ -380,7 +389,8 @@ def statistics(request):
             hike_sum_distance = Sum('user__hike__route__distance'), \
             hike_sum_duration = Sum('user__hike__duration'), \
             hike_sum_energy = Sum('user__hike__kcal'), \
-            hike_sum_ascent = Sum('user__hike__route__ascent') \
+            hike_sum_ascent = Sum('user__hike__route__ascent'), \
+            hike_avg_avg_hr = Avg('user__hike__avg_hr') \
             )
 
     hike_maxavgspeeds = hikestats.filter(hike_max_avg_speed__gt=0.0).order_by('hike_max_avg_speed').reverse()
@@ -391,15 +401,23 @@ def statistics(request):
     hike_dursums = hikestats.filter(hike_sum_duration__gt=0).order_by('hike_sum_duration').reverse()
     hike_energysums = hikestats.filter(hike_sum_energy__gt=0).order_by('hike_sum_energy').reverse()
     hike_ascentsums = hikestats.filter(hike_sum_ascent__gt=0).order_by('hike_sum_ascent').reverse()
+    hike_avgavghrs = hikestats.filter(hike_avg_avg_hr__gt=0).filter(max_hr__gt=0)
+
+    for u in hike_avgavghrs:
+        u.avgavghrpercent = float(u.hike_avg_avg_hr)/u.max_hr*100
+    hike_avgavghrs = sorted(hike_avgavghrs, key=lambda x:-x.avgavghrpercent)
 
     hike_climbstats = Profile.objects.filter(user__hike__route__in=validroutes).annotate( \
             distance = Sum('user__hike__route__distance'), \
-            height = Sum('user__hike__route__ascent') \
+            height = Sum('user__hike__route__ascent'), \
+            duration = Sum('user__hike__duration') \
             )
 
     for u in hike_climbstats:
         u.avgclimb = u.height/u.distance
+        u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
     hike_climbstats = sorted(hike_climbstats, key=lambda x: -x.avgclimb)
+    hike_climbstatsbytime = sorted(hike_climbstats, key=lambda x:-x.avgclimbperhour)
 
     return render_to_response('turan/statistics.html', locals(), context_instance=RequestContext(request))
 
