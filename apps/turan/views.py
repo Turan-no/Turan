@@ -587,16 +587,29 @@ def getslopes(values):
     min_slope = 40
     cur_start = 0
     cur_end = 0
+    stop_since = False
     inslope = False
     for i in xrange(1,len(values)):
+        if values[i].speed < 0.05 and not stop_since:
+            stop_since = i
+        if values[i].speed >= 0.05:
+            stop_since = False
         if inslope:
             if values[i].altitude > values[cur_end].altitude:
                 cur_end = i
             hdelta = values[cur_end].altitude - values[cur_start].altitude
-            if values[i].altitude < values[cur_start].altitude + hdelta*0.9 or i == len(values):
+            if stop_since:
+                stop_duration = (values[i].time - values[stop_since].time).seconds
+            else:
+                stop_duration = 0
+            if values[i].altitude < values[cur_start].altitude + hdelta*0.9 \
+                    or i == len(values) \
+                    or stop_duration > 60:
+                if stop_duration > 60:
+                    cur_stop = stop_since
                 inslope = False
                 if hdelta >= min_slope:
-                    distance = getdistance(values, cur_start, cur_end)
+                    distance = values[cur_end].distance - values[cur_start].distance
                     slopes.append(Slope(cur_start, cur_end, distance, hdelta, hdelta/distance * 100))
                 cur_start = i
         elif values[i].altitude <= values[cur_start].altitude:
@@ -613,6 +626,14 @@ def getdistance(values, start, end):
         delta_t = (values[i].time - values[i-1].time).seconds
         d += values[i].speed/3.6 * delta_t
     return d
+
+def filldistance(values):
+    d = 0
+    values[0].distance = 0
+    for i in xrange(1,len(values)):
+        delta_t = (values[i].time - values[i-1].time).seconds
+        d += values[i].speed/3.6 * delta_t
+        values[i].distance = d
 
 def getavghr(values, start, end):
     hr = 0
@@ -647,6 +668,7 @@ def cycletrip(request, object_id):
     details = object.cycletripdetail_set.all()
     #userweight = object.user.userprofile_set.all()[0].weight
     userweight = object.user.get_profile().weight
+    filldistance(details)
     slopes = getslopes(details)
     for slope in slopes:
         delta_t = (details[slope.end].time - details[slope.start].time).seconds
