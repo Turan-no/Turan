@@ -116,7 +116,7 @@ ul li {
 a {
 	background: transparent;
 	color: #204a87;
-	text-decoration: underline;
+	text-decoration: none;
 }
 a:hover {
 	color: #933;
@@ -236,29 +236,9 @@ hr.clear {
 	float: right;
 }
 
-ul.episode {
-	clear: left;
-}
-div.content h1 {
-	clear: left;
-}
-span.episodesave {
-	float: right;
-	padding: 0 5px;
-}
 ul.col2 li {
 	float: left;
 	width: 450px;
-}
-li.episode {
-	list-style-type: none;
-	padding: 0 15px 0 0;
-}
-.episode {
-	margin: 0;
-}
-.episode h3 {
-	margin: 0;
 }
 h1 a
 { 
@@ -266,38 +246,14 @@ h1 a
 	color: black;
 	text-decoration: none;
 }
-.episode h3 a,
-.episode h3 a:visited {
+h3 a,
+h3 a:visited {
 	background: transparent;
 	color: black;
 	text-decoration: none;
 }
-.episode h3 span .episodepub {
+h3 span .episodepub {
 	color: #666;
-}
-.episodepub {
-    text-decoration: none;
-    font-size: 1em;
-}
-.episode img.episodeimg {
-	background: white;
-	border: 2px solid #ddd;
-	padding: 0.5em;
-    margin-right: 1em;
-    width: 85px;
-    height: 48px;
-    float: left;
-}
-.episode p {
-	margin: 0.5em;
-}
-.episode span.episodetext {
-	font-style: italic;
-}
-.episode p.episodemeta {
-	background: transparent;
-	color: #666;
-	font-size: 93%;
 }
 .episode p.episodemeta a, .episode p.episodemeta a:hover {
 	background: transparent;
@@ -695,4 +651,13 @@ div.mapcontainer {
 span.current {
     padding-right: 10px;
     float: right;
+}
+li.even {
+	border-top: 1px solid #fcfcfc;
+	border-bottom: 1px solid #eee;
+    background: #f8f8f8;
+	list-style-type: none;
+}
+li.odd {
+	list-style-type: none;
 }

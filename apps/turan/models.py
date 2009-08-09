@@ -37,6 +37,8 @@ class Route(models.Model):
     start_lon = models.FloatField(blank=True, default=0.0)
     end_lat = models.FloatField(blank=True, default=0.0)
     end_lon = models.FloatField(blank=True, default=0.0)
+    
+    created = models.DateTimeField(editable=False,auto_now_add=True,null=True)
 
     def save(self):
         # If we have gpx file set but not start_lat set, parse gpx and set start and end positions
@@ -85,6 +87,7 @@ class Route(models.Model):
     class Meta:
         verbose_name = _("Route")
         verbose_name_plural = _("Routes")
+        ordering = ('-created',)
 
 #class Team(models.Model):
 #    name = models.CharField(max_length=160, help_text=_('Team name'))

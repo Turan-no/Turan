@@ -53,12 +53,13 @@
     </h1>
     <ul class="trips">
     {% for object in cycletrip_list %}
-    <li>
+    <li class="{% cycle "even" "odd" %}">
+    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
     <a href="{{ object.get_absolute_url }}">{{ object.route.name|slice:":35" }}</a>, 
         {% if object.route.distance %}
-            {{ object.route.distance|floatformat }} {% trans "km" %},
+            {{ object.route.distance|floatformat }} {% trans "km" %}
         {% endif %}
-        {{ object.date|naturalday}}, <a href="{{object.user.get_profile.get_absolute_url }}">{{ object.user }}</a>
+        {{ object.date|naturalday}}
     </li>
     {%endfor %}
     </ul>

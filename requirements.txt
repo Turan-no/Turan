@@ -56,3 +56,4 @@ django-wikiapp==0.2.0dev
 photologue==2.1
 django-attachments==0.3
 django-markup==0.2
+wadofstuff.django.serializers.json>=0
