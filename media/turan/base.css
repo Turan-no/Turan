@@ -492,10 +492,11 @@ ul.comments li div.comment_text {
 }
 ul.comments li {
     font-size: 0.8em;
-    margin: 6px 0 0 0;
+    margin-top: 6px;
     list-style-type: none;
     border-top: 2px solid silver;
-    padding: 2px 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 .label {
     font-weight: bold;
