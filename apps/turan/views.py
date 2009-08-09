@@ -256,7 +256,7 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('turanindex'))
 
-def events(request, group_slug=None, bridge=None):
+def events(request, group_slug=None, bridge=None, username=None):
     object_list = []
 
     if bridge is not None:
@@ -275,6 +275,12 @@ def events(request, group_slug=None, bridge=None):
         cycleqs = CycleTrip.objects.select_related()
         hikeqs = Hike.objects.select_related()
         exerciseqs = OtherExercise.objects.select_related()
+        if username:
+            user = get_object_or_404(User, username=username)
+            cycleqs = cycleqs.filter(user=user)
+            hikeqs = hikeqs.filter(user=user)
+            exerciseqs = exerciseqs.filter(user=user)
+
 
     object_list.extend(cycleqs)
     object_list.extend(hikeqs)
