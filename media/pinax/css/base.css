@@ -499,3 +499,8 @@ pre#footerLyrics {
 	margin: 0;
 	padding-right: 1em;
 }
+span.motto {
+    float: right;
+    font-style: italic;
+    font-size: 1.5em;
+}

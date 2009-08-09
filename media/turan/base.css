@@ -602,11 +602,6 @@ li.ascent {
 li.descent {
     list-style-image: url('/site_media/pinax/images/silk/icons/arrow_down.png')
 }
-span.motto {
-    float: right;
-    font-style: italic;
-    font-size: 1.5em;
-}
 
 .hlist li {
     float: left;
