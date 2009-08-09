@@ -23,45 +23,4 @@
 {% block body %}
 {% block content %}
 {% endblock %}
-	<div id="ft" class="clearboth">
-		<div id="footer">
-<div id="lyricContainer">
-    <pre id="footerLyrics">
-Jeg snører min sekk, jeg spenner mine ski,
-Nå lyser det så fagert I heien.
-Fra ovnskroken vekk! Så glad og så fri
-Mot store, hvite skogen tar jeg veien.
-
-I fykende fei, jeg baner meg en vei
-Blant vinterkledde stubber og steiner.
-Den susende vind meg stryker om kinn,
-Og snøen drysser ned fra lave greiner.
-
-De vinger på fot gir liv og lyst og mot!
-Nå stevner jeg mot høyeste tinden!
-Alt tungt og alt trått, alt smålig og grått,
-Det stryker og det fyker vekk med vinden.
-
-Og når jeg ser opp, da skuer jeg fra topp
-Den lyse dal med skoglier blandet,
-Da banker mitt bryst, av jublende lyst:
-"Jeg elsker, å, jeg elsker dette landet!"
-    </pre>
-</div>
-<script type="text/javascript">
-    function fadeFooter() {
-        $('#footerLyrics').fadeOut("slow", scrollFooter);
-    }
-    function scrollFooter() { 
-        var elem = $('#footerLyrics');
-        scroller -= 1;
-        if (scroller == -20)
-            scroller = 0;
-        elem.css("margin-top", scroller+"em");
-
-        elem.fadeIn(100);
-    }
-    scroller = 0;
-    setInterval(fadeFooter, 4000);
-</script>
 {% endblock %}

@@ -209,40 +209,6 @@ hr.clear {
 	text-decoration: underline;
 }
 
-/* Footer area */
-#footer {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	background: #609A43;
-	height: 20px;
-}
-#ft, #ft .content {
-	background: #508A33;
-	color: white;
-	height: 100px;
-}
-#ft .content {
-	padding: 1em;
-}
-#ft a {
-	background: transparent;
-	color: white;
-	text-decoration: none;
-}
-#ft a:hover {
-	text-decoration: underline;
-}
-#ft ul {
-	font-size: 100%;
-	margin: 0;
-}
-#ft ul li {
-	display: inline;
-	list-style-type: none;
-	margin: 0;
-	padding-right: 1em;
-}
 
 /* Timeframe and navigation menu */
 .menu {
@@ -559,16 +525,6 @@ ul#pagemenu li.modify {
 	color: #000;
 	font-weight: bolder;
 }
-div#lyricContainer {
-    height: 1.0em;
-    overflow: hidden;
-    float: right;
-}
-pre#footerLyrics {
-    margin-top: 0em;
-    color: #eee;
-}
-
 .third {
     width: 33.3%;
     margin: 0;

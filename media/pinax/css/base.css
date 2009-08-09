@@ -451,3 +451,47 @@ legend { padding: 0 .4em; font-weight: bold; font-size: 1.2em; }
     background: #DEF;
     border: 1px solid #9BC;
 }
+div#lyricContainer {
+    height: 1.0em;
+    overflow: hidden;
+    float: right;
+}
+pre#footerLyrics {
+    margin-top: 0em;
+    color: #eee;
+}
+
+/* Footer area */
+#footer {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	background: #609A43;
+	height: 20px;
+	color: white;
+}
+#ft, #ft .content {
+	background: #508A33;
+	height: 100px;
+}
+#ft .content {
+	padding: 1em;
+}
+#ft a {
+	background: transparent;
+	color: white;
+	text-decoration: none;
+}
+#ft a:hover {
+	text-decoration: underline;
+}
+#ft ul {
+	font-size: 100%;
+	margin: 0;
+}
+#ft ul li {
+	display: inline;
+	list-style-type: none;
+	margin: 0;
+	padding-right: 1em;
+}
