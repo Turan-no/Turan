@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-10 08:46+0200\n"
+"POT-Creation-Date: 2009-08-10 08:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -99,61 +99,6 @@ msgstr ""
 
 #: views.py:507
 msgid "Error while parsing form"
-msgstr ""
-
-#: templates/registration/activate.html:6
-#, python-format
-msgid ""
-"Thank you. Your account is now activated. Your username is \n"
-"                <b>%(username)s</b>."
-msgstr ""
-
-#: templates/registration/activate.html:10
-#, python-format
-msgid ""
-"\n"
-"                Your account could not be activated.\n"
-"                This may be because it is already active or because you "
-"waited over %(days)s\n"
-"                day to activate it. \n"
-"                If this is not the case, please contact the website "
-"administrator. Otherwise, you may \n"
-"                <a href=\"%(reg_url)s\">register again.</a>\n"
-"                "
-msgid_plural ""
-"\n"
-"                Your account could not be activated.\n"
-"                This may be because it is already active or because you "
-"waited over %(days)s\n"
-"                days to activate it. \n"
-"                If this is not the case, please contact the website "
-"administrator. Otherwise, you may \n"
-"                <a href=\"%(reg_url)s\">register again.</a>\n"
-"                "
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/registration/login.html:12
-msgid "Log in"
-msgstr ""
-
-#: templates/registration/logout.html:5
-msgid "You have been logged out. Thank you for your visit and see you soon!"
-msgstr ""
-
-#: templates/registration/registration_complete.html:5
-msgid ""
-"Thank you for registering. You will very soon receive an email with \n"
-"a confirmation link. Please follow this link in order to complete your "
-"registration."
-msgstr ""
-
-#: templates/registration/registration_form.html:4
-msgid "Registration"
-msgstr ""
-
-#: templates/registration/registration_form.html:9
-msgid "Submit"
 msgstr ""
 
 #: templates/turan/about.html:4 templates/turan/todo.html:4
