@@ -27,38 +27,38 @@
 
 
 {% with object.get_trips as trip_list %}
-{% if trip_list %}                     
-    <h2>{% trans "Trips on this route" %}</h2>                                                       
-    <input type="button" value="Compare">                                                              
-    <table style="float: left">                                                                        
-        <tr>                                                                                           
-            <th>{% trans "Select" %}</th>                                                              
-            <th>{% trans "Exerciser" %}</th>                                                           
-            <th>{% trans "Duration" %}</th>                                                            
-            <th>{% trans "Date" %}</th>                                                                
-            <th>{% trans "Trip" %}</th>                                                                
-            <th>{% trans "Comment" %}</th>                                                             
-        </tr>                                                                                          
-        {% for trip in trip_list %}                                                                                   
-        <tr>                                                                                                          
-            <td><input type="checkbox"></td>                                                                          
-            <td>{{ trip.user }}</td>                                                                                  
-            <td>{{ trip.duration }}</td>                                                                              
-            <td>{{trip.date|naturalday}}</td>                                                                         
-            <td><a href="{{ trip.get_absolute_url }}">{{ trip }}</a></td>                                             
-            <td>{{ trip.comment|slice:"90" }}</td>                                                                    
-        </tr>                                                                                                         
-        {% endfor %}                                                                                                  
-    </table>                                                                                                          
-    <h3>{% trans "Average duration"%}</h3>                                                                            
-    <div id="avgspeeddiv" style="width:420px;height:200px"></div>                                                     
-    <script id="source" language="javascript" type="text/javascript">                                                 
-    $(function () {                                                                                                   
-            var d1 = { color: 5, data: [{{speeddataseries}}], }                                                       
-            var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0, }, }                    
-        $.plot($("#avgspeeddiv"), [d1], options);                                                                     
-    });                                                                                                               
-    </script>                                                                                                         
+{% if trip_list %}
+    <h2>{% trans "Trips on this route" %}</h2>
+    <input type="button" value="Compare">
+    <table style="float: left">
+        <tr>
+            <th>{% trans "Select" %}</th>
+            <th>{% trans "Exerciser" %}</th>
+            <th>{% trans "Duration" %}</th>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Trip" %}</th>
+            <th>{% trans "Comment" %}</th>
+        </tr>
+        {% for trip in trip_list %}
+        <tr>
+            <td><input type="checkbox"></td>
+            <td>{{ trip.user }}</td>
+            <td>{{ trip.duration }}</td>
+            <td>{{trip.date|naturalday}}</td>
+            <td><a href="{{ trip.get_absolute_url }}">{{ trip }}</a></td>
+            <td>{{ trip.comment|slice:"90" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h3>{% trans "Average duration"%}</h3>
+    <div id="avgspeeddiv" style="width:420px;height:200px"></div>
+    <script id="source" language="javascript" type="text/javascript">
+    $(function () {
+            var d1 = { color: 5, data: [{{speeddataseries}}], }
+            var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0, }, }
+        $.plot($("#avgspeeddiv"), [d1], options);
+    });
+    </script>
 {% endif %}
 {% endwith %}
 
