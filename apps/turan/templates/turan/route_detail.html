@@ -28,8 +28,9 @@
 
 {% with object.get_trips as trip_list %}
 {% if trip_list %}
+    <form id="route_form">
     <h2>{% trans "Trips on this route" %}</h2>
-    <input type="button" value="Compare">
+    <input type="submit" value="Compare" />
     <table style="float: left">
         <tr>
             <th>{% trans "Select" %}</th>
@@ -41,7 +42,7 @@
         </tr>
         {% for trip in trip_list %}
         <tr>
-            <td><input type="checkbox"></td>
+	    <td><input type="checkbox" name="selected_routes" value="{{ trip.id }}"></td>
             <td>{{ trip.user }}</td>
             <td>{{ trip.duration }}</td>
             <td>{{trip.date|naturalday}}</td>
@@ -50,6 +51,19 @@
         </tr>
         {% endfor %}
     </table>
+    </form>
+    <script language="javascript" type="text/javascript">
+    $('#route_form').bind("submit", function (ev) {
+        ev.preventDefault();
+        var selectedIds = [];
+        $(this.selected_routes).each(function (i, elem) {
+            if (elem.checked) {
+                selectedIds.push(elem.value);
+            }
+        });
+        document.location = "{% url trip_compare_base %}/" + selectedIds.join("/");
+    });
+    </script>
     <h3>{% trans "Average duration"%}</h3>
     <div id="avgspeeddiv" style="width:420px;height:200px"></div>
     <script id="source" language="javascript" type="text/javascript">
