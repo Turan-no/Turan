@@ -6,8 +6,7 @@
 {% endblock %}
 {% block extramenu %}
     {% ifequal user object.user %}
-        <li class="right"><a href="{% url upload_eventdetails object.id "hike" %}/{{object.name|slugify}}">{% trans "Add trip values" %}</a>
-        <li class="modify"><a href="{% url admin:turan_hike_change object.id %}">{% trans "Modify" %}</a></li>
+        <li class="modify"><a href="{% url hike_update object.id %}">{% trans "Modify" %}</a></li>
     {% endifequal %}
 {% endblock %}
 {% block graph %}
