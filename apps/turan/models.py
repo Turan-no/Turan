@@ -87,14 +87,17 @@ class Route(models.Model):
     class Meta:
         verbose_name = _("Route")
         verbose_name_plural = _("Routes")
-        ordering = ('-created',)
+        ordering = ('-created','name')
 
-    def get_trips(self):                                                        
-        trip_list = []                                                          
-        trip_list.extend(self.cycletrip_set.all())                              
-        trip_list.extend(self.hike_set.all())                                   
-        trip_list.extend(self.otherexercise_set.all())                          
-        trip_list = sorted(trip_list, key=lambda x: x.duration)                 
+    def get_trips(self):
+        trip_list = []
+        trip_list.extend(self.cycletrip_set.all())
+        trip_list.extend(self.hike_set.all())
+        trip_list.extend(self.otherexercise_set.all())
+        try:
+            trip_list = sorted(trip_list, key=lambda x: x.duration)
+        except TypeError, e:
+            pass # value error because of invalid duration TODO FIXME write proper for loop ?
         return trip_list
 
 #class Team(models.Model):
@@ -132,8 +135,8 @@ class Event(models.Model):
     user = models.ForeignKey(User)
     route = models.ForeignKey(Route)
     duration = DurationField(blank=True, default=0, help_text='1y 7m 6w 3d 18h 30min 23s 10ms 150mis')
-    date = models.DateField()
-    time = models.TimeField(blank=True, null=True)
+    date = models.DateField(help_text="year-mo-dy")
+    time = models.TimeField(blank=True, null=True, help_text="00:00:00")
 
     comment = models.TextField(blank=True)
     url = models.URLField(blank=True)

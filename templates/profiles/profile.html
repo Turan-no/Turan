@@ -72,8 +72,12 @@ $(function () {
                 {% if other_user.get_profile.website %}<p><b>{% trans "Website" %}</b>: <a class="url" href="{{ other_user.get_profile.website }}">{{ other_user.get_profile.website }}</a></p>{% endif %}
                 {% with other_user.get_profile as object %}
                 <ul class="user_details">
-                    <li><span class="label">{% trans "Weight" %}:</span> {{ object.weight }} kg</li>
-                    <li><span class="label">{% trans "Height" %}:</span> {{ object.height }} cm</li>
+                    {% if object.weight %}
+                        <li><span class="label">{% trans "Weight" %}:</span> {{ object.weight }} kg</li>
+                    {% endif %}
+                    {% if object.height %}
+                        <li><span class="label">{% trans "Height" %}:</span> {{ object.height }} cm</li>
+                    {% endif %}
                     {% if object.cycle %}
                     <li><span class="label">{% trans "Cycle" %}:</span> {{ object.cycle }}</li>
                     {% endif %}

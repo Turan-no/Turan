@@ -149,11 +149,13 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     pulsedataseries = ""
     tripdataseries = ""
     avgspeeddataseries = ""
-    height = float(other_user.get_profile().height)/100
-    weightqs = other_user.get_profile().userprofiledetail_set.filter(weight__isnull=False).order_by('time')
-    for wtuple in weightqs.values_list('time', 'weight'):
-        bmidataseries += '[%s, %s],' % (datetime2jstimestamp(wtuple[0]), wtuple[1]/(height*height))
-        bmiline += '[%s, 25],' %datetime2jstimestamp(wtuple[0])
+    height = other_user.get_profile().height
+    if height:
+        height = float(other_user.get_profile().height)/100
+        weightqs = other_user.get_profile().userprofiledetail_set.filter(weight__isnull=False).order_by('time')
+        for wtuple in weightqs.values_list('time', 'weight'):
+            bmidataseries += '[%s, %s],' % (datetime2jstimestamp(wtuple[0]), wtuple[1]/(height*height))
+            bmiline += '[%s, 25],' %datetime2jstimestamp(wtuple[0])
 
     pulseqs = other_user.get_profile().userprofiledetail_set.filter(resting_hr__isnull=False).order_by('time')
     for hrtuple in pulseqs.values_list('time', 'resting_hr'):

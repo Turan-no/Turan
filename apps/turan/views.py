@@ -1,9 +1,11 @@
 from models import *
+#from forms import *
 from profiles.models import Profile
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseForbidden
 from django.utils.translation import ugettext_lazy as _
-from django.template import RequestContext, Context
+from django.utils.translation import ugettext
+from django.template import RequestContext, Context, loader
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django import forms
@@ -16,6 +18,8 @@ from django.utils.safestring import mark_safe
 from django.core.paginator import Paginator
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.views import redirect_to_login
+from django.views.generic.create_update import get_model_and_form_class, apply_extra_context, redirect, update_object, lookup_object
 
 
 from datetime import timedelta, datetime
@@ -309,8 +313,12 @@ def events(request, group_slug=None, bridge=None, username=None):
 def route_detail(request, object_id):
     object = get_object_or_404(Route, pk=object_id)
     speeddataseries = ''
-    for trip in sorted(object.get_trips(), key=lambda x:x.date):                                                      
-        speeddataseries +=  '[%s, %s],' % (datetime2jstimestamp(trip.date), time)                                 
+    for trip in sorted(object.get_trips(), key=lambda x:x.date):
+        try:
+            time = trip.duration.seconds/60
+            speeddataseries +=  '[%s, %s],' % (datetime2jstimestamp(trip.date), time)
+        except AttributeError:
+            pass # stupid decimal value in trip duration!
     return render_to_response('turan/route_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):
@@ -474,31 +482,27 @@ def normalize_altitude(trip_id):
             ctd.save()
 
 
-class RouteForm(forms.ModelForm):
-    class Meta:
-        model = Route
-        fields = ('name', 'distance', 'description', 'gpx_file')
 
-@login_required
-def route_new(request):
-    if request.method == 'POST':
-        routeform = RouteForm(request.POST, request.FILES)
-        if routeform.is_valid():
-            print 'valid!'
-            gpxfile = request.FILES['gpx_file']
-            filename = gpxfile.name
-            print filename
-
-            if not filename.endswith('.gpx'):
-                return HttpResponse(_('Wrong filetype!'))
-            
-            route = routeform.save()
-            return HttpResponseRedirect(route.get_absolute_url())
-        else:
-            return HttpResponse(_('Error while parsing form'))
-    else:
-        routeform = RouteForm()
-        return render_to_response('turan/route_new.html', locals(), context_instance=RequestContext(request))
+#@login_required
+#def route_new(request):
+#    if request.method == 'POST':
+#        routeform = RouteForm(request.POST, request.FILES)
+#        if routeform.is_valid():
+#            print 'valid!'
+#            gpxfile = request.FILES['gpx_file']
+#            filename = gpxfile.name
+#            print filename
+#
+#            if not filename.endswith('.gpx'):
+#                return HttpResponse(_('Wrong filetype!'))
+#            
+#            route = routeform.save()
+#            return HttpResponseRedirect(route.get_absolute_url())
+#        else:
+#            return HttpResponse(_('Error while parsing form'))
+#    else:
+#        routeform = RouteForm()
+#        return render_to_response('turan/route_new.html', locals(), context_instance=RequestContext(request))
 
 
 def calendar(request, year=False, month=False, user_id=False):
@@ -681,4 +685,62 @@ def json_serializer(request, queryset, root_name = None, relations = (), extras 
         root_name = queryset.model._meta.verbose_name_plural
     #hardcoded relations and extras while testing
     return HttpResponse(serializers.serialize('json', queryset, indent=4, relations=relations, extras=extras), mimetype='text/javascript')
+
+def create_object(request, model=None, template_name=None,
+        template_loader=loader, extra_context=None, post_save_redirect=None,
+        login_required=False, context_processors=None, form_class=None, user_required=False):
+    """
+    Generic object-creation function. 
+    Modified for turan to always save user to model
+
+    Templates: ``<app_label>/<model_name>_form.html``
+    Context:
+        form
+            the form for the object
+    """
+    if extra_context is None: extra_context = {}
+    if login_required and not request.user.is_authenticated():
+        return redirect_to_login(request.path)
+
+    model, form_class = get_model_and_form_class(model, form_class)
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES)
+        if form.is_valid():
+            new_object = form.save(commit=False)
+            if user_required:
+                new_object.user = request.user
+            new_object.save()
+            if request.user.is_authenticated():
+                request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": model._meta.verbose_name})
+            return redirect(post_save_redirect, new_object)
+    else:
+        form = form_class()
+
+    # Create the template, context, response
+    if not template_name:
+        template_name = "%s/%s_form.html" % (model._meta.app_label, model._meta.object_name.lower())
+    t = template_loader.get_template(template_name)
+    c = RequestContext(request, {
+        'form': form,
+    }, context_processors)
+    apply_extra_context(extra_context, c)
+    return HttpResponse(t.render(c))
+
+def update_object_user(request, model=None, object_id=None, slug=None,
+        slug_field='slug', template_name=None, template_loader=loader,
+        extra_context=None, post_save_redirect=None, login_required=False,
+        context_processors=None, template_object_name='object',
+        form_class=None):
+    """
+    Uses generic update code, just checks if object is owned by user.
+    """
+
+    model, form_class = get_model_and_form_class(model, form_class)
+    obj = lookup_object(model, object_id, slug, slug_field)
+    if not obj.user == request.user:
+        return HttpResponseForbidden('Wat?')
+
+    return update_object(request, model, object_id, slug, slug_field, template_name,
+            template_loader, extra_context, post_save_redirect, login_required,
+            context_processors, template_object_name, form_class)
 

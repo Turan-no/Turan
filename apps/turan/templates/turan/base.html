@@ -9,6 +9,7 @@
 
 {% block subnav %}
     <ul>
+        <li><a href="{% url what_next %}">{% trans "What next?" %}</a></li>
         <li><a href="{% url routes %}">{% trans "Routes" %}</a></li>
         <li><a href="{% url events %}">{% trans "Events" %}</a></li>
         <li><a href="{% url calendar-index %}">{% trans "Calendar" %}</a></li>

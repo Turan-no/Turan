@@ -34,5 +34,5 @@ class UserProfileDetailAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.user = request.user
         obj.save()
-admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Profile)#, ProfileAdmin)
 admin.site.register(UserProfileDetail, UserProfileDetailAdmin)

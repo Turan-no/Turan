@@ -14,8 +14,8 @@ class Profile(models.Model):
     location = models.CharField(_('location'), max_length=40, null=True, blank=True)
     website = models.URLField(_('website'), null=True, blank=True, verify_exists=False)
     
-    height = models.IntegerField(blank=True, help_text=_('in cm'))
-    weight = models.FloatField(blank=True, help_text=_('in kg'))
+    height = models.IntegerField(blank=True, default=0, help_text=_('in cm'))
+    weight = models.FloatField(blank=True, default=0, help_text=_('in kg'))
     resting_hr = models.IntegerField(blank=True, default=0, help_text=_('beats per minute'))
     max_hr = models.IntegerField(blank=True, default=0, help_text=_('beats per minute'))
     motto = models.CharField(max_length=160)

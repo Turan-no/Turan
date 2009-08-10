@@ -44,7 +44,7 @@
             <object width="50" height="50" type="image/svg+xml" data="{{ object.get_svg_url }}"></object>
         {% endif %}
 
-        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> <span class="trip_count">{{ object.get_trips|length }} {% trans "trips" %}</span>
     </li>
     {%endfor %}
     </ul>

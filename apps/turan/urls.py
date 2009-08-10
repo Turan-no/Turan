@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
 from models import Route, CycleTrip, Hike, OtherExercise
-from views import index, upload_eventdetails, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, route_new, calendar, cycletrip, json_tripdetail, TripsFeed, json_serializer
+from views import index, upload_eventdetails, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user
+from forms import *
 from threadedcomments.models import ThreadedComment as Comment
 
 feeds = {
@@ -16,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^trip/compare/(?P<trip1>\d+)/(?P<trip2>\d+)', trip_compare, name='trip_compare'),
     url(r'^route/(?P<object_id>\d+)', route_detail, name='route'),
     #url(r'^route/svg/(?P<route_id>\d+)', generate_svg, name='generate_svg'),
-    url(r'^route/new/', route_new, name='route_new'),
+#    url(r'^route/new/', route_new, name='route_new'),
     url(r'^week/(?P<week>\d+)', week, name='week-all'),
     url(r'^week/(?P<week>\d+)/(?P<user_id>)', week, name='week'),
 
@@ -58,3 +59,16 @@ urlpatterns += patterns('django.views.generic.simple',
     url(r'^about/', 'direct_to_template', {'template': 'turan/about.html'}, name='turan_about'),
     url(r'^todo/', 'direct_to_template', {'template': 'turan/todo.html'}, name='todo'),
 )
+
+urlpatterns += patterns('django.views.generic.create_update',
+#        url(r'^trip/create/$', 'create_object', 
+    url(r'^route/create/$', create_object, {'login_required': True, 'form_class': RouteForm},name='route_create'),
+    url(r'^trip/create/$', create_object, {'login_required': True, 'form_class': CycleTripForm, 'user_required':True}, name='trip_create'),
+    url(r'^hike/create/$', create_object, {'login_required': True, 'form_class': CycleTripForm, 'user_required':True}, name='hike_create'),
+    url(r'^exercise/create/$', create_object, {'login_required': True, 'form_class': CycleTripForm, 'user_required':True}, name='exercise_create'),
+
+    url(r'^route/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': RouteForm},name='route_update'),
+    url(r'^trip/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': FullCycleTripForm},name='trip_update'),
+
+)
+
