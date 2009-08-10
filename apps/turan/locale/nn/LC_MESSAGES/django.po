@@ -2,19 +2,19 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-31 00:06+0200\n"
-"PO-Revision-Date: 2009-07-31 00:07\n"
-"Last-Translator: Tor Hveem <xt@lart.no>\n"
+"POT-Creation-Date: 2009-08-10 08:46+0200\n"
+"PO-Revision-Date: 2009-08-10 08:40\n"
+"Last-Translator: Tor Hveem <xt@bash.no>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Translated-Using: django-rosetta 0.4.2.svn\n"
+"X-Translated-Using: django-rosetta 0.4.0\n"
 
 #: durationformfield.py:78
 msgid "Enter a valid duration."
@@ -30,200 +30,171 @@ msgstr "Sjekk at denne self er større eller lik som %(min)s."
 msgid "Ensure this self is less than or equal to %(max)s."
 msgstr "Sjekk at denne self er mindre enn eller lik som %(max)s."
 
-#: models.py:23
+#: models.py:28
 msgid "for example Opsangervatnet"
 msgstr "til dømes Opsangervatnet"
 
-#: models.py:24
+#: models.py:29
 msgid "in km"
 msgstr "i km"
 
-#: models.py:25
+#: models.py:30
 msgid "route description"
 msgstr "Ruteskildring"
 
-#: models.py:69 models.py:136
-msgid "Unnamed trip"
-msgstr "Namnlaus tur"
-
-#: models.py:83 templates/turan/maphead.html:16
+#: models.py:88 templates/turan/maphead.html:17
 #: templates/turan/cycletrip/attributes.html:18
 msgid "Route"
 msgstr "Rute"
 
-#: models.py:84 templates/turan/base.html:43 templates/turan/index.html:33
-#: templates/turan/route_list.html:6 templates/turan/route_list.html.py:11
-#: templates/turan/route_new.html:6
+#: models.py:89 templates/turan/base.html:12 templates/turan/route_list.html:6
+#: templates/turan/route_list.html.py:11 templates/turan/route_new.html:6
 msgid "Routes"
 msgstr "Ruter"
 
-#: models.py:87
-msgid "Team name"
-msgstr "Lagnamn"
-
-#: models.py:88
-msgid "info"
-msgstr "info"
-
-#: models.py:89
-msgid "No pain - no gain"
-msgstr "No pain - no gain"
-
-#: models.py:102
-msgid "Team"
-msgstr "Lag"
-
-#: models.py:103 templates/turan/base.html:46 templates/turan/team_list.html:5
-#: templates/turan/team_list.html.py:10
-msgid "Teams"
-msgstr "Lag"
-
-#: models.py:110
-msgid "i.e. Captain"
-msgstr "t.d. Kaptein"
-
-#: models.py:113
-msgid "Team Membership"
-msgstr "Lagmedlemskap"
-
-#: models.py:114 templates/turan/userprofile_detail.html:49
-msgid "Team Memberships"
-msgstr "Lagmedlemskap"
-
-#: models.py:132
+#: models.py:138
 msgid "File from equipment from Garmin/Polar (.tcx, .hrm, .gmd)"
-msgstr "Fil frå utstyr som Garmin/Polar (.tcx, .hrm, .gmd)"
+msgstr "Fil frå treningscomputer som Garmin/Polar (.tcx, .hrm, .gmd)"
 
-#: models.py:167 templates/turan/hike_detail.html:5
+#: models.py:147
+msgid "Unnamed trip"
+msgstr "Namnlaus tur"
+
+#: models.py:178 templates/turan/hike_detail.html:5
 msgid "Hike"
 msgstr "Fottur"
 
-#: models.py:168 templates/turan/index.html:63
+#: models.py:179 templates/turan/index.html:73
+#: templates/turan/plugins/profiles/profile.html:22
 msgid "Hikes"
 msgstr "Fotturar"
 
-#: models.py:197 models.py:209 templates/turan/index.html:87
+#: models.py:205 models.py:217 templates/turan/index.html:99
 msgid "Other Exercise"
 msgstr "Anna trening"
 
-#: models.py:210
+#: models.py:218 templates/turan/plugins/profiles/profile.html:38
 msgid "Other Exercises"
 msgstr "Anna trening"
 
-#: models.py:251 templates/turan/route_detail.html:5
+#: models.py:261 templates/turan/route_detail.html:5
 msgid "Cycle Trip"
 msgstr "Sykkeltur"
 
-#: models.py:252
+#: models.py:262 templates/turan/plugins/profiles/profile.html:6
 msgid "Cycle Trips"
 msgstr "Turan"
 
-#: models.py:284
-msgid "in cm"
-msgstr "i cm"
-
-#: models.py:285 models.py:310
-msgid "in kg"
-msgstr "i kg"
-
-#: models.py:286 models.py:287 models.py:311
-msgid "beats per minute"
-msgstr "slag i minuttet"
-
-#: models.py:293
-msgid "textual information"
-msgstr "Tekst"
-
-#: models.py:302
-msgid "User Profile"
-msgstr "Brukarprofil"
-
-#: models.py:303
-msgid "User Profiles"
-msgstr "Brukarprofilar"
-
-#: models.py:327
-msgid "User Profile Detail"
-msgstr "Brukarprofildetalje"
-
-#: models.py:328
-msgid "User Profile Details"
-msgstr "Brukarprofildetaljar"
-
-#: models.py:343
+#: models.py:354
 msgid "Location"
 msgstr "Stad"
 
-#: models.py:344
+#: models.py:355
 msgid "Locations"
 msgstr "Stadar"
 
-#: views.py:155 views.py:456
+#: views.py:159 views.py:502
 msgid "Wrong filetype!"
 msgstr "Feil filtype!"
 
-#: views.py:461
+#: views.py:507
 msgid "Error while parsing form"
 msgstr "Feil med inndata"
 
-#: templates/turan/about.html:4 templates/turan/base.html:83
-#: templates/turan/todo.html:4
+#: templates/registration/activate.html:6
+#, python-format
+msgid ""
+"Thank you. Your account is now activated. Your username is \n"
+"                <b>%(username)s</b>."
+msgstr ""
+
+#: templates/registration/activate.html:10
+#, python-format
+msgid ""
+"\n"
+"                Your account could not be activated.\n"
+"                This may be because it is already active or because you "
+"waited over %(days)s\n"
+"                day to activate it. \n"
+"                If this is not the case, please contact the website "
+"administrator. Otherwise, you may \n"
+"                <a href=\"%(reg_url)s\">register again.</a>\n"
+"                "
+msgid_plural ""
+"\n"
+"                Your account could not be activated.\n"
+"                This may be because it is already active or because you "
+"waited over %(days)s\n"
+"                days to activate it. \n"
+"                If this is not the case, please contact the website "
+"administrator. Otherwise, you may \n"
+"                <a href=\"%(reg_url)s\">register again.</a>\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/registration/login.html:12
+#, fuzzy
+msgid "Log in"
+msgstr "Logo"
+
+#: templates/registration/logout.html:5
+msgid "You have been logged out. Thank you for your visit and see you soon!"
+msgstr ""
+
+#: templates/registration/registration_complete.html:5
+msgid ""
+"Thank you for registering. You will very soon receive an email with \n"
+"a confirmation link. Please follow this link in order to complete your "
+"registration."
+msgstr ""
+
+#: templates/registration/registration_form.html:4
+#, fuzzy
+msgid "Registration"
+msgstr "Skildring"
+
+#: templates/registration/registration_form.html:9
+msgid "Submit"
+msgstr ""
+
+#: templates/turan/about.html:4 templates/turan/todo.html:4
 msgid "About"
 msgstr "Om"
 
-#: templates/turan/base.html:42 templates/turan/index.html:7
-msgid "What matters"
-msgstr "Det som tælle"
-
-#: templates/turan/base.html:44 templates/turan/event_list.html:5
-#: templates/turan/event_list.html.py:10
+#: templates/turan/base.html:13 templates/turan/event_list.html:5
+#: templates/turan/event_list.html.py:33
 msgid "Events"
 msgstr "Turan"
 
-#: templates/turan/base.html:45 templates/turan/calendar.html:6
+#: templates/turan/base.html:14 templates/turan/calendar.html:6
 #: templates/turan/calendar.html.py:11
 msgid "Calendar"
 msgstr "Kalender"
 
-#: templates/turan/base.html:47 templates/turan/userprofile_list.html:10
-msgid "People"
-msgstr "Folk"
-
-#: templates/turan/base.html:48 templates/turan/statistics.html:7
+#: templates/turan/base.html:15 templates/turan/statistics.html:7
 #: templates/turan/statistics.html.py:10
 #: templates/turan/userprofile_detail.html:58
 msgid "Statistics"
 msgstr "Statistikk"
 
-#: templates/turan/base.html:50
-msgid "Admin"
-msgstr "Admin"
-
-#: templates/turan/base.html:51
-msgid "Logout"
-msgstr "Logg ut"
-
-#: templates/turan/base.html:53
+#: templates/turan/base.html:17
 msgid "My calendar"
 msgstr "Min kalender"
 
-#: templates/turan/base.html:83
-msgid "Todo"
-msgstr "Todo"
-
-#: templates/turan/commentform.html:9
+#: templates/turan/commentform.html:12
 msgid "wrote"
 msgstr "skreiv"
 
-#: templates/turan/commentform.html:17
+#: templates/turan/commentform.html:20
 msgid "Add comment"
 msgstr "Kommenter"
 
-#: templates/turan/commentform.html:43
+#: templates/turan/commentform.html:46
 msgid "Post"
 msgstr "Send"
 
-#: templates/turan/commentform.html:44
+#: templates/turan/commentform.html:47
 msgid "Preview"
 msgstr "Førehandsvisning"
 
@@ -231,149 +202,205 @@ msgstr "Førehandsvisning"
 msgid "Reset zoom"
 msgstr "Zoom ut"
 
-#: templates/turan/cycletrip_compare.html:6
+#: templates/turan/cycletrip_compare.html:5
 msgid "versus"
 msgstr "mot"
 
-#: templates/turan/cycletrip_compare.html:7
-#: templates/turan/cycletrip_detail.html:5
+#: templates/turan/cycletrip_compare.html:6
+#: templates/turan/cycletrip_detail.html:6
 msgid "Cycle trip"
 msgstr "Sykkeltur"
 
 #: templates/turan/cycletrip_compare.html:10
-#: templates/turan/cycletrip_detail.html:30
-#: templates/turan/cycletrip/graph.html:13
+#: templates/turan/cycletrip_detail.html:36 templates/turan/slope.html:16
+#: templates/turan/cycletrip/graph.html:12
 #: templates/turan/exercise/graph.html:13 templates/turan/hike/graph.html:13
 msgid "Speed"
 msgstr "Fart"
 
 #: templates/turan/cycletrip_compare.html:12
-#: templates/turan/cycletrip/graph.html:19
+#: templates/turan/cycletrip/graph.html:18
 #: templates/turan/exercise/graph.html:17 templates/turan/hike/graph.html:17
 msgid "HR"
 msgstr "Puls"
 
-#: templates/turan/cycletrip_detail.html:9 templates/turan/hike_detail.html:9
-#: templates/turan/otherexercise_detail.html:9
-msgid "Add trip values"
-msgstr "Legg til verdiar"
+#: templates/turan/cycletrip_compare.html:14
+#: templates/turan/cycletrip/graph.html:25
+msgid "Cadence"
+msgstr "Kadens"
 
-#: templates/turan/cycletrip_detail.html:11
+#: templates/turan/cycletrip_detail.html:10
 #: templates/turan/hike_detail.html:10
-#: templates/turan/otherexercise_detail.html:10
+#: templates/turan/otherexercise_detail.html:9
 #: templates/turan/route_detail.html:15
 msgid "Modify"
 msgstr "Endre"
 
-#: templates/turan/cycletrip_detail.html:21
+#: templates/turan/cycletrip_detail.html:17
+msgid "Graph"
+msgstr ""
+
+#: templates/turan/cycletrip_detail.html:18
+msgid "Slopes"
+msgstr ""
+
+#: templates/turan/cycletrip_detail.html:27 templates/turan/slope.html:7
 msgid "Length"
 msgstr "Lengd"
 
-#: templates/turan/cycletrip_detail.html:24
+#: templates/turan/cycletrip_detail.html:30 templates/turan/slope.html:10
 #: templates/turan/route/attributes.html:15
 msgid "Ascent"
 msgstr "Stigning"
 
-#: templates/turan/cycletrip_detail.html:27
+#: templates/turan/cycletrip_detail.html:33 templates/turan/slope.html:13
 msgid "Gradient"
 msgstr "Stigningsprosent"
 
-#: templates/turan/cycletrip_detail.html:33
+#: templates/turan/cycletrip_detail.html:39 templates/turan/slope.html:19
 msgid "Avg power"
 msgstr "Gj. effekt"
 
-#: templates/turan/cycletrip_detail.html:38
-#: templates/turan/cycletrip_detail.html:39 templates/turan/statistics.html:74
-#: templates/turan/statistics.html.py:81 templates/turan/statistics.html:139
-#: templates/turan/statistics.html:146
+#: templates/turan/cycletrip_detail.html:42 templates/turan/slope.html:22
+#: templates/turan/cycletrip/attributes.html:36
+msgid "Avg HR"
+msgstr "Gj. puls"
+
+#: templates/turan/cycletrip_detail.html:47
+#: templates/turan/cycletrip_detail.html:48 templates/turan/slope.html:27
+#: templates/turan/slope.html.py:28 templates/turan/statistics.html:81
+#: templates/turan/statistics.html.py:88 templates/turan/statistics.html:95
+#: templates/turan/statistics.html:160 templates/turan/statistics.html:167
+#: templates/turan/statistics.html:174
 #: templates/turan/route/attributes.html:15
 #: templates/turan/route/attributes.html:22 templatetags/turan_extras.py:91
 msgid "m"
 msgstr "m"
 
-#: templates/turan/cycletrip_detail.html:41 templates/turan/statistics.html:15
-#: templates/turan/statistics.html.py:26 templates/turan/statistics.html:33
-#: templates/turan/statistics.html.py:39 templates/turan/statistics.html:91
-#: templates/turan/statistics.html.py:98 templates/turan/statistics.html:104
+#: templates/turan/cycletrip_detail.html:50 templates/turan/slope.html:30
+#: templates/turan/statistics.html:15 templates/turan/statistics.html.py:26
+#: templates/turan/statistics.html:33 templates/turan/statistics.html.py:39
+#: templates/turan/statistics.html:105 templates/turan/statistics.html:112
+#: templates/turan/statistics.html:118
 #: templates/turan/cycletrip/attributes.html:33
 #: templates/turan/cycletrip/attributes.html:42
 #: templates/turan/profile/statistics.html:6
 msgid "km/h"
 msgstr "km/t"
 
-#: templates/turan/cycletrip_detail.html:42
+#: templates/turan/cycletrip_detail.html:51 templates/turan/slope.html:31
 msgid "W"
 msgstr "W"
 
+#: templates/turan/cycletrip_detail.html:52 templates/turan/slope.html:32
+#: templates/turan/statistics.html:75 templates/turan/statistics.html:153
+#: templates/turan/userprofile_detail.html:41
+#: templates/turan/userprofile_detail.html:44
+#: templates/turan/userprofile_detail.html:82
+#: templates/turan/cycletrip/attributes.html:36
+#: templates/turan/cycletrip/attributes.html:45
+msgid "BPM"
+msgstr "Slag/m"
+
 #: templates/turan/cycletrip_list.html:5
-#: templates/turan/cycletrip_list.html:10 templates/turan/index.html:47
+#: templates/turan/cycletrip_list.html:10 templates/turan/index.html:56
 msgid "Cycle trips"
 msgstr "Turan"
 
-#: templates/turan/cycletrip_list.html:15 templates/turan/event_list.html:15
+#: templates/turan/cycletrip_list.html:15 templates/turan/event_list.html:40
 msgid "User"
 msgstr "Brukar"
 
-#: templates/turan/cycletrip_list.html:18 templates/turan/event_list.html:18
+#: templates/turan/cycletrip_list.html:18 templates/turan/event_list.html:43
+#: templates/turan/route_detail.html:35
 #: templates/turan/cycletrip/attributes.html:27
 msgid "Date"
 msgstr "Dato"
 
-#: templates/turan/cycletrip_list.html:21 templates/turan/event_list.html:21
+#: templates/turan/cycletrip_list.html:21 templates/turan/event_list.html:46
 #: templates/turan/route_list.html:26 templates/turan/team_list.html:15
 msgid "Name"
 msgstr "Namn"
 
-#: templates/turan/cycletrip_list.html:24 templates/turan/event_list.html:24
+#: templates/turan/cycletrip_list.html:24 templates/turan/event_list.html:49
 #: templates/turan/route_list.html:28 templates/turan/route/attributes.html:5
 msgid "Distance"
 msgstr "Lengd"
 
-#: templates/turan/cycletrip_list.html:39 templates/turan/event_list.html:49
-#: templates/turan/index.html:54 templates/turan/index.html.py:70
+#: templates/turan/cycletrip_list.html:39 templates/turan/event_list.html:74
+#: templates/turan/index.html:64 templates/turan/index.html.py:81
 #: templates/turan/statistics.html:14 templates/turan/statistics.html.py:18
-#: templates/turan/statistics.html:53 templates/turan/statistics.html.py:81
-#: templates/turan/statistics.html:118 templates/turan/statistics.html:146
+#: templates/turan/statistics.html:53 templates/turan/statistics.html.py:88
+#: templates/turan/statistics.html:132 templates/turan/statistics.html:167
 #: templates/turan/profile/statistics.html:5
 #: templates/turan/profile/statistics.html:9
 #: templates/turan/route/attributes.html:5
 msgid "km"
 msgstr "km"
 
-#: templates/turan/event_list.html:27
+#: templates/turan/event_list.html:16
+#, fuzzy
+msgid "Previous"
+msgstr "Førehandsvisning"
+
+#: templates/turan/event_list.html:23 templates/turan/route_new.html:15
+msgid "Next"
+msgstr "Neste"
+
+#: templates/turan/event_list.html:29
+msgid "Page"
+msgstr ""
+
+#: templates/turan/event_list.html:29
+msgid "of"
+msgstr ""
+
+#: templates/turan/event_list.html:52 templates/turan/route_detail.html:34
 #: templates/turan/cycletrip/attributes.html:25
 msgid "Duration"
 msgstr "Tid"
 
-#: templates/turan/event_list.html:30 templates/turan/route_list.html:39
+#: templates/turan/event_list.html:55 templates/turan/route_list.html:39
 msgid "Route plot"
 msgstr "Ruteplott"
 
-#: templates/turan/event_list.html:33
+#: templates/turan/event_list.html:58
 msgid "Type"
 msgstr "Type"
 
-#: templates/turan/index.html:13
+#: templates/turan/hike_detail.html:9
+msgid "Add trip values"
+msgstr "Legg til verdiar"
+
+#: templates/turan/index.html:10
+msgid "What matters"
+msgstr "Det som tælle"
+
+#: templates/turan/index.html:16
 msgid "Latest comments"
 msgstr "Siste kommentarar"
 
-#: templates/turan/index.html:21
+#: templates/turan/index.html:26
 msgid "commented on a"
 msgstr "kommenterte"
 
-#: templates/turan/index.html:31
+#: templates/turan/index.html:36
 msgid "Compass"
 msgstr "Kompass"
 
-#: templates/turan/index.html:45
+#: templates/turan/index.html:38
+msgid "Most popular routes"
+msgstr ""
+
+#: templates/turan/index.html:54
 msgid "Cyclist"
 msgstr "Syklist"
 
-#: templates/turan/index.html:61
+#: templates/turan/index.html:71
 msgid "Hiker"
 msgstr "Gåar"
 
-#: templates/turan/index.html:77 templates/turan/index.html.py:79
+#: templates/turan/index.html:88 templates/turan/index.html.py:90
 msgid "Other Exercices"
 msgstr "Anna trening"
 
@@ -385,7 +412,17 @@ msgstr "Trening"
 msgid "Trips on this route"
 msgstr "Turar på denne løpya"
 
-#: templates/turan/route_detail.html:38
+#: templates/turan/route_detail.html:32
+#, fuzzy
+msgid "Trip"
+msgstr "turar"
+
+#: templates/turan/route_detail.html:33
+#: templates/turan/cycletrip/attributes.html:15
+msgid "Exerciser"
+msgstr "Kven"
+
+#: templates/turan/route_detail.html:45
 msgid "Average duration"
 msgstr "Gjennomsnittstid"
 
@@ -409,10 +446,6 @@ msgstr "Opprett ny rute"
 #: templates/turan/route_new.html:14
 msgid "Cancel"
 msgstr "Avbryt"
-
-#: templates/turan/route_new.html:15
-msgid "Next"
-msgstr "Neste"
 
 #: templates/turan/statistics.html:13
 #: templates/turan/profile/statistics.html:4
@@ -454,23 +487,23 @@ msgstr "Lengste tur"
 msgid "Hike statistics"
 msgstr "Fotturstatistikk"
 
-#: templates/turan/statistics.html:23 templates/turan/statistics.html.py:88
+#: templates/turan/statistics.html:23 templates/turan/statistics.html:102
 msgid "Highest average speed for trip"
 msgstr "Høgast gj. fart for tur"
 
-#: templates/turan/statistics.html:30 templates/turan/statistics.html.py:95
+#: templates/turan/statistics.html:30 templates/turan/statistics.html:109
 msgid "Highest speeds"
 msgstr "Fartsrekordar"
 
-#: templates/turan/statistics.html:36 templates/turan/statistics.html:101
+#: templates/turan/statistics.html:36 templates/turan/statistics.html:115
 msgid "Average speed for all trips"
 msgstr "Gj. fart for alle turar"
 
-#: templates/turan/statistics.html:43 templates/turan/statistics.html:108
+#: templates/turan/statistics.html:43 templates/turan/statistics.html:122
 msgid "Number of trips"
 msgstr "Tur-teljar"
 
-#: templates/turan/statistics.html:50 templates/turan/statistics.html:115
+#: templates/turan/statistics.html:50 templates/turan/statistics.html:129
 msgid "Longest total distance"
 msgstr "Lengste distanse"
 
@@ -478,45 +511,64 @@ msgstr "Lengste distanse"
 msgid "Most time hiking"
 msgstr "Mest tid på tur"
 
-#: templates/turan/statistics.html:64 templates/turan/statistics.html:129
+#: templates/turan/statistics.html:64 templates/turan/statistics.html:143
 msgid "Most energy consumed"
 msgstr "Mest energi brukt"
 
-#: templates/turan/statistics.html:67 templates/turan/statistics.html:132
+#: templates/turan/statistics.html:67 templates/turan/statistics.html:146
 #: templates/turan/cycletrip/attributes.html:51
 #: templates/turan/profile/statistics.html:10
 msgid "kcal"
 msgstr "kcal"
 
-#: templates/turan/statistics.html:67 templates/turan/statistics.html:132
+#: templates/turan/statistics.html:67 templates/turan/statistics.html:146
 #: templates/turan/cycletrip/attributes.html:51
 msgid "bodyfat"
 msgstr "kropsfett"
 
-#: templates/turan/statistics.html:71 templates/turan/statistics.html:136
+#: templates/turan/statistics.html:72 templates/turan/statistics.html:150
+#, fuzzy
+msgid "Highest average HR"
+msgstr "Høgast gj. fart for tur"
+
+#: templates/turan/statistics.html:78 templates/turan/statistics.html:157
 msgid "Top climbers"
 msgstr "Klatrekongar"
 
-#: templates/turan/statistics.html:78 templates/turan/statistics.html:143
+#: templates/turan/statistics.html:85 templates/turan/statistics.html:164
 msgid "Steepest average grade"
 msgstr "Brattast gjennomsnitt"
 
-#: templates/turan/statistics.html:87
+#: templates/turan/statistics.html:92 templates/turan/statistics.html:171
+#, fuzzy
+msgid "Fastest average climb"
+msgstr "Brattast gjennomsnitt"
+
+#: templates/turan/statistics.html:95 templates/turan/statistics.html:174
+#, fuzzy
+msgid "hour"
+msgstr "time"
+
+#: templates/turan/statistics.html:101
 msgid "Bicycle statistics"
 msgstr "Sykkelstatistikk"
 
-#: templates/turan/statistics.html:122
+#: templates/turan/statistics.html:136
 msgid "Most time on bicycle"
 msgstr "Mest tid på sykkel"
 
-#: templates/turan/team_detail.html:11 templates/turan/team_list.html:24
+#: templates/turan/team_detail.html:10 templates/turan/team_list.html:24
 #: templates/turan/team_list.html.py:45
 msgid "Logo"
 msgstr "Logo"
 
-#: templates/turan/team_detail.html:27
+#: templates/turan/team_detail.html:26
 msgid "Function"
 msgstr "Rolle"
+
+#: templates/turan/team_list.html:5 templates/turan/team_list.html.py:10
+msgid "Teams"
+msgstr "Lag"
 
 #: templates/turan/team_list.html:21
 msgid "Slogan"
@@ -532,6 +584,14 @@ msgstr "URL"
 msgid "Members"
 msgstr "Medlemsliste"
 
+#: templates/turan/todo.html:8
+msgid "Todo"
+msgstr "Todo"
+
+#: templates/turan/todo.html:10
+msgid "Goals"
+msgstr ""
+
 #: templates/turan/tripdetail_form.html:6
 msgid "Submit trip details"
 msgstr "Legg til verdian"
@@ -541,7 +601,6 @@ msgid "User profile"
 msgstr "Brukarprofil"
 
 #: templates/turan/userprofile_detail.html:18
-#: templates/turan/cycletrip/graph.html:3
 msgid "Cycle trip graph"
 msgstr "Sykkelturgraf"
 
@@ -575,14 +634,6 @@ msgstr "Sykkel"
 msgid "Resting pulse"
 msgstr "Kvilepuls"
 
-#: templates/turan/userprofile_detail.html:41
-#: templates/turan/userprofile_detail.html:44
-#: templates/turan/userprofile_detail.html:82
-#: templates/turan/cycletrip/attributes.html:36
-#: templates/turan/cycletrip/attributes.html:45
-msgid "BPM"
-msgstr "Slag/m"
-
 #: templates/turan/userprofile_detail.html:44
 #: templates/turan/cycletrip/attributes.html:45
 msgid "Max HR"
@@ -591,6 +642,10 @@ msgstr "Makspuls"
 #: templates/turan/userprofile_detail.html:47
 msgid "Info"
 msgstr "Info"
+
+#: templates/turan/userprofile_detail.html:49
+msgid "Team Memberships"
+msgstr "Lagmedlemskap"
 
 #: templates/turan/userprofile_detail.html:61
 msgid "Cycle trip log"
@@ -612,13 +667,13 @@ msgstr "Kvilepulslogg"
 msgid "User profiles"
 msgstr "Brukarprofilar"
 
+#: templates/turan/userprofile_list.html:10
+msgid "People"
+msgstr "Folk"
+
 #: templates/turan/cycletrip/attributes.html:13
 msgid "Photo"
 msgstr "Foto"
-
-#: templates/turan/cycletrip/attributes.html:15
-msgid "Exerciser"
-msgstr "Kven"
 
 #: templates/turan/cycletrip/attributes.html:28
 msgid "Start time"
@@ -627,10 +682,6 @@ msgstr "Starttid"
 #: templates/turan/cycletrip/attributes.html:33
 msgid "Avg Speed"
 msgstr "Gj. fart"
-
-#: templates/turan/cycletrip/attributes.html:36
-msgid "Avg HR"
-msgstr "Gj. puls"
 
 #: templates/turan/cycletrip/attributes.html:39
 msgid "Avg Cadence"
@@ -657,16 +708,12 @@ msgstr "Brukt kcal"
 msgid "writes"
 msgstr "skriv"
 
-#: templates/turan/cycletrip/graph.html:4
+#: templates/turan/cycletrip/graph.html:3
 #: templates/turan/exercise/graph.html:4 templates/turan/hike/graph.html:4
 msgid "Show"
 msgstr "Vis"
 
-#: templates/turan/cycletrip/graph.html:26
-msgid "Cadence"
-msgstr "Kadens"
-
-#: templates/turan/cycletrip/graph.html:32
+#: templates/turan/cycletrip/graph.html:31
 #: templates/turan/exercise/graph.html:23 templates/turan/hike/graph.html:23
 msgid "Altitude"
 msgstr "Høgd"
@@ -678,6 +725,18 @@ msgstr "Treningsgraf"
 #: templates/turan/hike/graph.html:3
 msgid "Hike graph"
 msgstr "Fottur-graf"
+
+#: templates/turan/plugins/profiles/profile.html:19
+msgid "No cycle trips added yet."
+msgstr ""
+
+#: templates/turan/plugins/profiles/profile.html:35
+msgid "No hikes added yet."
+msgstr ""
+
+#: templates/turan/plugins/profiles/profile.html:51
+msgid "No other exercises added yet."
+msgstr ""
 
 #: templates/turan/profile/statistics.html:10
 msgid "Total energy expenditure"
@@ -770,6 +829,54 @@ msgstr "sekund"
 #: templatetags/turan_extras.py:115
 msgid "Zero time"
 msgstr "Ingen tid"
+
+#~ msgid "Team name"
+#~ msgstr "Lagnamn"
+
+#~ msgid "info"
+#~ msgstr "info"
+
+#~ msgid "No pain - no gain"
+#~ msgstr "No pain - no gain"
+
+#~ msgid "Team"
+#~ msgstr "Lag"
+
+#~ msgid "i.e. Captain"
+#~ msgstr "t.d. Kaptein"
+
+#~ msgid "Team Membership"
+#~ msgstr "Lagmedlemskap"
+
+#~ msgid "in cm"
+#~ msgstr "i cm"
+
+#~ msgid "in kg"
+#~ msgstr "i kg"
+
+#~ msgid "beats per minute"
+#~ msgstr "slag i minuttet"
+
+#~ msgid "textual information"
+#~ msgstr "Tekst"
+
+#~ msgid "User Profile"
+#~ msgstr "Brukarprofil"
+
+#~ msgid "User Profiles"
+#~ msgstr "Brukarprofilar"
+
+#~ msgid "User Profile Detail"
+#~ msgstr "Brukarprofildetalje"
+
+#~ msgid "User Profile Details"
+#~ msgstr "Brukarprofildetaljar"
+
+#~ msgid "Admin"
+#~ msgstr "Admin"
+
+#~ msgid "Logout"
+#~ msgstr "Logg ut"
 
 #~ msgid "Other Excercise"
 #~ msgstr "Anna trening"
