@@ -1,5 +1,5 @@
 from django import forms
-from models import Route, CycleTrip
+from models import Route, CycleTrip, Hike, OtherExercise
 
 
 class RouteForm(forms.ModelForm):
@@ -18,4 +18,8 @@ class CycleTripForm(EventForm):
 class FullCycleTripForm(forms.ModelForm):
     class Meta:
         model = CycleTrip
+        exclude = ('user', 'content_type', 'object_id')
+class FullHikeForm(forms.ModelForm):
+    class Meta:
+        model = Hike
         exclude = ('user', 'content_type', 'object_id')

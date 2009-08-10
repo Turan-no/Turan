@@ -7,7 +7,7 @@
 {% endblock %}
 {% block extramenu %}
 {% ifequal user object.user %}
-        <li class="modify"><a href="{% url admin:turan_cycletrip_change object.id %}">{% trans "Modify" %}</a></li>
+        <li class="modify"><a href="{% url trip_update object.id %}">{% trans "Modify" %}</a></li>
 {% endifequal %}
 {% endblock%}
 {% block content %}
