@@ -225,7 +225,7 @@ LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "what_next"
 
 INTERNAL_IPS = (
-    '83.242.17.117',
+    '10.2.4.100',
 )
 
 ugettext = lambda s: s
