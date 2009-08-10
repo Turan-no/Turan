@@ -68,11 +68,17 @@ table .number {
 
 
 /* Forms */
+form input[type=submit]:active {
+	margin: 2px -2px -2px 2px;
+}
+form input[type=submit]:hover {
+	background: #f88;
+}
 form input, form textarea {
 	border: 1px solid #bbb;
 	color: black;
-	font-size: 123.1%;
 	padding: 0.2em;
+	background: #eaeaea;
 }
 form#new_set {
 	text-align: right;
