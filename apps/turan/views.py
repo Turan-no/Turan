@@ -668,20 +668,21 @@ def cycletrip(request, object_id):
 
     object = get_object_or_404(CycleTrip, pk=object_id)
     details = object.cycletripdetail_set.all()
-    #userweight = object.user.userprofile_set.all()[0].weight
-    userweight = object.user.get_profile().weight
-    filldistance(details)
-    slopes = getslopes(details)
-    for slope in slopes:
-        delta_t = (details[slope.end].time - details[slope.start].time).seconds
-        slope.speed = slope.length/delta_t * 3.6
-        slope.avg_hr = getavghr(details, slope.start, slope.end)
-        slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
-    
-    speedjs = tripdetail_js('cycletrip', object_id, 'speed')
-    hrjs = tripdetail_js('cycletrip', object_id, 'hr')
-    cadencejs = tripdetail_js('cycletrip', object_id, 'cadence')
-    altitudejs = tripdetail_js('cycletrip', object_id, 'altitude')
+    if details:
+        #userweight = object.user.userprofile_set.all()[0].weight
+        userweight = object.user.get_profile().weight
+        filldistance(details)
+        slopes = getslopes(details)
+        for slope in slopes:
+            delta_t = (details[slope.end].time - details[slope.start].time).seconds
+            slope.speed = slope.length/delta_t * 3.6
+            slope.avg_hr = getavghr(details, slope.start, slope.end)
+            slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
+        
+        speedjs = tripdetail_js('cycletrip', object_id, 'speed')
+        hrjs = tripdetail_js('cycletrip', object_id, 'hr')
+        cadencejs = tripdetail_js('cycletrip', object_id, 'cadence')
+        altitudejs = tripdetail_js('cycletrip', object_id, 'altitude')
     return render_to_response('turan/cycletrip_detail.html', locals(), context_instance=RequestContext(request))
 
 def json_serializer(request, queryset, root_name = None, relations = (), extras = ()):
