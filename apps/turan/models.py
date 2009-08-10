@@ -89,6 +89,14 @@ class Route(models.Model):
         verbose_name_plural = _("Routes")
         ordering = ('-created',)
 
+    def get_trips(self):                                                        
+        trip_list = []                                                          
+        trip_list.extend(self.cycletrip_set.all())                              
+        trip_list.extend(self.hike_set.all())                                   
+        trip_list.extend(self.otherexercise_set.all())                          
+        trip_list = sorted(trip_list, key=lambda x: x.duration)                 
+        return trip_list
+
 #class Team(models.Model):
 #    name = models.CharField(max_length=160, help_text=_('Team name'))
 #    description = models.TextField(help_text=_('info'))

@@ -309,17 +309,8 @@ def events(request, group_slug=None, bridge=None, username=None):
 def route_detail(request, object_id):
     object = get_object_or_404(Route, pk=object_id)
     speeddataseries = ''
-
-    def getjsdatapoint(trip):
-        if trip.duration:
-            time = trip.duration.seconds/60
-            speeddataseries =  '[%s, %s],' % (datetime2jstimestamp(trip.date), time)
-            return speeddataseries
-        return ''
-    for trip in object.hike_set.all():
-        speeddataseries += getjsdatapoint(trip)
-    for trip in object.cycletrip_set.all():
-        speeddataseries += getjsdatapoint(trip)
+    for trip in sorted(object.get_trips(), key=lambda x:x.date):                                                      
+        speeddataseries +=  '[%s, %s],' % (datetime2jstimestamp(trip.date), time)                                 
     return render_to_response('turan/route_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):
