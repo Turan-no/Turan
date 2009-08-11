@@ -12,7 +12,7 @@
 {% endblock %}
 {% block extramenu %}
 {% if user.is_authenticated %}
-        <li class="right"><a href="{% url admin:turan_route_change object.id %}">{% trans "Modify" %}</a></li>
+        <li class="right"><a href="{% url route_update object.id %}">{% trans "Modify" %}</a></li>
 {% endif %}
 {% endblock %}
 {% block content %}
