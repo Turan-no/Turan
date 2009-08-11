@@ -362,7 +362,7 @@ def statistics(request):
     dursums = userstats.filter(sum_duration__gt=0).order_by('sum_duration').reverse()
     energysums = userstats.filter(sum_energy__gt=0).order_by('sum_energy').reverse()
     ascentsums = userstats.filter(sum_ascent__gt=0).order_by('sum_ascent').reverse()
-    avgavghrs = userstats.filter(max_hr__gt=0)
+    avgavghrs = userstats.filter(avg_avg_hr__gt=0).filter(max_hr__gt=0)
 
     for u in avgavghrs:
         u_avg_avg_hr = u.avg_avg_hr
