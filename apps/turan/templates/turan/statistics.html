@@ -150,7 +150,7 @@
     <h3> {% trans "Highest average HR" %} </h3>
     <ol>
         {% for u in avgavghrs %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avg_avg_hr|floatformat}} {% trans "BPM" %} ( {{u.avg_avg_hr|percent:u.max_hr}}  )</li>
+        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {% if u.avg_avg_hr %} {{ u.avg_avg_hr|floatformat}} {% trans "BPM" %} ( {{u.avg_avg_hr|percent:u.max_hr}}  ) {% endif %}</li>
         {% endfor %}
     </ol>
 

@@ -365,7 +365,11 @@ def statistics(request):
     avgavghrs = userstats.filter(max_hr__gt=0)
 
     for u in avgavghrs:
-        u.avgavghrpercent = float(u.avg_avg_hr)/u.max_hr*100
+        u_avg_avg_hr = u.avg_avg_hr
+        if u_avg_avg_hr:
+            u.avgavghrpercent = float(u_avg_avg_hr)/u.max_hr*100
+        else:
+            u.avgavghrpercent = 0
     avgavghrs = sorted(avgavghrs, key=lambda x:-x.avgavghrpercent)
 
     validroutes = Route.objects.filter(ascent__gt=0).filter(distance__gt=0)
