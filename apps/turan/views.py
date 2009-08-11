@@ -15,7 +15,7 @@ from django.contrib.syndication.feeds import Feed
 from django.contrib.comments.models import Comment
 from django.core.files.storage import FileSystemStorage
 from django.utils.safestring import mark_safe
-from django.core.paginator import Paginator
+#from django.core.paginator import Paginator
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import redirect_to_login
@@ -136,102 +136,31 @@ def index(request):
 
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))
 
-class UploadFileForm(forms.Form):
-    id = forms.IntegerField(widget=forms.HiddenInput())
-    file = forms.FileField()
+def trip_compare(request, event_type, trip1, trip2):
 
-@login_required
-def upload_eventdetails(request, object_id, event_type):
-    ''' The view that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
+    if not event_type in ('exercise', 'cycletrip', 'hike'):
+        return HttpResponse('unsupported type')
 
-    id = object_id
+    if event_type == 'cycletrip':
+        trip1 = get_object_or_404(CycleTrip, pk=trip1)
+        trip2 = get_object_or_404(CycleTrip, pk=trip2)
+    elif event_type == 'hike':
+        trip1 = get_object_or_404(Hike, pk=trip1)
+        trip2 = get_object_or_404(Hike, pk=trip2)
+    elif event_type == 'exercise':
+        trip1 = get_object_or_404(OtherExercise, pk=trip1)
+        trip2 = get_object_or_404(OtherExercise, pk=trip2)
 
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES['file']
-            filename = file.name
+    t1_speed = tripdetail_js(event_type, trip1.id, 'speed')
+    t2_speed = tripdetail_js(event_type, trip2.id, 'speed')
+    t1_hr = tripdetail_js(event_type, trip1.id, 'hr')
+    t2_hr = tripdetail_js(event_type, trip2.id, 'hr')
+    t1_cad = tripdetail_js(event_type, trip1.id, 'cadence')
+    t2_cad = tripdetail_js(event_type, trip2.id, 'cadence')
 
-            if filename.endswith('.hrm'): # Polar !
-                parser = HRMParser()
-            elif filename.endswith('.gmd'): # garmin-tools-dump
-                parser = GMDParser()
-            elif filename.endswith('.tcx'): # garmin training centre
-                parser = TCXParser(gps_distance=False) #should have menu on
-                                                       #upload page 
-            else:
-                return HttpResponse(_('Wrong filetype!'))
-            parser.parse_uploaded_file(file)
-            values = parser.entries
-            id = form.cleaned_data['id']
+    alt = tripdetail_js(event_type, trip1.id, 'altitude')
 
-            for val in values:
-                if event_type == 'hike':
-                    d = HikeDetail()
-                elif event_type == 'cycletrip':
-                    d = CycleTripDetail()
-                elif event_type == 'exercise':
-                    d = OtherExerciseDetail()
-
-                d.trip_id = id
-                d.time = val.time
-                d.hr = val.hr
-                d.altitude = val.altitude
-                d.speed = val.speed
-                d.cadence = val.cadence
-                d.lat = val.lat
-                d.lon = val.lon
-                d.save()
-
-
-            if event_type == 'hike':
-                e = Hike.objects.get(pk=id)
-                # TODO: add normalize for hikes
-            elif event_type == 'cycletrip':
-                e = CycleTrip.objects.get(pk=id)
-                # Normalize altitude, that is, if it's below zero scale every value up
-                normalize_altitude(id)
-            elif event_type == 'exercise':
-                e = OtherExercise.objects.get(pk=id)
-                # TODO: add normalize for OtherExercise
-
-            e.max_hr = parser.max_hr
-            e.max_speed = parser.max_speed
-            e.max_cadence = parser.max_cadence
-
-            e.avg_hr = parser.avg_hr
-            e.avg_speed = parser.avg_speed
-            e.avg_cadence = parser.avg_cadence
-            
-            e.kcal = parser.kcal_sum
-
-            e.duration = parser.duration
-
-            if not e.route.distance:
-                if parser.distance_sum:
-                    e.route.distance = parser.distance_sum
-
-            e.save()
-            return HttpResponseRedirect(e.get_absolute_url())
-    else:
-        form = UploadFileForm(initial={'id': id})
-    return render_to_response('turan/tripdetail_form.html', {'form': form, 'id': id, }, context_instance=RequestContext(request))
-
-
-def trip_compare(request, trip1, trip2):
-    trip1 = get_object_or_404(CycleTrip, pk=trip1)
-    trip2 = get_object_or_404(CycleTrip, pk=trip2)
-
-    t1_speed = tripdetail_js('cycletrip', trip1.id, 'speed')
-    t2_speed = tripdetail_js('cycletrip', trip2.id, 'speed')
-    t1_hr = tripdetail_js('cycletrip', trip1.id, 'hr')
-    t2_hr = tripdetail_js('cycletrip', trip2.id, 'hr')
-    t1_cad = tripdetail_js('cycletrip', trip1.id, 'cadence')
-    t2_cad = tripdetail_js('cycletrip', trip2.id, 'cadence')
-
-    alt = tripdetail_js('cycletrip', trip1.id, 'altitude')
-
-    alt_max = trip1.cycletripdetail_set.aggregate(Max('altitude'))['altitude__max']*2
+    alt_max = trip1.get_details.aggregate(Max('altitude'))['altitude__max']*2
 
     return render_to_response('turan/cycletrip_compare.html', locals(), context_instance=RequestContext(request))
 
@@ -293,18 +222,18 @@ def events(request, group_slug=None, bridge=None, username=None):
     object_list = sorted(object_list, key=lambda x: x.date)
     object_list.reverse()
 
-    paginator = Paginator(object_list, 15)
+    #paginator = Paginator(object_list, 15)
     # Make sure page request is an int. If not, deliver first page.
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
+    #try:
+    #    page = int(request.GET.get('page', '1'))
+    #except ValueError:
+    #    page = 1
 
     # If page request (9999) is out of range, deliver last page of results.
-    try:
-        events = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        events = paginator.page(paginator.num_pages)
+    #try:
+    #    events = paginator.page(page)
+    #except (EmptyPage, InvalidPage):
+    #    events = paginator.page(paginator.num_pages)
 
 
     
@@ -557,6 +486,10 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
         stop = int(stop)
     if event_type == 'cycletrip':
         qs = CycleTripDetail.objects.filter(trip=object_id)
+    elif event_type == 'hike':
+        qs = HikeDetail.objects.filter(trip=object_id)
+    elif event_type == 'exercise':
+        qs = OtherExerciseDetail.objects.filter(trip=object_id)
 
     distance = 0
     previous_time = False

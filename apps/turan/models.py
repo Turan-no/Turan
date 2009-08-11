@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
+from tagging.fields import TagField
 
 
 
@@ -39,6 +40,8 @@ class Route(models.Model):
     end_lon = models.FloatField(blank=True, default=0.0)
     
     created = models.DateTimeField(editable=False,auto_now_add=True,null=True)
+
+    tags = TagField()
 
     def save(self):
         # If we have gpx file set but not start_lat set, parse gpx and set start and end positions
@@ -170,6 +173,9 @@ class Hike(Event):
     avg_speed = models.FloatField(blank=True, null=True) #kmt
     max_speed = models.FloatField(blank=True, null=True) #kmt
 
+    def get_details(self):
+        return self.hikedetail_set
+
     def get_absolute_url(self):
         return reverse('hike', kwargs={ 'object_id': self.id }) + '/' + slugify(self.route.name)
 
@@ -203,6 +209,9 @@ class OtherExercise(Event):
 
     exercise_type = models.ForeignKey(ExerciseType)
 
+    def get_details(self):
+        return self.otherexercisedetail_set
+
     def save(self):
         ''' if sensor_file is set and children count is 0, parser sensor
         file and create children '''
@@ -230,13 +239,16 @@ class OtherExercise(Event):
 
 
 class CycleTripManager(models.Manager):
+    pass
    
-    def get_by_userteams(self, user_id):
-        innerq = TeamMembership.objects.filter(user=user_id).values('team').query
-        return self.filter(user__team__in=innerq)
+    #def get_by_userteams(self, user_id):
+    #    innerq = TeamMembership.objects.filter(user=user_id).values('team').query
+    #    return self.filter(user__team__in=innerq)
 
-    def get_by_teamname(self, teamname):
-        return self.filter(user__team__name__exact=teamname)
+    #def get_by_teamname(self, teamname):
+    #    return self.filter(user__team__name__exact=teamname)
+
+
 
 class CycleTrip(Event):
 
@@ -252,6 +264,9 @@ class CycleTrip(Event):
 
     #testm = CycleTripManager()
     objects = CycleTripManager()
+
+    def get_details(self):
+        return self.cycletripdetail_set
 
     def save(self):
         ''' if sensor_file is set and children count is 0, parser sensor

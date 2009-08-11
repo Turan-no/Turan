@@ -252,6 +252,8 @@ RESTRUCTUREDTEXT_FILTER_SETTINGS = {
     'strip_comments': True,
 }
 
+
+PAGINATION_INVALID_PAGE_RAISES_404 = False
 # if Django is running behind a proxy, we need to do things like use
 # HTTP_X_FORWARDED_FOR instead of REMOTE_ADDR. This setting is used
 # to inform apps of this fact

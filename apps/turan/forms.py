@@ -5,7 +5,8 @@ from models import Route, CycleTrip, Hike, OtherExercise
 class RouteForm(forms.ModelForm):
     class Meta:
         model = Route
-        fields = ('distance', 'description', 'gpx_file', 'ascent', 'descent', 'route_url')
+        #fields = ('distance', 'description', 'gpx_file', 'ascent', 'descent', 'route_url')
+        exclude = ('start_lat', 'start_lon', 'end_lat', 'end_lon')
 
 class EventForm(forms.ModelForm):
     class Meta:

@@ -1,15 +1,20 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
+{% load pagination_tags %}
 {% block title %}
 {{ block.super }}
 {% trans "Routes" %}
 {% endblock %}
 {% block content %}
+{% autopaginate object_list %}
+
 
 <h1>
     {% trans "Routes" %}
 </h1>
+
+{% paginate %}
 
 <ul class="buttons">
     <li>

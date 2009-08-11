@@ -2,38 +2,18 @@
 {% load humanize %}
 {% load i18n %}
 {% block title %}
+{% load pagination_tags %}
 {% trans "Events" %}
 {% endblock %}
 {% block content %}
-
-<div class="menu">
-<div class="navigation">
-    <ul class="buttons">
-        {% if events.has_previous %}
-            <li>
-                <a href="?page={{ events.previous_page_number }}">
-                <img src="{{ MEDIA_URL }}pinax/images/silk/icons/resultset_previous.png" alt="">
-                {% trans "Previous" %}</a>
-            </li>
-        {% endif %}
-        {% if events.has_next %}
-            <li>
-                <a href="?page={{ events.next_page_number }}">
-                <img src="{{ MEDIA_URL }}pinax/images/silk/icons/resultset_next.png" alt="">
-                {% trans "Next" %}</a>
-            </li>
-        {% endif %}
-    </ul>
-</div>
-<span class="current">
-    {% trans "Page" %} {{ events.number }} {% trans "of" %} {{ events.paginator.num_pages }}
-</span>
+{% autopaginate object_list %}
 
 <h1>
     {% trans "Events" %}
 </h1>
 
-</div>
+{% paginate %}
+
 <table>
     <tr>
         <th>
@@ -58,7 +38,7 @@
             {% trans "Type" %}
         </th>
     </tr>
-{% for object in events.object_list %}
+{% for object in object_list %}
 <tr class="{% cycle "odd" "even" %}">
     <td>
         {{ object.user }}

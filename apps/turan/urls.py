@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
 from models import Route, CycleTrip, Hike, OtherExercise
-from views import index, upload_eventdetails, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user
+from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user
 from forms import *
 from threadedcomments.models import ThreadedComment as Comment
 
@@ -49,7 +49,6 @@ urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^hike/(?P<object_id>\d+)', 'object_detail', { 'queryset': Hike.objects.select_related(), }, name='hike'),
     url(r'^exercise/?$', 'object_list', { 'queryset': OtherExercise.objects.select_related().order_by('-date'), }, name='exercies'),
     url(r'^exercise/(?P<object_id>\d+)', 'object_detail', { 'queryset': OtherExercise.objects.select_related(), }, name='exercise'),
-    url(r'^upload/eventdetails/(?P<object_id>\d+)/(?P<event_type>\w+)/', upload_eventdetails, name='upload_eventdetails'),
 
 #    url(r'^team/?$', 'object_list', { 'queryset': Team.objects.select_related(), }, name='teams'),
 #    url(r'^team/(?P<object_id>\d+)', 'object_detail', { 'queryset': Team.objects.select_related(), }, name='team'),

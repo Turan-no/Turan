@@ -17,6 +17,13 @@
 {% block head_title %}{% blocktrans %}Tags{% endblocktrans %}{% endblock %}
 
 {% block body %}
+    <h1>{% trans "All routes matching" %} <i>"{{ tag }}"</i></h1>
+    {% for tag in route_tags %}
+    <a href="{{ tag.absolute_url }}">{{ tag }}</a>
+    {% empty %}
+        {% trans "No routes matching tag" %}.
+    {% endfor %}
+
     <h1>{% trans "All Photos Matching " %}<i>"{{ tag }}"</i></h1>
 
     {% if phototags %}
@@ -34,6 +41,7 @@
     {% else %}
         No photos matching tag.
     {% endif %}
+
 
     {% if bookmarktags %}
         {% scores_for_objects bookmarktags as score_dict %}
