@@ -1,6 +1,7 @@
 {% extends "turan/base.html" %}
 {% load threadedcommentstags %}
 {% load avatar_tags %}
+{% load tagging_tags %}
 
 {% load humanize %}
 {% load i18n %}
@@ -108,4 +109,15 @@
     </ul>
 </div>
 {% endblock content %}
+
+{% block cloud %}
+{% tag_cloud_for_model turan.Route as route_tags with steps=3 min_count=0 distribution=log %}
+{% tag_cloud_for_model photos.Image as photo_tags with steps=3 min_count=0 distribution=log %}
+{% for tag in photo_tags %}
+    <a href="/tags/{{ tag }}">{{ tag }}</a>
+{% endfor %}
+{% for tag in route_tags %}
+    <a href="/tags/{{ tag }}">{{ tag }}</a>
+{% endfor %}
+{% endblock %}
 

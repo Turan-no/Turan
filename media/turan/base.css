@@ -2,20 +2,10 @@ html {
 }
 
 body {
-	font-family: Trebuchet MS, Tahoma, Verdana;
 	text-align: left;
     padding: 0;
     background: #fff;
     margin: 0;
-}
-
-/* Grid layout */
-.content {
-	margin-left: auto;
-	margin-right: auto;
-	min-width: 750px;
-	width: 76em;
-    background: #fff;
 }
 
 /* Headers */
@@ -252,21 +242,6 @@ h1 a
 	color: black;
 	text-decoration: none;
 }
-h3 a,
-h3 a:visited {
-	background: transparent;
-	color: black;
-	text-decoration: none;
-}
-h3 span .episodepub {
-	color: #666;
-}
-.episode p.episodemeta a, .episode p.episodemeta a:hover {
-	background: transparent;
-	color: #666;
-	text-decoration: none;
-}
-
 /* Message panels */
 .info, .success, .warning, .notice, .error {
 	border: 2px solid black;

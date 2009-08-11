@@ -14,7 +14,7 @@ html, body {
 }
 body {
     color: #333;
-    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-family: sans-serif;
     font-size: 10pt;
 }
 a, a:visited {
@@ -51,10 +51,11 @@ td {
     width: 800px;
 }
 #footer a, #footer a:visited {
-    color: #444; /* footer link colour */
+    color: white; /* footer link colour */
 }
 #footer a:hover {
-    color: #777; /* footer link hover colour */
+    color: #933; /* footer link hover colour */
+    text-decoration: none !important;
 }
 #site_wide_announcements {
     background: yellow;

@@ -9,7 +9,6 @@
 {% load wiki_tags %}
 {% load voting_tags %} 
 {% load extra_voting_tags %}
-
 {% load in_filter %}
 {% load extra_tagging_tags %}
 
@@ -18,8 +17,9 @@
 
 {% block body %}
     <h1>{% trans "All routes matching" %} <i>"{{ tag }}"</i></h1>
+    
     {% for tag in route_tags %}
-    <a href="{{ tag.absolute_url }}">{{ tag }}</a>
+    <a href="{{ tag.get_absolute_url }}">{% if tag.gpx_file %}<object style="float: left" alt="{{tag}}" title="{{tag}}" type="image/svg+xml" data="{{ tag.get_svg_url }}"></object>{% endif %}{{ tag }}</a>
     {% empty %}
         {% trans "No routes matching tag" %}.
     {% endfor %}
