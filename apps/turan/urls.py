@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
 from models import Route, CycleTrip, Hike, OtherExercise
-from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user
+from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list
 from forms import *
 from threadedcomments.models import ThreadedComment as Comment
 
@@ -37,7 +37,7 @@ urlpatterns = patterns('',
     (r'^feed/(?P<url>.*)/?$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 )
 urlpatterns += patterns('django.views.generic.list_detail',
-    url(r'^route/?$', 'object_list', { 'queryset': Route.objects.select_related().order_by('name'), }, name='routes'),
+    url(r'^route/?$', turan_object_list, { 'queryset': Route.objects.select_related().order_by('name'), }, name='routes'),
 
     url(r'^trip/?$', 'object_list', { 'queryset': CycleTrip.objects.select_related().order_by('-date'), }, name='cycletrips'),
     #    url(r'^trip/(?P<object_id>\d+)', 'object_detail', { 'queryset': CycleTrip.objects.select_related(), }, name='cycletrip'),

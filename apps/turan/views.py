@@ -20,6 +20,8 @@ from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import redirect_to_login
 from django.views.generic.create_update import get_model_and_form_class, apply_extra_context, redirect, update_object, lookup_object
+from django.views.generic.list_detail import object_list
+from django.db.models import Q
 
 
 from datetime import timedelta, datetime
@@ -680,4 +682,19 @@ def update_object_user(request, model=None, object_id=None, slug=None,
     return update_object(request, model, object_id, slug, slug_field, template_name,
             template_loader, extra_context, post_save_redirect, login_required,
             context_processors, template_object_name, form_class)
+
+def turan_object_list(request, queryset):
+
+    query = request.GET.get('q', '')
+    if query:
+        qset = (
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(tags__contains=query)
+        )
+        queryset = queryset.filter(qset).distinct()
+
+
+    return object_list(request, queryset=queryset)
+
 
