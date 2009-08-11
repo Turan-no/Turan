@@ -65,6 +65,14 @@ $(function () {
                 <h1>{% blocktrans %}Profile for <span class="fn nickname">{{ other_user }}</span>{% endblocktrans %}</h1>
             {% endif %}
             
+        <div style="float: right">
+            {% if other_user.get_profile.image %}
+            <img alt="{% trans "User image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.image }}"><br>
+            {% endif %}
+            {% if other_user.get_profile.cycle_image %}
+            <img alt="{% trans "Cycle image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.cycle_image }}">
+            {% endif %}
+        </div>
             <div class="profile_info">
                 {% if other_user.get_profile.name %}<p><b>{% trans "Name" %}</b>: <span class="fn">{{ other_user.get_profile.name }}</span></p>{% endif %}
                 {% if other_user.get_profile.about %}<p><b>{% trans "About" %}</b>: {{ other_user.get_profile.about }}</p>{% endif %}
