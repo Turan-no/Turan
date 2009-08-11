@@ -19,6 +19,12 @@ class FullCycleTripForm(forms.ModelForm):
     class Meta:
         model = CycleTrip
         exclude = ('user', 'content_type', 'object_id')
+
+class HikeForm(forms.ModelForm):
+    class Meta:
+        model = Hike
+        fields = ('route', 'date', 'time', 'comment', 'sensor_file', 'kcal', 'url')
+
 class FullHikeForm(forms.ModelForm):
     class Meta:
         model = Hike

@@ -65,7 +65,7 @@ urlpatterns += patterns('django.views.generic.create_update',
 #        url(r'^trip/create/$', 'create_object', 
     url(r'^route/create/$', create_object, {'login_required': True, 'form_class': RouteForm},name='route_create'),
     url(r'^trip/create/$', create_object, {'login_required': True, 'form_class': CycleTripForm, 'user_required':True}, name='trip_create'),
-    url(r'^hike/create/$', create_object, {'login_required': True, 'form_class': CycleTripForm, 'user_required':True}, name='hike_create'),
+    url(r'^hike/create/$', create_object, {'login_required': True, 'form_class': HikeForm, 'user_required':True}, name='hike_create'),
     url(r'^exercise/create/$', create_object, {'login_required': True, 'form_class': CycleTripForm, 'user_required':True}, name='exercise_create'),
 
     url(r'^route/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': RouteForm},name='route_update'),
