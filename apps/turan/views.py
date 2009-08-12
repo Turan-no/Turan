@@ -35,6 +35,13 @@ from hrmparser import HRMParser
 from gmdparser import GMDParser
 from tcxparser import TCXParser
 
+if "notification" in settings.INSTALLED_APPS:
+    from notification import models as notification
+else:
+    notification = None
+
+from friends.models import friend_set_for
+
 def datetime2jstimestamp(obj):
     ''' Helper to generate js timestamp for usage in flot '''
     return mktime(obj.timetuple())*1000
@@ -265,9 +272,15 @@ def week(request, week, user_id='all'):
     
     return render_to_response('turan/event_list.html', locals(), context_instance=RequestContext(request))
 
-def statistics(request):
+def statistics(request, year=None, month=None):
 
-    stats_dict = CycleTrip.objects.aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
+    cycleqs = CycleTrip.objects
+    if year:
+        cycleqs = cycleqs.filter(date__year=year)
+    if month:
+        cycleqs = cycleqs.filter(date__month=month)
+
+    stats_dict = cycleqs.aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
     total_duration = stats_dict['duration__sum']
     total_distance = stats_dict['route__distance__sum']
     total_avg_speed = stats_dict['avg_speed__avg']
@@ -649,6 +662,12 @@ def create_object(request, model=None, template_name=None,
             if user_required:
                 new_object.user = request.user
             new_object.save()
+
+            # notify friends of new object
+            if notification and user_required: # only notify for user owned objects
+                notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
+            
+
             if request.user.is_authenticated():
                 request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": model._meta.verbose_name})
             return redirect(post_save_redirect, new_object)
