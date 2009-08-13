@@ -193,7 +193,7 @@ INSTALLED_APPS = (
 
 )
 
-GPX_STORAGE = '/home/lart.no/media/turan'
+GPX_STORAGE = '/home/turan.lart.no/pinax-env/turansite/media/turan'
 #DEFAULT_FILE_STORAGE = GPX_STORAGE
 
 
