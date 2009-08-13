@@ -1,0 +1,19 @@
+wget http://github.com/pinax/pinax/raw/master/scripts/pinax-boot.py
+python pinax-boot.py --development ./pinax-env
+source ./pinax-env/bin/activate
+cd pinax-env/
+vim src/pinax/requirements/libs.txt
+
+Modify django 1.03 to django 1.1
+BeautifulSoup>=3.0.7a
+Django==1.1
+wadofstuff-django-serializers==1.0.0
+
+
+pip install --upgrade --requirement src/pinax/requirements/external_apps.txt
+(pip install --upgrade django) ?
+(rm -rf ./lib/python2.6/site-packages/Django-1.0.3-py2.6.egg/django) ?
+ 
+git clone /home/git/turan.git/ turansite
+
+kopier/symlink katalogar frå site_media etter behov (avatars/photologue/turan/{gpx,svg,sensor}
