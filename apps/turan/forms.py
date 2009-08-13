@@ -30,3 +30,13 @@ class FullHikeForm(forms.ModelForm):
     class Meta:
         model = Hike
         exclude = ('user', 'content_type', 'object_id')
+
+class ExerciseForm(forms.ModelForm):
+    class Meta:
+        model = OtherExercise
+        fields = ('route', 'date', 'time', 'exercise_type', 'comment', 'sensor_file', 'kcal', 'url')
+
+class FullExerciseForm(forms.ModelForm):
+    class Meta:
+        model = OtherExercise
+        exclude = ('user', 'content_type', 'object_id')
