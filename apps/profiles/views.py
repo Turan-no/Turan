@@ -3,6 +3,7 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
+from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
@@ -44,6 +45,17 @@ def profiles(request, template_name="profiles/profiles.html", extra_context=None
         users = users.order_by("-date_joined")
     elif order == 'name':
         users = users.order_by("username")
+    elif order == 'time':
+
+        users = users.annotate(c =
+                Sum('cycletrip__duration'),h =
+                Sum('hike__duration'),e =
+                Sum('otherexercise__duration'))
+        for u in users:
+            if not u.e: u.e = 0
+            if not u.h: u.h = 0
+            if not u.c: u.c = 0
+        users = sorted(users, key=lambda x: -x.c-x.h-x.e)
     return render_to_response(template_name, dict({
         'users': users,
         'order': order,
