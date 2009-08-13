@@ -2,12 +2,12 @@
 {% load humanize %}
 {% load i18n %}
 {% load pagination_tags %}
+{% load sorting_tags %}
 {% block title %}
 {{ block.super }}
 {% trans "Routes" %}
 {% endblock %}
 {% block content %}
-{% autopaginate object_list %}
 
 <div style="float: right">
 <h3>{% trans "Search for route" %}</h3>
@@ -21,6 +21,8 @@
     {% trans "Routes" %}
 </h1>
 
+{% autosort object_list %}
+{% autopaginate object_list %}
 {% paginate %}
 
 <ul class="buttons">
@@ -35,20 +37,22 @@
 <table>
     <tr>
         <th>
-            {% trans "Name" %}
-        </th>
-        <th>{% trans "Distance" %}</th>
-        <th>
-            {% trans "Description" %}
+            {% anchor name %}
         </th>
         <th>
-            {% trans "Cycle Trip count" %}
+            {% anchor distance %}
         </th>
         <th>
-            {% trans "Hike count" %}
+            {% anchor ascent %}
         </th>
         <th>
-            {% trans "Route plot" %}
+            {% anchor descent %}
+        </th>
+        <th>
+            {% anchor created %}
+        </th>
+        <th>
+            {% trans "Trip count" %}
         </th>
     </tr>
 {% for object in object_list %}
@@ -57,14 +61,22 @@
         <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
     </td>
     <td class="number">{{ object.distance }} km</td>
-    <td>{{ object.description }}</td>
-    <td class="number">{{ object.cycletrip_set.count }}</td>
-    <td class="number">{{ object.hike_set.count }}</td>
-    <td>
-        {% if object.gpx_file %}
-            <object  type="image/svg+xml" data="{{ object.get_svg_url }}"></object>
+    <td class="number">
+        {% if object.ascent %}
+            {{ object.ascent }} {% trans "m" %}
         {% endif %}
     </td>
+    <td class="number">
+        {% if object.descent %}
+            {{ object.descent }} {% trans "m" %}
+        {% endif %}
+    </td>
+    <td>
+        {% if object.created %}
+        {{ object.created|naturalday}}
+        {% endif %}
+    </td>
+    <td class="number">{{ object.tripcount }}</td>
 </tr>
 
 {%endfor %}

@@ -105,6 +105,12 @@ class Route(models.Model):
             pass # value error because of invalid duration TODO FIXME write proper for loop ?
         return trip_list
 
+    @property
+    def tripcount(self):
+        ''' used in triplist, nice for sorting '''
+        return len(self.get_trips())
+
+
 #class Team(models.Model):
 #    name = models.CharField(max_length=160, help_text=_('Team name'))
 #    description = models.TextField(help_text=_('info'))
