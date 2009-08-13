@@ -24,6 +24,9 @@
         <table>
             <tr>
                 <th>
+                    {% trans "Start" %}
+                </th>
+                <th>
                     {% trans "Length" %}
                 </th>
                 <th>
@@ -44,6 +47,7 @@
             </tr>
         {% for slope in slopes %}
             <tr>
+                <td>{{ slope.start }} </td>
                 <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
                 <td>{{slope.hdelta}} {% trans "m" %}</td>
                 <td>{{slope.gradient|floatformat}} %</td>
