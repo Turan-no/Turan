@@ -21,7 +21,7 @@ SERIALIZATION_MODULES = {
 SERVE_MEDIA = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+     ('tor', 'tor@bash.no'),
 )
 
 MANAGERS = ADMINS
@@ -67,7 +67,7 @@ MEDIA_URL = '/site_media/'
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/site_media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '%z3t0zu+99#5(m^w%-+q)m7tc2o9n#p_o%vah-$@7i_#))+0l8'
