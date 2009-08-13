@@ -23,6 +23,8 @@ from gpxparser import GPXParser
 from hrmparser import HRMParser
 from gmdparser import GMDParser
 from tcxparser import TCXParser
+from csvparser import CSVParser
+
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 
 class Route(models.Model):
@@ -405,6 +407,8 @@ def parse_sensordata(event, event_type):
     elif filename.endswith('.tcx'): # garmin training centre
         parser = TCXParser(gps_distance=False) #should have menu on
                                                #upload page 
+    elif filename.endswith('.csv'): # PowerTap
+        parser = CSVParser()
     else:
         return # Maybe warn user somehow?
 
