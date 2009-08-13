@@ -25,7 +25,9 @@
     <li class="duration"><span class="label">{% trans "Duration" %}:</span> {{ object.duration }}</li>
     {% endif %}
     <li class="date"><span class="label">{% trans "Date" %}:</span> {{ object.date }}</li>
+    {% if object.time %}
     <li class="time"><span class="label">{% trans "Start time" %}:</span> {{ object.time }}</li>
+    {% endif %}
     {% if object.url %}
     <li class="url"><span class="label">{% trans "URL" %}:</span> {{ object.url|urlize }}</li>
     {% endif %}
