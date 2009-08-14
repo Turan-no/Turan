@@ -17,10 +17,10 @@ blogs_feed_dict = {"feed_dict": {
 bookmarks_feed_dict = {"feed_dict": { '': BookmarkFeed }}
 
 
-if settings.ACCOUNT_OPEN_SIGNUP:
-    signup_view = "account.views.signup"
-else:
-    signup_view = "signup_codes.views.signup"
+#if settings.ACCOUNT_OPEN_SIGNUP:
+signup_view = "account.views.signup"
+#else:
+#    signup_view = "signup_codes.views.signup"
 
 
 urlpatterns = patterns('',

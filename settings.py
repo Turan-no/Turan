@@ -182,7 +182,7 @@ INSTALLED_APPS = (
     'profiles',
     'staticfiles',
     'account',
-    'signup_codes',
+#    'signup_codes',
     'tribes',
     'photos',
     'tag_app',
