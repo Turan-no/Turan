@@ -467,7 +467,8 @@ def parse_sensordata(event, event_type):
     event.avg_speed = parser.avg_speed
     event.avg_cadence = parser.avg_cadence
     
-    event.kcal = parser.kcal_sum
+    if parser.kcal_sum: # only some parsers provide kcal
+        event.kcal = parser.kcal_sum
 
     event.duration = parser.duration
 

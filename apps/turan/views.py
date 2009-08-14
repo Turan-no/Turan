@@ -2,7 +2,7 @@ from models import *
 #from forms import *
 from profiles.models import Profile
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseForbidden, Http404
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.template import RequestContext, Context, loader
@@ -25,7 +25,8 @@ from django.db.models import Q
 
 
 from datetime import timedelta, datetime
-from time import mktime
+from datetime import date as datetimedate
+from time import mktime, strptime
 import locale
 
 from svg import GPX2SVG
@@ -429,48 +430,59 @@ def normalize_altitude(trip_id):
             ctd.altitude += altitude_min
             ctd.save()
 
+def calendar(request, user_id=False):
+    now = datetime.now()
+    return calendar_month(request, now.year, now.month, user_id)
+
+def calendar_month(request, year, month, user_id=False):
+    ''' the calendar view, some code stolen from archive_month generic view '''
+
+    month_format = '%m' 
+    allow_future = True
+    date_field = 'date'
+    tt = strptime("%s-%s" % (year, month), '%s-%s' % ('%Y', month_format))
+    date = datetimedate(*tt[:3])
+    now = datetime.now()
 
 
-#@login_required
-#def route_new(request):
-#    if request.method == 'POST':
-#        routeform = RouteForm(request.POST, request.FILES)
-#        if routeform.is_valid():
-#            print 'valid!'
-#            gpxfile = request.FILES['gpx_file']
-#            filename = gpxfile.name
-#            print filename
-#
-#            if not filename.endswith('.gpx'):
-#                return HttpResponse(_('Wrong filetype!'))
-#            
-#            route = routeform.save()
-#            return HttpResponseRedirect(route.get_absolute_url())
-#        else:
-#            return HttpResponse(_('Error while parsing form'))
-#    else:
-#        routeform = RouteForm()
-#        return render_to_response('turan/route_new.html', locals(), context_instance=RequestContext(request))
-
-
-def calendar(request, year=False, month=False, user_id=False):
-    if not year:
-        year = datetime.now().year
-        month = datetime.now().month
+    # Calculate first and last day of month, for use in a date-range lookup.
+    first_day = date.replace(day=1)
+    if first_day.month == 12:
+        last_day = first_day.replace(year=first_day.year + 1, month=1)
     else:
-        year, month = int(year), int(month)
-    cycletrips = CycleTrip.objects.order_by('date').filter(
-            date__year=year, date__month=month)
-    hikes = Hike.objects.order_by('date').filter(
-            date__year=year, date__month=month)
-    exercices = OtherExercise.objects.order_by('date').filter(
-            date__year=year, date__month=month)
+        last_day = first_day.replace(month=first_day.month + 1)
+    lookup_kwargs = {
+        '%s__gte' % date_field: first_day,
+        '%s__lt' % date_field: last_day,
+    }
+
+    # Only bother to check current date if the month isn't in the past and future objects are requested.
+    if last_day >= now.date() and not allow_future:
+        lookup_kwargs['%s__lte' % date_field] = now
+
+
+    cycletrips = CycleTrip.objects.order_by('date').filter(**lookup_kwargs)
+    hikes = Hike.objects.order_by('date').filter(**lookup_kwargs)
+    exercices = OtherExercise.objects.order_by('date').filter(**lookup_kwargs)
 
     if user_id:
         cycletrips = cycletrips.filter(user=user_id)
         hikes = hikes.filter(user=user_id)
         exercices = exercices.filter(user=user_id)
 
+    # Calculate the next month, if applicable.
+    if allow_future:
+        next_month = last_day
+    elif last_day <= datetime.date.today():
+        next_month = last_day
+    else:
+        next_month = None
+
+    # Calculate the previous month
+    if first_day.month == 1:
+        previous_month = first_day.replace(year=first_day.year-1,month=12)
+    else:
+        previous_month = first_day.replace(month=first_day.month-1)
 
     months = []
     workouts = []
@@ -479,20 +491,17 @@ def calendar(request, year=False, month=False, user_id=False):
     workouts.extend(exercices)
     workouts = sorted(workouts, key=lambda x: x.date)
 
-    #for x in cycletrips, hikes, exercices:
-    #    dates = x.dates('date', 'month')
-    #    if len(dates) > 0:
-    #        for month in dates:
-    #            if not month in months:
-    #                months.append(month)
-    #    else:
-    #        if not dates in months:
-    #            months.append(dates)
-
-
    # FIXME django locale
+    # stupid calendar needs int
+    year, month = int(year), int(month)
     cal = WorkoutCalendar(workouts, locale.getdefaultlocale()).formatmonth(year, month)
-    return render_to_response('turan/calendar.html', {'calendar': mark_safe(cal), 'months': months,}, context_instance=RequestContext(request))
+    return render_to_response('turan/calendar.html',
+            {'calendar': mark_safe(cal),
+             'months': months,
+             'previous_month': previous_month,
+             'next_month': next_month,
+             },
+            context_instance=RequestContext(request))
 
 def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     if start:
