@@ -17,6 +17,17 @@ class TCXEntry(object):
     def __unicode__(self):
          return '[%s] hr: %s, speed: %s, cadence: %s, alt: %s, lon %s, lat: %s, power: %s' % (self.time, self.hr, self.speed, self.cadence, self.altitude, self.lon, self.lat, self.power)
 
+class LapData(object):
+    def __init__(self, start_time, duration, distance,  max_speed, avg_hr, max_hr, avg_cadence, kcal_sum):
+        self.start_time = start_time
+        self.duration = duration
+        self.distance = distance
+        self.max_speed = max_speed
+        self.avg_hr = avg_hr
+        self.max_hr = max_hr
+        self.avg_cadence = avg_cadence
+        self.kcal_sum = kcal_sum
+
 class TCXParser(object):
     def __init__(self, gps_distance=False):
         self.entries = []
@@ -29,47 +40,65 @@ class TCXParser(object):
 
         t = ElementTree.parse(f)
 
+        self.laps = []
         # warning. ugly xml crap ahead
-        #garmin probably supports multiple laps, should be fixed
-        try: 
-            lap = t.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Activities").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Activity").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Lap")
-        except:
-            lap = t.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Courses").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Course").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Lap")
-        try:
-            startstring = dict(lap.items())["StartTime"]
-        except:
-            startstring = t.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Courses").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Course").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Track").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Time").text
-        self.time = datetime.datetime(*map(int, startstring.replace("T","-").replace(":","-").strip("Z").split("-")))
+        lapskaus = t.getiterator("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Lap")
+        for lap in lapskaus:
+            try:
+                startstring = dict(lap.items())["StartTime"]
+            except:
+                startstring = t.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Courses").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Course").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Track").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Time").text
+            time = datetime.datetime(*map(int, startstring.replace("T","-").replace(":","-").strip("Z").split("-")))
+
+            try:
+                kcal_sum = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Calories").text)
+            except AttributeError:
+                kcal_sum = 0
+
+            try:
+                avg_cadence = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Cadence").text)
+            except AttributeError:
+                avg_cadence = 0
+
+            try:
+                max_hr = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}MaximumHeartRateBpm").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Value").text)
+            except AttributeError:
+                max_hr = 0    # Ring 113
+
+            try:
+                avg_hr = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}AverageHeartRateBpm").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Value").text)
+            except AttributeError:
+                avg_hr = 0    # Ring 113
+            
+            try:
+                distance_sum = float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}DistanceMeters").text)
+            except AttributeError:
+                distance_sum = 0.0
+
+            try:
+                duration = float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}TotalTimeSeconds").text)
+            except AttributeError:
+                duration = 1.0 # we're going to divide by this, can't set to 0
+
+            try:
+                max_speed = float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}MaximumSpeed").text)*3.6
+            except AttributeError:
+                max_speed = None
+
+            self.laps.append(LapData(time, duration, distance_sum, max_speed, avg_hr, max_hr, avg_cadence, kcal_sum))
+
+        self.time = self.laps[0].start_time
         self.cur_time = self.time
 
-        try:
-            self.kcal_sum = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Calories").text)
-        except AttributeError:
-            self.kcal_sum = 0
-
-        try:
-            self.avg_cadence = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Cadence").text)
-        except AttributeError:
-            self.avg_cadence = 0
-
-        try:
-            self.max_hr = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}MaximumHeartRateBpm").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Value").text)
-        except AttributeError:
-            self.max_hr = 0    # Ring 113
-
-        try:
-            self.avg_hr = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}AverageHeartRateBpm").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Value").text)
-        except AttributeError:
-            self.avg_hr = 0    # Ring 113
-        
         if self.gps_distance:
             self.distance_sum = 0.0
         else:
-            try:
-                self.distance_sum = float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}DistanceMeters").text)
-            except AttributeError:
-                self.distance_sum = 0.0
+            self.distance_sum = sum([self.laps[i].distance for i in xrange(0,len(self.laps))])
+        self.max_hr = max([self.laps[i].max_hr for i in xrange(0,len(self.laps))])
+        self.kcal_sum = sum([self.laps[i].kcal_sum for i in xrange(0,len(self.laps))])
 
+        self.heartbeats = 0
+        self.rotations = 0
         for e in t.getiterator(tag="{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint"):
             try:
                 tstring = e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Time").text
@@ -132,22 +161,25 @@ class TCXParser(object):
             else:
                 speed = 0.0
 
+            self.heartbeats += hr*timedelta
+            self.rotations += cadence*timedelta
+
             self.entries.append(TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power))
             self.cur_time = time
 
-        try:
-            seconds = float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}TotalTimeSeconds").text)
-        except AttributeError:
-            seconds = 1.0 # we're going to divide by this, can't set to 0
-        
+        seconds = sum([self.laps[i].duration for i in xrange(0,len(self.laps))])
         self.avg_speed = self.distance_sum / seconds * 3.6
         if self.gps_distance:
             self.max_speed = max([self.entries[i].speed for i in xrange(0,len(self.entries))])
         else:
             try:
-                self.max_speed = float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}MaximumSpeed").text)*3.6
-            except AttributeError:
+                self.max_speed = max([self.laps[i].max_speed for i in xrange(0,len(self.laps))])
+            except:
+                pass
+            if not self.max_speed:
                 self.max_speed = max(filter(lambda x: x<= 200,[self.entries[i].speed for i in xrange(0,len(self.entries))]))
  
         self.max_cadence = max([self.entries[i].cadence for i in xrange(0,len(self.entries))])
+        self.avg_cadence = self.rotations/seconds
+        self.avg_hr = self.heartbeats/seconds
         self.duration = '%is' % int(seconds)
