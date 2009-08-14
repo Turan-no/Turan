@@ -13,6 +13,11 @@ wadofstuff-django-serializers==1.0.0
 pip install --upgrade --requirement src/pinax/requirements/external_apps.txt
 (pip install --upgrade django) ?
 (rm -rf ./lib/python2.6/site-packages/Django-1.0.3-py2.6.egg/django) ?
+
+
+Enable nynorsk: 
+cp -a lib/python2.6/site-packages/django/conf/locale/no lib/python2.6/site-packages/django/conf/locale/nn
+
  
 git clone /home/git/turan.git/ turansite
 
