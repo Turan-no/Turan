@@ -6,10 +6,17 @@
 {% endblock %}
 {% block extramenu %}
     {% ifequal user object.user %}
-        <li class="modify"><a href="{% url admin:turan_otherexercise_change object.id %}">{% trans "Modify" %}</a></li>
+        <li class="modify"><a href="{% url exercise_update object.id %}">{% trans "Modify" %}</a></li>
     {% endifequal %}
 {% endblock %}
+
+{% block content %}
+{% include "turan/cycletrip/attributes.html" %}
+<hr class="clear">
+{% include "turan/commentform.html" %}
 {% block graph %}
     {% include "turan/exercise/graph.html" %}
 {% endblock graph %}
+{% endblock %}
+
 

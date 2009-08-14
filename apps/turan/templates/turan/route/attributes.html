@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load turan_extras %}
+{% ifnotequal object.id 24 %}
 <ul class="route_attributes">
     {% if object.distance %}
     <li class="distance"><span class="label">{% trans "Distance" %}:</span> {{ object.distance }} {% trans "km" %}</li>
@@ -22,3 +23,4 @@
     <li class="descent"><span class="label">{% trans "Descent" %}:</span> {{ object.descent }} {% trans "m" %}</li>
     {% endif %}
 </ul>
+{% endifnotequal %}

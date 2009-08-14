@@ -27,6 +27,13 @@ from csvparser import CSVParser
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 
+class RouteManager(models.Manager):
+    ''' Primary purpose to remove the /dev/null route. Will also hide "one time routes" '''
+
+    def get_query_set(self):
+        return super(RouteManager, self).get_query_set().exclude(id=24)
+    
+
 class Route(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_('for example Opsangervatnet'))
     distance = models.FloatField(help_text=_('in km'))
@@ -44,6 +51,8 @@ class Route(models.Model):
     created = models.DateTimeField(editable=False,auto_now_add=True,null=True)
 
     tags = TagField()
+
+    objects = RouteManager()
 
     def save(self):
         # If we have gpx file set but not start_lat set, parse gpx and set start and end positions
@@ -236,7 +245,7 @@ class OtherExercise(Event):
         return u'%s' %(name)
 
     def get_absolute_url(self):
-        return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + slugify(self.route.name)
+        return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + slugify(self.exercise_type)
 
     def icon(self):
         return '<img alt="Hiker" src="/site_media/turan/hiker.png">'
