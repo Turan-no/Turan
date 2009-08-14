@@ -3,19 +3,19 @@
 {% load uni_form %}
 {% load pagination_tags %}
 {% load avatar_tags %}
+{% load humanize %}
 
 {% get_threaded_comment_tree for object as responses %}
 {% autopaginate responses %}
-
 <ul class="comments">
     {% for response in responses %}
         <li class="{% cycle even,odd %} thread-{{ response.depth }} clearfix">
             <div class="meta">
                 <div class="avatar">{% avatar response.user 40 %}</div>
-                <div class="details"><a href="{% url profile_detail response.user.username %}">{{ response.user     }}</a></div>
-		<span class="date">{{ response.date_submitted|date }}</span>
+                <div class="details"><a href="{% url profile_detail response.user.username %}">{{ response.user }} </a></div>
+		<span class="date">{{ response.date_submitted|naturalday }}</span>
 		<span class="controls">
-                	{% ifequal user response.user %}
+            {% ifequal user response.user %}
 			<form method="POST" action="{% url tc_comment_delete response.id %}">
 			    <input type="submit" value="{% trans "Delete Post" %}" />
 			    <input type="hidden" name="next" value="{{ request.path }}" />
@@ -44,7 +44,7 @@
     <form class="uniForm" method="POST" action="{% get_comment_url object %}">
         <fieldset class="inlineLabels">
             <div class="ctrlHolder">
-                <textarea id="id_comment" rows="10" cols="40" name="comment"></textarea>
+                <textarea id="id_comment" rows="2" cols="40" name="comment"></textarea>
             </div>
             <div class="form_block">
                 <input type="hidden" name="next" value="{{ request.path }}" />
@@ -53,5 +53,5 @@
         </fieldset>
     </form>
 {% else %}
-    <h3>Please <a href="{% url acct_login %}">Login</a> (or <a href="{% url acct_signup %}">Sign Up</a>) to leave a comment</h3>
+<h3>{% blocktrans %}Please <a href="{% url acct_login %}">Login</a> (or <a href="{% url acct_signup %}">Sign Up</a>) to leave a comment{% endblocktrans %}</h3>
 {% endif %}
