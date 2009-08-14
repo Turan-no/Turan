@@ -559,7 +559,7 @@ def getslopes(values):
                 inslope = False
                 if hdelta >= min_slope:
                     distance = values[cur_end].distance - values[cur_start].distance
-                    slopes.append(Slope(cur_start, cur_end, distance, hdelta, hdelta/distance * 100))
+                    slopes.append(Slope(cur_start, cur_end, distance, hdelta, hdelta/distance * 100, values[cur_start].distance/1000))
                 cur_start = i
         elif values[i].altitude <= values[cur_start].altitude:
             cur_start = i
@@ -593,12 +593,13 @@ def getavghr(values, start, end):
     return float(hr)/delta_t
 
 class Slope(object):
-    def __init__(self, start, end, length, hdelta, gradient):
+    def __init__(self, start, end, length, hdelta, gradient, start_km):
         self.start = start
         self.end = end
         self.length = length
         self.hdelta = hdelta
         self.gradient = gradient
+        self.start_km = start_km
 
 def calcpower(userweight, eqweight, gradient, speed, 
         rollingresistance = 0.006 ,
