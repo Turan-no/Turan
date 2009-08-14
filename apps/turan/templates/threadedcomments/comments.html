@@ -13,7 +13,7 @@
             <div class="meta">
                 <div class="avatar">{% avatar response.user 40 %}</div>
                 <div class="details"><a href="{% url profile_detail response.user.username %}">{{ response.user }} </a></div>
-		<span class="date">{{ response.date_submitted|naturalday }}</span>
+		<span class="date">&nobr;{{ response.date_submitted|naturalday }}</span>
 		<span class="controls">
             {% ifequal user response.user %}
 			<form method="POST" action="{% url tc_comment_delete response.id %}">
@@ -29,7 +29,7 @@
             <div class="bulk">
                 <div class="body">{{ response.comment|urlize|linebreaks }}</div>
                 <form class="hidden" method="POST" action="{% get_comment_url object response %}" id="comment_form_{{ response.id }}">
-                    <table><tr><td><textarea id="id_comment" rows="10" cols="40" name="comment"></textarea></td></tr>
+                    <table><tr><td><textarea id="id_comment" rows="2" cols="40" name="comment"></textarea></td></tr>
                     <tr><td><input type="submit" value="{% trans "Post Response" %}" /></td></tr></table>
                     <input type="hidden" name="next" value="{{ request.path }}" />
                 </form>
@@ -53,5 +53,5 @@
         </fieldset>
     </form>
 {% else %}
-<h3>{% blocktrans %}Please <a href="{% url acct_login %}">Login</a> (or <a href="{% url acct_signup %}">Sign Up</a>) to leave a comment{% endblocktrans %}</h3>
+<h3><a href="{% url acct_login %}">Login</a> (or <a href="{% url acct_signup %}">Sign Up</a>) to leave a comment %}</h3>
 {% endif %}
