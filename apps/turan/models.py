@@ -33,7 +33,8 @@ class RouteManager(models.Manager):
     ''' Primary purpose to remove the /dev/null route. Will also hide "one time routes" '''
 
     def get_query_set(self):
-        return super(RouteManager, self).get_query_set().exclude(id=24)
+        # TODO, this needs to be a fixture, with a fixed ID
+        return super(RouteManager, self).get_query_set().exclude(id=24).filter(single_serving=0)
     
 
 class Route(models.Model):
@@ -51,6 +52,7 @@ class Route(models.Model):
     end_lon = models.FloatField(blank=True, default=0.0)
     
     created = models.DateTimeField(editable=False,auto_now_add=True,null=True)
+    single_serving = models.BooleanField(blank=True, default=0)
 
     tags = TagField()
 
