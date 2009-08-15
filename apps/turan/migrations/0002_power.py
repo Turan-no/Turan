@@ -7,180 +7,27 @@ class Migration:
     
     def forwards(self, orm):
         
-        # Adding model 'CycleTripDetail'
-        db.create_table('turan_cycletripdetail', (
-            ('id', orm['turan.CycleTripDetail:id']),
-            ('time', orm['turan.CycleTripDetail:time']),
-            ('speed', orm['turan.CycleTripDetail:speed']),
-            ('hr', orm['turan.CycleTripDetail:hr']),
-            ('altitude', orm['turan.CycleTripDetail:altitude']),
-            ('lat', orm['turan.CycleTripDetail:lat']),
-            ('lon', orm['turan.CycleTripDetail:lon']),
-            ('trip', orm['turan.CycleTripDetail:trip']),
-            ('cadence', orm['turan.CycleTripDetail:cadence']),
-        ))
-        db.send_create_signal('turan', ['CycleTripDetail'])
+        # Adding field 'CycleTripDetail.power'
+        db.add_column('turan_cycletripdetail', 'power', orm['turan.cycletripdetail:power'])
         
-        # Adding model 'ExerciseType'
-        db.create_table('turan_exercisetype', (
-            ('id', orm['turan.ExerciseType:id']),
-            ('name', orm['turan.ExerciseType:name']),
-        ))
-        db.send_create_signal('turan', ['ExerciseType'])
+        # Adding field 'CycleTrip.avg_power'
+        db.add_column('turan_cycletrip', 'avg_power', orm['turan.cycletrip:avg_power'])
         
-        # Adding model 'HikeDetail'
-        db.create_table('turan_hikedetail', (
-            ('id', orm['turan.HikeDetail:id']),
-            ('time', orm['turan.HikeDetail:time']),
-            ('speed', orm['turan.HikeDetail:speed']),
-            ('hr', orm['turan.HikeDetail:hr']),
-            ('altitude', orm['turan.HikeDetail:altitude']),
-            ('lat', orm['turan.HikeDetail:lat']),
-            ('lon', orm['turan.HikeDetail:lon']),
-            ('trip', orm['turan.HikeDetail:trip']),
-        ))
-        db.send_create_signal('turan', ['HikeDetail'])
-        
-        # Adding model 'CycleTrip'
-        db.create_table('turan_cycletrip', (
-            ('id', orm['turan.CycleTrip:id']),
-            ('user', orm['turan.CycleTrip:user']),
-            ('route', orm['turan.CycleTrip:route']),
-            ('duration', orm['turan.CycleTrip:duration']),
-            ('date', orm['turan.CycleTrip:date']),
-            ('time', orm['turan.CycleTrip:time']),
-            ('comment', orm['turan.CycleTrip:comment']),
-            ('url', orm['turan.CycleTrip:url']),
-            ('avg_hr', orm['turan.CycleTrip:avg_hr']),
-            ('max_hr', orm['turan.CycleTrip:max_hr']),
-            ('kcal', orm['turan.CycleTrip:kcal']),
-            ('sensor_file', orm['turan.CycleTrip:sensor_file']),
-            ('object_id', orm['turan.CycleTrip:object_id']),
-            ('content_type', orm['turan.CycleTrip:content_type']),
-            ('avg_speed', orm['turan.CycleTrip:avg_speed']),
-            ('avg_cadence', orm['turan.CycleTrip:avg_cadence']),
-            ('max_speed', orm['turan.CycleTrip:max_speed']),
-            ('max_cadence', orm['turan.CycleTrip:max_cadence']),
-        ))
-        db.send_create_signal('turan', ['CycleTrip'])
-        
-        # Adding model 'OtherExercise'
-        db.create_table('turan_otherexercise', (
-            ('id', orm['turan.OtherExercise:id']),
-            ('user', orm['turan.OtherExercise:user']),
-            ('route', orm['turan.OtherExercise:route']),
-            ('duration', orm['turan.OtherExercise:duration']),
-            ('date', orm['turan.OtherExercise:date']),
-            ('time', orm['turan.OtherExercise:time']),
-            ('comment', orm['turan.OtherExercise:comment']),
-            ('url', orm['turan.OtherExercise:url']),
-            ('avg_hr', orm['turan.OtherExercise:avg_hr']),
-            ('max_hr', orm['turan.OtherExercise:max_hr']),
-            ('kcal', orm['turan.OtherExercise:kcal']),
-            ('sensor_file', orm['turan.OtherExercise:sensor_file']),
-            ('object_id', orm['turan.OtherExercise:object_id']),
-            ('content_type', orm['turan.OtherExercise:content_type']),
-            ('exercise_type', orm['turan.OtherExercise:exercise_type']),
-        ))
-        db.send_create_signal('turan', ['OtherExercise'])
-        
-        # Adding model 'OtherExerciseDetail'
-        db.create_table('turan_otherexercisedetail', (
-            ('id', orm['turan.OtherExerciseDetail:id']),
-            ('time', orm['turan.OtherExerciseDetail:time']),
-            ('speed', orm['turan.OtherExerciseDetail:speed']),
-            ('hr', orm['turan.OtherExerciseDetail:hr']),
-            ('altitude', orm['turan.OtherExerciseDetail:altitude']),
-            ('lat', orm['turan.OtherExerciseDetail:lat']),
-            ('lon', orm['turan.OtherExerciseDetail:lon']),
-            ('trip', orm['turan.OtherExerciseDetail:trip']),
-        ))
-        db.send_create_signal('turan', ['OtherExerciseDetail'])
-        
-        # Adding model 'Route'
-        db.create_table('turan_route', (
-            ('id', orm['turan.Route:id']),
-            ('name', orm['turan.Route:name']),
-            ('distance', orm['turan.Route:distance']),
-            ('description', orm['turan.Route:description']),
-            ('route_url', orm['turan.Route:route_url']),
-            ('gpx_file', orm['turan.Route:gpx_file']),
-            ('ascent', orm['turan.Route:ascent']),
-            ('descent', orm['turan.Route:descent']),
-            ('start_lat', orm['turan.Route:start_lat']),
-            ('start_lon', orm['turan.Route:start_lon']),
-            ('end_lat', orm['turan.Route:end_lat']),
-            ('end_lon', orm['turan.Route:end_lon']),
-            ('created', orm['turan.Route:created']),
-            ('single_serving', orm['turan.Route:single_serving']),
-            ('tags', orm['turan.Route:tags']),
-        ))
-        db.send_create_signal('turan', ['Route'])
-        
-        # Adding model 'Location'
-        db.create_table('turan_location', (
-            ('id', orm['turan.Location:id']),
-            ('lat', orm['turan.Location:lat']),
-            ('lon', orm['turan.Location:lon']),
-            ('town', orm['turan.Location:town']),
-            ('county', orm['turan.Location:county']),
-            ('state', orm['turan.Location:state']),
-            ('country', orm['turan.Location:country']),
-            ('url', orm['turan.Location:url']),
-        ))
-        db.send_create_signal('turan', ['Location'])
-        
-        # Adding model 'Hike'
-        db.create_table('turan_hike', (
-            ('id', orm['turan.Hike:id']),
-            ('user', orm['turan.Hike:user']),
-            ('route', orm['turan.Hike:route']),
-            ('duration', orm['turan.Hike:duration']),
-            ('date', orm['turan.Hike:date']),
-            ('time', orm['turan.Hike:time']),
-            ('comment', orm['turan.Hike:comment']),
-            ('url', orm['turan.Hike:url']),
-            ('avg_hr', orm['turan.Hike:avg_hr']),
-            ('max_hr', orm['turan.Hike:max_hr']),
-            ('kcal', orm['turan.Hike:kcal']),
-            ('sensor_file', orm['turan.Hike:sensor_file']),
-            ('object_id', orm['turan.Hike:object_id']),
-            ('content_type', orm['turan.Hike:content_type']),
-            ('avg_speed', orm['turan.Hike:avg_speed']),
-            ('max_speed', orm['turan.Hike:max_speed']),
-        ))
-        db.send_create_signal('turan', ['Hike'])
+        # Adding field 'CycleTrip.max_power'
+        db.add_column('turan_cycletrip', 'max_power', orm['turan.cycletrip:max_power'])
         
     
     
     def backwards(self, orm):
         
-        # Deleting model 'CycleTripDetail'
-        db.delete_table('turan_cycletripdetail')
+        # Deleting field 'CycleTripDetail.power'
+        db.delete_column('turan_cycletripdetail', 'power')
         
-        # Deleting model 'ExerciseType'
-        db.delete_table('turan_exercisetype')
+        # Deleting field 'CycleTrip.avg_power'
+        db.delete_column('turan_cycletrip', 'avg_power')
         
-        # Deleting model 'HikeDetail'
-        db.delete_table('turan_hikedetail')
-        
-        # Deleting model 'CycleTrip'
-        db.delete_table('turan_cycletrip')
-        
-        # Deleting model 'OtherExercise'
-        db.delete_table('turan_otherexercise')
-        
-        # Deleting model 'OtherExerciseDetail'
-        db.delete_table('turan_otherexercisedetail')
-        
-        # Deleting model 'Route'
-        db.delete_table('turan_route')
-        
-        # Deleting model 'Location'
-        db.delete_table('turan_location')
-        
-        # Deleting model 'Hike'
-        db.delete_table('turan_hike')
+        # Deleting field 'CycleTrip.max_power'
+        db.delete_column('turan_cycletrip', 'max_power')
         
     
     
@@ -222,6 +69,7 @@ class Migration:
         'turan.cycletrip': {
             'avg_cadence': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'avg_hr': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'avg_power': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'avg_speed': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'comment': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']", 'null': 'True'}),
@@ -231,6 +79,7 @@ class Migration:
             'kcal': ('django.db.models.fields.IntegerField', [], {'default': '0', 'blank': 'True'}),
             'max_cadence': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'max_hr': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'max_power': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'max_speed': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'object_id': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
             'route': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['turan.Route']"}),
@@ -246,6 +95,7 @@ class Migration:
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'lat': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'lon': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
+            'power': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'speed': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'time': ('django.db.models.fields.DateTimeField', [], {}),
             'trip': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['turan.CycleTrip']"})
