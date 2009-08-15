@@ -639,6 +639,7 @@ def cycletrip(request, object_id):
         speedjs = tripdetail_js('cycletrip', object_id, 'speed')
         hrjs = tripdetail_js('cycletrip', object_id, 'hr')
         cadencejs = tripdetail_js('cycletrip', object_id, 'cadence')
+        powerjs = tripdetail_js('cycletrip', object_id, 'power')
         altitudejs = tripdetail_js('cycletrip', object_id, 'altitude')
     return render_to_response('turan/cycletrip_detail.html', locals(), context_instance=RequestContext(request))
 

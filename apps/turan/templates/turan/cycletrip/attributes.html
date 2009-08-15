@@ -47,6 +47,9 @@
     {% if object.avg_cadence %}
     <li class="cadence"><span class="label">{% trans "Avg Cadence" %}:</span> {{ object.avg_cadence }} {% trans "RPM" %}</li>
     {% endif %}
+    {% if object.avg_power %}
+    <li class="power"><span class="label">{% trans "Avg Power" %}:</span> {{ object.avg_power }} {% trans "W" %}</li>
+    {% endif %}
     {% if object.max_speed %}
     <li class="speed"><span class="label">{% trans "Max Speed" %}:</span> {{ object.max_speed|floatformat }} {% trans "km/h" %}</li>
     {% endif %}
@@ -55,6 +58,9 @@
     {% endif %}
     {% if object.max_cadence %}
     <li class="cadence"><span class="label">{% trans "Max Cadence" %}:</span> {{ object.max_cadence }} {% trans "RPM" %}</li>
+    {% endif %}
+    {% if object.max_power %}
+    <li class="power"><span class="label">{% trans "Max Power" %}:</span> {{ object.max_power }} {% trans "W" %}</li>
     {% endif %}
     {% if object.kcal %}
     <li><span class="label">{% trans "Used kcal" %}:</span> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})</li>

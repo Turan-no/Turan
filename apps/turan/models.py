@@ -276,22 +276,25 @@ def create_gpx_from_details(trip):
     # Since we at this point have trip details
     # we can generate gpx based on that
     if not trip.route.gpx_file:
-        g = GPXWriter(trip.get_details().all())
-        filename = 'gpx/%s.gpx' %trip.id
 
-        # tie the created file to the route object
-        # also call Save on route to generate start/stop-pos, etc
-        trip.route.gpx_file.save(filename, ContentFile(g.xml), save=True)
+        # Check if the details have lon, some parsers doesn't provide position
+        if trip.get_details.filter(lon__gt=0).filter(lat__gt=0).count() > 0:
+            g = GPXWriter(trip.get_details().all())
+            filename = 'gpx/%s.gpx' %trip.id
+
+            # tie the created file to the route object
+            # also call Save on route to generate start/stop-pos, etc
+            trip.route.gpx_file.save(filename, ContentFile(g.xml), save=True)
 
 class CycleTrip(Event):
 
     avg_speed = models.FloatField(blank=True, null=True) #kmt
     avg_cadence = models.IntegerField(blank=True, null=True) # rpm
-    #avg_power = models.IntegerField(blank=True, null=True) # W
+    avg_power = models.IntegerField(blank=True, null=True) # W
 
     max_speed = models.FloatField(blank=True, null=True) #kmt
     max_cadence = models.IntegerField(blank=True, null=True) # rpm
-    #max_power = models.IntegerField(blank=True, null=True) # W
+    max_power = models.IntegerField(blank=True, null=True) # W
 
     #objects = models.Manager() # default manager
 
@@ -340,7 +343,7 @@ class ExerciseDetail(models.Model):
 class CycleTripDetail(ExerciseDetail):
     trip = models.ForeignKey(CycleTrip)
     cadence = models.IntegerField(blank=True, null=True)
-    #power = models.IntegerField(blank=True, null=True)
+    power = models.IntegerField(blank=True, null=True)
 
     def get_relative_time(self):
         start_time = datetime(self.time.year, self.time.month, self.time.day, self.trip.time.hour, self.trip.time.minute, self.trip.time.second)
@@ -416,19 +419,6 @@ class Location(models.Model):
         verbose_name = _("Location")
         verbose_name_plural = _("Locations")
 
-#def update_pos(route_id):
-#    r = Route.objects.get(pk=route_id)
-#    if r.gpx_file:
-#        g = GPXParser(r.gpx_file.file)
-#        r.start_lon = g.start_lon
-#        r.start_lat = g.start_lat
-#        r.end_lon = g.end_lon
-#        r.end_lat = g.end_lat
-#        r.save()
-
-#pre_save.connect(setpos, sender=Route)
-
-
 def parse_sensordata(event, event_type):
     ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
 
@@ -465,6 +455,8 @@ def parse_sensordata(event, event_type):
         d.cadence = val.cadence
         d.lat = val.lat
         d.lon = val.lon
+        if hasattr(val, 'power'): # very few parsers has this
+            d.power = val.power # assume the object has it if parser has it (cycletrip)
         d.save()
 
     #if event_type == 'hike':
@@ -488,6 +480,11 @@ def parse_sensordata(event, event_type):
     
     if parser.kcal_sum: # only some parsers provide kcal
         event.kcal = parser.kcal_sum
+
+    if hasattr(parser, 'avg_power'): # only some parsers
+        event.avg_power = parser.avg_power
+    if hasattr(parser, 'max_power'): # only some parsers
+        event.max_power = parser.max_power
 
     event.duration = parser.duration
 
