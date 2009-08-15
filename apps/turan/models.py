@@ -25,6 +25,8 @@ from gmdparser import GMDParser
 from tcxparser import TCXParser
 from csvparser import CSVParser
 
+from gpxwriter import GPXWriter
+
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 
 class RouteManager(models.Manager):
@@ -206,6 +208,7 @@ class Hike(Event):
         if self.sensor_file:
             if self.hikedetail_set.count() == 0:
                 parse_sensordata(self, 'hike')
+            create_gpx_from_details(self)
         super(Hike, self).save(force_update=True)
 
     class Meta:
@@ -266,6 +269,17 @@ class CycleTripManager(models.Manager):
     #    return self.filter(user__team__name__exact=teamname)
 
 
+def create_gpx_from_details(trip):
+    # Check if the route has .gpx or not.
+    # Since we at this point have trip details
+    # we can generate gpx based on that
+    if not trip.route.gpx_file:
+        g = GPXWriter(trip.get_details().all())
+        filename = 'gpx/%s.gpx' %trip.id
+
+        # tie the created file to the route object
+        # also call Save on route to generate start/stop-pos, etc
+        trip.route.gpx_file.save(filename, ContentFile(g.xml), save=True)
 
 class CycleTrip(Event):
 
@@ -292,6 +306,9 @@ class CycleTrip(Event):
         if self.sensor_file:
             if self.cycletripdetail_set.count() == 0:
                 parse_sensordata(self, 'cycletrip')
+
+            create_gpx_from_details(self)
+
         super(CycleTrip, self).save(force_update=True)
 
     def get_absolute_url(self):

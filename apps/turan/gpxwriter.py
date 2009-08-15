@@ -2,7 +2,7 @@
 # -*- coding: UTF-8
 #
 
-''' This file will need a list of object that has following properties:
+''' This file will need a list of object that have following properties:
 
     * time
     * lon
@@ -27,6 +27,9 @@ xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/
     def __init__(self, objects):
 
         def point2xmlblock(time, lon, lat, alt):
+            if not lon or not lat:
+                # Some devices (Garmin!) likes to save 0-points. Skip those.
+                return 
             xmlp = '<trkpt lat="%s" lon="%s">\n' %(lat, lon)
             xmlp+= ' <time>%s</time>\n' %time.strftime('%Y-%m-%dT%H:%M:%SZ')
             xmlp+= ' <ele>%.1f</ele>\n' %alt
@@ -34,7 +37,9 @@ xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/
             return xmlp
 
         for o in objects:
-            self.xml += point2xmlblock(o.time, o.lon, o.lat, o.altitude)
+            xmlblock = point2xmlblock(o.time, o.lon, o.lat, o.altitude)
+            if xmlblock:
+                self.xml += xmlblock
 
         self.xml += '''</trkseg>
 </trk>
