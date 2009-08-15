@@ -26,18 +26,18 @@ $(function () {
             points: { show: false } ,
             lines: { show: true },
             },
-        "power": {
-            data: [ {{ powerjs }}],
-            label: "{% trans "Power" %}",
-            points: { show: false } ,
-            lines: { show: true },
-            },
         "altitude":{
             data: [ {{ altitudejs }}],
             label: "{% trans "Altitude" %}",
             lines: { show: true, fill: 0.3 },
             points: { show: false } ,
         },
+        "power": {
+            data: [ {{ powerjs }}],
+            label: "{% trans "Power" %}",
+            points: { show: false } ,
+            lines: { show: true },
+            },
         };
         {% include "turan/common_graph.html" %}
 
