@@ -15,13 +15,14 @@ from django.contrib.syndication.feeds import Feed
 from django.contrib.comments.models import Comment
 from django.core.files.storage import FileSystemStorage
 from django.utils.safestring import mark_safe
-#from django.core.paginator import Paginator
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import redirect_to_login
 from django.views.generic.create_update import get_model_and_form_class, apply_extra_context, redirect, update_object, lookup_object
 from django.views.generic.list_detail import object_list
 from django.db.models import Q
+from django.contrib.contenttypes.models import ContentType
+
 
 
 from datetime import timedelta, datetime
@@ -232,21 +233,6 @@ def events(request, group_slug=None, bridge=None, username=None):
     object_list = sorted(object_list, key=lambda x: x.date)
     object_list.reverse()
 
-    #paginator = Paginator(object_list, 15)
-    # Make sure page request is an int. If not, deliver first page.
-    #try:
-    #    page = int(request.GET.get('page', '1'))
-    #except ValueError:
-    #    page = 1
-
-    # If page request (9999) is out of range, deliver last page of results.
-    #try:
-    #    events = paginator.page(page)
-    #except (EmptyPage, InvalidPage):
-    #    events = paginator.page(paginator.num_pages)
-
-
-    
     return render_to_response('turan/event_list.html', locals(), context_instance=RequestContext(request))
 
 def route_detail(request, object_id):
@@ -728,3 +714,27 @@ def turan_object_list(request, queryset):
     return object_list(request, queryset=queryset)
 
 
+def autocomplete_route(request, app_label, model):
+    ''' ajax view to return list of matching routes to given query'''
+
+    #try:
+    #    model = ContentType.objects.get(app_label=app_label, model=model)
+    #except:
+    #    raise Http404
+
+    if not request.GET.has_key('q'):
+        raise Http404
+
+    query = request.GET.get('q', '')
+    qset = (
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(tags__contains=query)
+        )
+
+    limit = request.GET.get('limit', None)
+
+    routes = Route.objects.filter(qset).order_by('name').distinct()[:limit]
+    route_list = '\n'.join([u'%s|%s' % (f.__unicode__(), f.pk) for f in routes])
+
+    return HttpResponse(route_list)

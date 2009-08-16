@@ -12,8 +12,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
 from tagging.fields import TagField
 
-
-
 from datetime import datetime
 
 from svg import GPX2SVG
@@ -176,6 +174,8 @@ class Event(models.Model):
     content_type = models.ForeignKey(ContentType, null=True)
     group = generic.GenericForeignKey("object_id", "content_type")
 
+    tags = TagField()
+
 
 
     def __unicode__(self):
@@ -278,7 +278,7 @@ def create_gpx_from_details(trip):
     if not trip.route.gpx_file:
 
         # Check if the details have lon, some parsers doesn't provide position
-        if trip.get_details.filter(lon__gt=0).filter(lat__gt=0).count() > 0:
+        if trip.get_details().filter(lon__gt=0).filter(lat__gt=0).count() > 0:
             g = GPXWriter(trip.get_details().all())
             filename = 'gpx/%s.gpx' %trip.id
 

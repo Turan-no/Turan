@@ -443,32 +443,9 @@ ul.trip_attributes li {
     padding: 1px 0;
 }
 
-ul#pagemenu {
-    background: #d0d0d9;
-    border-top: 1px solid silver;
-    height: 21px;
-    border-bottom: 1px solid #999;
-    margin: 0;
-}
-
-ul#pagemenu li {
-    list-style-type: none;
-    padding-right: 15px;
-    float: left;
-    padding-top: 1px;
-}
-
-ul#pagemenu li.right {
-    float: right;
-}
-ul#pagemenu li.modify {
+.modify {
     float: right;
     list-style-image: url('/site_media/pinax/images/silk/icons/wrench.png');
-}
-#pagemenu a:hover {
-	background: transparent;
-	color: #000;
-	font-weight: bolder;
 }
 .third {
     width: 33.3%;
@@ -539,6 +516,12 @@ li.ascent {
 }
 li.descent {
     list-style-image: url('/site_media/pinax/images/silk/icons/arrow_down.png')
+}
+li.kcal {
+    list-style-image: url('/site_media/pinax/images/silk/icons/cake.png')
+}
+li.power {
+    list-style-image: url('/site_media/pinax/images/silk/icons/lightbulb.png')
 }
 
 .hlist li {
