@@ -11,8 +11,7 @@ $(function () {
         "speed": {
             data: [{{ speedjs }}],
             label: "{% trans "Speed" %}",
-            points: { show: false } ,
-            lines: { show: true },
+            color: 0,
         },
         {% endif %}
         {% if hrjs %}
@@ -20,16 +19,14 @@ $(function () {
             data: [{{ hrjs }} ],
             label: "{% trans "HR" %}",
             yaxis: 2,
-            lines: { show: true, fill: 0.2 },
-            points: { show: false } ,
+            color: 2,
         },
         {% endif %}
         {% if cadencejs %}
         "cadence": {
             data: [ {{ cadencejs }}],
             label: "{% trans "Cadence" %}",
-            points: { show: false } ,
-            lines: { show: true },
+            color: 1,
             },
         {% endif %}
         {% if altitudejs %}
@@ -37,7 +34,7 @@ $(function () {
             data: [ {{ altitudejs }}],
             label: "{% trans "Altitude" %}",
             lines: { show: true, fill: 0.3 },
-            points: { show: false } ,
+            color: 3,
         },
         {% endif %}
         {% if powerjs %}
@@ -45,7 +42,7 @@ $(function () {
             data: [ {{ powerjs }}],
             label: "{% trans "Power" %}",
             points: { show: false } ,
-            lines: { show: true },
+            color: 5,
             },
         {% endif %}
         };
