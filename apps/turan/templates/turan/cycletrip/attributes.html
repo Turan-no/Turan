@@ -63,7 +63,7 @@
     <li class="power"><span class="label">{% trans "Max Power" %}:</span> {{ object.max_power }} {% trans "W" %}</li>
     {% endif %}
     {% if object.kcal %}
-    <li><span class="label">{% trans "Used kcal" %}:</span> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})</li>
+    <li class="kcal" ><span class="label">{% trans "Used kcal" %}:</span> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})</li>
     {% endif %}
     <ol>
     {% if object.comment %}
