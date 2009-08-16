@@ -3,6 +3,10 @@
 
 {% block extra_head %}
 {{ form.media }}
+<script type="text/javascript" src="{{MEDIA_URL}}date.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}jquery.datePicker.js"></script>
+<link rel="stylesheet" href="{{MEDIA_URL}}/datePicker.css" />
+
 {% endblock %}
 
 {% block content %}
@@ -16,4 +20,12 @@
 <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
 <input type="submit" value="{% trans "Submit" %}" />
 </form>
+<script type="text/javascript">
+    Date.firstDayOfWeek = 0;
+    Date.format = 'yyyy-mm-dd';
+    $(function()
+    {
+    $('#id_date').datePicker({startDate:'1996-01-01'}).val(new Date().asString()).trigger('change');
+});
+</script>
 {% endblock content %}

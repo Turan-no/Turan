@@ -78,6 +78,7 @@ class ForeignKeySearchInput(forms.HiddenInput):
 class EventForm(forms.ModelForm):
     route = forms.CharField(widget=ForeignKeySearchInput('Route'))#, 'turan'))
 
+
     class Meta:
         model = CycleTrip
         fields = ('route', 'date', 'time', 'comment', 'sensor_file', 'kcal', 'url')
