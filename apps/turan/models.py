@@ -12,8 +12,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
 from tagging.fields import TagField
 
-
-
 from datetime import datetime
 
 from svg import GPX2SVG
@@ -175,6 +173,8 @@ class Event(models.Model):
     object_id = models.IntegerField(null=True)
     content_type = models.ForeignKey(ContentType, null=True)
     group = generic.GenericForeignKey("object_id", "content_type")
+
+    tags = TagField()
 
 
 

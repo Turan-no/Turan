@@ -2,3 +2,4 @@
 *.mo
 site_media
 local_settings.py
+.svn
