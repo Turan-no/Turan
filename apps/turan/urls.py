@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
 from models import Route, CycleTrip, Hike, OtherExercise
-from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, calendar_month, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list
+from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, calendar_month, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list, autocomplete_route
 from forms import *
 from threadedcomments.models import ThreadedComment as Comment
 
@@ -27,6 +27,8 @@ urlpatterns = patterns('',
     url(r'^json/comment/random/?$', json_serializer, { 'queryset': Comment.objects.order_by('?')[:10], 'relations': ('content_type',) }, name='json_comments'),
     url(r'json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/(?P<start>\d+)/(?P<stop>\d+)', json_tripdetail, name='json_tripdetail-startstop'),
     url(r'json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/?$', json_tripdetail, name='json_tripdetail'),
+
+      url(r'^autocomplete/(?P<app_label>\w+)/(?P<model>\w+)/$', autocomplete_route, name='autocomplete_route'),
 
     url(r'^$', index, name='turanindex'),
 

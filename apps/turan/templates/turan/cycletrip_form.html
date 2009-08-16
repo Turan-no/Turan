@@ -1,9 +1,15 @@
 {% extends "turan/base.html" %}
 {% load i18n %}
+
 {% block title %}
 {{ block.super }}
 {% trans "Add Cycle Trip" %}
 {% endblock %}
+
+{% block extra_head %}
+{{ form.media }}
+{% endblock %}
+
 {% block content %}
 <h1>{% trans "Add new trip" %}</h1>
 <form enctype="multipart/form-data" method="post">
