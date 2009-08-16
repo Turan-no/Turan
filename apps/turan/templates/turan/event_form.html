@@ -1,0 +1,19 @@
+{% extends "turan/base.html" %}
+{% load i18n %}
+
+{% block extra_head %}
+{{ form.media }}
+{% endblock %}
+
+{% block content %}
+{% block action_title %}
+<h1>{% trans "Add new trip" %}</h1>
+{% endblock %}
+<form enctype="multipart/form-data" method="post">
+<table>
+{{ form }}
+</table>
+<input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
+<input type="submit" value="{% trans "Submit" %}" />
+</form>
+{% endblock content %}

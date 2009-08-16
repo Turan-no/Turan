@@ -88,35 +88,33 @@ class EventForm(forms.ModelForm):
         data = Route.objects.get(pk=data)
         return data
     
+class CycleTripForm(EventForm):
+    pass
+
+class HikeForm(EventForm):
+    class Meta(EventForm.Meta):
+        model = Hike
+
+class ExerciseForm(EventForm):
+    class Meta(EventForm.Meta):
+        model = OtherExercise
+        fields = ('route', 'date', 'time', 'exercise_type', 'comment', 'sensor_file', 'kcal', 'url')
 
 class RouteForm(forms.ModelForm):
     class Meta:
         model = Route
         exclude = ('single_serving', 'start_lat', 'start_lon', 'end_lat', 'end_lon')
 
-
-class CycleTripForm(EventForm):
-    pass
-
 class FullCycleTripForm(forms.ModelForm):
     class Meta:
         model = CycleTrip
         exclude = ('user', 'content_type', 'object_id')
-
-class HikeForm(forms.ModelForm):
-    class Meta:
-        model = Hike
-        fields = ('route', 'date', 'time', 'comment', 'sensor_file', 'kcal', 'url')
 
 class FullHikeForm(forms.ModelForm):
     class Meta:
         model = Hike
         exclude = ('user', 'content_type', 'object_id')
 
-class ExerciseForm(forms.ModelForm):
-    class Meta:
-        model = OtherExercise
-        fields = ('route', 'date', 'time', 'exercise_type', 'comment', 'sensor_file', 'kcal', 'url')
 
 class FullExerciseForm(forms.ModelForm):
     class Meta:
