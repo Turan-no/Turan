@@ -8,11 +8,13 @@
 {% block content %}
 {% autopaginate object_list %}
 
+<span class="floatright">
+{% paginate %}
+</span>
+
 <h1>
     {% trans "Events" %}
 </h1>
-
-{% paginate %}
 
 <table>
     <tr>
@@ -68,5 +70,9 @@
 </tr>
 {%endfor %}
 </table>
+<span class="floatright">
+{% paginate %}
+</span>
+
 {% endblock content %}
 
