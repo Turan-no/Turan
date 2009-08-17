@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-08-13 22:48+0200\n"
-"PO-Revision-Date: 2009-08-13 22:58\n"
+"PO-Revision-Date: 2009-08-17 22:51\n"
 "Last-Translator: Tor Hveem <tor@bash.no>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -696,17 +696,17 @@ msgstr ""
 #: templates/tags/index.html:85
 #, python-format
 msgid "All Tribes Matching <i>%(tag)s</i>"
-msgstr ""
+msgstr "All lag merka <i>%(tag)s</i>"
 
 #: templates/tags/index.html:94
 #, python-format
 msgid "All Tribe Topics Matching <i>%(tag)s</i>"
-msgstr ""
+msgstr "Alle lag-emne merka <i>%(tag)s</i>"
 
 #: templates/tags/index.html:101
 #, python-format
 msgid "All Wiki Articles Matching <i>%(tag)s</i>"
-msgstr ""
+msgstr "Alle wiki-artiklar merka All Tribe Topics Matching <i>%(tag)s</i>"
 
 #: templates/threadedcomments/comments.html:20
 msgid "Delete Post"
