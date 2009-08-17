@@ -1,7 +1,6 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
-{% load tagging_tags %}
 
 {% block title %}
 {% trans "Cycle Trip" %}
@@ -26,18 +25,6 @@
 
 {% include "turan/route/attributes.html" %}
 
-{% tags_for_object object as tag_list %}
-{% if tag_list %}
-<div>
-        <h2><img src="{{ MEDIA_URL }}pinax/images/silk/icons/tag_blue.png" border="0" class="noborder
-" align="absmiddle" /> Tags</h2>
-        <ul>
-            {% for tag in tag_list %}
-                <li><a href="/tags/{{ tag }}">{{ tag }}</a></li>
-            {% endfor %}
-        </ul>
-</div>
-{% endif %}
 
 <ul class="buttons">
     <li>
@@ -47,6 +34,7 @@
     </a>
     </li>
 </ul>
+{% include "turan/tags.html" %}
 {% include "turan/commentform.html" %}
 
 
