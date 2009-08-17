@@ -10,12 +10,12 @@ body {
 
 /* Headers */
 h1 {
-	font-size: 197%;
+	font-size: 175%;
 	font-weight: bolder;
 	margin: 0;
 }
 h2 {
-	font-size: 182%;
+	font-size: 152%;
 	font-weight: bolder;
 	margin: 0.5em 0 0.5em;
 }
@@ -436,6 +436,7 @@ ul.comments li {
     padding-bottom: 2px;
 }
 .label {
+    cursor: pointer;
     font-weight: bold;
 }
 
@@ -630,5 +631,14 @@ li.odd {
 }
 ul.routes li.routes {
 	list-style-type: none;
+}
+/* Calendar */
+table.month td,
+table.month th {
+	vertical-align: top;
+	border: 1px solid #999;
+}
+ol span.selected {
+	background-color: yellow;
 }
 
