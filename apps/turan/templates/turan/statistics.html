@@ -175,5 +175,19 @@
         {% endfor %}
     </ol>
 </div>
+<script type="text/javascript" language="javascript">
+	var labels = $('ol span.label');
+	labels.bind("click", function(ev) {
+		var clickedLabel = $(this);
+		var selectedLabels = labels.filter(function (i) { if ($(this).text() == clickedLabel.text()) return true; })
+		if ($(this).hasClass('selected'))
+			selectedLabels.removeClass('selected');
+		else {
+			labels.removeClass('selected');
+			selectedLabels.addClass('selected');
+		}
+
+	});
+</script>
 
 {% endblock content %}
