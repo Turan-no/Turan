@@ -1,7 +1,6 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
-{% load tagging_tags %}
 
 {% block title %}
 {% trans "Cycle Trip" %}
@@ -26,18 +25,6 @@
 
 {% include "turan/route/attributes.html" %}
 
-{% tags_for_object object as tag_list %}
-{% if tag_list %}
-<div>
-        <h2><img src="{{ MEDIA_URL }}pinax/images/silk/icons/tag_blue.png" border="0" class="noborder
-" align="absmiddle" /> Tags</h2>
-        <ul>
-            {% for tag in tag_list %}
-                <li><a href="/tags/{{ tag }}">{{ tag }}</a></li>
-            {% endfor %}
-        </ul>
-</div>
-{% endif %}
 
 <ul class="buttons">
     <li>
@@ -47,15 +34,24 @@
     </a>
     </li>
 </ul>
-{% include "turan/commentform.html" %}
+{% include "turan/tags.html" %}
 
 
 {% with object.get_trips as trip_list %}
 {% if trip_list %}
+    <h3>{% trans "Average duration"%}</h3>
+    <div id="avgspeeddiv" style="width:420px;height:200px"></div>
+    <script id="source" language="javascript" type="text/javascript">
+    $(function () {
+            var d1 = { color: 5, data: [{{speeddataseries}}], }
+            var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0, }, }
+        $.plot($("#avgspeeddiv"), [d1], options);
+    });
+    </script>
     <form id="route_form">
     <h2>{% trans "Trips on this route" %}</h2>
-    <input type="submit" value="Compare" />
-    <table style="float: left">
+    <input type="submit" value="{% trans "Compare"%}">
+    <table>
         <tr>
             <th>{% trans "Select" %}</th>
             <th>{% trans "Exerciser" %}</th>
@@ -85,22 +81,13 @@
                 selectedIds.push(elem.value);
             }
         });
-        document.location = "{% url trip_compare_base %}/" + selectedIds.join("/");
-    });
-    </script>
-    <h3>{% trans "Average duration"%}</h3>
-    <div id="avgspeeddiv" style="width:420px;height:200px"></div>
-    <script id="source" language="javascript" type="text/javascript">
-    $(function () {
-            var d1 = { color: 5, data: [{{speeddataseries}}], }
-            var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0, }, }
-        $.plot($("#avgspeeddiv"), [d1], options);
+        // todo.. yea this code is real bad. *sighface*
+        document.location = "/turan/trip/compare/" + selectedIds.join("/");
     });
     </script>
 {% endif %}
 {% endwith %}
-
-
-
+<hr>
+{% include "turan/commentform.html" %}
 {% endblock content %}
 

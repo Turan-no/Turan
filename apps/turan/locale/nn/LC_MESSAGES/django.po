@@ -671,7 +671,7 @@ msgstr "Send"
 
 #: templates/tags/index.html:16
 msgid "Tags"
-msgstr "Taggar"
+msgstr "Merke"
 
 #: templates/tags/index.html:19
 msgid "All routes matching"
@@ -858,11 +858,11 @@ msgstr "Legg til tur"
 #: templates/turan/cycletrip_list.html:5
 #: templates/turan/cycletrip_list.html:10 templates/turan/index.html:57
 msgid "Cycle trips"
-msgstr "Turan"
+msgstr "Sykkelturar"
 
 #: templates/turan/cycletrip_list.html:15 templates/turan/event_list.html:20
 msgid "User"
-msgstr "Brukar"
+msgstr "Mosjonist"
 
 #: templates/turan/cycletrip_list.html:24 templates/turan/event_list.html:29
 #: templates/turan/route_list.html:40 templates/turan/route/attributes.html:5

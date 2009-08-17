@@ -16,6 +16,14 @@
 {% block head_title %}{% blocktrans %}Tags{% endblocktrans %}{% endblock %}
 
 {% block body %}
+    <h1>{% trans "All cycle trips matching" %} <i>"{{ tag }}"</i></h1>
+    
+    {% for tag in cycletrip_tags %}
+    <a href="{{ tag.get_absolute_url }}">{% if tag.route.gpx_file %}<object style="float: left" alt="{{tag}}" title="{{tag}}" type="image/svg+xml" data="{{ tag.route.get_svg_url }}"></object>{% endif %}{{ tag }}</a>
+    {% empty %}
+        {% trans "No cycle trips matching tag" %}.
+    {% endfor %}
+
     <h1>{% trans "All routes matching" %} <i>"{{ tag }}"</i></h1>
     
     {% for tag in route_tags %}
