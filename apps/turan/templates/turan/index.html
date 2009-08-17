@@ -12,7 +12,7 @@
 {% endblock %}
 {% block content %}
 
-<div class="half floatright rightcol">
+<div class="half floatright">
     <h1>
         {% trans "Latest comments" %}
     </h1>
@@ -41,9 +41,12 @@
     <ul class="routes">
     {% for object in route_list %}
     <li class="{% cycle "even" "odd" %}">
+    {% comment %}
+    Silly SVG
         {% if object.gpx_file %}
             <object width="50" height="50" type="image/svg+xml" data="{{ object.get_svg_url }}"></object>
         {% endif %}
+    {% endcomment %}
 
         <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> <span class="trip_count">{{ object.get_trips|length }} {% trans "trips" %}</span>
     </li>
