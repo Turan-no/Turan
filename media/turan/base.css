@@ -616,10 +616,6 @@ div.mapcontainer {
     border-right: 2px solid black;
 }
 
-span.current {
-    padding-right: 10px;
-    float: right;
-}
 ul.trips {
     display: inline;
 }
