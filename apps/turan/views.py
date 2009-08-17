@@ -23,6 +23,8 @@ from django.views.generic.list_detail import object_list
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 
+from tagging.models import Tag
+
 
 
 from datetime import timedelta, datetime
@@ -144,6 +146,8 @@ def index(request):
 
     route_list = Route.objects.all()
     route_list = sorted(route_list, key=lambda x: -x.cycletrip_set.count()-x.hike_set.count())[:10]
+
+    tag_list = Tag.objects.all()
 
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))
 
