@@ -1,5 +1,4 @@
 {% load i18n %}
-{% ifnotequal object.cycletripdetail_set.count 0 %}
 <p style="float: right;" id="choices">{% trans "Show" %}:</p>
 <div id="tripdiv_legend{{object.id}}" style="width:100px;height:400px; float: right;"></div>
 <div id="tripdiv{{object.id}}" style="width:700px;height:400px;"></div>
@@ -53,4 +52,3 @@ $(function () {
 
 });
 </script>
-{% endifnotequal %}

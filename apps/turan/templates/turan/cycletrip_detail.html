@@ -10,8 +10,8 @@
         <li class="modify"><a href="{% url trip_update object.id %}">{% trans "Modify" %}</a></li>
 {% endifequal %}
 {% endblock%}
-{% block content %}
-{{ block.super }}
+{% block graph %}
+{% ifnotequal object.cycletripdetail_set.count 0 %}
 <div id="tabs">
     <ul>
         <li class="selected" id="tabs-select-1">{% trans "Graph" %}</li>
@@ -75,4 +75,5 @@
         $(this).bind("click", selectTab);
     });
 </script>
+{% endifnotequal %}
 {% endblock %}
