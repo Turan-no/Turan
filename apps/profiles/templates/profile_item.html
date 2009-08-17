@@ -3,15 +3,36 @@
 {% load avatar_tags %}
 {% load humanize %}
 
-<div class="profile clearfix">
-    {# @@@ factor out style into css file #}
-    <div style="float: left;">{% avatar user 40 %}</div>
-    <div style="padding: 5px; margin-left: 50px;"><a href="{% url profile_detail user.username %}">{{ user }}</a><br />
-     {% if user.get_profile.name %}<b>{% trans "Name" %}</b>: {{ user.get_profile.name }}{% endif %}<br />
-     {% if user.get_profile.about %}<b>{% trans "About" %}</b>: {{ user.get_profile.about }}{% endif %}<br />
-     {% if user.get_profile.location%}<b>{% trans "Location" %}</b>: {{ user.get_profile.location }}{% endif %}<br />
-     {% if user.get_profile.height %}<b>{% trans "Height" %}</b>: {{ user.get_profile.height }}{% endif %}
-     {% if user.get_profile.weight %}<b>{% trans "Weight" %}</b>: {{ user.get_profile.weight }}{% endif %}
-     {% if user.get_profile.motto %}<b>{% trans "Motto" %}</b>: {{ user.get_profile.motto }}{% endif %}
-     {% if user.get_profile.cycle %}<b>{% trans "Cycle" %}</b>: {{ user.get_profile.cycle }}{% endif %}
+<div class="profile">
+    <div class="floatleft">{% avatar user 40 %}</div>
+    <ul class="attributes">
+        <li><a href="{% url profile_detail user.username %}">{{ user }}</a></li>
+    {% if user.get_profile.name %}
+        <li><span class="label">{% trans "Name" %}</span>: {{ user.get_profile.name }}</li>
+    {% endif %}
+    {% if user.get_profile.about %}
+        <li><span class="label">{% trans "About" %}</span>: {{ user.get_profile.about }}</li>
+    {% endif %}
+    {% if user.get_profile.location%}
+        <li><span class="label">{% trans "Location" %}</span>: {{ user.get_profile.location }}</li>
+    {% endif %}
+    {% if user.get_profile.height or user.get_profile.weight or user.get_profile.motto or user.get_profile.cycle %}
+        <li>
+            <ul class="horizlist">
+            {% if user.get_profile.height %}
+                <li><span class="label">{% trans "Height" %}</span>: {{ user.get_profile.height }}</li>
+            {% endif %}
+            {% if user.get_profile.weight %}
+                <li><span class="label">{% trans "Weight" %}</span>: {{ user.get_profile.weight }}</li>
+            {% endif %}
+            {% if user.get_profile.motto %}
+                <li><span class="label">{% trans "Motto" %}</span>: {{ user.get_profile.motto }}</li>
+            {% endif %}
+            {% if user.get_profile.cycle %}
+                <li><span class="label">{% trans "Cycle" %}</span>: {{ user.get_profile.cycle }}</li>
+            {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+    </ul>
 </div>
