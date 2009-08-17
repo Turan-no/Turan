@@ -149,18 +149,19 @@ def index(request):
 
 def trip_compare(request, event_type, trip1, trip2):
 
-    if not event_type in ('exercise', 'cycletrip', 'hike'):
-        return HttpResponse('unsupported type')
-
-    if event_type == 'cycletrip':
+    if event_type == 'cycletrip' or event_type == 'trip':
         trip1 = get_object_or_404(CycleTrip, pk=trip1)
         trip2 = get_object_or_404(CycleTrip, pk=trip2)
+        if event_type == 'trip':
+            event_type = 'cycletrip'
     elif event_type == 'hike':
         trip1 = get_object_or_404(Hike, pk=trip1)
         trip2 = get_object_or_404(Hike, pk=trip2)
     elif event_type == 'exercise':
         trip1 = get_object_or_404(OtherExercise, pk=trip1)
         trip2 = get_object_or_404(OtherExercise, pk=trip2)
+    else:
+        return HttpResponse('unsupported type')
 
     t1_speed = tripdetail_js(event_type, trip1.id, 'speed')
     t2_speed = tripdetail_js(event_type, trip2.id, 'speed')
@@ -171,7 +172,7 @@ def trip_compare(request, event_type, trip1, trip2):
 
     alt = tripdetail_js(event_type, trip1.id, 'altitude')
 
-    alt_max = trip1.get_details.aggregate(Max('altitude'))['altitude__max']*2
+    alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
     return render_to_response('turan/cycletrip_compare.html', locals(), context_instance=RequestContext(request))
 
