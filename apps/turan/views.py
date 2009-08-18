@@ -139,13 +139,13 @@ def datetime2jstimestamp(obj):
 def index(request):
     ''' Index view for Turan '''
 
-    cycletrip_list = CycleTrip.objects.all().order_by('-date')[:5]
-    hike_list = Hike.objects.all().order_by('-date')[:5]
-    exercise_list = OtherExercise.objects.all().order_by('-date')[:5]
-    comment_list = Comment.objects.order_by('-submit_date')[:5]
+    cycletrip_list = CycleTrip.objects.all().order_by('-date', '-time')[:10]
+    hike_list = Hike.objects.all().order_by('-date', '-time')[:5]
+    exercise_list = OtherExercise.objects.all().order_by('-date', '-time')[:5]
+    comment_list = Comment.objects.order_by('-submit_date', '-time')[:5]
 
     route_list = Route.objects.all()
-    route_list = sorted(route_list, key=lambda x: -x.cycletrip_set.count()-x.hike_set.count())[:10]
+    route_list = sorted(route_list, key=lambda x: -x.cycletrip_set.count()-x.hike_set.count())[:15]
 
     tag_list = Tag.objects.all()
 
