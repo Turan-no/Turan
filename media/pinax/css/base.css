@@ -505,33 +505,3 @@ span.motto {
     font-style: italic;
     font-size: 1.5em;
 }
-.profile {
-	float: left;
-	width: 300px;
-	padding: 10px;
-}
-.profile ul.horizlist {
-	margin: 0;
-	padding: 0;
-}
-.profile ul {
-	padding-left: 0;
-	margin-left: 50px;
-	margin-top: 0;
-}
-.profile ul li {
-	list-style-type: none;
-}
-.profile ul.horizlist li {
-	float: left;
-	margin-right: 5px;
-}
-.join_date {
-	clear: left;
-}
-.floatleft {
-	float: left;
-}
-.label {
-	font-weight: bold;
-}
