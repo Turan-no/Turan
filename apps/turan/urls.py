@@ -46,7 +46,7 @@ urlpatterns += patterns('django.views.generic.list_detail',
 
     url(r'^hike/?$', turan_object_list, { 'queryset': Hike.objects.select_related() }, name='hikes'),
     url(r'^hike/(?P<object_id>\d+)', 'object_detail', { 'queryset': Hike.objects.select_related(), }, name='hike'),
-    url(r'^exercise/?$', turan_object_list, { 'queryset': OtherExercise.objects.select_related() }, name='exercies'),
+    url(r'^exercise/?$', turan_object_list, { 'queryset': OtherExercise.objects.select_related() }, name='exercises'),
     url(r'^exercise/(?P<object_id>\d+)', 'object_detail', { 'queryset': OtherExercise.objects.select_related(), }, name='exercise'),
 )
 urlpatterns += patterns('django.views.generic.simple',
