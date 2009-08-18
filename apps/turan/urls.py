@@ -35,16 +35,18 @@ urlpatterns = patterns('',
 # The RSS Feeds
     (r'^feed/(?P<url>.*)/?$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 )
+
+# Lists and details
 urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^route/?$', turan_object_list, { 'queryset': Route.objects.select_related().filter(distance__gt=0), }, name='routes'),
 
-    url(r'^trip/?$', 'object_list', { 'queryset': CycleTrip.objects.select_related().order_by('-date'), }, name='cycletrips'),
+    url(r'^trip/?$', turan_object_list, { 'queryset': CycleTrip.objects.select_related() }, name='cycletrips'),
     url(r'^trip/(?P<object_id>\d+)', cycletrip, name='cycletrip'),
 
 
-    url(r'^hike/?$', 'object_list', { 'queryset': Hike.objects.select_related().order_by('-date'), }, name='hikes'),
+    url(r'^hike/?$', turan_object_list, { 'queryset': Hike.objects.select_related() }, name='hikes'),
     url(r'^hike/(?P<object_id>\d+)', 'object_detail', { 'queryset': Hike.objects.select_related(), }, name='hike'),
-    url(r'^exercise/?$', 'object_list', { 'queryset': OtherExercise.objects.select_related().order_by('-date'), }, name='exercies'),
+    url(r'^exercise/?$', turan_object_list, { 'queryset': OtherExercise.objects.select_related() }, name='exercies'),
     url(r'^exercise/(?P<object_id>\d+)', 'object_detail', { 'queryset': OtherExercise.objects.select_related(), }, name='exercise'),
 )
 urlpatterns += patterns('django.views.generic.simple',

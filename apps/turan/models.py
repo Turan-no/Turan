@@ -186,7 +186,7 @@ class Event(models.Model):
     
     class Meta:
         abstract = True
-        ordering = ('-date',)
+        ordering = ('-date','-time')
 
 
 class Hike(Event):

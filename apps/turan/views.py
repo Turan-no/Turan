@@ -706,8 +706,8 @@ def update_object_user(request, model=None, object_id=None, slug=None,
 
 def turan_object_list(request, queryset):
 
-    query = request.GET.get('q', '')
-    if query:
+    search_query = request.GET.get('q', '')
+    if search_query:
         qset = (
             Q(name__icontains=query) |
             Q(description__icontains=query) |
@@ -715,6 +715,10 @@ def turan_object_list(request, queryset):
         )
         queryset = queryset.filter(qset).distinct()
 
+    username = request.GET.get('username', '')
+    if username:
+        user = get_object_or_404(User, username=username)
+        queryset = queryset.filter(user=user)
 
     return object_list(request, queryset=queryset)
 
