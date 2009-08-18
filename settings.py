@@ -196,6 +196,11 @@ INSTALLED_APPS = (
 GPX_STORAGE = '/home/turan.lart.no/pinax-env/turansite/site_media/turan'
 #DEFAULT_FILE_STORAGE = GPX_STORAGE
 
+STATICFILES_EXTRA_MEDIA = (
+    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+    ('turansite', os.path.join(PROJECT_ROOT, 'media')),
+)
+
 
 ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profiles/%s/" % o.username,
