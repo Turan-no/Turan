@@ -32,7 +32,7 @@ class RouteManager(models.Manager):
 
     def get_query_set(self):
         # TODO, this needs to be a fixture, with a fixed ID
-        return super(RouteManager, self).get_query_set().exclude(id=24).filter(single_serving=0)
+        return super(RouteManager, self).get_query_set().filter(single_serving=0)
     
 
 class Route(models.Model):
