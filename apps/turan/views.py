@@ -494,6 +494,88 @@ def calendar_month(request, year, month, user_id=False):
              },
             context_instance=RequestContext(request))
 
+def geojson(request, event_type, object_id):
+    ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
+    give each line a zone property so it can be styled differently'''
+
+    if event_type == 'cycletrip':
+        qs = CycleTripDetail.objects.filter(trip=object_id)
+    elif event_type == 'hike':
+        qs = HikeDetail.objects.filter(trip=object_id)
+    elif event_type == 'exercise':
+        qs = OtherExerciseDetail.objects.filter(trip=object_id)
+
+    max_hr = qs[0].trip.user.get_profile().max_hr
+
+    class Feature(object):
+
+        linestrings = '\n'
+
+        def __init__(self, zone):
+            self.jsonhead = '''
+            { "type": "Feature", "properties":
+                { "ZONE": %s },
+                "geometry": {
+                    "type": "LineString", "coordinates": [ ''' %zone
+            self.jsonfoot = '''] }
+            },'''
+            
+        def addLine(self, a, b, c, d):
+            self.linestrings += '[%s, %s], [%s, %s],\n' %(a,b,c,d)
+
+        @property
+        def json(self):
+            if self.linestrings == '\n':
+                # Don't return empty feature
+                return ''
+            return self.jsonhead + self.linestrings + self.jsonfoot
+
+    features = []
+    #for i in range(1,6):
+    #    features.append(Feature(i))
+
+    previous_lon, previous_lat, previous_zone = 0, 0, 0
+    previous_feature = False
+    for d in qs:
+        if previous_lon and previous_lat:
+            hr_percent = float(d.hr)*100/max_hr
+            zone = 1
+            if hr_percent > 89:
+                zone = 5
+            elif hr_percent > 79:
+                zone = 4
+            elif hr_percent > 69:
+                zone = 3
+            elif hr_percent > 59:
+                zone = 2
+
+            if previous_zone == zone:
+                previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
+            else:
+                if previous_feature:
+                    features.append(previous_feature)
+                previous_feature = Feature(zone)
+
+            previous_zone = zone
+        previous_lon = d.lon
+        previous_lat = d.lat
+
+
+    # add last segment
+    features.append(previous_feature)
+
+
+    gjhead = '''{
+    "type": "FeatureCollection",
+        "features": ['''
+    gjfoot = ']}'
+    gjstr = gjhead
+    for f in features:
+        gjstr += f.json
+    gjstr = gjstr.rstrip(',')
+    gjstr += gjfoot
+    return HttpResponse(gjstr, mimetype='text/javascript')
+
 def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     if start:
         start = int(start)
