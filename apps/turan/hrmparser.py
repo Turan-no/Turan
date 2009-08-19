@@ -37,7 +37,8 @@ class HRMParser(object):
     def parse_uploaded_file(self, f):
         f = f.readlines()
 
-        for i, line in enumerate(f):
+        i = 0
+        for line in f:
             if self.started:
                 line = line.strip()
                 if line:
@@ -78,6 +79,7 @@ class HRMParser(object):
                     time = datetime.datetime(self.date.year, self.date.month, self.date.day, self.start_time.hour, self.start_time.minute, self.start_time.second)
                     time = time + datetime.timedelta(0, self.interval*i)
                     self.entries.append(HRMEntry(time, hr, speed, cadence, altitude))
+                    i += 1
             elif line.startswith('Date'):
                 year, date, month = int(line[5:9]), int(line[9:11]), int(line[11:13])
                 self.date = datetime.date(year, date, month)
