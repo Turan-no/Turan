@@ -64,6 +64,37 @@
                 layerMarkers.addMarker(new OpenLayers.Marker(startlonlat, icon));
                 layerMarkers.addMarker(new OpenLayers.Marker(endlonlat, icon.clone()));
             {% endif %}
+
+            var styles = new OpenLayers.StyleMap({
+                    "default": {
+                        strokeWidth: 2
+                    },
+                    "select": {
+                        strokeColor: "#0099cc",
+                        strokeWidth: 4
+                    }
+                });
+            
+                // add rules from the above lookup table
+            styles.addUniqueValueRules("default", "ZONE", {
+                    1: {strokeColor: "#CCCCCC", strokeWidth: 2},
+                    2: {strokeColor: "#3366FF", strokeWidth: 4},
+                    3: {strokeColor: "#66CC00", strokeWidth: 4},
+                    4: {strokeColor: "#FF9900", strokeWidth: 4},
+                    5: {strokeColor: "#C80000", strokeWidth: 4},
+                });
+
+            var vectors = new OpenLayers.Layer.Vector("Lines", {
+                    strategies: [new OpenLayers.Strategy.Fixed()],                
+                    protocol: new OpenLayers.Protocol.HTTP({
+                        url: "{% url geojson "cycletrip" object.id %}",
+                        format: new OpenLayers.Format.GeoJSON()
+                    }),
+                    styleMap: styles
+                });
+            
+            map.addLayer(vectors);
+ 
 /*
             var lat=59.8;
             var lon=5.8;
