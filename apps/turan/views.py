@@ -27,7 +27,7 @@ from django.views.decorators.cache import cache_page
 from tagging.models import Tag
 
 
-
+import re
 from datetime import timedelta, datetime
 from datetime import date as datetimedate
 from time import mktime, strptime
@@ -578,7 +578,7 @@ def geojson(request, event_type, object_id):
     gjstr = gjstr.rstrip(',')
     gjstr += gjfoot
 
-    return HttpResponse(gjstr, mimetype='text/javascript')
+    return HttpResponse(re.sub('\s','', gjstr), mimetype='text/javascript')
 
 def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     if start:
