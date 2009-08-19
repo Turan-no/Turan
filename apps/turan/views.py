@@ -791,9 +791,9 @@ def turan_object_list(request, queryset):
     search_query = request.GET.get('q', '')
     if search_query:
         qset = (
-            Q(name__icontains=query) |
-            Q(description__icontains=query) |
-            Q(tags__contains=query)
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(tags__contains=search_query)
         )
         queryset = queryset.filter(qset).distinct()
 
