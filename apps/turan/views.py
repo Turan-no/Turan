@@ -505,6 +505,8 @@ def geojson(request, event_type, object_id):
     elif event_type == 'exercise':
         qs = OtherExerciseDetail.objects.filter(trip=object_id)
 
+    qs = qs.exclude(lon=0).exclude(lat=0)
+
     max_hr = qs[0].trip.user.get_profile().max_hr
 
     class Feature(object):
