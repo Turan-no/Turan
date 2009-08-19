@@ -505,6 +505,8 @@ def geojson(request, event_type, object_id):
     elif event_type == 'exercise':
         qs = OtherExerciseDetail.objects.filter(trip=object_id)
 
+    qs = qs.exclude(lon=0).exclude(lat=0)
+
     max_hr = qs[0].trip.user.get_profile().max_hr
 
     class Feature(object):
@@ -791,9 +793,9 @@ def turan_object_list(request, queryset):
     search_query = request.GET.get('q', '')
     if search_query:
         qset = (
-            Q(name__icontains=query) |
-            Q(description__icontains=query) |
-            Q(tags__contains=query)
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(tags__contains=search_query)
         )
         queryset = queryset.filter(qset).distinct()
 
