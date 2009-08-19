@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # pinax.fcgi is configured to live in projects/turansite/deploy.
+
 
 import os
 import sys
