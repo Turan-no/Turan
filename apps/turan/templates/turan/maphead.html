@@ -40,16 +40,11 @@
             } );
  
  
-            layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
-            map.addLayer(layerCycleMap);
-            layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
-            map.addLayer(layerMapnik);
-            layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
-            map.addLayer(layerTilesAtHome);
+            var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
+            var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+            var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 
-
-            map.addLayer(lgpx);
-
+            map.addLayers([layerCycleMap, layerMapnik, layerTilesAtHome, lgpx ]);
 
             {% if object.route.start_lat %} 
                 var size = new OpenLayers.Size(20,25);
@@ -80,9 +75,10 @@
                     1: {strokeColor: "#CCCCCC", strokeWidth: 4},
                     2: {strokeColor: "#3366FF", strokeWidth: 4},
                     3: {strokeColor: "#66CC00", strokeWidth: 4},
-                    4: {strokeColor: "#FF9900", strokeWidth: 4},
-                    5: {strokeColor: "#FF6600", strokeWidth: 4},
-                    6: {strokeColor: "#FF0000", strokeWidth: 8},
+                    4: {strokeColor: "#FF00FF", strokeWidth: 4},
+                    5: {strokeColor: "#FF9900", strokeWidth: 4},
+                    6: {strokeColor: "#FF6600", strokeWidth: 4},
+                    7: {strokeColor: "#FF0000", strokeWidth: 8},
                 });
 
             var vectors = new OpenLayers.Layer.Vector("Lines", {

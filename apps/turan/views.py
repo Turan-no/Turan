@@ -27,6 +27,7 @@ from django.utils.decorators import decorator_from_middleware
 from django.middleware.gzip import GZipMiddleware
 
 from tagging.models import Tag
+from tribes.models import Tribe
 
 import re
 from datetime import timedelta, datetime
@@ -267,20 +268,21 @@ def week(request, week, user_id='all'):
     return render_to_response('turan/event_list.html', locals(), context_instance=RequestContext(request))
 
 def statistics(request, year=None, month=None):
+    teamname = request.GET.get('team')
+    if teamname:
+        team = get_object_or_404(Tribe, slug=teamname)
+        statsusers = team.members.all()
+        statsprofiles = Profile.objects.all().filter(user__in=statsusers)
+    else:
+        statsprofiles = Profile.objects.all()
 
-    cycleqs = CycleTrip.objects
-    if year:
-        cycleqs = cycleqs.filter(date__year=year)
-    if month:
-        cycleqs = cycleqs.filter(date__month=month)
-
-    stats_dict = cycleqs.aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
+    stats_dict = CycleTrip.objects.aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
     total_duration = stats_dict['duration__sum']
     total_distance = stats_dict['route__distance__sum']
     total_avg_speed = stats_dict['avg_speed__avg']
     longest_trip = stats_dict['route__distance__max']
 
-    userstats = Profile.objects.annotate( \
+    userstats = statsprofiles.annotate( \
             avg_avg_speed = Avg('user__cycletrip__avg_speed'), \
             max_avg_speed = Max('user__cycletrip__avg_speed'), \
             max_speed = Max('user__cycletrip__max_speed'), \
@@ -311,7 +313,7 @@ def statistics(request, year=None, month=None):
     avgavghrs = sorted(avgavghrs, key=lambda x:-x.avgavghrpercent)
 
     validroutes = Route.objects.filter(ascent__gt=0).filter(distance__gt=0)
-    climbstats = Profile.objects.filter(user__cycletrip__route__in=validroutes).annotate( \
+    climbstats = statsprofiles.filter(user__cycletrip__route__in=validroutes).annotate( \
             distance = Sum('user__cycletrip__route__distance'), \
             height = Sum('user__cycletrip__route__ascent'),  \
             duration = Sum('user__cycletrip__duration') \
@@ -323,7 +325,7 @@ def statistics(request, year=None, month=None):
     climbstats = sorted(climbstats, key=lambda x: -x.avgclimb)
     climbstatsbytime = sorted(climbstats, key=lambda x:-x.avgclimbperhour)
 
-    hikestats = Profile.objects.annotate( \
+    hikestats = statsprofiles.annotate( \
             hike_avg_avg_speed = Avg('user__hike__avg_speed'), \
             hike_max_avg_speed = Max('user__hike__avg_speed'), \
             hike_max_speed = Max('user__hike__max_speed'), \
@@ -349,7 +351,7 @@ def statistics(request, year=None, month=None):
         u.avgavghrpercent = float(u.hike_avg_avg_hr)/u.max_hr*100
     hike_avgavghrs = sorted(hike_avgavghrs, key=lambda x:-x.avgavghrpercent)
 
-    hike_climbstats = Profile.objects.filter(user__hike__route__in=validroutes).annotate( \
+    hike_climbstats = statsprofiles.filter(user__hike__route__in=validroutes).annotate( \
             distance = Sum('user__hike__route__distance'), \
             height = Sum('user__hike__route__ascent'), \
             duration = Sum('user__hike__duration') \
@@ -360,6 +362,8 @@ def statistics(request, year=None, month=None):
         u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
     hike_climbstats = sorted(hike_climbstats, key=lambda x: -x.avgclimb)
     hike_climbstatsbytime = sorted(hike_climbstats, key=lambda x:-x.avgclimbperhour)
+
+    team_list = Tribe.objects.all()
 
     return render_to_response('turan/statistics.html', locals(), context_instance=RequestContext(request))
 
@@ -547,10 +551,12 @@ def geojson(request, event_type, object_id):
             hr_percent = float(d.hr)*100/max_hr
             zone = 1
             if hr_percent > 89:
-                zone = 6
+                zone = 7
             elif hr_percent > 84:
-                zone = 5
+                zone = 6
             elif hr_percent > 79:
+                zone = 5
+            elif hr_percent > 74:
                 zone = 4
             elif hr_percent > 69:
                 zone = 3
