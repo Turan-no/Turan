@@ -27,6 +27,7 @@ from django.utils.decorators import decorator_from_middleware
 from django.middleware.gzip import GZipMiddleware
 
 from tagging.models import Tag
+from tribes.models import Tribe
 
 import re
 from datetime import timedelta, datetime
@@ -360,6 +361,8 @@ def statistics(request, year=None, month=None):
         u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
     hike_climbstats = sorted(hike_climbstats, key=lambda x: -x.avgclimb)
     hike_climbstatsbytime = sorted(hike_climbstats, key=lambda x:-x.avgclimbperhour)
+
+    team_list = Tribe.objects.all()
 
     return render_to_response('turan/statistics.html', locals(), context_instance=RequestContext(request))
 

@@ -7,6 +7,15 @@
 {% trans "Statistics" %}
 {% endblock %}
 {% block content %}
+<div class="half floatright">
+<h1>{% trans "Filter by team" %}</h1>
+<ul>
+    <li><a href="{% url statistics%}">{% trans "No filter" %}</a></li> 
+    {% for team in team_list %}
+    <li><a href="{% url statistics%}/?team={{team.slug}}">{{team}}</a></li> 
+    {% endfor %}
+</ul>
+</div>
 <h1>{% trans "Statistics" %}</h1>
 
 <ul>
@@ -17,6 +26,7 @@
     <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Total hike count"%}:</span> {{ hikeqs.count}} {% trans "trips" %}</li>
     <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
 </ul>
+<hr class="clear">
 
 <div class="toplist hike half floatright">
     <h2> {% trans "Hike statistics" %} </h2>
