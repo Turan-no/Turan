@@ -75,7 +75,7 @@
     <td>
         <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
     </td>
-    <td class="number">{{ object.distance }} km</td>
+    <td class="number">{{ object.distance|floatformat }} km</td>
     <td class="number">
         {% if object.ascent %}
             {{ object.ascent }} {% trans "m" %}

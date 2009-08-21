@@ -419,6 +419,8 @@ class Location(models.Model):
         verbose_name = _("Location")
         verbose_name_plural = _("Locations")
 
+EXPERIMENTAL_POLAR_GPX_HRM_COMBINER = 0
+
 def parse_sensordata(event, event_type):
     ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
 
@@ -439,7 +441,10 @@ def parse_sensordata(event, event_type):
     parser.parse_uploaded_file(event.sensor_file.file)
     values = parser.entries
 
-    for val in values:
+    if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
+        gpxvalues = GPXParser(event.route.gpx_file.file).entries
+
+    for i, val in enumerate(values):
         if event_type == 'hike':
             d = HikeDetail()
         elif event_type == 'cycletrip':
@@ -455,6 +460,13 @@ def parse_sensordata(event, event_type):
         d.cadence = val.cadence
         d.lat = val.lat
         d.lon = val.lon
+        if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
+            if not d.lat and not d.lon: # try and get from .gpx FIXME yeah...you know why
+                try:
+                    d.lon = gpxvalues[i]['lon']
+                    d.lat = gpxvalues[i]['lat']
+                except IndexError:
+                    pass # well..it might not match
         if hasattr(val, 'power'): # very few parsers has this
             d.power = val.power # assume the object has it if parser has it (cycletrip)
         d.save()

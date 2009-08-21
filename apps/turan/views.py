@@ -23,10 +23,11 @@ from django.views.generic.list_detail import object_list
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.cache import cache_page
+from django.utils.decorators import decorator_from_middleware
+from django.middleware.gzip import GZipMiddleware
 
 from tagging.models import Tag
 from tribes.models import Tribe
-
 
 import re
 from datetime import timedelta, datetime
@@ -497,7 +498,8 @@ def calendar_month(request, year, month, user_id=False):
              },
             context_instance=RequestContext(request))
 
-@cache_page(86400*7)
+#@cache_page(86400*7)
+#@decorator_from_middleware(GZipMiddleware)
 def geojson(request, event_type, object_id):
     ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
     give each line a zone property so it can be styled differently'''
@@ -547,8 +549,12 @@ def geojson(request, event_type, object_id):
             hr_percent = float(d.hr)*100/max_hr
             zone = 1
             if hr_percent > 89:
-                zone = 5
+                zone = 7
+            elif hr_percent > 84:
+                zone = 6
             elif hr_percent > 79:
+                zone = 5
+            elif hr_percent > 74:
                 zone = 4
             elif hr_percent > 69:
                 zone = 3
