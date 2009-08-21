@@ -1,0 +1,103 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-08-21 17:44+0200\n"
+"PO-Revision-Date: 2009-08-21 17:49\n"
+"Last-Translator: Tor Hveem <tor@bash.no>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Translated-Using: django-rosetta 0.4.0\n"
+
+#: forms.py:11
+msgid "a short version of the name consisting only of letters, numbers, underscores and hyphens."
+msgstr "kortversjon av namnet - bruk berre bokstavar, nummer eller strekar"
+
+#: forms.py:12
+msgid "This value must contain only letters, numbers, underscores and hyphens."
+msgstr "Verdien må berre innehalda tal, bokstavar, - eller _"
+
+#: forms.py:16
+msgid "A team already exists with that slug."
+msgstr "Eit lag finst allerie med det kortnamnet."
+
+#: forms.py:21 forms.py:38
+msgid "A team already exists with that name."
+msgstr "Eit lag finst allereie med det namnet."
+
+#: management.py:9
+msgid "New Team Member"
+msgstr "Nytt lagmedlem"
+
+#: management.py:9
+msgid "a team you are a member of has a new member"
+msgstr "eit lag du er med i har fått eit nytt medlem"
+
+#: management.py:10
+msgid "New Member Of Team You Created"
+msgstr "Nytt lagmedlem i ditt lag"
+
+#: management.py:10
+msgid "a tribe you created has a new member"
+msgstr "eit lag du opretta har nytt medlem"
+
+#: management.py:11
+msgid "New Team Created"
+msgstr "Nytt lag oppretta"
+
+#: management.py:11
+msgid "a new team has been created"
+msgstr "eit nytt lag har blitt oppretta"
+
+#: models.py:10
+msgid "members"
+msgstr "medlemmer"
+
+#: models.py:11
+msgid "No pain - no gain"
+msgstr "No pain - no gain"
+
+#: models.py:22
+msgid "Team"
+msgstr "Lag"
+
+#: models.py:23
+msgid "Teams"
+msgstr "Lag"
+
+#: views.py:86
+#, python-format
+msgid "Tribe %(tribe_name)s deleted."
+msgstr "Lag %(tribe_name)s sletta."
+
+#: views.py:117
+#, python-format
+msgid "You have joined the team %(tribe_name)s"
+msgstr "Du har blitt medlem i laget %(tribe_name)s"
+
+#: views.py:123
+#, python-format
+msgid "You have already joined team %(tribe_name)s"
+msgstr "Du er allereie medlem i %(tribe_name)s"
+
+#: templates/notification/tribes_created_new_member/notice.html:2
+#, python-format
+msgid "<a href=\"%(user_url)s\">%(user)s</a> has joined the tribe <a href=\"%(tribe_url)s\">%(group)s</a>."
+msgstr "<a href=\"%(user_url)s\">%(user)s</a> har blitt medlem i laget <a href=\"%(tribe_url)s\">%(group)s</a>."
+
+#: templates/notification/tribes_new_member/notice.html:2
+#, python-format
+msgid "<a href=\"%(user_url)s\">%(user)s</a> has joined the tribe <a href=\"%(tribe_url)s\">%(tribe)s</a>."
+msgstr "<a href=\"%(user_url)s\">%(user)s</a> har blitt medlem i laget <a href=\"%(tribe_url)s\">%(tribe)s</a>."
+
+#: templates/notification/tribes_new_tribe/notice.html:2
+#, python-format
+msgid "A new group <a href=\"%(group_url)s\">%(group)s</a> has been created."
+msgstr "Eit nytt lag <a href=\"%(group_url)s\">%(group)s</a> har blitt oppretta."

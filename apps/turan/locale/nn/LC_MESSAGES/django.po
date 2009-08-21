@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-17 22:51+0200\n"
-"PO-Revision-Date: 2009-08-17 23:02\n"
+"POT-Creation-Date: 2009-08-21 18:04+0200\n"
+"PO-Revision-Date: 2009-08-21 17:45\n"
 "Last-Translator: Tor Hveem <tor@bash.no>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +63,8 @@ msgstr "Ruter"
 
 #: models.py:171
 msgid "File from equipment from Garmin/Polar (.tcx, .hrm, .gmd)"
-msgstr "Fil frå treningscomputer som Garmin/Polar/PowerTap (.tcx, .hrm, .gmd, .csv)"
+msgstr ""
+"Fil frå treningscomputer som Garmin/Polar/PowerTap (.tcx, .hrm, .gmd, .csv)"
 
 #: models.py:182
 msgid "Unnamed trip"
@@ -73,8 +74,9 @@ msgstr "Namnlaus tur"
 msgid "Hike"
 msgstr "Fottur"
 
-#: models.py:218 templates/turan/index.html:77
-#: templates/turan/plugins/profiles/profile.html:22
+#: models.py:218 templates/turan/hike_list.html:7
+#: templates/turan/hike_list.html.py:12 templates/turan/index.html:77
+#: templates/turan/plugins/profiles/profile.html:27
 msgid "Hikes"
 msgstr "Fotturar"
 
@@ -82,7 +84,7 @@ msgstr "Fotturar"
 msgid "Other Exercise"
 msgstr "Anna trening"
 
-#: models.py:260 templates/turan/plugins/profiles/profile.html:38
+#: models.py:260 templates/turan/plugins/profiles/profile.html:46
 msgid "Other Exercises"
 msgstr "Anna trening"
 
@@ -90,7 +92,7 @@ msgstr "Anna trening"
 msgid "Cycle Trip"
 msgstr "Sykkeltur"
 
-#: models.py:327 templates/turan/plugins/profiles/profile.html:6
+#: models.py:327 templates/turan/plugins/profiles/profile.html:8
 msgid "Cycle Trips"
 msgstr "Sykkelturar"
 
@@ -102,7 +104,7 @@ msgstr "Stad"
 msgid "Locations"
 msgstr "Stadar"
 
-#: views.py:670
+#: views.py:764
 #, python-format
 msgid "The %(verbose_name)s was created successfully."
 msgstr "%(verbose_name)s vart lagt til."
@@ -148,8 +150,12 @@ msgstr "Lurer du på <a href=\"%(what_next_url)s\">kva no?</a>?"
 
 #: templates/homepage.html:38
 #, python-format
-msgid "You can <a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">Log in</a> to try out the site."
-msgstr "Du kan <a href=\"%(signup_url)s\">Registrere deg</a> og <a href=\"%(login_url)s\">Logge inn</a>for å starte."
+msgid ""
+"You can <a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s"
+"\">Log in</a> to try out the site."
+msgstr ""
+"Du kan <a href=\"%(signup_url)s\">Registrere deg</a> og <a href=\"%"
+"(login_url)s\">Logge inn</a>for å starte."
 
 #: templates/homepage.html:40
 #, python-format
@@ -201,7 +207,9 @@ msgid "verify an email address"
 msgstr "stadfest epost-adresse"
 
 #: templates/about/what_next.html:27
-msgid "so you can receive notifications, reset your password and so people can find you more easily."
+msgid ""
+"so you can receive notifications, reset your password and so people can find "
+"you more easily."
 msgstr "så du kan få meldingar, nullstille passord med meir."
 
 #: templates/about/what_next.html:29
@@ -246,8 +254,12 @@ msgstr "så meir folk kan dele treningsgleda"
 
 #: templates/about/what_next.html:49
 #, python-format
-msgid "Start by <a href=\"%(signup_url)s\">signing up</a> and <a href=\"%(login_url)s\">logging in</a>."
-msgstr "Start ved å<a href=\"%(signup_url)s\">melde seg inn</a> og <a href=\"%(login_url)s\">logge inn</a>."
+msgid ""
+"Start by <a href=\"%(signup_url)s\">signing up</a> and <a href=\"%(login_url)"
+"s\">logging in</a>."
+msgstr ""
+"Start ved å<a href=\"%(signup_url)s\">melde seg inn</a> og <a href=\"%"
+"(login_url)s\">logge inn</a>."
 
 #: templates/account/base.html:10
 msgid "E-Mail Addresses"
@@ -332,8 +344,12 @@ msgid "Invite someone new to join"
 msgstr "Inviter nokre nye"
 
 #: templates/friends_app/invitations.html:14
-msgid "If you'd like to invite someone to join Turan, you can enter their email address and a message for them below:"
-msgstr "Om du vil invitere nokon til Turan, skriv inn epost-adressa deira og ei melding under:"
+msgid ""
+"If you'd like to invite someone to join Turan, you can enter their email "
+"address and a message for them below:"
+msgstr ""
+"Om du vil invitere nokon til Turan, skriv inn epost-adressa deira og ei "
+"melding under:"
 
 #: templates/friends_app/invitations.html:21
 msgid "Someone with this email address has already joined:"
@@ -405,12 +421,12 @@ msgstr "Total Lengd"
 
 #: templates/profile/statistics.html:5 templates/profile/statistics.html:9
 #: templates/turan/cycletrip_detail.html:50
-#: templates/turan/cycletrip_list.html:39 templates/turan/event_list.html:56
-#: templates/turan/index.html:68 templates/turan/index.html.py:85
-#: templates/turan/statistics.html:14 templates/turan/statistics.html.py:18
-#: templates/turan/statistics.html:53 templates/turan/statistics.html.py:88
-#: templates/turan/statistics.html:132 templates/turan/statistics.html:167
-#: templates/turan/route/attributes.html:6
+#: templates/turan/cycletrip_list.html:56 templates/turan/event_list.html:56
+#: templates/turan/hike_list.html:56 templates/turan/index.html:68
+#: templates/turan/index.html.py:85 templates/turan/statistics.html:14
+#: templates/turan/statistics.html.py:18 templates/turan/statistics.html:53
+#: templates/turan/statistics.html.py:88 templates/turan/statistics.html:132
+#: templates/turan/statistics.html:167 templates/turan/route/attributes.html:6
 msgid "km"
 msgstr "km"
 
@@ -419,11 +435,12 @@ msgid "Total Avg Speed"
 msgstr "Total gj. fart"
 
 #: templates/profile/statistics.html:6
-#: templates/turan/cycletrip_detail.html:54 templates/turan/slope.html:30
-#: templates/turan/statistics.html:15 templates/turan/statistics.html.py:26
-#: templates/turan/statistics.html:33 templates/turan/statistics.html.py:39
-#: templates/turan/statistics.html:105 templates/turan/statistics.html:112
-#: templates/turan/statistics.html:118
+#: templates/turan/cycletrip_detail.html:54
+#: templates/turan/cycletrip_list.html:62 templates/turan/hike_list.html:62
+#: templates/turan/slope.html:30 templates/turan/statistics.html:15
+#: templates/turan/statistics.html.py:26 templates/turan/statistics.html:33
+#: templates/turan/statistics.html.py:39 templates/turan/statistics.html:105
+#: templates/turan/statistics.html:112 templates/turan/statistics.html:118
 #: templates/turan/cycletrip/attributes.html:42
 #: templates/turan/cycletrip/attributes.html:54
 msgid "km/h"
@@ -525,6 +542,189 @@ msgstr "Svar på denne"
 msgid "Post Response"
 msgstr "Send"
 
+#: templates/tribes/base.html:16 templates/tribes/your_tribes.html:7
+#: templates/tribes/your_tribes.html:11
+msgid "Your Tribes"
+msgstr "Dine lag"
+
+#: templates/tribes/base.html:17
+msgid "Create a Tribe"
+msgstr "Opprett nytt lag"
+
+#: templates/tribes/base.html:19
+msgid "All Tribes"
+msgstr "Alle lag"
+
+#: templates/tribes/create.html:11 templates/tribes/create.html.py:14
+msgid "Create Tribe"
+msgstr "Opprett lag"
+
+#: templates/tribes/create.html:16 templates/tribes/tribes.html:17
+msgid "A <b>tribe</b> is a group of people with some common interest."
+msgstr "Eit <b>lag</b> er ei gruppe menneske som har tilknyting."
+
+#: templates/tribes/create.html:23
+msgid "create"
+msgstr "opprett"
+
+#: templates/tribes/create.html:30 templates/tribes/tribes.html:23
+#, fuzzy, python-format
+msgid ""
+"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in "
+"</a> to create your own tribe or join an existing one."
+msgstr ""
+"Du kan <a href=\"%(signup_url)s\">Registrere deg</a> og <a href=\"%"
+"(login_url)s\">Logge inn</a>for å starte."
+
+#: templates/tribes/tribe.html:21 templates/turan/team_list.html:30
+msgid "Members"
+msgstr "Medlemsliste"
+
+#: templates/tribes/tribe.html:39
+msgid "Tribe"
+msgstr "Lag"
+
+#: templates/tribes/tribe.html:42
+msgid "Slug:"
+msgstr "Kortnamn:"
+
+#: templates/tribes/tribe.html:43
+msgid "Slogan:"
+msgstr "Slogan:"
+
+#: templates/tribes/tribe.html:44
+msgid "URL:"
+msgstr "URL:"
+
+#: templates/tribes/tribe.html:45
+msgid "Creator:"
+msgstr ""
+
+#: templates/tribes/tribe.html:46
+msgid "Created:"
+msgstr ""
+
+#: templates/tribes/tribe.html:55
+msgid "Edit details"
+msgstr "Endre detaljar"
+
+#: templates/tribes/tribe.html:62
+msgid "updated"
+msgstr "oppdatert"
+
+#: templates/tribes/tribe.html:69
+msgid "Delete tribe"
+msgstr "Slett lag"
+
+#: templates/tribes/tribe.html:71
+msgid "Delete Tribe"
+msgstr "Slett lag"
+
+#: templates/tribes/tribe.html:74
+msgid "You are not the only member of the tribe so you can't delete the tribe."
+msgstr "Du er det einaste medlemmet i laget så du kan ikkje slette."
+
+#: templates/tribes/tribe.html:84
+msgid "You are the creator of this tribe so can't leave (yet)."
+msgstr "Du oppretta laget så du kan ikkje melde deg ut."
+
+#: templates/tribes/tribe.html:87
+msgid "leave"
+msgstr "meld ut"
+
+#: templates/tribes/tribe.html:91
+msgid "join tribe"
+msgstr "bli medlem i lag"
+
+#: templates/tribes/tribe.html:98
+#, fuzzy, python-format
+msgid ""
+"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in "
+"</a> to join this tribe."
+msgstr ""
+"Du kan <a href=\"%(signup_url)s\">Registrere deg</a> og <a href=\"%"
+"(login_url)s\">Logge inn</a>for å starte."
+
+#: templates/tribes/tribe.html:103
+msgid "Discussion Topics"
+msgstr ""
+
+#: templates/tribes/tribe.html:111 templates/tribes/tribe.html.py:127
+msgid "more..."
+msgstr ""
+
+#: templates/tribes/tribe.html:114
+#, fuzzy, python-format
+msgid "None yet. <a href=\"%(new_topic_url)s\">Start one...</a>"
+msgstr "Lurer du på <a href=\"%(what_next_url)s\">kva no?</a>?"
+
+#: templates/tribes/tribe.html:119
+msgid "Wiki Articles"
+msgstr ""
+
+#: templates/tribes/tribe.html:131
+#, python-format
+msgid ""
+"\n"
+"                        None yet. Go to the <a href=\"%(wiki_url)s\" title="
+"\"wiki\">wiki</a> to start a new article.\n"
+"                    "
+msgstr ""
+
+#: templates/tribes/tribe.html:140
+msgid "Tribe Photo Pool"
+msgstr ""
+
+#: templates/tribes/tribe.html:147
+#, python-format
+msgid "%(commentcount)s Comments "
+msgstr ""
+
+#: templates/tribes/tribe.html:154
+#, python-format
+msgid ""
+"\n"
+"                        There are no photos associated to this tribe. You "
+"can <a href=\"%(photo_upload_url)s\">add a photo</a>.</a>\n"
+"                    "
+msgstr ""
+
+#: templates/tribes/tribe.html:162
+msgid "Tweets"
+msgstr ""
+
+#: templates/tribes/tribe.html:166
+msgid "Upcoming Events"
+msgstr ""
+
+#: templates/tribes/tribe.html:178
+msgid "There are no upcoming events."
+msgstr ""
+
+#: templates/tribes/tribe.html:181
+msgid "calendar..."
+msgstr "kalender..."
+
+#: templates/tribes/tribe_item.html:7
+msgid "Members:"
+msgstr "Medlemsliste"
+
+#: templates/tribes/tribe_item.html:9
+msgid "Topics:"
+msgstr "Emne:"
+
+#: templates/tribes/tribes.html:12 templates/tribes/tribes.html.py:15
+msgid "Tribes"
+msgstr "Lag"
+
+#: templates/tribes/tribes.html:36
+msgid "Order by:"
+msgstr "Sorter etter:"
+
+#: templates/tribes/your_tribes.html:13
+msgid "These are the tribes you participate in."
+msgstr "Dette er dine lagmedlemskap."
+
 #: templates/turan/about.html:4 templates/turan/todo.html:4
 msgid "About"
 msgstr "Om"
@@ -562,9 +762,17 @@ msgstr "Førre"
 msgid "Next"
 msgstr "Neste"
 
-#: templates/turan/common_graph.html:14
+#: templates/turan/common_graph.html:9
 msgid "Reset zoom"
 msgstr "Zoom ut"
+
+#: templates/turan/common_graph.html:69
+msgid "at"
+msgstr "ved"
+
+#: templates/turan/common_graph.html:69
+msgid "is"
+msgstr "er"
 
 #: templates/turan/cycletrip_compare.html:5
 msgid "versus"
@@ -577,19 +785,19 @@ msgstr "Sykkeltur"
 
 #: templates/turan/cycletrip_compare.html:10
 #: templates/turan/cycletrip_detail.html:39 templates/turan/slope.html:16
-#: templates/turan/cycletrip/graph.html:12
+#: templates/turan/cycletrip/graph.html:14
 #: templates/turan/exercise/graph.html:13 templates/turan/hike/graph.html:13
 msgid "Speed"
 msgstr "Fart"
 
 #: templates/turan/cycletrip_compare.html:12
-#: templates/turan/cycletrip/graph.html:19
+#: templates/turan/cycletrip/graph.html:21
 #: templates/turan/exercise/graph.html:17 templates/turan/hike/graph.html:17
 msgid "HR"
 msgstr "Puls"
 
 #: templates/turan/cycletrip_compare.html:14
-#: templates/turan/cycletrip/graph.html:27
+#: templates/turan/cycletrip/graph.html:29
 msgid "Cadence"
 msgstr "Kadens"
 
@@ -651,8 +859,10 @@ msgstr "m"
 msgid "W"
 msgstr "W"
 
-#: templates/turan/cycletrip_detail.html:56 templates/turan/slope.html:32
-#: templates/turan/statistics.html:75 templates/turan/statistics.html:153
+#: templates/turan/cycletrip_detail.html:56
+#: templates/turan/cycletrip_list.html:65 templates/turan/hike_list.html:65
+#: templates/turan/slope.html:32 templates/turan/statistics.html:75
+#: templates/turan/statistics.html:153
 #: templates/turan/userprofile_detail.html:41
 #: templates/turan/userprofile_detail.html:44
 #: templates/turan/userprofile_detail.html:82
@@ -669,30 +879,10 @@ msgstr "Legg til sykkeltur"
 msgid "Add new trip"
 msgstr "Legg til tur"
 
-#: templates/turan/cycletrip_list.html:5
-#: templates/turan/cycletrip_list.html:10 templates/turan/index.html:60
+#: templates/turan/cycletrip_list.html:7
+#: templates/turan/cycletrip_list.html:12 templates/turan/index.html:60
 msgid "Cycle trips"
 msgstr "Sykkelturar"
-
-#: templates/turan/cycletrip_list.html:15 templates/turan/event_list.html:22
-msgid "User"
-msgstr "Brukar"
-
-#: templates/turan/cycletrip_list.html:18 templates/turan/event_list.html:25
-#: templates/turan/route_detail.html:59
-#: templates/turan/cycletrip/attributes.html:34
-msgid "Date"
-msgstr "Dato"
-
-#: templates/turan/cycletrip_list.html:21 templates/turan/event_list.html:28
-#: templates/turan/team_list.html:15
-msgid "Name"
-msgstr "Namn"
-
-#: templates/turan/cycletrip_list.html:24 templates/turan/event_list.html:31
-#: templates/turan/route/attributes.html:6
-msgid "Distance"
-msgstr "Lengd"
 
 #: templates/turan/event_form.html:20 templates/turan/route_form.html:14
 msgid "Cancel"
@@ -701,6 +891,23 @@ msgstr "Avbryt"
 #: templates/turan/event_form.html:21
 msgid "Submit"
 msgstr "Send"
+
+#: templates/turan/event_list.html:22
+msgid "User"
+msgstr "Brukar"
+
+#: templates/turan/event_list.html:25 templates/turan/route_detail.html:59
+#: templates/turan/cycletrip/attributes.html:34
+msgid "Date"
+msgstr "Dato"
+
+#: templates/turan/event_list.html:28 templates/turan/team_list.html:15
+msgid "Name"
+msgstr "Namn"
+
+#: templates/turan/event_list.html:31 templates/turan/route/attributes.html:6
+msgid "Distance"
+msgstr "Lengd"
 
 #: templates/turan/event_list.html:34 templates/turan/route_detail.html:58
 #: templates/turan/cycletrip/attributes.html:32
@@ -905,10 +1112,6 @@ msgstr "Slogan"
 msgid "URL"
 msgstr "URL"
 
-#: templates/turan/team_list.html:30
-msgid "Members"
-msgstr "Medlemsliste"
-
 #: templates/turan/todo.html:8
 msgid "Todo"
 msgstr "Todo"
@@ -1042,12 +1245,12 @@ msgstr "skriv"
 msgid "Show"
 msgstr "Vis"
 
-#: templates/turan/cycletrip/graph.html:34
+#: templates/turan/cycletrip/graph.html:36
 #: templates/turan/exercise/graph.html:23 templates/turan/hike/graph.html:23
 msgid "Altitude"
 msgstr "Høgd"
 
-#: templates/turan/cycletrip/graph.html:42
+#: templates/turan/cycletrip/graph.html:44
 msgid "Power"
 msgstr "Effekt"
 
@@ -1059,15 +1262,21 @@ msgstr "Treningsgraf"
 msgid "Hike graph"
 msgstr "Fottur-graf"
 
-#: templates/turan/plugins/profiles/profile.html:19
+#: templates/turan/plugins/profiles/profile.html:9
+#: templates/turan/plugins/profiles/profile.html:28
+#: templates/turan/plugins/profiles/profile.html:47
+msgid "Show all"
+msgstr "Vis alle"
+
+#: templates/turan/plugins/profiles/profile.html:21
 msgid "No cycle trips added yet."
 msgstr "Ingen sykkelturar lagt til endå."
 
-#: templates/turan/plugins/profiles/profile.html:35
+#: templates/turan/plugins/profiles/profile.html:40
 msgid "No hikes added yet."
 msgstr "Ingen turar lagt til endå."
 
-#: templates/turan/plugins/profiles/profile.html:51
+#: templates/turan/plugins/profiles/profile.html:59
 msgid "No other exercises added yet."
 msgstr "Ingen anna trening lagt til endå."
 
@@ -1151,197 +1360,189 @@ msgstr "sekund"
 msgid "Zero time"
 msgstr "Ingen tid"
 
-#~ msgid "Profile for %(other_user)s"
-#~ msgstr "Profil for %(other_user)s"
+msgid "Account"
+msgstr "Konto"
 
-#~ msgid "Profile for <span class=\"nickname\">%(other_user)s</span>"
-#~ msgstr "Profil for <span class=\"nickname\">%(other_user)s</span>"
+msgid "Admin"
+msgstr "Admin"
 
-#~ msgid "Profile for <span class=\"fn nickname\">%(other_user)s</span>"
-#~ msgstr "Profil for <span class=\"fn nickname\">%(other_user)s</span>"
+msgid "Logout"
+msgstr "Logg ut"
 
-#~ msgid "User image"
-#~ msgstr "Brukarbilete"
+msgid "Login"
+msgstr "Logg inn"
 
-#~ msgid "Cycle image"
-#~ msgstr "Sykkelbilete"
+msgid "or"
+msgstr "eller"
 
-#~ msgid "Website"
-#~ msgstr "Nettstad"
+msgid "Sign up"
+msgstr "Registrer"
 
-#~ msgid "Edit profile"
-#~ msgstr "Brukarprofil"
+msgid "Turan"
+msgstr "Turan"
 
-#~ msgid "update"
-#~ msgstr "oppdater"
+msgid "Exercisers"
+msgstr "Utøvarar"
 
-#~ msgid "You are friends with %(other_user)s."
-#~ msgstr "Du er ven med %(other_user)s."
+msgid "Photos"
+msgstr "Foto"
 
-#~ msgid "Send a message"
-#~ msgstr "Send melding"
+msgid "Profile"
+msgstr "Profil"
 
-#~ msgid "remove from friends"
-#~ msgstr "Fjern som ven"
+msgid "Inbox"
+msgstr "Innboks"
 
-#~ msgid "Add As Friend"
-#~ msgstr "Legg til som ven"
+msgid "&copy; 2009 &lt;lart.no&gt;"
+msgstr "&copy; 2009 &lt;lart.no&gt;"
 
-#~ msgid "<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in </a> to add this person as a friend and see more of their content."
-#~ msgstr "Du kan <a href=\"%(signup_url)s\">Registrere deg</a> og <a href=\"%(login_url)s\">Logge inn</a> for å starte."
+msgid "Profile for %(other_user)s"
+msgstr "Profil for %(other_user)s"
 
-#~ msgid "All Profiles"
-#~ msgstr "Alle profilar"
+msgid "Profile for <span class=\"nickname\">%(other_user)s</span>"
+msgstr "Profil for <span class=\"nickname\">%(other_user)s</span>"
 
-#~ msgid "Profiles"
-#~ msgstr "Profilar"
+msgid "Profile for <span class=\"fn nickname\">%(other_user)s</span>"
+msgstr "Profil for <span class=\"fn nickname\">%(other_user)s</span>"
 
-#~ msgid "Order by:"
-#~ msgstr "Sorter etter:"
+msgid "User image"
+msgstr "Brukarbilete"
 
-#~ msgid "Exercise time"
-#~ msgstr "Treningstid"
+msgid "Cycle image"
+msgstr "Sykkelbilete"
 
-#~ msgid "MONTH_DAY_FORMAT"
-#~ msgstr "MONTH_DAY_FORMAT"
+msgid "Website"
+msgstr "Nettstad"
 
-#~ msgid "Add profile detail"
-#~ msgstr "Legg til brukarprofildetalje"
+msgid "Edit profile"
+msgstr "Brukarprofil"
 
-#~ msgid "Add new profile detail"
-#~ msgstr "Legg til brukarprofildetalje"
+msgid "You are friends with %(other_user)s."
+msgstr "Du er ven med %(other_user)s."
 
-#~ msgid "wrote"
-#~ msgstr "skreiv"
+msgid "Send a message"
+msgstr "Send melding"
 
-#~ msgid "Add comment"
-#~ msgstr "Kommenter"
+msgid "remove from friends"
+msgstr "Fjern som ven"
 
-#~ msgid "Post"
-#~ msgstr "Send"
+msgid "Add As Friend"
+msgstr "Legg til som ven"
 
-#~ msgid "Preview"
-#~ msgstr "Førehandsvisning"
+msgid ""
+"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log "
+"in </a> to add this person as a friend and see more of their content."
+msgstr ""
+"Du kan <a href=\"%(signup_url)s\">Registrere deg</a> og <a href=\"%"
+"(login_url)s\">Logge inn</a> for å starte."
 
-#~ msgid "Add new hike"
-#~ msgstr "Legg til fottur"
+msgid "All Profiles"
+msgstr "Alle profilar"
 
-#~ msgid "Add new exercise"
-#~ msgstr "Legg til trening"
+msgid "Exercise time"
+msgstr "Treningstid"
 
-#~ msgid "Hike count"
-#~ msgstr "Tur-teljar"
+msgid "MONTH_DAY_FORMAT"
+msgstr "MONTH_DAY_FORMAT"
 
-#~ msgid "Submit trip details"
-#~ msgstr "Legg til verdian"
+msgid "Add profile detail"
+msgstr "Legg til brukarprofildetalje"
 
-#~ msgid "Wrong filetype!"
-#~ msgstr "Feil filtype!"
+msgid "Add new profile detail"
+msgstr "Legg til brukarprofildetalje"
 
-#~ msgid "Hide announcement"
-#~ msgstr "Gøym melding"
+msgid "wrote"
+msgstr "skreiv"
 
-#~ msgid "clear"
-#~ msgstr "fjern"
+msgid "Add comment"
+msgstr "Kommenter"
 
-#~ msgid "Account"
-#~ msgstr "Konto"
+msgid "Post"
+msgstr "Send"
 
-#~ msgid "Admin"
-#~ msgstr "Admin"
+msgid "Preview"
+msgstr "Førehandsvisning"
 
-#~ msgid "Logout"
-#~ msgstr "Logg ut"
+msgid "Add new hike"
+msgstr "Legg til fottur"
 
-#~ msgid "Login"
-#~ msgstr "Logg inn"
+msgid "Add new exercise"
+msgstr "Legg til trening"
 
-#~ msgid "or"
-#~ msgstr "eller"
+msgid "Hike count"
+msgstr "Tur-teljar"
 
-#~ msgid "Sign up"
-#~ msgstr "Registrer"
+msgid "Wrong filetype!"
+msgstr "Feil filtype!"
 
-#~ msgid "Turan"
-#~ msgstr "Turan"
+msgid "Hide announcement"
+msgstr "Gøym melding"
 
-#~ msgid "Exercisers"
-#~ msgstr "Utøvarar"
+msgid "clear"
+msgstr "fjern"
 
-#~ msgid "Photos"
-#~ msgstr "Foto"
+msgid "Start by <a href=\"%(login_url)s\">logging in</a>."
+msgstr "Start ved å <a href=\"%(login_url)s\">logge inn</a>."
 
-#~ msgid "Tribes"
-#~ msgstr "Lag"
+msgid "Page"
+msgstr "Side"
 
-#~ msgid "Inbox"
-#~ msgstr "Innboks"
+msgid "of"
+msgstr "av"
 
-#~ msgid "&copy; 2009 &lt;lart.no&gt;"
-#~ msgstr "&copy; 2009 &lt;lart.no&gt;"
+msgid "Error while parsing form"
+msgstr "Feil med inndata"
 
-#~ msgid "Start by <a href=\"%(login_url)s\">logging in</a>."
-#~ msgstr "Start ved å <a href=\"%(login_url)s\">logge inn</a>."
+msgid "Add trip values"
+msgstr "Legg til verdiar"
 
-#~ msgid "Page"
-#~ msgstr "Side"
+msgid "Team name"
+msgstr "Lagnamn"
 
-#~ msgid "of"
-#~ msgstr "av"
+msgid "info"
+msgstr "info"
 
-#~ msgid "Error while parsing form"
-#~ msgstr "Feil med inndata"
+msgid "No pain - no gain"
+msgstr "No pain - no gain"
 
-#~ msgid "Add trip values"
-#~ msgstr "Legg til verdiar"
+msgid "Team"
+msgstr "Lag"
 
-#~ msgid "Team name"
-#~ msgstr "Lagnamn"
+msgid "i.e. Captain"
+msgstr "t.d. Kaptein"
 
-#~ msgid "info"
-#~ msgstr "info"
+msgid "Team Membership"
+msgstr "Lagmedlemskap"
 
-#~ msgid "No pain - no gain"
-#~ msgstr "No pain - no gain"
+msgid "in cm"
+msgstr "i cm"
 
-#~ msgid "Team"
-#~ msgstr "Lag"
+msgid "in kg"
+msgstr "i kg"
 
-#~ msgid "i.e. Captain"
-#~ msgstr "t.d. Kaptein"
+msgid "beats per minute"
+msgstr "slag i minuttet"
 
-#~ msgid "Team Membership"
-#~ msgstr "Lagmedlemskap"
+msgid "textual information"
+msgstr "Tekst"
 
-#~ msgid "in cm"
-#~ msgstr "i cm"
+msgid "User Profiles"
+msgstr "Brukarprofilar"
 
-#~ msgid "in kg"
-#~ msgstr "i kg"
+msgid "User Profile Details"
+msgstr "Brukarprofildetaljar"
 
-#~ msgid "beats per minute"
-#~ msgstr "slag i minuttet"
+msgid "Other Excercise"
+msgstr "Anna trening"
 
-#~ msgid "textual information"
-#~ msgstr "Tekst"
+msgid "All content types"
+msgstr "Alle innhaldstypar"
 
-#~ msgid "User Profiles"
-#~ msgstr "Brukarprofilar"
+msgid "hike"
+msgstr "fottur"
 
-#~ msgid "User Profile Details"
-#~ msgstr "Brukarprofildetaljar"
+msgid "Motto"
+msgstr "Motto"
 
-#~ msgid "Other Excercise"
-#~ msgstr "Anna trening"
-
-#~ msgid "All content types"
-#~ msgstr "Alle innhaldstypar"
-
-#~ msgid "hike"
-#~ msgstr "fottur"
-
-#~ msgid "Motto"
-#~ msgstr "Motto"
-
-#~ msgid "in m.o.h."
-#~ msgstr "i m.o.h."
+msgid "in m.o.h."
+msgstr "i m.o.h."

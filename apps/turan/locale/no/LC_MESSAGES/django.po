@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-17 22:51+0200\n"
+"POT-Creation-Date: 2009-08-21 18:04+0200\n"
 "PO-Revision-Date: 2009-07-18 22:20\n"
 "Last-Translator: <>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,8 +73,9 @@ msgstr "Tur til gokk"
 msgid "Hike"
 msgstr "Fottur"
 
-#: models.py:218 templates/turan/index.html:77
-#: templates/turan/plugins/profiles/profile.html:22
+#: models.py:218 templates/turan/hike_list.html:7
+#: templates/turan/hike_list.html.py:12 templates/turan/index.html:77
+#: templates/turan/plugins/profiles/profile.html:27
 msgid "Hikes"
 msgstr "Fottura"
 
@@ -83,7 +84,7 @@ msgstr "Fottura"
 msgid "Other Exercise"
 msgstr "Hvem"
 
-#: models.py:260 templates/turan/plugins/profiles/profile.html:38
+#: models.py:260 templates/turan/plugins/profiles/profile.html:46
 #, fuzzy
 msgid "Other Exercises"
 msgstr "Hvem"
@@ -92,7 +93,7 @@ msgstr "Hvem"
 msgid "Cycle Trip"
 msgstr "Sykkeltur"
 
-#: models.py:327 templates/turan/plugins/profiles/profile.html:6
+#: models.py:327 templates/turan/plugins/profiles/profile.html:8
 msgid "Cycle Trips"
 msgstr "Sykkelturan"
 
@@ -104,7 +105,7 @@ msgstr "Sted"
 msgid "Locations"
 msgstr "Steder"
 
-#: views.py:670
+#: views.py:764
 #, python-format
 msgid "The %(verbose_name)s was created successfully."
 msgstr ""
@@ -421,12 +422,12 @@ msgstr "Totallengde"
 
 #: templates/profile/statistics.html:5 templates/profile/statistics.html:9
 #: templates/turan/cycletrip_detail.html:50
-#: templates/turan/cycletrip_list.html:39 templates/turan/event_list.html:56
-#: templates/turan/index.html:68 templates/turan/index.html.py:85
-#: templates/turan/statistics.html:14 templates/turan/statistics.html.py:18
-#: templates/turan/statistics.html:53 templates/turan/statistics.html.py:88
-#: templates/turan/statistics.html:132 templates/turan/statistics.html:167
-#: templates/turan/route/attributes.html:6
+#: templates/turan/cycletrip_list.html:56 templates/turan/event_list.html:56
+#: templates/turan/hike_list.html:56 templates/turan/index.html:68
+#: templates/turan/index.html.py:85 templates/turan/statistics.html:14
+#: templates/turan/statistics.html.py:18 templates/turan/statistics.html:53
+#: templates/turan/statistics.html.py:88 templates/turan/statistics.html:132
+#: templates/turan/statistics.html:167 templates/turan/route/attributes.html:6
 msgid "km"
 msgstr "km"
 
@@ -435,11 +436,12 @@ msgid "Total Avg Speed"
 msgstr "Gjennomsnittlig fart"
 
 #: templates/profile/statistics.html:6
-#: templates/turan/cycletrip_detail.html:54 templates/turan/slope.html:30
-#: templates/turan/statistics.html:15 templates/turan/statistics.html.py:26
-#: templates/turan/statistics.html:33 templates/turan/statistics.html.py:39
-#: templates/turan/statistics.html:105 templates/turan/statistics.html:112
-#: templates/turan/statistics.html:118
+#: templates/turan/cycletrip_detail.html:54
+#: templates/turan/cycletrip_list.html:62 templates/turan/hike_list.html:62
+#: templates/turan/slope.html:30 templates/turan/statistics.html:15
+#: templates/turan/statistics.html.py:26 templates/turan/statistics.html:33
+#: templates/turan/statistics.html.py:39 templates/turan/statistics.html:105
+#: templates/turan/statistics.html:112 templates/turan/statistics.html:118
 #: templates/turan/cycletrip/attributes.html:42
 #: templates/turan/cycletrip/attributes.html:54
 msgid "km/h"
@@ -544,6 +546,199 @@ msgstr ""
 msgid "Post Response"
 msgstr ""
 
+#: templates/tribes/base.html:16 templates/tribes/your_tribes.html:7
+#: templates/tribes/your_tribes.html:11
+#, fuzzy
+msgid "Your Tribes"
+msgstr "skriv"
+
+#: templates/tribes/base.html:17
+#, fuzzy
+msgid "Create a Tribe"
+msgstr "Lag ei ny rute"
+
+#: templates/tribes/base.html:19
+#, fuzzy
+msgid "All Tribes"
+msgstr "skriv"
+
+#: templates/tribes/create.html:11 templates/tribes/create.html.py:14
+#, fuzzy
+msgid "Create Tribe"
+msgstr "Lag ei ny rute"
+
+#: templates/tribes/create.html:16 templates/tribes/tribes.html:17
+msgid "A <b>tribe</b> is a group of people with some common interest."
+msgstr ""
+
+#: templates/tribes/create.html:23
+#, fuzzy
+msgid "create"
+msgstr "Dato"
+
+#: templates/tribes/create.html:30 templates/tribes/tribes.html:23
+#, python-format
+msgid ""
+"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in "
+"</a> to create your own tribe or join an existing one."
+msgstr ""
+
+#: templates/tribes/tribe.html:21 templates/turan/team_list.html:30
+msgid "Members"
+msgstr "Medlemmer"
+
+#: templates/tribes/tribe.html:39
+#, fuzzy
+msgid "Tribe"
+msgstr "skriv"
+
+#: templates/tribes/tribe.html:42
+msgid "Slug:"
+msgstr ""
+
+#: templates/tribes/tribe.html:43
+#, fuzzy
+msgid "Slogan:"
+msgstr "Slagord"
+
+#: templates/tribes/tribe.html:44
+#, fuzzy
+msgid "URL:"
+msgstr "URL"
+
+#: templates/tribes/tribe.html:45
+msgid "Creator:"
+msgstr ""
+
+#: templates/tribes/tribe.html:46
+msgid "Created:"
+msgstr ""
+
+#: templates/tribes/tribe.html:55
+#, fuzzy
+msgid "Edit details"
+msgstr "Send turdetaljer"
+
+#: templates/tribes/tribe.html:62
+#, fuzzy
+msgid "updated"
+msgstr "Dato"
+
+#: templates/tribes/tribe.html:69
+msgid "Delete tribe"
+msgstr ""
+
+#: templates/tribes/tribe.html:71
+msgid "Delete Tribe"
+msgstr ""
+
+#: templates/tribes/tribe.html:74
+msgid "You are not the only member of the tribe so you can't delete the tribe."
+msgstr ""
+
+#: templates/tribes/tribe.html:84
+msgid "You are the creator of this tribe so can't leave (yet)."
+msgstr ""
+
+#: templates/tribes/tribe.html:87
+#, fuzzy
+msgid "leave"
+msgstr "Min kalender"
+
+#: templates/tribes/tribe.html:91
+msgid "join tribe"
+msgstr ""
+
+#: templates/tribes/tribe.html:98
+#, python-format
+msgid ""
+"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in "
+"</a> to join this tribe."
+msgstr ""
+
+#: templates/tribes/tribe.html:103
+msgid "Discussion Topics"
+msgstr ""
+
+#: templates/tribes/tribe.html:111 templates/tribes/tribe.html.py:127
+msgid "more..."
+msgstr ""
+
+#: templates/tribes/tribe.html:114
+#, python-format
+msgid "None yet. <a href=\"%(new_topic_url)s\">Start one...</a>"
+msgstr ""
+
+#: templates/tribes/tribe.html:119
+msgid "Wiki Articles"
+msgstr ""
+
+#: templates/tribes/tribe.html:131
+#, python-format
+msgid ""
+"\n"
+"                        None yet. Go to the <a href=\"%(wiki_url)s\" title="
+"\"wiki\">wiki</a> to start a new article.\n"
+"                    "
+msgstr ""
+
+#: templates/tribes/tribe.html:140
+msgid "Tribe Photo Pool"
+msgstr ""
+
+#: templates/tribes/tribe.html:147
+#, python-format
+msgid "%(commentcount)s Comments "
+msgstr ""
+
+#: templates/tribes/tribe.html:154
+#, python-format
+msgid ""
+"\n"
+"                        There are no photos associated to this tribe. You "
+"can <a href=\"%(photo_upload_url)s\">add a photo</a>.</a>\n"
+"                    "
+msgstr ""
+
+#: templates/tribes/tribe.html:162
+msgid "Tweets"
+msgstr ""
+
+#: templates/tribes/tribe.html:166
+msgid "Upcoming Events"
+msgstr ""
+
+#: templates/tribes/tribe.html:178
+msgid "There are no upcoming events."
+msgstr ""
+
+#: templates/tribes/tribe.html:181
+#, fuzzy
+msgid "calendar..."
+msgstr "Kalender"
+
+#: templates/tribes/tribe_item.html:7
+#, fuzzy
+msgid "Members:"
+msgstr "Medlemmer"
+
+#: templates/tribes/tribe_item.html:9
+msgid "Topics:"
+msgstr ""
+
+#: templates/tribes/tribes.html:12 templates/tribes/tribes.html.py:15
+#, fuzzy
+msgid "Tribes"
+msgstr "skriv"
+
+#: templates/tribes/tribes.html:36
+msgid "Order by:"
+msgstr ""
+
+#: templates/tribes/your_tribes.html:13
+msgid "These are the tribes you participate in."
+msgstr ""
+
 #: templates/turan/about.html:4 templates/turan/todo.html:4
 msgid "About"
 msgstr "Om"
@@ -582,9 +777,19 @@ msgstr "Forhåndsvis"
 msgid "Next"
 msgstr "Neste"
 
-#: templates/turan/common_graph.html:14
+#: templates/turan/common_graph.html:9
 msgid "Reset zoom"
 msgstr "Tilbakestill"
+
+#: templates/turan/common_graph.html:69
+#, fuzzy
+msgid "at"
+msgstr "fett"
+
+#: templates/turan/common_graph.html:69
+#, fuzzy
+msgid "is"
+msgstr "s"
 
 #: templates/turan/cycletrip_compare.html:5
 msgid "versus"
@@ -597,19 +802,19 @@ msgstr "Sykkeltur"
 
 #: templates/turan/cycletrip_compare.html:10
 #: templates/turan/cycletrip_detail.html:39 templates/turan/slope.html:16
-#: templates/turan/cycletrip/graph.html:12
+#: templates/turan/cycletrip/graph.html:14
 #: templates/turan/exercise/graph.html:13 templates/turan/hike/graph.html:13
 msgid "Speed"
 msgstr "Fart"
 
 #: templates/turan/cycletrip_compare.html:12
-#: templates/turan/cycletrip/graph.html:19
+#: templates/turan/cycletrip/graph.html:21
 #: templates/turan/exercise/graph.html:17 templates/turan/hike/graph.html:17
 msgid "HR"
 msgstr "Hjerterytme"
 
 #: templates/turan/cycletrip_compare.html:14
-#: templates/turan/cycletrip/graph.html:27
+#: templates/turan/cycletrip/graph.html:29
 msgid "Cadence"
 msgstr "Kadens"
 
@@ -673,8 +878,10 @@ msgstr "m"
 msgid "W"
 msgstr ""
 
-#: templates/turan/cycletrip_detail.html:56 templates/turan/slope.html:32
-#: templates/turan/statistics.html:75 templates/turan/statistics.html:153
+#: templates/turan/cycletrip_detail.html:56
+#: templates/turan/cycletrip_list.html:65 templates/turan/hike_list.html:65
+#: templates/turan/slope.html:32 templates/turan/statistics.html:75
+#: templates/turan/statistics.html:153
 #: templates/turan/userprofile_detail.html:41
 #: templates/turan/userprofile_detail.html:44
 #: templates/turan/userprofile_detail.html:82
@@ -692,30 +899,10 @@ msgstr "Sykkeltur"
 msgid "Add new trip"
 msgstr ""
 
-#: templates/turan/cycletrip_list.html:5
-#: templates/turan/cycletrip_list.html:10 templates/turan/index.html:60
+#: templates/turan/cycletrip_list.html:7
+#: templates/turan/cycletrip_list.html:12 templates/turan/index.html:60
 msgid "Cycle trips"
 msgstr "Sykkelturan"
-
-#: templates/turan/cycletrip_list.html:15 templates/turan/event_list.html:22
-msgid "User"
-msgstr "Folk"
-
-#: templates/turan/cycletrip_list.html:18 templates/turan/event_list.html:25
-#: templates/turan/route_detail.html:59
-#: templates/turan/cycletrip/attributes.html:34
-msgid "Date"
-msgstr "Dato"
-
-#: templates/turan/cycletrip_list.html:21 templates/turan/event_list.html:28
-#: templates/turan/team_list.html:15
-msgid "Name"
-msgstr "Navn"
-
-#: templates/turan/cycletrip_list.html:24 templates/turan/event_list.html:31
-#: templates/turan/route/attributes.html:6
-msgid "Distance"
-msgstr "Lengde"
 
 #: templates/turan/event_form.html:20 templates/turan/route_form.html:14
 msgid "Cancel"
@@ -724,6 +911,23 @@ msgstr "Avbryt"
 #: templates/turan/event_form.html:21
 msgid "Submit"
 msgstr ""
+
+#: templates/turan/event_list.html:22
+msgid "User"
+msgstr "Folk"
+
+#: templates/turan/event_list.html:25 templates/turan/route_detail.html:59
+#: templates/turan/cycletrip/attributes.html:34
+msgid "Date"
+msgstr "Dato"
+
+#: templates/turan/event_list.html:28 templates/turan/team_list.html:15
+msgid "Name"
+msgstr "Navn"
+
+#: templates/turan/event_list.html:31 templates/turan/route/attributes.html:6
+msgid "Distance"
+msgstr "Lengde"
 
 #: templates/turan/event_list.html:34 templates/turan/route_detail.html:58
 #: templates/turan/cycletrip/attributes.html:32
@@ -941,10 +1145,6 @@ msgstr "Slagord"
 msgid "URL"
 msgstr "URL"
 
-#: templates/turan/team_list.html:30
-msgid "Members"
-msgstr "Medlemmer"
-
 #: templates/turan/todo.html:8
 msgid "Todo"
 msgstr ""
@@ -1079,12 +1279,12 @@ msgstr "skriv"
 msgid "Show"
 msgstr "Vis"
 
-#: templates/turan/cycletrip/graph.html:34
+#: templates/turan/cycletrip/graph.html:36
 #: templates/turan/exercise/graph.html:23 templates/turan/hike/graph.html:23
 msgid "Altitude"
 msgstr "Høyde"
 
-#: templates/turan/cycletrip/graph.html:42
+#: templates/turan/cycletrip/graph.html:44
 msgid "Power"
 msgstr ""
 
@@ -1097,15 +1297,22 @@ msgstr "Hvem"
 msgid "Hike graph"
 msgstr "Fotturgraf"
 
-#: templates/turan/plugins/profiles/profile.html:19
+#: templates/turan/plugins/profiles/profile.html:9
+#: templates/turan/plugins/profiles/profile.html:28
+#: templates/turan/plugins/profiles/profile.html:47
+#, fuzzy
+msgid "Show all"
+msgstr "Vis"
+
+#: templates/turan/plugins/profiles/profile.html:21
 msgid "No cycle trips added yet."
 msgstr ""
 
-#: templates/turan/plugins/profiles/profile.html:35
+#: templates/turan/plugins/profiles/profile.html:40
 msgid "No hikes added yet."
 msgstr ""
 
-#: templates/turan/plugins/profiles/profile.html:51
+#: templates/turan/plugins/profiles/profile.html:59
 msgid "No other exercises added yet."
 msgstr ""
 
@@ -1190,6 +1397,44 @@ msgid "Zero time"
 msgstr "Ingen tid"
 
 #, fuzzy
+#~ msgid "Account"
+#~ msgstr "Om"
+
+#~ msgid "Admin"
+#~ msgstr "Sjefe"
+
+#~ msgid "Logout"
+#~ msgstr "Logg ut"
+
+#, fuzzy
+#~ msgid "Login"
+#~ msgstr "Logo"
+
+#, fuzzy
+#~ msgid "or"
+#~ msgstr " time"
+
+#, fuzzy
+#~ msgid "Turan"
+#~ msgstr "Tid"
+
+#, fuzzy
+#~ msgid "Exercisers"
+#~ msgstr "Hvem"
+
+#, fuzzy
+#~ msgid "Photos"
+#~ msgstr "Foto"
+
+#, fuzzy
+#~ msgid "Profile"
+#~ msgstr "Brukerprofil"
+
+#, fuzzy
+#~ msgid "Inbox"
+#~ msgstr "Informasjon"
+
+#, fuzzy
 #~ msgid "User image"
 #~ msgstr "Brukerprofil"
 
@@ -1206,15 +1451,7 @@ msgstr "Ingen tid"
 #~ msgstr "Brukerprofil"
 
 #, fuzzy
-#~ msgid "update"
-#~ msgstr "Dato"
-
-#, fuzzy
 #~ msgid "All Profiles"
-#~ msgstr "Brukerprofil"
-
-#, fuzzy
-#~ msgid "Profiles"
 #~ msgstr "Brukerprofil"
 
 #, fuzzy
@@ -1248,53 +1485,8 @@ msgstr "Ingen tid"
 #~ msgid "Hike count"
 #~ msgstr "Antall fottura"
 
-#~ msgid "Submit trip details"
-#~ msgstr "Send turdetaljer"
-
 #~ msgid "Wrong filetype!"
 #~ msgstr "Feil filtype"
-
-#, fuzzy
-#~ msgid "clear"
-#~ msgstr "Min kalender"
-
-#, fuzzy
-#~ msgid "Account"
-#~ msgstr "Om"
-
-#~ msgid "Admin"
-#~ msgstr "Sjefe"
-
-#~ msgid "Logout"
-#~ msgstr "Logg ut"
-
-#, fuzzy
-#~ msgid "Login"
-#~ msgstr "Logo"
-
-#, fuzzy
-#~ msgid "or"
-#~ msgstr " time"
-
-#, fuzzy
-#~ msgid "Turan"
-#~ msgstr "Tid"
-
-#, fuzzy
-#~ msgid "Exercisers"
-#~ msgstr "Hvem"
-
-#, fuzzy
-#~ msgid "Photos"
-#~ msgstr "Foto"
-
-#, fuzzy
-#~ msgid "Tribes"
-#~ msgstr "skriv"
-
-#, fuzzy
-#~ msgid "Inbox"
-#~ msgstr "Informasjon"
 
 #~ msgid "Error while parsing form"
 #~ msgstr "Feil ved parsing av skjema"
