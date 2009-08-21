@@ -77,11 +77,12 @@
             
                 // add rules from the above lookup table
             styles.addUniqueValueRules("default", "ZONE", {
-                    1: {strokeColor: "#CCCCCC", strokeWidth: 2},
+                    1: {strokeColor: "#CCCCCC", strokeWidth: 4},
                     2: {strokeColor: "#3366FF", strokeWidth: 4},
                     3: {strokeColor: "#66CC00", strokeWidth: 4},
                     4: {strokeColor: "#FF9900", strokeWidth: 4},
-                    5: {strokeColor: "#C80000", strokeWidth: 4},
+                    5: {strokeColor: "#FF6600", strokeWidth: 4},
+                    6: {strokeColor: "#FF0000", strokeWidth: 8},
                 });
 
             var vectors = new OpenLayers.Layer.Vector("Lines", {
@@ -95,57 +96,7 @@
             
             map.addLayer(vectors);
  
-/*
-            var lat=59.8;
-            var lon=5.8;
-            var lat2=59.9;
-            var lon2=5.9;
-
-
-
-            var featurecollection = {
-                    "type": "FeatureCollection", 
-                    "features": [{
-                        "geometry": {
-                            "type": "GeometryCollection", 
-                            "geometries": [
-                                {
-                                    "type": "LineString", 
-                                    "coordinates": 
-                                        [
-                                        [lon, lat], 
-                                        [lon2, lat2]
-                                        ]
-                                },
-                            ]
-                        }, 
-                        "type": "Feature", 
-                        "properties": {}    
-                    }]
-                };
-                                /*{
-                                    "type": "Polygon", 
-                                    "coordinates": 
-                                        [[[11.0878902207, 45.1602390564], 
-                                          [14.931640625, 40.9228515625], 
-                                          [0.8251953125, 41.0986328125], 
-                                          [7.63671875, 48.96484375], 
-                                          [11.0878902207, 45.1602390564]]]
-                                },
-                                {
-                                    "type":"Point", 
-                                    "coordinates":[{{ object.route.start_lon}}, {{ object.route.start_lat}}]                                    
-                                }
-                var geojson_format = new OpenLayers.Format.GeoJSON({
-                    'internalProjection': projection,
-                    'externalProjection': projection
-                });
-                var vector_layer = new OpenLayers.Layer.Vector(); 
-                map.addLayer(vector_layer);
-                vector_layer.addFeatures(geojson_format.read(featurecollection));
-
-*/
-                map.render("map");
+            map.render("map");
  
 
         }

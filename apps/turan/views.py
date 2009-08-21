@@ -22,11 +22,13 @@ from django.views.generic.create_update import get_model_and_form_class, apply_e
 from django.views.generic.list_detail import object_list
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import decorator_from_middleware
+from django.middleware.gzip import GZipMiddleware
 
 from tagging.models import Tag
 
-
-
+import re
 from datetime import timedelta, datetime
 from datetime import date as datetimedate
 from time import mktime, strptime
@@ -494,6 +496,8 @@ def calendar_month(request, year, month, user_id=False):
              },
             context_instance=RequestContext(request))
 
+#@cache_page(86400*7)
+#@decorator_from_middleware(GZipMiddleware)
 def geojson(request, event_type, object_id):
     ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
     give each line a zone property so it can be styled differently'''
@@ -506,6 +510,8 @@ def geojson(request, event_type, object_id):
         qs = OtherExerciseDetail.objects.filter(trip=object_id)
 
     qs = qs.exclude(lon=0).exclude(lat=0)
+    if qs.count() == 0:
+        return HttpResponse('{}')
 
     max_hr = qs[0].trip.user.get_profile().max_hr
 
@@ -533,8 +539,6 @@ def geojson(request, event_type, object_id):
             return self.jsonhead + self.linestrings + self.jsonfoot
 
     features = []
-    #for i in range(1,6):
-    #    features.append(Feature(i))
 
     previous_lon, previous_lat, previous_zone = 0, 0, 0
     previous_feature = False
@@ -543,6 +547,8 @@ def geojson(request, event_type, object_id):
             hr_percent = float(d.hr)*100/max_hr
             zone = 1
             if hr_percent > 89:
+                zone = 6
+            elif hr_percent > 84:
                 zone = 5
             elif hr_percent > 79:
                 zone = 4
@@ -562,7 +568,6 @@ def geojson(request, event_type, object_id):
         previous_lon = d.lon
         previous_lat = d.lat
 
-
     # add last segment
     features.append(previous_feature)
 
@@ -576,7 +581,8 @@ def geojson(request, event_type, object_id):
         gjstr += f.json
     gjstr = gjstr.rstrip(',')
     gjstr += gjfoot
-    return HttpResponse(gjstr, mimetype='text/javascript')
+
+    return HttpResponse(re.sub('\s','', gjstr), mimetype='text/javascript')
 
 def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     if start:
