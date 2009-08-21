@@ -547,10 +547,12 @@ def geojson(request, event_type, object_id):
             hr_percent = float(d.hr)*100/max_hr
             zone = 1
             if hr_percent > 89:
-                zone = 6
+                zone = 7
             elif hr_percent > 84:
-                zone = 5
+                zone = 6
             elif hr_percent > 79:
+                zone = 5
+            elif hr_percent > 74:
                 zone = 4
             elif hr_percent > 69:
                 zone = 3
