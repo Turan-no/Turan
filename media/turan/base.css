@@ -642,3 +642,41 @@ table.month th {
 	background-color: yellow;
 }
 
+#tag li {
+	list-style-type: none;
+    float: left;
+    margin-right: 0.5em;
+}
+.regn {
+    list-style-image: url('/site_media/pinax/images/silk/icons/weather_rain.png');
+}
+.overskya {
+    list-style-image: url('/site_media/pinax/images/silk/icons/weather_clouds.png');
+}
+.lettskya {
+    list-style-image: url('/site_media/pinax/images/silk/icons/weather_cloudy.png');
+}
+.snjo {
+    list-style-image: url('/site_media/pinax/images/silk/icons/weather_snow.png');
+}
+.sol {
+    list-style-image: url('/site_media/pinax/images/silk/icons/weather_sun.png');
+}
+.duo {
+    list-style-image: url('/site_media/pinax/images/silk/icons/group_link.png');
+}
+.bakke {
+    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_up.png');
+}
+.fjell {
+    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_turn_right.png');
+}
+.godkjent {
+    list-style-image: url('/site_media/pinax/images/silk/icons/accept.png');
+}
+.bra {
+    list-style-image: url('/site_media/pinax/images/silk/icons/thumb_up.png');
+}
+.insekt {
+    list-style-image: url('/site_media/pinax/images/silk/icons/bug.png');
+}

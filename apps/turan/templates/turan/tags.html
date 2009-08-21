@@ -4,9 +4,9 @@
 {% if tag_list %}
 <div class="tags">
     <h2><img src="{{ MEDIA_URL }}pinax/images/silk/icons/tag_blue.png" border="0" class="noborder" align="absmiddle" />{% trans "Tags"%}</h2>
-    <ul>
+    <ul id="tag" class="tag">
         {% for tag in tag_list %}
-        <li class="{{ tag }}"><a href="/tags/{{ tag }}">{{ tag }}</a></li>
+        <li id="tag" class="{{ tag }}"><a href="/tags/{{ tag }}">{{ tag }}</a></li>
         {% endfor %}
     </ul>
 </div>
