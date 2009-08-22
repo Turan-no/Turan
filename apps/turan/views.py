@@ -285,12 +285,11 @@ def statistics(request, year=None, month=None, day=None, week=None):
         hikefilter = {"user__hike__date__gte": dummystart }
 
     teamname = request.GET.get('team')
+    statsprofiles = Profile.objects.all()
     if teamname:
         team = get_object_or_404(Tribe, slug=teamname)
         statsusers = team.members.all()
-        statsprofiles = Profile.objects.all().filter(user__in=statsusers)
-    else:
-        statsprofiles = Profile.objects.all()
+        statsprofiles = statsprofiles.filter(user__in=statsusers)
 
     stats_dict = CycleTrip.objects.filter(**cycletripfilter).aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
     total_duration = stats_dict['duration__sum']
