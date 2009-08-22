@@ -81,7 +81,7 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = CycleTrip
-        fields = ('route', 'date', 'time', 'comment', 'sensor_file', 'kcal', 'url')
+        fields = ('route', 'date', 'time', 'comment', 'tags', 'sensor_file', 'kcal', 'url')
 
     def clean_route(self):
         '''Translate number from autocomplete to object '''
