@@ -379,6 +379,8 @@ def statistics(request, year=None, month=None, day=None, week=None):
     hike_climbstats = sorted(hike_climbstats, key=lambda x: -x.avgclimb)
     hike_climbstatsbytime = sorted(hike_climbstats, key=lambda x:-x.avgclimbperhour)
 
+    team_list = Tribe.objects.all()
+
     return render_to_response('turan/statistics.html', locals(), context_instance=RequestContext(request))
 
 def generate_tshirt(request):
