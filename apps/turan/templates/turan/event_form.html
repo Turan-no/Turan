@@ -23,9 +23,11 @@
 <script type="text/javascript">
     Date.firstDayOfWeek = 0;
     Date.format = 'yyyy-mm-dd';
-    $(function()
-    {
-    $('#id_date').datePicker({startDate:'1996-01-01'}).val(new Date().asString()).trigger('change');
-});
+    $(function() {
+        var dateField = $('#id_date');
+        dateField.datePicker({startDate:'1996-01-01'});
+        if (dateField.val().length == 0)
+            dateField.val(new Date().asString()).trigger('change');
+    });
 </script>
 {% endblock content %}
