@@ -267,7 +267,23 @@ def week(request, week, user_id='all'):
     
     return render_to_response('turan/event_list.html', locals(), context_instance=RequestContext(request))
 
-def statistics(request, year=None, month=None):
+def statistics(request, year=None, month=None, day=None, week=None):
+    if year:
+        cycletripfilter = {"user__cycletrip__date__year": year}
+        hikefilter = {"user__hike__date__year": year}
+        if month:
+            cycletripfilter["user__cycletrip__date__month"] = month
+            hikefilter["user__hike__date__month"] = month
+            if day:
+                cycletripfilter["user__cycletrip__date__day"] = day
+                hikefilter["user__hike__date__day"] = day
+    else:
+        # silly, but can't find a suitable noop for filter, and ** can't unpack
+        # empty dict into zero arguments - wah
+        dummystart = datetime(1970,1,1)
+        cycletripfilter = { "user__cycletrip__date__gte": dummystart }
+        hikefilter = {"user__hike__date__gte": dummystart }
+
     teamname = request.GET.get('team')
     if teamname:
         team = get_object_or_404(Tribe, slug=teamname)
@@ -276,13 +292,13 @@ def statistics(request, year=None, month=None):
     else:
         statsprofiles = Profile.objects.all()
 
-    stats_dict = CycleTrip.objects.aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
+    stats_dict = CycleTrip.objects.filter(**cycletripfilter).aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
     total_duration = stats_dict['duration__sum']
     total_distance = stats_dict['route__distance__sum']
     total_avg_speed = stats_dict['avg_speed__avg']
     longest_trip = stats_dict['route__distance__max']
 
-    userstats = statsprofiles.annotate( \
+    userstats = statsprofiles.filter(**cycletripfilter).annotate( \
             avg_avg_speed = Avg('user__cycletrip__avg_speed'), \
             max_avg_speed = Max('user__cycletrip__avg_speed'), \
             max_speed = Max('user__cycletrip__max_speed'), \
@@ -313,11 +329,11 @@ def statistics(request, year=None, month=None):
     avgavghrs = sorted(avgavghrs, key=lambda x:-x.avgavghrpercent)
 
     validroutes = Route.objects.filter(ascent__gt=0).filter(distance__gt=0)
-    climbstats = statsprofiles.filter(user__cycletrip__route__in=validroutes).annotate( \
+    climbstats = statsprofiles.filter(**cycletripfilter).filter(user__cycletrip__route__in=validroutes).annotate( \
             distance = Sum('user__cycletrip__route__distance'), \
             height = Sum('user__cycletrip__route__ascent'),  \
             duration = Sum('user__cycletrip__duration') \
-            )
+            ).filter(duration__gt=0)
 
     for u in climbstats:
         u.avgclimb = u.height/u.distance
@@ -325,7 +341,7 @@ def statistics(request, year=None, month=None):
     climbstats = sorted(climbstats, key=lambda x: -x.avgclimb)
     climbstatsbytime = sorted(climbstats, key=lambda x:-x.avgclimbperhour)
 
-    hikestats = statsprofiles.annotate( \
+    hikestats = statsprofiles.filter(**hikefilter).annotate( \
             hike_avg_avg_speed = Avg('user__hike__avg_speed'), \
             hike_max_avg_speed = Max('user__hike__avg_speed'), \
             hike_max_speed = Max('user__hike__max_speed'), \
@@ -351,11 +367,11 @@ def statistics(request, year=None, month=None):
         u.avgavghrpercent = float(u.hike_avg_avg_hr)/u.max_hr*100
     hike_avgavghrs = sorted(hike_avgavghrs, key=lambda x:-x.avgavghrpercent)
 
-    hike_climbstats = statsprofiles.filter(user__hike__route__in=validroutes).annotate( \
+    hike_climbstats = statsprofiles.filter(**hikefilter).filter(user__hike__route__in=validroutes).annotate( \
             distance = Sum('user__hike__route__distance'), \
             height = Sum('user__hike__route__ascent'), \
             duration = Sum('user__hike__duration') \
-            )
+            ).filter(duration__gt=0)
 
     for u in hike_climbstats:
         u.avgclimb = u.height/u.distance
