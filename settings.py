@@ -2,10 +2,11 @@
 # Django settings for complete pinax project.
 
 import os.path
+import posixpath
 import pinax
 
-PINAX_ROOT = os.path.realpath(os.path.dirname(pinax.__file__))
-PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
+PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 # tells Pinax to use the default theme
 PINAX_THEME = 'default'
@@ -67,7 +68,7 @@ MEDIA_URL = '/site_media/'
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-#ADMIN_MEDIA_PREFIX = '/admin/'
+ADMIN_MEDIA_PREFIX = posixpath.join(MEDIA_URL, "admin/")
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '%z3t0zu+99#5(m^w%-+q)m7tc2o9n#p_o%vah-$@7i_#))+0l8'
@@ -110,8 +111,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
 
-    "pinax.core.context_processors.contact_email",
-    "pinax.core.context_processors.site_name",
+    "pinax.core.context_processors.pinax_settings",
 
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
@@ -197,10 +197,6 @@ INSTALLED_APPS = (
 GPX_STORAGE = '/home/turan.lart.no/pinax-env/turansite/site_media/turan'
 #DEFAULT_FILE_STORAGE = GPX_STORAGE
 
-STATICFILES_EXTRA_MEDIA = (
-    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
-    ('turansite', os.path.join(PROJECT_ROOT, 'media')),
-)
 
 
 ABSOLUTE_URL_OVERRIDES = {
@@ -273,6 +269,10 @@ WIKI_REQUIRES_LOGIN = True
 # following URL: https://developer.yahoo.com/wsregapp/
 # YAHOO_MAPS_API_KEY = ''
 
+STATICFILES_EXTRA_MEDIA = (
+    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+    ('turansite', os.path.join(PROJECT_ROOT, 'media')),
+)
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:
