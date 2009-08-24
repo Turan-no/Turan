@@ -279,12 +279,12 @@ def statistics(request, year=None, month=None, day=None, week=None):
                 cycletripfilter["user__cycletrip__date__day"] = day
                 hikefilter["user__hike__date__day"] = day
         if week:
-            tt = strptime(year+'-0-'+week, '%Y-%w-%U')
+            tt = strptime(year+'-1-' + str(int(week)-1), '%Y-%w-%W')
             date = datetimedate(*tt[:3])
             first_day = date
             last_day = date + timedelta(days=7)
-            cycletripfilter= {"user__cycletrip__date__gte":  first_day, 'user__cycletrip__date__lte': last_day}
-            hikefilter= {"user__hike__date__gte":  first_day, 'user__hike__date__lte': last_day}
+            cycletripfilter= {"user__cycletrip__date__gte":  first_day, 'user__cycletrip__date__lt': last_day}
+            hikefilter= {"user__hike__date__gte":  first_day, 'user__hike__date__lt': last_day}
     else:
         # silly, but can't find a suitable noop for filter, and ** can't unpack
         # empty dict into zero arguments - wah
