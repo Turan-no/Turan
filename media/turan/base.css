@@ -12,12 +12,13 @@ body {
 h1 {
 	font-size: 175%;
 	font-weight: bolder;
-	margin: 0;
+    margin: 0;
+	margin: 1em 0 0.5em;
 }
 h2 {
 	font-size: 152%;
 	font-weight: bolder;
-	margin: 0.5em 0 0.5em;
+	margin: 1em 0 0.5em;
 }
 h3 {
 	font-size: 130%;
@@ -95,9 +96,6 @@ p, ul {
 }
 em {
 	font-style: italic;
-}
-ul {
-	margin-left: 0;
 }
 ul li {
 	list-style-type: square;
@@ -398,6 +396,7 @@ h1 a
 }
 ul {
     padding: 0;
+    margin: 0;
 }
 ul li ul { 
     padding-left: 10px; 
@@ -453,7 +452,7 @@ ul.trip_attributes li {
     margin: 0;
 }
 .half {
-    width: 50%;
+    width: 49%;
     margin: 0;
 }
 
@@ -552,12 +551,6 @@ li.power {
     background: green;
 }
 
-.rightcol {
-    margin-left: 12px;
-}
-.leftcol {
-    float: left;
-}
 div.graph {
 	background: #eee;
 	border-bottom: 1px solid black;
@@ -617,21 +610,22 @@ div.mapcontainer {
     border-right: 2px solid black;
 }
 
-ul.trips {
-    display: inline;
+li {
+	list-style-type: none;
 }
 li.even {
 	border-top: 1px solid #fcfcfc;
 	border-bottom: 1px solid #eee;
     background: #f8f8f8;
-	list-style-type: none;
 }
 li.odd {
-	list-style-type: none;
+    background: #ffffff;
 }
-ul.routes li.routes {
-	list-style-type: none;
+ul.iconlist li {
+    margin-left: 0;
+    list-style-type: none;
 }
+
 /* Calendar */
 table.month td,
 table.month th {

@@ -200,6 +200,9 @@ class Hike(Event):
     def get_absolute_url(self):
         return reverse('hike', kwargs={ 'object_id': self.id }) + '/' + slugify(self.route.name)
 
+    def get_geojson_url(self):
+        return reverse('geojson', kwargs={'event_type': 'hike', 'object_id': self.id})
+
     def icon(self):
         return '<img alt="Hiker" src="/site_media/turan/hiker.png">'
 
@@ -318,6 +321,10 @@ class CycleTrip(Event):
 
     def get_absolute_url(self):
         return reverse('cycletrip', kwargs={ 'object_id': self.id }) + '/' + slugify(self.route.name)
+
+    def get_geojson_url(self):
+        return reverse('geojson', kwargs={'event_type': 'cycletrip', 'object_id': self.id})
+
 
     def icon(self):
         return '<img alt="Cyclist" src="/site_media/turan/cyclist.png">'

@@ -37,6 +37,7 @@ import locale
 
 from svg import GPX2SVG
 from turancalendar import WorkoutCalendar
+from feeds import ExerciseCalendar
 
 from hrmparser import HRMParser
 from gmdparser import GMDParser
@@ -277,6 +278,13 @@ def statistics(request, year=None, month=None, day=None, week=None):
             if day:
                 cycletripfilter["user__cycletrip__date__day"] = day
                 hikefilter["user__hike__date__day"] = day
+        if week:
+            tt = strptime(year+'-1-' + str(int(week)-1), '%Y-%w-%W')
+            date = datetimedate(*tt[:3])
+            first_day = date
+            last_day = date + timedelta(days=7)
+            cycletripfilter= {"user__cycletrip__date__gte":  first_day, 'user__cycletrip__date__lt': last_day}
+            hikefilter= {"user__hike__date__gte":  first_day, 'user__hike__date__lt': last_day}
     else:
         # silly, but can't find a suitable noop for filter, and ** can't unpack
         # empty dict into zero arguments - wah
@@ -860,3 +868,40 @@ def autocomplete_route(request, app_label, model):
     route_list = '\n'.join([u'%s|%s' % (f.__unicode__(), f.pk) for f in routes])
 
     return HttpResponse(route_list)
+
+class UserTripsFeed(Feed):
+    def get_object(self, bits):
+        # In case of "/rss/beats/0613/foo/bar/baz/", or other such clutter,
+        # check that bits has only one member.
+        #if len(bits) != 1:
+        #    raise ObjectDoesNotExist
+        result = User.objects.get(username=bits[0])
+        return result
+
+    def title(self, obj):
+        return _("Events for %(username)s") % obj.username
+
+    def link(self, obj):
+        if not obj:
+            raise FeedDoesNotExist
+        return obj.get_absolute_url()
+
+    def description(self, obj):
+        return "Events for %(username)s" % obj.username
+
+    def items(self, obj):
+       return Episodes.objects.filter(series__id__exact=obj.id).filter(downloadurl__isnull=False).order_by('-releasedate')[:30]
+
+    def item_author_name(self, obj):
+        "Item author"
+        return obj.series.name
+
+    def item_link(self, obj):
+        "Download link"
+        return obj.downloadurl
+
+def ical(request, username):
+
+    cal = ExerciseCalendar(username)
+
+    return cal()
