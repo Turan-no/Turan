@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
 from models import Route, CycleTrip, Hike, OtherExercise
-from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, calendar_month, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list, autocomplete_route, geojson
+from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, calendar_month, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list, autocomplete_route, geojson, ical
 from forms import *
+from feeds import *
 from threadedcomments.models import ThreadedComment as Comment
 
 feeds = {
@@ -14,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^statistics/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)', statistics, name='statistics-day'),
     url(r'^statistics/(?P<year>\d+)/(?P<month>\d+)', statistics, name='statistics-month'),
     url(r'^statistics/(?P<year>\d+)', statistics, name='statistics-year'),
+    url(r'^statistics/week/(?P<year>\d+)/(?P<week>\d+)', statistics, name='statistics-week'),
     url(r'^statistics/?', statistics, name='statistics'),
     url(r'^generate/tshirt', generate_tshirt, name='generate_tshirt'),
     url(r'^(?P<event_type>\w+)/compare/(?P<trip1>\d+)/(?P<trip2>\d+)', trip_compare, name='trip_compare'),
@@ -36,8 +38,9 @@ urlpatterns = patterns('',
 
     url(r'^$', index, name='turanindex'),
 
-# The RSS Feeds
+# The Feeds
     (r'^feed/(?P<url>.*)/?$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+    url(r'^feeds/ical/(?P<username>\w+)/?$', ical, name='ical'),
 )
 
 # Lists and details
