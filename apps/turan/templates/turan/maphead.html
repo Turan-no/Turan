@@ -84,7 +84,7 @@
             var vectors = new OpenLayers.Layer.Vector("Lines", {
                     strategies: [new OpenLayers.Strategy.Fixed()],                
                     protocol: new OpenLayers.Protocol.HTTP({
-                        url: "{% url geojson "cycletrip" object.id %}",
+                        url: "{{ object.get_geojson_url }}",
                         format: new OpenLayers.Format.GeoJSON()
                     }),
                     styleMap: styles
