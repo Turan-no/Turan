@@ -3,7 +3,7 @@
 {% ifnotequal object.id 24 %}
 <ul class="route_attributes">
     {% if object.distance %}
-    <li class="distance"><span class="label">{% trans "Distance" %}:</span> {{ object.distance }} {% trans "km" %}</li>
+    <li class="distance"><span class="label">{% trans "Distance" %}:</span> {{ object.distance|floatformat }} {% trans "km" %}</li>
     {% endif %}
     <li class="description">
         <span class="label">{% trans "Description" %}:</span> 
