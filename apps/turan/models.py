@@ -38,7 +38,7 @@ class RouteManager(models.Manager):
 
 class Route(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_('for example Opsangervatnet'))
-    distance = models.FloatField(help_text=_('in km'))
+    distance = models.FloatField(help_text=_('in km'), default=0)
     description = models.TextField(help_text=_('route description'))
     route_url = models.URLField(blank=True) # gmaps?
     gpx_file = models.FileField(upload_to='gpx', blank=True, storage=gpxstore)
