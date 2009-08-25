@@ -9,6 +9,7 @@ from django.db.models.signals import pre_save, post_save
 from django.conf import settings
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 from django.core.files.base import ContentFile
 from tagging.fields import TagField
 
@@ -478,16 +479,6 @@ def parse_sensordata(event, event_type):
             d.power = val.power # assume the object has it if parser has it (cycletrip)
         d.save()
 
-    #if event_type == 'hike':
-    #    e = Hike.objects.get(pk=id)
-    #    # TODO: add normalize for hikes
-    #elif event_type == 'cycletrip':
-    #    e = CycleTrip.objects.get(pk=id)
-    #    # Normalize altitude, that is, if it's below zero scale every value up
-    #    normalize_altitude(id)
-    #elif event_type == 'exercise':
-    #    e = OtherExercise.objects.get(pk=id)
-    #    # TODO: add normalize for OtherExercise
 
     event.max_hr = parser.max_hr
     event.max_speed = parser.max_speed
@@ -511,4 +502,16 @@ def parse_sensordata(event, event_type):
         if parser.distance_sum:
             event.route.distance = parser.distance_sum
 
+    # Normalize altitude, that is, if it's below zero scale every value up
+    normalize_altitude(event)
     #e.save()
+
+def normalize_altitude(event):
+    ''' Normalize altitude, that is, if it's below zero scale every value up '''
+
+    altitude_min = event.get_details().aggregate(Min('altitude'))['altitude__min']
+    if altitude_min < 0:
+        altitude_min = 0 - altitude_min
+        for d in event.get_details().all():
+            d.altitude += altitude_min
+            d.save()

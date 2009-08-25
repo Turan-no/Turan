@@ -442,15 +442,6 @@ def generate_tshirt(request):
     data.seek(0)
     return HttpResponse(data.read(), mimetype='image/png',status=200)
 
-def normalize_altitude(trip_id):
-    ''' Normalize altitude, that is, if it's below zero scale every value up '''
-
-    altitude_min = CycleTripDetail.objects.filter(trip=trip_id).aggregate(Min('altitude'))['altitude__min']
-    if altitude_min < 0:
-        altitude_min = 0 - altitude_min
-        for ctd in CycleTripDetail.objects.filter(trip=trip_id):
-            ctd.altitude += altitude_min
-            ctd.save()
 
 def calendar(request, user_id=False):
     now = datetime.now()
