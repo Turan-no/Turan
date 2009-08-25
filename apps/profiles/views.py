@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 
 from time import mktime
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from friends.forms import InviteFriendForm
 from friends.models import FriendshipInvitation, Friendship
@@ -190,20 +190,13 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     if total_avg_speed:
         total_avg_speed = total_avg_speed/nr_trips
 
-    return render_to_response(template_name, dict({
-        "profile_form": profile_form,
-        "is_me": is_me,
-        'bmidataseries': bmidataseries,
-        'bmiline': bmiline,
-        'tripdataseries': tripdataseries,
-        'avgspeeddataseries': avgspeeddataseries,
-        'tripdataseries': tripdataseries,
-        'pulsedataseries': pulsedataseries,
-        "is_friend": is_friend,
-        "is_following": is_following,
-        "other_user": other_user,
-        "other_friends": other_friends,
-        "invite_form": invite_form,
-        "previous_invitations_to": previous_invitations_to,
-        "previous_invitations_from": previous_invitations_from,
-    }, **extra_context), context_instance=RequestContext(request))
+    total_kcals = max(0, other_user.cycletrip_set.aggregate(Sum('kcal'))['kcal__sum'])
+
+
+    if cycleqs:
+        days_since_start = (datetime.now() - datetime(cycleqs[0].date.year, cycleqs[0].date.month, cycleqs[0].date.day, 0, 0, 0)).days
+        if days_since_start == 0: # if they only have one trip and it was today
+            days_since_start = 1
+        km_per_day = total_distance / days_since_start
+    return render_to_response(template_name, locals(),
+            context_instance=RequestContext(request))

@@ -120,6 +120,12 @@ $(function () {
                     </div>
                 {% endif %}
             {% endif %}
+
+            {% if total_duration %}
+            <h1>{% trans "Statistics" %}</h1>
+            {% include "profile/statistics.html" %}
+            {% endif %}
+
             {% plugin_point "profiles.profile" user=other_user owner=other_user viewer=user %}
             {% if user.is_authenticated %}
                 {% if is_me %}
