@@ -500,7 +500,8 @@ def parse_sensordata(event, event_type):
 
     if not event.route.distance:
         if parser.distance_sum:
-            event.route.distance = parser.distance_sum
+            # Sum is in meter, but routes like km.
+            event.route.distance = parser.distance_sum/1000
 
     # Normalize altitude, that is, if it's below zero scale every value up
     normalize_altitude(event)
