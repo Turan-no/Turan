@@ -7,46 +7,7 @@
 
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
-        var datasets = {
-        {% if speedjs %}
-        "speed": {
-            data: [{{ speedjs }}],
-            label: "{% trans "Speed" %}",
-            color: 0,
-        },
-        {% endif %}
-        {% if hrjs %}
-        "hr": {
-            data: [{{ hrjs }} ],
-            label: "{% trans "HR" %}",
-            yaxis: 2,
-            color: 2,
-        },
-        {% endif %}
-        {% if cadencejs %}
-        "cadence": {
-            data: [ {{ cadencejs }}],
-            label: "{% trans "Cadence" %}",
-            color: 1,
-            },
-        {% endif %}
-        {% if altitudejs %}
-        "altitude":{
-            data: [ {{ altitudejs }}],
-            label: "{% trans "Altitude" %}",
-            lines: { show: true, fill: 0.3 },
-            color: 3,
-        },
-        {% endif %}
-        {% if powerjs %}
-        "power": {
-            data: [ {{ powerjs }}],
-            label: "{% trans "Power" %}",
-            points: { show: false } ,
-            color: 5,
-            },
-        {% endif %}
-        };
+        var datasets = {{ datasets }};
         {% include "turan/common_graph.html" %}
 
 

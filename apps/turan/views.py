@@ -26,6 +26,7 @@ from django.views.decorators.cache import cache_page
 from django.utils.decorators import decorator_from_middleware
 from django.middleware.gzip import GZipMiddleware
 
+
 from tagging.models import Tag
 from tribes.models import Tribe
 
@@ -636,6 +637,42 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
             js += '[%s, %s],' % (distance, dval)
     return js
 
+def js_trip_series(details,  start=False, stop=False):
+
+    # The JS arrays
+    js_strings = {
+            'speed': '',
+            'power': '',
+            'altitude': '',
+            'cadence': '',
+            'hr': '',
+        }
+
+    distance = 0
+    previous_time = False
+    for i, d in enumerate(details):
+        if start and start < i:
+            continue
+        if stop and i > stop:
+            break
+        if not previous_time:
+            previous_time = d.time
+        time = d.time - previous_time
+        previous_time = d.time
+        distance += ((d.speed/3.6) * time.seconds)/1000
+
+        for val in js_strings.keys():
+            dval = getattr(d, val)
+            if dval > 0: # skip zero values (makes prettier graph)
+                # TODO needs to select between distance and time and possibly sample
+                js_strings[val] += '[%s, %s],' % (distance, dval)
+
+    t = loader.get_template('turan/js_datasets.js')
+    c = Context(js_strings)
+    js = t.render(c)
+
+    return js
+
 def json_tripdetail(request, event_type, object_id, val, start=False, stop=False):
 
     #response = HttpResponse()
@@ -739,11 +776,13 @@ def cycletrip(request, object_id):
             slope.avg_hr = getavghr(details, slope.start, slope.end)
             slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
         
-        speedjs = tripdetail_js('cycletrip', object_id, 'speed')
-        hrjs = tripdetail_js('cycletrip', object_id, 'hr')
-        cadencejs = tripdetail_js('cycletrip', object_id, 'cadence')
-        powerjs = tripdetail_js('cycletrip', object_id, 'power')
-        altitudejs = tripdetail_js('cycletrip', object_id, 'altitude')
+        #speedjs = tripdetail_js('cycletrip', object_id, 'speed')
+        #hrjs = tripdetail_js('cycletrip', object_id, 'hr')
+        #cadencejs = tripdetail_js('cycletrip', object_id, 'cadence')
+        #powerjs = tripdetail_js('cycletrip', object_id, 'power')
+        #altitudejs = tripdetail_js('cycletrip', object_id, 'altitude')
+
+    datasets = js_trip_series(details)
     return render_to_response('turan/cycletrip_detail.html', locals(), context_instance=RequestContext(request))
 
 def json_serializer(request, queryset, root_name = None, relations = (), extras = ()):
