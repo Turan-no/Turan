@@ -18,7 +18,7 @@ from django.utils.safestring import mark_safe
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import redirect_to_login
-from django.views.generic.create_update import get_model_and_form_class, apply_extra_context, redirect, update_object, lookup_object
+from django.views.generic.create_update import get_model_and_form_class, apply_extra_context, redirect, update_object, lookup_object, delete_object
 from django.views.generic.list_detail import object_list
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
@@ -39,10 +39,6 @@ import locale
 from svg import GPX2SVG
 from turancalendar import WorkoutCalendar
 from feeds import ExerciseCalendar
-
-from hrmparser import HRMParser
-from gmdparser import GMDParser
-from tcxparser import TCXParser
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -935,3 +931,17 @@ def ical(request, username):
     cal = ExerciseCalendar(username)
 
     return cal()
+
+def turan_delete_object(request, model=None, post_delete_redirect='/turan/', object_id=None,
+        slug=None, slug_field='slug', template_name=None,
+        template_loader=loader, extra_context=None, login_required=False,
+        context_processors=None, template_object_name='object'):
+    ''' See django's generic view docs for help. This specific checks that a user is deleting his own objects'''
+
+
+    obj = lookup_object(model, object_id, slug, slug_field)
+    if not obj.user == request.user:
+        return HttpResponseForbidden('Wat?')
+
+    return delete_object(request, model, post_delete_redirect, object_id, login_required=login_required)
+

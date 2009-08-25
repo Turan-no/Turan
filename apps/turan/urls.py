@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
 from models import Route, CycleTrip, Hike, OtherExercise
-from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, calendar_month, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list, autocomplete_route, geojson, ical
+from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, calendar_month, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list, autocomplete_route, geojson, ical, turan_delete_object
 from forms import *
 from feeds import *
 from threadedcomments.models import ThreadedComment as Comment
@@ -71,5 +71,7 @@ urlpatterns += patterns('django.views.generic.create_update',
     url(r'^trip/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': FullCycleTripForm},name='trip_update'),
     url(r'^hike/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': FullHikeForm},name='hike_update'),
     url(r'^exercise/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': FullExerciseForm},name='exercise_update'),
+
+    url(r'^trip/delete/(?P<object_id>\d+)', turan_delete_object, {'model': CycleTrip, 'login_required': True,},name='trip_delete'),
 )
 

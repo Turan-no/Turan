@@ -198,5 +198,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
         if days_since_start == 0: # if they only have one trip and it was today
             days_since_start = 1
         km_per_day = total_distance / days_since_start
+        kcal_per_day = total_kcals / days_since_start
+        time_per_day = total_duration / days_since_start
     return render_to_response(template_name, locals(),
             context_instance=RequestContext(request))

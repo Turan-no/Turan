@@ -38,7 +38,7 @@ class RouteManager(models.Manager):
 
 class Route(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_('for example Opsangervatnet'))
-    distance = models.FloatField(help_text=_('in km'))
+    distance = models.FloatField(help_text=_('in km'), default=0)
     description = models.TextField(help_text=_('route description'))
     route_url = models.URLField(blank=True) # gmaps?
     gpx_file = models.FileField(upload_to='gpx', blank=True, storage=gpxstore)
@@ -500,7 +500,8 @@ def parse_sensordata(event, event_type):
 
     if not event.route.distance:
         if parser.distance_sum:
-            event.route.distance = parser.distance_sum
+            # Sum is in meter, but routes like km.
+            event.route.distance = parser.distance_sum/1000
 
     # Normalize altitude, that is, if it's below zero scale every value up
     normalize_altitude(event)
