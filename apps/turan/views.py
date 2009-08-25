@@ -474,9 +474,9 @@ def calendar_month(request, year, month, user_id=False):
         lookup_kwargs['%s__lte' % date_field] = now
 
 
-    cycletrips = CycleTrip.objects.order_by('date').filter(**lookup_kwargs)
-    hikes = Hike.objects.order_by('date').filter(**lookup_kwargs)
-    exercices = OtherExercise.objects.order_by('date').filter(**lookup_kwargs)
+    cycletrips = CycleTrip.objects.select_related().order_by('date').filter(**lookup_kwargs)
+    hikes = Hike.objects.select_related().order_by('date').filter(**lookup_kwargs)
+    exercices = OtherExercise.objects.select_related().order_by('date').filter(**lookup_kwargs)
 
     if user_id:
         cycletrips = cycletrips.filter(user=user_id)
@@ -621,17 +621,17 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     distance = 0
     previous_time = False
     js = ''
-    for i, d in enumerate(qs.iterator()):
+    for i, d in enumerate(qs.all().values('time', 'speed', val)):
         if start and start < i:
             continue
         if stop and i > stop:
             break
         if not previous_time:
-            previous_time = d.time
-        time = d.time - previous_time
-        previous_time = d.time
-        distance += ((d.speed/3.6) * time.seconds)/1000
-        dval = getattr(d, val)
+            previous_time = d['time']
+        time = d['time'] - previous_time
+        previous_time = d['time']
+        distance += ((d['speed']/3.6) * time.seconds)/1000
+        dval = d[val]
         if dval > 0: # skip zero values (makes prettier graph)
             js += '[%s, %s],' % (distance, dval)
     return js
