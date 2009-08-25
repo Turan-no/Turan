@@ -157,7 +157,10 @@ class TCXParser(object):
             if timedelta and distdelta:
                 speed = distdelta/timedelta * 3.6
                 if speed >= 200:
-                    speed = self.entries[-1].speed
+                    if self.entries:
+                        speed = self.entries[-1].speed
+                    else:
+                        speed = 0
             else:
                 speed = 0.0
 
