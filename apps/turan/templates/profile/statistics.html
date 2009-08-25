@@ -7,21 +7,6 @@
     <li><span class="label">{% trans "Total cycle trip count"%}:</span> {{ cycleqs.count}} {% trans "trips" %}</li>
     <li><span class="label">{% trans "Total hike count"%}:</span> {{ hikeqs.count}} {% trans "trips" %}</li>
     <li><span class="label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
+    <li><span class="label">{% trans "Avg distance/day"%}:</span> {{ km_per_day|floatformat}} {% trans "km/d" %}</li>
     <li><span class="label">{% trans "Total energy expenditure"%}:</span> {{ total_kcals }} {% trans "kcal" %} (= {{total_kcals|bodyfat|floatformat}} {% trans "kg" %} {% trans "fat" %} ) </li>
-{% for item, val in avg_speed_dict.items %}
-<li>{{item}}: {{val|floatformat}}</li>
-{% endfor %}
-{% for item, val in hr_dict.items %}
-<li>{{item}}: {{val|floatformat}}</li>
-{% endfor %}
-{% for item, val in cadence_dict.items %}
-<li>{{item}}: {{val|floatformat}}</li>
-{% endfor %}
-{% for item, val in duration_dict.items %}
-<li>{{item}}: {{val|floatformat}}</li>
-{% endfor %}
-{% for item, val in distance_dict.items %}
-<li>{{item}}: {{val|floatformat}}</li>
-{% endfor %}
 </ul>
-
