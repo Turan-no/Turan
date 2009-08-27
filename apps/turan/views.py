@@ -767,8 +767,8 @@ def cycletrip(request, object_id):
         filldistance(details)
         slopes = getslopes(details)
         for slope in slopes:
-            delta_t = (details[slope.end].time - details[slope.start].time).seconds
-            slope.speed = slope.length/delta_t * 3.6
+            slope.duration = details[slope.end].time - details[slope.start].time
+            slope.speed = slope.length/slope.duration.seconds * 3.6
             slope.avg_hr = getavghr(details, slope.start, slope.end)
             slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
         
