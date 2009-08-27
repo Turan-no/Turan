@@ -47,11 +47,11 @@ urlpatterns = patterns('',
 urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^route/?$', turan_object_list, { 'queryset': Route.objects.select_related().filter(distance__gt=0), }, name='routes'),
 
-    url(r'^trip/?$', turan_object_list, { 'queryset': CycleTrip.objects.select_related() }, name='cycletrips'),
+    url(r'^trip/?$', turan_object_list, { 'queryset': CycleTrip.objects.select_related().order_by('-date') }, name='cycletrips'),
     url(r'^trip/(?P<object_id>\d+)', cycletrip, name='cycletrip'),
 
 
-    url(r'^hike/?$', turan_object_list, { 'queryset': Hike.objects.select_related() }, name='hikes'),
+    url(r'^hike/?$', turan_object_list, { 'queryset': Hike.objects.select_related().order_by('-date') }, name='hikes'),
     url(r'^hike/(?P<object_id>\d+)', 'object_detail', { 'queryset': Hike.objects.select_related(), }, name='hike'),
     url(r'^exercise/?$', turan_object_list, { 'queryset': OtherExercise.objects.select_related() }, name='exercises'),
     url(r'^exercise/(?P<object_id>\d+)', 'object_detail', { 'queryset': OtherExercise.objects.select_related(), }, name='exercise'),
