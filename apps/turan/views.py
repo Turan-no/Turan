@@ -789,15 +789,14 @@ def json_serializer(request, queryset, root_name = None, relations = (), extras 
 
 def create_object(request, model=None, template_name=None,
         template_loader=loader, extra_context=None, post_save_redirect=None,
-        login_required=False, context_processors=None, form_class=None, user_required=False):
+        login_required=False, context_processors=None, form_class=None, user_required=False, profile_required=False):
     """
-    Generic object-creation function. 
+    Based on Generic object-creation function. 
     Modified for turan to always save user to model
 
-    Templates: ``<app_label>/<model_name>_form.html``
-    Context:
-        form
-            the form for the object
+    new parameters:
+        * user_required: if the form needs user set to request.user
+        * profile_required: if the form needs userprofile set to current user's profile
     """
     if extra_context is None: extra_context = {}
     if login_required and not request.user.is_authenticated():
@@ -810,6 +809,8 @@ def create_object(request, model=None, template_name=None,
             new_object = form.save(commit=False)
             if user_required:
                 new_object.user = request.user
+            if profile_required:
+                new_object.userprofile = request.user.get_profile()
             new_object.save()
 
             # notify friends of new object

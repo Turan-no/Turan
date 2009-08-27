@@ -38,7 +38,7 @@ class Profile(models.Model):
 
 class UserProfileDetail(models.Model):
     userprofile = models.ForeignKey(Profile)
-    time = models.DateTimeField()
+    time = models.DateTimeField(help_text=_('2009-08-27 08:00:00, time optional'))
     weight = models.FloatField(blank=True, null=True, help_text=_('in kg'))
     resting_hr = models.IntegerField(blank=True,null=True, help_text=_('beats per minute'))
 
@@ -47,6 +47,7 @@ class UserProfileDetail(models.Model):
         ''' Overriden to update UserProfile with new data '''
         super(UserProfileDetail, self).save(force_insert, force_update)
         if self.weight:
+            # TODO: maybe round this off?
             self.userprofile.weight = int(self.weight)
         if self.resting_hr:
             self.userprofile.esting_hr = self.resting_hr
@@ -58,6 +59,11 @@ class UserProfileDetail(models.Model):
     class Meta:
         verbose_name = _("Profile Detail")
         verbose_name_plural = _("Profile Details")
+
+    def get_absolute_url(self):
+        # TODO: maybe have separate views for all the details in the future?
+        return self.userprofile.get_absolute_url()
+
 def create_profile(sender, instance=None, **kwargs):
     if instance is None:
         return
