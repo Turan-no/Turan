@@ -38,13 +38,14 @@
 $(function () {
 });
 </script>
-{% with trip2 as object %}
-{% include "turan/cycletrip/attributes.html" %}
-{% endwith %}
+
 
 {% with trip1 as object %}
 {% include "turan/cycletrip/attributes.html" %}
 {% endwith %}
 
+{% with trip2 as object %}
+{% include "turan/cycletrip/attributes.html" %}
+{% endwith %}
 {% endblock content %}
 
