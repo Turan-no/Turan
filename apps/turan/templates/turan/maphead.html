@@ -58,7 +58,6 @@
 
                 layerMarkers.addMarker(new OpenLayers.Marker(startlonlat, icon));
                 layerMarkers.addMarker(new OpenLayers.Marker(endlonlat, icon.clone()));
-            {% endif %}
 
             var styles = new OpenLayers.StyleMap({
                     "default": {
@@ -81,7 +80,7 @@
                     7: {strokeColor: "#FF0000", strokeWidth: 8},
                 });
 
-            var vectors = new OpenLayers.Layer.Vector("Lines", {
+            var vectors = new OpenLayers.Layer.Vector("HR Line", {
                     strategies: [new OpenLayers.Strategy.Fixed()],                
                     protocol: new OpenLayers.Protocol.HTTP({
                         url: "{{ object.get_geojson_url }}",
@@ -91,6 +90,7 @@
                 });
             
             map.addLayer(vectors);
+            {% endif %}
  
             map.render("map");
  
