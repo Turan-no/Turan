@@ -43,6 +43,9 @@
         <th>
             {% anchor avg_hr "Avg HR" %}
         </th>
+        <th>
+            {% anchor kcal %}
+        </th>
     </tr>
 {% for object in object_list %}
 <tr>
@@ -71,6 +74,11 @@
     </td>
     <td>
         {{ object.avg_hr}}  {% trans "BPM" %}
+    </td>
+    <td>
+        {% if object.kcal %}
+        {{ object.kcal}}  {% trans "kcal" %}
+        {% endif %}
     </td>
 </tr>
 {%endfor %}
