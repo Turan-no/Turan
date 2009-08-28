@@ -60,6 +60,8 @@
                 layerMarkers.addMarker(new OpenLayers.Marker(endlonlat, icon.clone()));
             {% endif %}
 
+            {% if object.get_geojson_url %}
+
             var styles = new OpenLayers.StyleMap({
                     "default": {
                         strokeWidth: 2
@@ -91,6 +93,7 @@
                 });
             
             map.addLayer(vectors);
+            {% endif %}
  
             map.render("map");
  
