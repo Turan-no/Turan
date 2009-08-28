@@ -58,6 +58,7 @@
 
                 layerMarkers.addMarker(new OpenLayers.Marker(startlonlat, icon));
                 layerMarkers.addMarker(new OpenLayers.Marker(endlonlat, icon.clone()));
+            {% endif %}
 
             var styles = new OpenLayers.StyleMap({
                     "default": {
@@ -90,7 +91,6 @@
                 });
             
             map.addLayer(vectors);
-            {% endif %}
  
             map.render("map");
  
