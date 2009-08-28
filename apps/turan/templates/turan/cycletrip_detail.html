@@ -37,6 +37,9 @@
                     {% trans "Gradient" %}
                 </th>
                 <th>
+                    {% trans "Duration" %}
+                </th>
+                <th>
                     {% trans "Speed" %}
                 </th>
                 <th>
@@ -52,6 +55,7 @@
                 <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
                 <td>{{slope.hdelta}} {% trans "m" %}</td>
                 <td>{{slope.gradient|floatformat}} %</td>
+                <td>{{ slope.duration.seconds|durationformat }} </td>
                 <td>{{slope.speed|floatformat}} {% trans "km/h" %}</td>
                 <td>{{slope.avg_power|floatformat}} {% trans "W" %} </td>
                 <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}
