@@ -289,6 +289,9 @@ def create_gpx_from_details(trip):
             # tie the created file to the route object
             # also call Save on route to generate start/stop-pos, etc
             trip.route.gpx_file.save(filename, ContentFile(g.xml), save=True)
+            
+            # Save the Route (because of triggers for pos setting and such)
+            trip.route.save()
 
 class CycleTrip(Event):
 
