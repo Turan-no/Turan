@@ -103,3 +103,15 @@ class HRMParser(object):
         self.avg_cadence = self.cadence_sum/len(self.entries)
 
 
+if __name__ == '__main__':
+    
+    import pprint
+    import sys
+    h = HRMParser()
+    h.parse_uploaded_file(file(sys.argv[1]))
+
+    for x in h.entries:
+        print x.time, x.speed, x.altitude, x.hr, x.cadence
+
+    print h.avg_hr, h.avg_speed, h.avg_cadence
+    print h.max_hr, h.max_speed, h.max_cadence
