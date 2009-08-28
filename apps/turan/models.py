@@ -501,6 +501,11 @@ def parse_sensordata(event, event_type):
 
     event.duration = parser.duration
 
+    if hasattr(parser, 'start_time'):
+        if parser.start_time:
+            event.time = parser.start_time
+
+
     if not event.route.distance:
         if parser.distance_sum:
             # Sum is in meter, but routes like km.
