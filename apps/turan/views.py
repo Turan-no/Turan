@@ -339,7 +339,7 @@ def statistics(request, year=None, month=None, day=None, week=None):
             distance = Sum('user__cycletrip__route__distance'), \
             height = Sum('user__cycletrip__route__ascent'),  \
             duration = Sum('user__cycletrip__duration') \
-            ).filter(duration__gt=0)
+            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0)
 
     for u in climbstats:
         u.avgclimb = u.height/u.distance
@@ -377,7 +377,7 @@ def statistics(request, year=None, month=None, day=None, week=None):
             distance = Sum('user__hike__route__distance'), \
             height = Sum('user__hike__route__ascent'), \
             duration = Sum('user__hike__duration') \
-            ).filter(duration__gt=0)
+            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0)
 
     for u in hike_climbstats:
         u.avgclimb = u.height/u.distance
