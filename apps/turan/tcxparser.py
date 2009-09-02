@@ -164,8 +164,9 @@ class TCXParser(object):
             else:
                 speed = 0.0
 
-            self.heartbeats += hr*timedelta
-            self.rotations += cadence*timedelta
+            if timedelta <= 60:
+                self.heartbeats += hr*timedelta
+                self.rotations += cadence*timedelta
 
             self.entries.append(TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power))
             self.cur_time = time
