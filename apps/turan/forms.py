@@ -78,10 +78,9 @@ class ForeignKeySearchInput(forms.HiddenInput):
 class EventForm(forms.ModelForm):
     route = forms.CharField(widget=ForeignKeySearchInput('Route'))#, 'turan'))
 
-
     class Meta:
         model = CycleTrip
-        fields = ('route', 'date', 'time', 'comment', 'tags', 'sensor_file', 'kcal', 'url')
+        fields = ['route', 'sensor_file', 'comment', 'tags', 'kcal', 'url']
 
     def clean_route(self):
         '''Translate number from autocomplete to object '''
@@ -99,7 +98,7 @@ class HikeForm(EventForm):
 class ExerciseForm(EventForm):
     class Meta(EventForm.Meta):
         model = OtherExercise
-        fields = ('route', 'date', 'time', 'exercise_type', 'comment', 'sensor_file', 'kcal', 'url')
+        fields = ('route', 'exercise_type', 'comment', 'sensor_file', 'kcal', 'url')
 
 class RouteForm(forms.ModelForm):
     class Meta:

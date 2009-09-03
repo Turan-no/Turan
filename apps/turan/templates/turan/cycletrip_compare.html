@@ -32,9 +32,17 @@
                  max: {{ alt_max }},
                },
     };
-    $.plot($("#speediv"), [speed1, speed2, alt], options);
-    $.plot($("#hrdiv"), [hr1, hr2, alt], options);
-    $.plot($("#caddiv"), [cad1, cad2, alt], options);
+
+var datasets = [ {{ datasets }}];
+var datasets1 = {{ datasets1 }};
+var datasets2 = {{ datasets2 }};
+    var speeddata = [];
+    for (var i in datasets) {
+        speeddata.push(datasets[i]["speed"]["data"]);
+    }
+    $.plot($("#speediv"), [datasets1["speed"]["data"], datasets2["speed"]["data"], alt], options);
+    $.plot($("#hrdiv"), [datasets1["hr"]["data"], datasets2["hr"]["data"], alt], options);
+    $.plot($("#caddiv"), [datasets1["cadence"]["data"], datasets2["cadence"]["data"], alt], options);
 $(function () {
 });
 </script>

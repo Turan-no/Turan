@@ -156,9 +156,9 @@ class Route(models.Model):
 class Event(models.Model):
 
     user = models.ForeignKey(User)
-    route = models.ForeignKey(Route)
-    duration = DurationField(blank=True, default=0, help_text='1y 7m 6w 3d 18h 30min 23s 10ms 150mis')
-    date = models.DateField(help_text="year-mo-dy")
+    route = models.ForeignKey(Route, help_text=_("Search existing routes"))
+    duration = DurationField(blank=True, default=0, help_text='18h 30min 23s 10ms 150mis')
+    date = models.DateField(blank=True, null=True, help_text=_("year-mo-dy"))
     time = models.TimeField(blank=True, null=True, help_text="00:00:00")
 
     comment = models.TextField(blank=True)
@@ -167,7 +167,7 @@ class Event(models.Model):
     avg_hr = models.IntegerField(blank=True, null=True) # bpm 
     max_hr = models.IntegerField(blank=True, null=True) # bpm 
     
-    kcal = models.IntegerField(blank=True, default=0)
+    kcal = models.IntegerField(blank=True, default=0, help_text=_('Only needed for Polar products'))
 
     sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.tcx, .hrm, .gmd)'))
 
@@ -175,7 +175,9 @@ class Event(models.Model):
     content_type = models.ForeignKey(ContentType, null=True)
     group = generic.GenericForeignKey("object_id", "content_type")
 
-    tags = TagField()
+    tags = TagField(help_text='f.eks. sol regn uhell punktering')
+
+    temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
 
 
 
@@ -491,6 +493,8 @@ def parse_sensordata(event, event_type):
     event.avg_speed = parser.avg_speed
     event.avg_cadence = parser.avg_cadence
     
+    event.duration = parser.duration
+
     if parser.kcal_sum: # only some parsers provide kcal
         event.kcal = parser.kcal_sum
 
@@ -499,11 +503,14 @@ def parse_sensordata(event, event_type):
     if hasattr(parser, 'max_power'): # only some parsers
         event.max_power = parser.max_power
 
-    event.duration = parser.duration
 
     if hasattr(parser, 'start_time'):
         if parser.start_time:
             event.time = parser.start_time
+
+    if hasattr(parser, 'date'):
+        if parser.date:
+            event.date = parser.date
 
 
     if not event.route.distance:

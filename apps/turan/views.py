@@ -168,16 +168,19 @@ def trip_compare(request, event_type, trip1, trip2):
     else:
         return HttpResponse('unsupported type')
 
-    t1_speed = tripdetail_js(event_type, trip1.id, 'speed')
-    t2_speed = tripdetail_js(event_type, trip2.id, 'speed')
-    t1_hr = tripdetail_js(event_type, trip1.id, 'hr')
-    t2_hr = tripdetail_js(event_type, trip2.id, 'hr')
-    t1_cad = tripdetail_js(event_type, trip1.id, 'cadence')
-    t2_cad = tripdetail_js(event_type, trip2.id, 'cadence')
+    #t1_speed = tripdetail_js(event_type, trip1.id, 'speed')
+    #t2_speed = tripdetail_js(event_type, trip2.id, 'speed')
+    #t1_hr = tripdetail_js(event_type, trip1.id, 'hr')
+    #t2_hr = tripdetail_js(event_type, trip2.id, 'hr')
+    #t1_cad = tripdetail_js(event_type, trip1.id, 'cadence')
+    #t2_cad = tripdetail_js(event_type, trip2.id, 'cadence')
 
     alt = tripdetail_js(event_type, trip1.id, 'altitude')
-
     alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
+
+    datasets1 = js_trip_series(trip1.get_details().all())
+    datasets2 = js_trip_series(trip2.get_details().all())
+    datasets = mark_safe(datasets1 +',' +datasets2)
 
     return render_to_response('turan/cycletrip_compare.html', locals(), context_instance=RequestContext(request))
 
@@ -771,13 +774,6 @@ def cycletrip(request, object_id):
             slope.speed = slope.length/slope.duration.seconds * 3.6
             slope.avg_hr = getavghr(details, slope.start, slope.end)
             slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
-        
-        #speedjs = tripdetail_js('cycletrip', object_id, 'speed')
-        #hrjs = tripdetail_js('cycletrip', object_id, 'hr')
-        #cadencejs = tripdetail_js('cycletrip', object_id, 'cadence')
-        #powerjs = tripdetail_js('cycletrip', object_id, 'power')
-        #altitudejs = tripdetail_js('cycletrip', object_id, 'altitude')
-
     datasets = js_trip_series(details)
     return render_to_response('turan/cycletrip_detail.html', locals(), context_instance=RequestContext(request))
 

@@ -88,6 +88,8 @@ class TCXParser(object):
             self.laps.append(LapData(time, duration, distance_sum, max_speed, avg_hr, max_hr, avg_cadence, kcal_sum))
 
         self.time = self.laps[0].start_time
+        self.start_time = datetime.time(self.time.hour, self.time.minute, self.time.second)
+        self.date = datetime.date(self.time.year, self.time.month, self.time.day)
         self.cur_time = self.time
 
         if self.gps_distance:
@@ -187,3 +189,18 @@ class TCXParser(object):
         self.avg_cadence = self.rotations/seconds
         self.avg_hr = self.heartbeats/seconds
         self.duration = '%is' % int(seconds)
+
+if __name__ == '__main__':
+    
+    import pprint
+    import sys
+    t = TCXParser()
+    t.parse_uploaded_file(file(sys.argv[1]))
+
+    for x in t.entries:
+        print x.time, x.speed, x.altitude, x.hr, x.cadence
+
+    print t.avg_hr, t.avg_speed, t.avg_cadence
+    print t.max_hr, t.max_speed, t.max_cadence
+    print t.start_time
+    print t.date
