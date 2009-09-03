@@ -65,10 +65,14 @@
     {% if object.kcal %}
     <li class="kcal" ><span class="label">{% trans "Used kcal" %}:</span> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})</li>
     {% endif %}
-    <ol>
+    {% if object.temperature %}
+    <li class="temperature" ><span class="label">{% trans "Temperature" %}:</span> {{ object.temperature|floatformat }} {% trans "℃" %}</li>
+    {% endif %}
     {% if object.comment %}
+    <ol>
     <li class="comment">{{ object.user }} {% trans "writes" %}:
     <p>{{ object.comment }}</p>
     </li>
+    </ol>
     {% endif %}
 </ul>

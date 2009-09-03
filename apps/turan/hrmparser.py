@@ -14,12 +14,12 @@ class HRMEntry(object):
 
 class HRMParser(object):
 
-    started = False
     entries = []
     start_time = 0
     date = 0
     interval = 0
     duration = 0
+    temperature = 0
 
     smode = 0 # Polar specific mode (sensor mode)
 
@@ -38,8 +38,11 @@ class HRMParser(object):
         f = f.readlines()
 
         i = 0
+        laprow = 0
+        hrstarted = False
+        lapstarted = False
         for line in f:
-            if self.started:
+            if hrstarted:
                 line = line.strip()
                 if line:
                     if self.smode == '111000100':
@@ -80,6 +83,14 @@ class HRMParser(object):
                     time = time + datetime.timedelta(0, self.interval*i)
                     self.entries.append(HRMEntry(time, hr, speed, cadence, altitude))
                     i += 1
+            elif lapstarted:
+                laprow += 1
+                if laprow == 4:
+                    splitted = line.split('\t')
+                    self.temperature = float(splitted[3])/10
+                    lapstarted = False # reset
+            elif line.startswith('[IntTimes]'): #IntTimes = GoodTimes ?
+                lapstarted = True
             elif line.startswith('Date'):
                 year, date, month = int(line[5:9]), int(line[9:11]), int(line[11:13])
                 self.date = datetime.date(year, date, month)
@@ -89,9 +100,9 @@ class HRMParser(object):
             elif line.startswith('Interval'):
                 self.interval = int(line[9:10])
             elif line.startswith('[HRData]'):
-                self.started = True
+                hrstarted = True
             elif line.startswith('SMode'):
-                self.smode = line[6:].strip() 
+                self.smode = line[6:].strip()
             elif line.startswith('Length'):
                 hours = line[7:9]
                 minutes = line[10:12]
@@ -115,3 +126,4 @@ if __name__ == '__main__':
 
     print h.avg_hr, h.avg_speed, h.avg_cadence
     print h.max_hr, h.max_speed, h.max_cadence
+    print h.temperature

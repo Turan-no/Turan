@@ -513,6 +513,10 @@ def parse_sensordata(event, event_type):
         if parser.date:
             event.date = parser.date
 
+    if hasattr(parser, 'temperature'): # Polar has this
+        if parser.temperature:
+            event.temperature = parser.temperature
+
 
     if not event.route.distance:
         if parser.distance_sum:
