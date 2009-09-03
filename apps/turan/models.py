@@ -214,9 +214,9 @@ class Hike(Event):
         file and create children '''
         super(Hike, self).save() # sensor parser needs id
         if self.sensor_file:
-            if self.hikedetail_set.count() == 0:
-                parse_sensordata(self, 'hike')
+            parse_sensordata(self, 'hike')
             create_gpx_from_details(self)
+
         super(Hike, self).save(force_update=True)
 
     class Meta:
@@ -318,9 +318,7 @@ class CycleTrip(Event):
         file and create children '''
         super(CycleTrip, self).save() # sensor parser needs id
         if self.sensor_file:
-            if self.cycletripdetail_set.count() == 0:
-                parse_sensordata(self, 'cycletrip')
-
+            parse_sensordata(self, 'cycletrip')
             create_gpx_from_details(self)
 
         super(CycleTrip, self).save(force_update=True)
@@ -450,6 +448,9 @@ def parse_sensordata(event, event_type):
         parser = CSVParser()
     else:
         return # Maybe warn user somehow?
+
+    if event.get_details().count: # If the event already has details, delete them and reparse
+        event.get_details().all().delete()
 
     parser.parse_uploaded_file(event.sensor_file.file)
     values = parser.entries
