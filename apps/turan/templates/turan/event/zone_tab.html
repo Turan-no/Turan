@@ -1,0 +1,30 @@
+{% load i18n %}
+{% load turan_extras %}
+        <table>
+            <tr>
+                <th>
+                    {% trans "Zone" %}
+                </th>
+                <th>
+                    {% trans "Length" %}
+                </th>
+                <th>
+                    {% trans "%" %}
+                </th>
+            </tr>
+            {% for zone, length in zones.items %}
+            {% if length %}
+            <tr>
+                <td>
+                    {{ zone }}
+                </td>
+                <td>
+                    {{ length|durationformat }}
+                </td>
+                <td>
+                    {{ length|percent:object.duration.seconds }}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
