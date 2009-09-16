@@ -851,6 +851,13 @@ def exercise(request, object_id):
         zones = getzones(details)
     return render_to_response('turan/otherexercise_detail.html', locals(), context_instance=RequestContext(request))
 
+def hike(request, object_id):
+    object = get_object_or_404(Hike, pk=object_id)
+    details = object.hikedetail_set.all()
+    if details:
+        zones = getzones(details)
+    return render_to_response('turan/hike_detail.html', locals(), context_instance=RequestContext(request))
+
 def json_serializer(request, queryset, root_name = None, relations = (), extras = ()):
     if root_name == None:
         root_name = queryset.model._meta.verbose_name_plural
