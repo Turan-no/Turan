@@ -720,7 +720,26 @@ def getzones(values):
 
         zones[zone] += time.seconds
 
-    return zones
+
+    zones_with_legend = {}
+
+    for zone, val in zones.items():
+        if zone == 0:
+            zones_with_legend['0 (0% - 60%)'] = val
+        elif zone == 1:
+            zones_with_legend['1 (60% - 72%)'] = val
+        elif zone == 2:
+            zones_with_legend['2 (72% - 82%)'] = val
+        elif zone == 3:
+            zones_with_legend['3 (82% - 87%)'] = val
+        elif zone == 4:
+            zones_with_legend['4 (87% - 92%)'] = val
+        elif zone == 5:
+            zones_with_legend['5 (92% - 97%)'] = val
+        elif zone == 6:
+            zones_with_legend['6 (97% - 100%'] = val
+
+    return zones_with_legend
 
 def getslopes(values):
     slopes = []

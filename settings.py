@@ -80,7 +80,8 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.gzip.GZipMiddleware',
+#        'debug_toolbar.middleware.DebugToolbarMiddleware',
+#    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -111,8 +112,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
 
-    "pinax.core.context_processors.contact_email",
-    "pinax.core.context_processors.site_name",
+# OLD PINAX    "pinax.core.context_processors.contact_email",
+# OLD PINAX   "pinax.core.context_processors.site_name",
+    "pinax.core.context_processors.pinax_settings",
 
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
@@ -177,7 +179,8 @@ INSTALLED_APPS = (
 # TUUURAN
     'turan',
     'rosetta',
-#    'south',
+    'south',
+#    'debug_toolbar',
     
     # internal (for now)
     'analytics',

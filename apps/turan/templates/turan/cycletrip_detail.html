@@ -76,6 +76,9 @@
                 <th>
                     {% trans "Length" %}
                 </th>
+                <th>
+                    {% trans "%" %}
+                </th>
             </tr>
             {% for zone, length in zones.items %}
             {% if length %}
@@ -85,6 +88,9 @@
                 </td>
                 <td>
                     {{ length|durationformat }}
+                </td>
+                <td>
+                    {{ length|percent:object.duration.seconds }}
                 </td>
             </tr>
             {% endif %}
