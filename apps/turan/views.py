@@ -702,6 +702,8 @@ def getzones(values):
             continue
         time = d.time - previous_time
         previous_time = d.time
+        if time.seconds > 60:
+            continue
 
         hr_percent = float(d.hr)*100/max_hr
 
