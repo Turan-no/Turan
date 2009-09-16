@@ -566,18 +566,19 @@ def geojson(request, event_type, object_id):
         if previous_lon and previous_lat:
             hr_percent = float(d.hr)*100/max_hr
             zone = 1
-            if hr_percent > 89:
-                zone = 7
-            elif hr_percent > 84:
+# TODO? Support zone 0 ?
+            if hr_percent > 97:
                 zone = 6
-            elif hr_percent > 79:
+            elif hr_percent > 92:
                 zone = 5
-            elif hr_percent > 74:
+            elif hr_percent > 87:
                 zone = 4
-            elif hr_percent > 69:
+            elif hr_percent > 82:
                 zone = 3
-            elif hr_percent > 59:
+            elif hr_percent > 72:
                 zone = 2
+            elif hr_percent > 60:
+                zone = 1
 
             if previous_zone == zone:
                 previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
@@ -679,6 +680,48 @@ def json_tripdetail(request, event_type, object_id, val, start=False, stop=False
     js = tripdetail_js(event_type, object_id, val, start, stop)
     return HttpResponse(js)
 
+def getzones(values):
+    ''' Calculate time in different sport zones given trip details '''
+
+    max_hr = values[0].trip.user.get_profile().max_hr
+
+    zones = {
+            0: 0,
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            6: 0,
+        }
+    previous_time = False
+    for i, d in enumerate(values):
+        if not previous_time:
+            previous_time = d.time
+            continue
+        time = d.time - previous_time
+        previous_time = d.time
+
+        hr_percent = float(d.hr)*100/max_hr
+
+        zone = 0
+        if hr_percent > 97:
+            zone = 6
+        elif hr_percent > 92:
+            zone = 5
+        elif hr_percent > 87:
+            zone = 4
+        elif hr_percent > 82:
+            zone = 3
+        elif hr_percent > 72:
+            zone = 2
+        elif hr_percent > 60:
+            zone = 1
+
+        zones[zone] += time.seconds
+
+    return zones
+
 def getslopes(values):
     slopes = []
     min_slope = 40
@@ -774,6 +817,8 @@ def cycletrip(request, object_id):
             slope.speed = slope.length/slope.duration.seconds * 3.6
             slope.avg_hr = getavghr(details, slope.start, slope.end)
             slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
+
+        zones = getzones(details)
     datasets = js_trip_series(details)
     return render_to_response('turan/cycletrip_detail.html', locals(), context_instance=RequestContext(request))
 

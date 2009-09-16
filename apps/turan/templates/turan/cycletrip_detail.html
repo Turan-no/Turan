@@ -17,6 +17,7 @@
     <ul>
         <li class="selected" id="tabs-select-1">{% trans "Graph" %}</li>
         <li id="tabs-select-2">{% trans "Slopes" %}</li>
+        <li id="tabs-select-3">{% trans "Zones" %}</li>
     </ul>
     <div id="tabs-1" class="graph visible">
         {% include "turan/cycletrip/graph.html" %}
@@ -64,6 +65,30 @@
                     {% endif %} </td>
             </tr>
         {% endfor %}
+        </table>
+    </div>
+    <div id="tabs-3" class="zone_tab">
+        <table>
+            <tr>
+                <th>
+                    {% trans "Zone" %}
+                </th>
+                <th>
+                    {% trans "Length" %}
+                </th>
+            </tr>
+            {% for zone, length in zones.items %}
+            {% if length %}
+            <tr>
+                <td>
+                    {{ zone }}
+                </td>
+                <td>
+                    {{ length|durationformat }}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
         </table>
     </div>
 </div>
