@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
 from models import Route, CycleTrip, Hike, OtherExercise
-from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, calendar_month, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list, autocomplete_route, geojson, ical, turan_delete_object
+from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, calendar_month, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list, autocomplete_route, geojson, ical, turan_delete_object, exercise
 from forms import *
 from feeds import *
 from threadedcomments.models import ThreadedComment as Comment
@@ -54,7 +54,7 @@ urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^hike/?$', turan_object_list, { 'queryset': Hike.objects.select_related().order_by('-date') }, name='hikes'),
     url(r'^hike/(?P<object_id>\d+)', 'object_detail', { 'queryset': Hike.objects.select_related(), }, name='hike'),
     url(r'^exercise/?$', turan_object_list, { 'queryset': OtherExercise.objects.select_related() }, name='exercises'),
-    url(r'^exercise/(?P<object_id>\d+)', 'object_detail', { 'queryset': OtherExercise.objects.select_related(), }, name='exercise'),
+    url(r'^exercise/(?P<object_id>\d+)', exercise, name='exercise'),
 )
 urlpatterns += patterns('django.views.generic.simple',
     url(r'^about/', 'direct_to_template', {'template': 'turan/about.html'}, name='turan_about'),
