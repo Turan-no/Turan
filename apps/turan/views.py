@@ -25,6 +25,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import decorator_from_middleware
 from django.middleware.gzip import GZipMiddleware
+from django.utils.datastructures import SortedDict
+
 
 
 from tagging.models import Tag
@@ -685,7 +687,7 @@ def getzones(values):
 
     max_hr = values[0].trip.user.get_profile().max_hr
 
-    zones = {
+    zones = SortedDict({
             0: 0,
             1: 0,
             2: 0,
@@ -693,7 +695,7 @@ def getzones(values):
             4: 0,
             5: 0,
             6: 0,
-        }
+        })
     previous_time = False
     for i, d in enumerate(values):
         if not previous_time:
@@ -721,7 +723,7 @@ def getzones(values):
         zones[zone] += time.seconds
 
 
-    zones_with_legend = {}
+    zones_with_legend = SortedDict()
 
     for zone, val in zones.items():
         if zone == 0:
