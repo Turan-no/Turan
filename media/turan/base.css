@@ -578,12 +578,15 @@ div.mapcontainer {
     font-size: 1.1em;
 }
 #tabs>div {
-    display: none;
+    position: absolute;
+    left: -10000px;
 }
 #tabs>div.visible {
     display: block;
     border-top: 1px solid black;
     border-bottom: 1px solid black;
+    position: relative;
+    left: 0px;
 }
 #tabs>ul {
     overflow: hidden;
@@ -674,3 +677,5 @@ table.month th {
 .insekt {
     list-style-image: url('/site_media/pinax/images/silk/icons/bug.png');
 }
+
+
