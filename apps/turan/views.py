@@ -683,6 +683,36 @@ def json_tripdetail(request, event_type, object_id, val, start=False, stop=False
     js = tripdetail_js(event_type, object_id, val, start, stop)
     return HttpResponse(js)
 
+def getinclinesummary(values):
+    inclines = SortedDict({
+        -1: 0,
+        0: 0,
+        1: 0,
+        })
+
+    previous_time = False
+    previous_altitude = 0
+    for d in values:
+        if not previous_time:
+            previous_time = d.time
+            continue
+        time = d.time - previous_time
+        previous_time = d.time
+        if time.seconds > 60:
+            continue
+
+
+        if d.altitude == previous_altitude:
+            inclines[0] += time.seconds
+        elif d.altitude > previous_altitude:
+            inclines[1] += time.seconds
+        elif d.altitude < previous_altitude:
+            inclines[-1] += time.seconds
+
+        previous_altitude = d.altitude
+
+    return inclines
+
 def getzones(values):
     ''' Calculate time in different sport zones given trip details '''
 
@@ -843,6 +873,7 @@ def cycletrip(request, object_id):
             slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
 
         zones = getzones(details)
+        inclinesummary = getinclinesummary(details)
     datasets = js_trip_series(details)
     return render_to_response('turan/cycletrip_detail.html', locals(), context_instance=RequestContext(request))
 

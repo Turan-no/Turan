@@ -1,0 +1,55 @@
+{% load i18n %}
+{% load turan_extras %}
+<div id="inclinediv" style="width:400px;height:400px; float: right;"></div>
+<div id="incline" style="width:500px; height: 400px;">
+        <table>
+            <tr>
+                <th>
+                    {% trans "Type" %}
+                </th>
+                <th>
+                    {% trans "Duration" %}
+                </th>
+                <th>
+                    {% trans "%" %}
+                </th>
+            </tr>
+            {% for i_type, length in inclinesummary.items %}
+            {% if length %}
+            <tr>
+                <td>
+                    {% ifequal i_type 0 %}
+                        {% trans "Flat" %}
+                    {% endifequal %}
+                    {% ifequal i_type 1 %}
+                        {% trans "Uphill" %}
+                    {% endifequal %}
+                    {% ifequal i_type -1 %}
+                        {% trans "Downhill" %}
+                    {% endifequal %}
+                </td>
+                <td>
+                    {{ length|durationformat }}
+                </td>
+                <td>
+                    {{ length|percent:object.duration.seconds }}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+<script language="javascript" type="text/javascript">
+    var inclinedata = [
+            {% for i_type, length in inclinesummary.items %}
+            {% if length %}
+                {
+                    data: [[{{ i_type }}, {{ length }}]],
+                    bars: { show: true},
+                    color: {{ forloop.counter }}
+                },
+            {% endif %}
+            {% endfor %}
+    ];
+    $.plot($("#inclinediv"), inclinedata, { grid: { show: false } });
+</script>
