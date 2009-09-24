@@ -717,6 +717,8 @@ def getzones(values):
     ''' Calculate time in different sport zones given trip details '''
 
     max_hr = values[0].trip.user.get_profile().max_hr
+    if not max_hr:
+        return []
 
     zones = SortedDict({
             0: 0,
