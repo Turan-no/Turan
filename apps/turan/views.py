@@ -342,14 +342,17 @@ def statistics(request, year=None, month=None, day=None, week=None):
     climbstats = statsprofiles.filter(**cycletripfilter).filter(user__cycletrip__route__in=validroutes).annotate( \
             distance = Sum('user__cycletrip__route__distance'), \
             height = Sum('user__cycletrip__route__ascent'),  \
-            duration = Sum('user__cycletrip__duration') \
-            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0)
+            duration = Sum('user__cycletrip__duration'), \
+            trips = Count('user__cycletrip') \
+            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0).filter(trips__gt=0)
 
     for u in climbstats:
         u.avgclimb = u.height/u.distance
         u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
+        u.avglen = float(u.distance)/u.trips
     climbstats = sorted(climbstats, key=lambda x: -x.avgclimb)
     climbstatsbytime = sorted(climbstats, key=lambda x:-x.avgclimbperhour)
+    lengthstats = sorted(climbstats, key=lambda x: -x.avglen)
 
     hikestats = statsprofiles.filter(**hikefilter).annotate( \
             hike_avg_avg_speed = Avg('user__hike__avg_speed'), \
@@ -380,14 +383,17 @@ def statistics(request, year=None, month=None, day=None, week=None):
     hike_climbstats = statsprofiles.filter(**hikefilter).filter(user__hike__route__in=validroutes).annotate( \
             distance = Sum('user__hike__route__distance'), \
             height = Sum('user__hike__route__ascent'), \
-            duration = Sum('user__hike__duration') \
-            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0)
+            duration = Sum('user__hike__duration'), \
+            hikes = Count('user__hike') \
+            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0).filter(hikes__gt=0)
 
     for u in hike_climbstats:
         u.avgclimb = u.height/u.distance
         u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
+        u.avglen = float(u.distance)/u.hikes
     hike_climbstats = sorted(hike_climbstats, key=lambda x: -x.avgclimb)
     hike_climbstatsbytime = sorted(hike_climbstats, key=lambda x:-x.avgclimbperhour)
+    hike_lengthstats = sorted(hike_climbstats, key=lambda x: -x.avglen)
 
     team_list = Tribe.objects.all()
 
