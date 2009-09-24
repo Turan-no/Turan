@@ -64,6 +64,13 @@
         {% endfor %}
     </ol>
 
+    <h3> {% trans "Average hike length" %} </h3>
+    <ol>
+        {% for u in hike_lengthstats %}
+        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avglen|floatformat }} {% trans "km" %}</li>
+        {% endfor %}
+    </ol>
+
     <h3> {% trans "Most time hiking" %} </h3>
     <ol>
         {% for u in hike_dursums %}
@@ -140,6 +147,13 @@
     <ol>
         {% for u in distsums %}
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.sum_distance|floatformat }} {% trans "km" %}</li>
+        {% endfor %}
+    </ol>
+
+    <h3> {% trans "Average trip length" %} </h3>
+    <ol>
+        {% for u in lengthstats %}
+        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avglen|floatformat }} {% trans "km" %}</li>
         {% endfor %}
     </ol>
 
