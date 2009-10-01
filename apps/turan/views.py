@@ -229,9 +229,9 @@ def events(request, group_slug=None, bridge=None, username=None):
         hikeqs = group.content_objects(Hike)
         exerciseqs = group.content_objects(OtherExercise)
     else:
-        cycleqs = CycleTrip.objects.select_related()
-        hikeqs = Hike.objects.select_related()
-        exerciseqs = OtherExercise.objects.select_related()
+        cycleqs = CycleTrip.objects.select_related().filter(date__isnull=False)
+        hikeqs = Hike.objects.select_related().filter(date__isnull=False)
+        exerciseqs = OtherExercise.objects.select_related().filter(date__isnull=False)
         if username:
             user = get_object_or_404(User, username=username)
             cycleqs = cycleqs.filter(user=user)
@@ -242,6 +242,7 @@ def events(request, group_slug=None, bridge=None, username=None):
     object_list.extend(cycleqs)
     object_list.extend(hikeqs)
     object_list.extend(exerciseqs)
+
     object_list = sorted(object_list, key=lambda x: x.date)
     object_list.reverse()
 
