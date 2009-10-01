@@ -430,7 +430,7 @@ class Location(models.Model):
         verbose_name = _("Location")
         verbose_name_plural = _("Locations")
 
-EXPERIMENTAL_POLAR_GPX_HRM_COMBINER = 1
+EXPERIMENTAL_POLAR_GPX_HRM_COMBINER = 0
 
 def parse_sensordata(event, event_type):
     ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
