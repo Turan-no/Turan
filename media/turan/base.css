@@ -458,14 +458,15 @@ ul.trip_attributes li {
 
 ul.trip_attributes li {
 }
-ul.trip_attributes {
-	background: #eee;
-	border-bottom: 1px solid black;
-	border-top: 1px solid black;
+div.trip_attributes {
+	background: #DEF;
+	border: 1px solid #99BBCC;
     padding-left: 1em;
     width: 458px;
     margin: 0;
     margin-top: -1px;
+}
+ul.trip_attributes {
 }
 li.duration {
     list-style-image: url('/site_media/pinax/images/silk/icons/clock.png');
@@ -553,13 +554,12 @@ li.power {
 
 div.graph {
 	background: #eee;
-	border-bottom: 1px solid black;
-	border-top: 1px solid black;
+	border: 1px solid #99BBCC;
 }
 div.map {
     width: 500px;
     height: 500px;
-    border: 1px black solid;
+	border: 1px solid #99BBCC;
 }
 div.mapcontainer {
     float: right;
@@ -583,8 +583,7 @@ div.mapcontainer {
 }
 #tabs>div.visible {
     display: block;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+	border: 1px solid #99BBCC;
     position: relative;
     left: 0px;
 }
@@ -597,20 +596,31 @@ div.mapcontainer {
     width: 100px;
     height: 20px;
     list-style-type: none;
-    margin: 2px 2px 0 2px;
+    margin: 2px 2px 0px 2px;
     padding: 3px;
-    background-color: #ccc;
+    background-color: #DEF;
     cursor: pointer;
+    color: #444; /* unselected tab text colour */
+    font-weight: bold;
+    text-decoration: none;
+	border-top: 1px solid #99BBCC;
+	border-left: 1px solid #99BBCC;
+	border-right: 1px solid #99BBCC;
+}
+#tabs>ul>li:hover {
+    color: #FFF;
+    background: #9BC;
+}
+#tabs>ul>li.selected:hover {
+    color: #000;
+    background: #9BC;
 }
 #tabs>ul>li.selected {
-    background-color: #eee;
+    background-color: #FFF;
     font-weight: bold;
-    margin-top: 0;
-    margin-left: 0;
-    margin-right: 0;
-    border-top: 2px solid black;
-    border-left: 2px solid black;
-    border-right: 2px solid black;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 }
 
 li {
