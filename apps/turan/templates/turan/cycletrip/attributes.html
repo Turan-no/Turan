@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load turan_extras %}
-<div style="float: left; width: 450px;">
+<div class="trip_attributes">
     <div style="float: right">{{object.icon|safe}}</div>
 <h1>
     {% ifequal object.route.id 24 %}
@@ -9,7 +9,6 @@
     <a href="{{object.get_absolute_url}}">{{ object.route.name }}</a>
     {% endifequal %}
 </h1>
-</div>
 <div style="clear: left"></div>
 <ul class="trip_attributes">
     <li class="person">
@@ -76,3 +75,4 @@
     </ol>
     {% endif %}
 </ul>
+</div>
