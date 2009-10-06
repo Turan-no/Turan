@@ -365,6 +365,8 @@ class HikeDetail(ExerciseDetail):
 
 class OtherExerciseDetail(ExerciseDetail):
     trip = models.ForeignKey(OtherExercise)
+    cadence = models.IntegerField(blank=True, null=True)
+    power = models.IntegerField(blank=True, null=True)
 
 #class UserProfile(models.Model):
 #    user = models.ForeignKey(User, unique=True)
