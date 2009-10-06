@@ -2,6 +2,7 @@
 {% load threadedcommentstags %}
 {% load avatar_tags %}
 {% load tagging_tags %}
+{% load webdesign %}
 
 {% load humanize %}
 {% load i18n %}
@@ -14,26 +15,55 @@
 
 <div class="half floatright">
     <h1>
-        {% trans "Latest comments" %}
+        {% trans "Welcome to Turan" %}!
     </h1>
-    <ul class="comments">
-    {% get_latest_comments 5 as comments %}
-    {% for comment in comments %}
-        <li>
-            <div class="header">
-                <div class="avatar">{% avatar comment.user 40 %}</div>
-                <img alt="Comment" src="{{MEDIA_URL}}/pinax/images/silk/icons/comment.png" />
-                <span class="name">{{ comment.user }}</span>&nbsp;
-                {% trans "commented on a" %}
-                    <a href="{{ comment.content_object.get_absolute_url }}">
-                        {{ comment.content_object|model_verbose_name }}
-                    </a>
-                <span class="date">{{ comment.date_submitted|naturalday }}</span>
-            </div>
-            <div class="comment_text">{{ comment.comment|urlize|linebreaks }}</div>
-        </li>
-    {% endfor %}
+
+<div id="tabs">
+    <ul>
+        <li class="selected" id="tabs-select-1">{% trans "Turan?" %}</li>
+        <li id="tabs-select-2">{% trans "Analyze" %}</li>
+        <li id="tabs-select-3">{% trans "Map" %}</li>
+        <li id="tabs-select-4">{% trans "Log" %}</li>
     </ul>
+    <div id="tabs-1" class="visible">
+        {% blocktrans %}
+        Text
+        {% endblocktrans %}
+        {% lorem 3 p %}
+    </div>
+    <div id="tabs-2" class="">
+        {% blocktrans %}
+        Text 2
+        {% endblocktrans %}
+        {% lorem 3 p %}
+    </div>
+    <div id="tabs-3" class="">
+        {% blocktrans %}
+        Text 3
+        {% endblocktrans %}
+        {% lorem 3 p %}
+    </div>
+    <div id="tabs-4" class="">
+        {% blocktrans %}
+        Text 4
+        {% endblocktrans %}
+        {% lorem 3 p %}
+    </div>
+</div>
+<script type="text/javascript">
+    function selectTab(evt) {
+        var id = evt.target.id;
+        id = "tabs-" + id.split('-')[2];
+        $('#tabs div.visible').removeClass('visible');
+        $('#tabs div#' + id).addClass('visible');
+        $('#tabs ul li').removeClass('selected');
+        $(this).addClass('selected');
+    }
+$('#tabs ul li').each(function () {
+        $(this).bind("click", selectTab);
+        });
+</script>
+
     <img alt="{% trans "Compass" %}" style="float:right" src="{{MEDIA_URL}}turan/compass.png">
     <h1>
         <a href="{% url routes %}">{% trans "Most popular routes" %}</a>

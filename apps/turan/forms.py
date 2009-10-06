@@ -50,7 +50,7 @@ class ForeignKeySearchInput(forms.HiddenInput):
                     display: none;
                 }
             </style>
-<input type="text" id="lookup_%(name)s" value="%(label)s" />
+<input type="text" id="lookup_%(name)s" value="%(label)s" /> <br>Search for route or <a href="%(route_create)s">Create new</a> first
             <script type="text/javascript">
             jQuery("#lookup_%(name)s").autocomplete('%(url)s', {
                 max: 10,
@@ -73,6 +73,7 @@ class ForeignKeySearchInput(forms.HiddenInput):
             'label': label,
             'admin_media_prefix': settings.ADMIN_MEDIA_PREFIX,
             'url': reverse(autocomplete_route, args=('a','b')),
+            'route_create': reverse('route_create'),
         }
 
 class EventForm(forms.ModelForm):
@@ -98,7 +99,7 @@ class HikeForm(EventForm):
 class ExerciseForm(EventForm):
     class Meta(EventForm.Meta):
         model = OtherExercise
-        fields = ('route', 'exercise_type', 'comment', 'sensor_file', 'kcal', 'url')
+        fields = ('route', 'exercise_type', 'comment', 'sensor_file', 'duration', 'date', 'time', 'kcal', 'url')
 
 class RouteForm(forms.ModelForm):
     class Meta:
