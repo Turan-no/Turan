@@ -245,8 +245,7 @@ class OtherExercise(Event):
         file and create children '''
         super(OtherExercise, self).save() # sensor parser needs id
         if self.sensor_file:
-            if self.otherexercisedetail_set.count() == 0:
-                parse_sensordata(self, 'exercise')
+            parse_sensordata(self, 'exercise')
         super(OtherExercise, self).save(force_update=True)
 
     def __unicode__(self):
