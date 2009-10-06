@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.defaults import *
 from models import Route, CycleTrip, Hike, OtherExercise
-from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, calendar_month, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list, autocomplete_route, geojson, ical, turan_delete_object, exercise, hike
+from views import index, trip_compare, logout, events, route_detail, week, statistics, generate_tshirt, calendar, calendar_month, cycletrip, json_tripdetail, TripsFeed, json_serializer, create_object, update_object_user, turan_object_list, autocomplete_route, geojson, ical, turan_delete_object, exercise, hike, turan_delete_detailset_value
 from forms import *
 from feeds import *
 from threadedcomments.models import ThreadedComment as Comment
@@ -73,5 +73,12 @@ urlpatterns += patterns('django.views.generic.create_update',
     url(r'^exercise/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': FullExerciseForm},name='exercise_update'),
 
     url(r'^trip/delete/(?P<object_id>\d+)', turan_delete_object, {'model': CycleTrip, 'login_required': True,},name='trip_delete'),
+    url(r'^hike/delete/(?P<object_id>\d+)', turan_delete_object, {'model': Hike, 'login_required': True,},name='hike_delete'),
+    url(r'^exercise/delete/(?P<object_id>\d+)', turan_delete_object, {'model': OtherExercise, 'login_required': True,},name='exercise_delete'),
+
+# Detail deletes
+    url(r'^trip/detail_delete/(?P<object_id>\d+)/(?P<value>\w+)/', turan_delete_detailset_value, {'model': CycleTrip, },name='trip_detail_delete'),
+    url(r'^hike/detail_delete/(?P<object_id>\d+)/(?P<value>\w+)/', turan_delete_detailset_value, {'model': Hike, },name='hike_detail_delete'),
+    url(r'^exercise/detail_delete/(?P<object_id>\d+)/(?P<value>\w+)/', turan_delete_detailset_value, {'model': OtherExercise, },name='exercise_detail_delete'),
 )
 

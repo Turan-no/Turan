@@ -11,6 +11,7 @@
         "hr": {
             data: [{{ hr}} ],
             label: "{% trans "HR" %}",
+            lines: { show: true, fill: 0.2 },
             yaxis: 2,
             color: 2,
         },

@@ -8,6 +8,8 @@
 {% block extramenu %}
     {% ifequal user object.user %}
         <li class="modify"><a href="{% url exercise_update object.id %}">{% trans "Modify" %}</a></li>
+        <li class="modify delete"><a href="{% url exercise_delete object.id %}">{% trans "Delete" %}</a></li>
+        <li class="modify delete"><a href="{% url exercise_detail_delete object.id "altitude" %}">{% trans "Delete altitude" %}</a></li>
     {% endifequal %}
 {% endblock %}
 

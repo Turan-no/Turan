@@ -1,33 +1,17 @@
 {% load i18n %}
-{% ifnotequal object.hikedetail_set.count 0 %}
-<h2>{% trans "Hike graph"%}</h2>
 <p style="float: right;" id="choices">{% trans "Show" %}:</p>
 <div id="tripdiv_legend{{object.id}}" style="width:100px;height:400px; float: right;"></div>
-<div id="tripdiv{{object.id}}" style="width:700px;height:400px;"></div>
-<br>
+<div id="tripdiv{{object.id}}" style="width:700px;height:400px; background: white;"></div>
+<p id="hoverdata">Mouse hovers at
+    (<span id="x">0</span>, <span id="y">0</span>). <span id="clickdata"></span></p>
+
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
-        var datasets = {
-        "speed": {
-            data: [{% for value in object.hikedetail_set.iterator %}[{{forloop.counter}}, {{value.speed}}]{% if not forloop.last %},{%endif %}{% endfor %}],
-            label: "{% trans "Speed" %}",
-        },
-        "hr": {
-        data: [{% for value in object.hikedetail_set.iterator %}[{{forloop.counter}}, {{value.hr}}]{% if not forloop.last %},{%endif %}{% endfor %}],
-        label: "{% trans "HR" %}",
-        lines: { fill: 0.2 },
-        yaxis: 2,
-        },
-        "altitude":{
-        data: [{% for value in object.hikedetail_set.iterator %}[{{forloop.counter}}, {{value.altitude}}]{% if not forloop.last %},{%endif %}{% endfor %}],
-        label: "{% trans "Altitude" %}",
-        lines: { fill: 0.3 },
-        },
-        };
-
+        var datasets = {{ datasets }};
         {% include "turan/common_graph.html" %}
+
+
 
 
 });
 </script>
-{% endifnotequal %}

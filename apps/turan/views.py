@@ -647,7 +647,7 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
             js += '[%s, %s],' % (distance, dval)
     return js
 
-def js_trip_series(details,  start=False, stop=False):
+def js_trip_series(details,  start=False, stop=False, time_xaxis=False):
 
     # The JS arrays
     js_strings = {
@@ -658,7 +658,7 @@ def js_trip_series(details,  start=False, stop=False):
             'hr': '',
         }
 
-    distance = 0
+    x = 0
     previous_time = False
     for i, d in enumerate(details):
         if start and start < i:
@@ -669,13 +669,19 @@ def js_trip_series(details,  start=False, stop=False):
             previous_time = d.time
         time = d.time - previous_time
         previous_time = d.time
-        distance += ((d.speed/3.6) * time.seconds)/1000
+        if not time_xaxis:
+            x += ((d.speed/3.6) * time.seconds)/1000
+        else:
+            x += float(time.seconds)/60
 
         for val in js_strings.keys():
-            dval = getattr(d, val)
-            if dval > 0: # skip zero values (makes prettier graph)
-                # TODO needs to select between distance and time and possibly sample
-                js_strings[val] += '[%s, %s],' % (distance, dval)
+            try:
+                dval = getattr(d, val)
+                if dval > 0: # skip zero values (makes prettier graph)
+                    # TODO needs to select between distance and time and possibly sample
+                    js_strings[val] += '[%s, %s],' % (x, dval)
+            except AttributeError: # not all formats support all values
+                pass
 
     t = loader.get_template('turan/js_datasets.js')
     c = Context(js_strings)
@@ -892,6 +898,7 @@ def exercise(request, object_id):
     details = object.otherexercisedetail_set.all()
     if details:
         zones = getzones(details)
+        datasets = js_trip_series(details, time_xaxis=True)
     return render_to_response('turan/otherexercise_detail.html', locals(), context_instance=RequestContext(request))
 
 def hike(request, object_id):
@@ -899,6 +906,7 @@ def hike(request, object_id):
     details = object.hikedetail_set.all()
     if details:
         zones = getzones(details)
+        datasets = js_trip_series(details)
     return render_to_response('turan/hike_detail.html', locals(), context_instance=RequestContext(request))
 
 def json_serializer(request, queryset, root_name = None, relations = (), extras = ()):
@@ -1065,4 +1073,18 @@ def turan_delete_object(request, model=None, post_delete_redirect='/turan/', obj
         return HttpResponseForbidden('Wat?')
 
     return delete_object(request, model, post_delete_redirect, object_id, login_required=login_required)
+
+def turan_delete_detailset_value(request, model, object_id, value=False):
+    ''' Delete value from exercise, like remove altitude from a spinning session '''
+
+
+    obj = lookup_object(model, object_id, None, 'slug')
+    if not obj.user == request.user:
+        return HttpResponseForbidden('Wat?')
+
+    for detail in obj.get_details().all():
+        setattr(detail, value, 0)
+        detail.save()
+
+    return HttpResponseRedirect(obj.get_absolute_url())
 
