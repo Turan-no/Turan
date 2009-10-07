@@ -28,6 +28,8 @@
                 },
                 xaxis: {
                     mode: null, // null or "time"
+                    transform: null, // null or f: number -> number to transform axis
+                    inverseTransform: null, // if transform is set, this should be the inverse function
                     min: null, // min. value to show, null means set automatically
                     max: null, // max. value to show, null means set automatically
                     autoscaleMargin: null, // margin in % to add if auto-setting min/max
@@ -132,8 +134,8 @@
         plot.getPlaceholder = function() { return placeholder; };
         plot.getCanvas = function() { return canvas; };
         plot.getPlotOffset = function() { return plotOffset; };
-        plot.width = function () { return plotWidth; }
-        plot.height = function () { return plotHeight; }
+        plot.width = function () { return plotWidth; };
+        plot.height = function () { return plotHeight; };
         plot.offset = function () {
             var o = eventHolder.offset();
             o.left += plotOffset.left;
@@ -149,7 +151,7 @@
         plot.pointOffset = function(point) {
             return { left: parseInt(axisSpecToRealAxis(point, "xaxis").p2c(+point.x) + plotOffset.left),
                      top: parseInt(axisSpecToRealAxis(point, "yaxis").p2c(+point.y) + plotOffset.top) };
-        }
+        };
         
 
         // public attributes
@@ -183,7 +185,7 @@
         function parseOptions(opts) {
             $.extend(true, options, opts);
             if (options.grid.borderColor == null)
-                options.grid.borderColor = options.grid.color
+                options.grid.borderColor = options.grid.color;
             // backwards compatibility, to be removed in future
             if (options.xaxis.noTicks && options.xaxis.ticks == null)
                 options.xaxis.ticks = options.xaxis.noTicks;
@@ -307,7 +309,7 @@
                 // turn on lines automatically in case nothing is set
                 if (s.lines.show == null) {
                     var v, show = true;
-                    for (var v in s)
+                    for (v in s)
                         if (s[v].show) {
                             show = false;
                             break;
@@ -331,8 +333,6 @@
             for (axis in axes) {
                 axes[axis].datamin = topSentry;
                 axes[axis].datamax = bottomSentry;
-                axes[axis].min = options[axis].min;
-                axes[axis].max = options[axis].max;
                 axes[axis].used = false;
             }
 
@@ -357,10 +357,10 @@
                 var data = s.data, format = s.datapoints.format;
 
                 if (!format) {
-                    format = []
+                    format = [];
                     // find out how to copy
-                    format.push({ x: true, number: true, required: true })
-                    format.push({ y: true, number: true, required: true })
+                    format.push({ x: true, number: true, required: true });
+                    format.push({ y: true, number: true, required: true });
 
                     if (s.bars.show)
                         format.push({ y: true, number: true, required: false, defaultValue: 0 });
@@ -397,15 +397,8 @@
                                 }
 
                                 if (val == null) {
-                                    if (f.required) {
-                                        // extract min/max info before we whack it
-                                        if (f.x)
-                                            updateAxis(s.xaxis, val, val)
-                                        if (f.y)
-                                            updateAxis(s.yaxis, val, val)
-                                        val = null;
+                                    if (f.required)
                                         nullify = true;
-                                    }
                                     
                                     if (f.defaultValue != null)
                                         val = f.defaultValue;
@@ -417,8 +410,18 @@
                     }
                     
                     if (nullify) {
-                        for (m = 0; m < ps; ++m)
+                        for (m = 0; m < ps; ++m) {
+                            val = points[k + m];
+                            if (val != null) {
+                                f = format[m];
+                                // extract min/max info
+                                if (f.x)
+                                    updateAxis(s.xaxis, val, val);
+                                if (f.y)
+                                    updateAxis(s.yaxis, val, val);
+                            }
                             points[k + m] = null;
+                        }
                     }
                     else {
                         // a little bit of line specific stuff that
@@ -442,6 +445,7 @@
                 }
             }
 
+            // give the hooks a chance to run
             for (i = 0; i < series.length; ++i) {
                 s = series[i];
                 
@@ -465,7 +469,7 @@
                         val = points[j + m];
                         f = format[m];
                         if (!f)
-                            continue
+                            continue;
                         
                         if (f.x) {
                             if (val < xmin)
@@ -559,27 +563,42 @@
         }
 
         function setupGrid() {
-            function setTransformationHelpers(axis) {
-                var s, m;
+            function setTransformationHelpers(axis, o) {
+                function identity(x) { return x; }
+                
+                var s, m, t = o.transform || identity,
+                    it = o.inverseTransform;
                     
                 // add transformation helpers
                 if (axis == axes.xaxis || axis == axes.x2axis) {
                     // precompute how much the axis is scaling a point
                     // in canvas space
-                    s = axis.scale = plotWidth / (axis.max - axis.min);
-                    m = axis.min;
-                    
+                    s = axis.scale = plotWidth / (t(axis.max) - t(axis.min));
+                    m = t(axis.min);
+
                     // data point to canvas coordinate
-                    axis.p2c = function (p) { return (p - m) * s; };
-                    // canvas coordinate to data point 
-                    axis.c2p = function (c) { return m + c / s; };
+                    if (t == identity) // slight optimization
+                        axis.p2c = function (p) { return (p - m) * s; };
+                    else
+                        axis.p2c = function (p) { return (t(p) - m) * s; };
+                    // canvas coordinate to data point
+                    if (!it)
+                        axis.c2p = function (c) { return m + c / s; };
+                    else
+                        axis.c2p = function (c) { return it(m + c / s); };
                 }
                 else {
-                    s = axis.scale = plotHeight / (axis.max - axis.min)
-                    m = axis.max;
+                    s = axis.scale = plotHeight / (t(axis.max) - t(axis.min));
+                    m = t(axis.max);
                     
-                    axis.p2c = function (p) { return (m - p) * s; };
-                    axis.c2p = function (p) { return m - p / s; };
+                    if (t == identity)
+                        axis.p2c = function (p) { return (m - p) * s; };
+                    else
+                        axis.p2c = function (p) { return (m - t(p)) * s; };
+                    if (!it)
+                        axis.c2p = function (c) { return m - c / s; };
+                    else
+                        axis.c2p = function (c) { return it(m - c / s); };
                 }
             }
 
@@ -684,7 +703,7 @@
             }
             
             for (axis in axes)
-                setTransformationHelpers(axes[axis]);
+                setTransformationHelpers(axes[axis], options[axis]);
 
             if (options.grid.show)
                 insertLabels();
@@ -1768,7 +1787,7 @@
                 lowestDistance = maxDistance * maxDistance + 1,
                 item = null, foundPoint = false, i, j;
 
-            for (var i = 0; i < series.length; ++i) {
+            for (i = 0; i < series.length; ++i) {
                 if (!seriesFilter(series[i]))
                     continue;
                 
