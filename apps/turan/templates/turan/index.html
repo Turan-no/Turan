@@ -119,11 +119,11 @@ $('#tabs ul li').each(function () {
     {%endfor %}
     </ul>
 
-    <img alt="{% trans "Other Exercices"%}" style="float:right" src="{{MEDIA_URL}}turan/hiker.png">
+    <img alt="{% trans "Other Exercises"%}" style="float:right" src="{{MEDIA_URL}}turan/hiker.png">
     <h1>
-        <a href="{% url hikes %}">{% trans "Other Exercices" %}</a>
+        <a href="{% url exercises %}">{% trans "Other Exercises" %}</a>
     </h1>
-    <ul class="exercies iconlist">
+    <ul class="exercises iconlist">
     {% for object in exercise_list %}
     <li class="{% cycle "even" "odd" %}">
     <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
