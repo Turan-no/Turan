@@ -20,10 +20,10 @@
 
 <div id="tabs">
     <ul>
-        <li class="selected" id="tabs-select-1">{% trans "Turan?" %}</li>
-        <li id="tabs-select-2">{% trans "Analyze" %}</li>
-        <li id="tabs-select-3">{% trans "Map" %}</li>
-        <li id="tabs-select-4">{% trans "Log" %}</li>
+        <li class="tab selected" id="tabs-select-1">{% trans "Turan?" %}</li>
+        <li class="tab" id="tabs-select-2">{% trans "Analyze" %}</li>
+        <li class="tab" id="tabs-select-3">{% trans "Map" %}</li>
+        <li class="tab" id="tabs-select-4">{% trans "Log" %}</li>
     </ul>
     <div id="tabs-1" class="visible">
         {% blocktrans %}
@@ -62,7 +62,7 @@
         $('#tabs ul li').removeClass('selected');
         $(this).addClass('selected');
     }
-$('#tabs ul li').each(function () {
+$('#tabs ul li.tab').each(function () {
         $(this).bind("click", selectTab);
         });
 </script>
