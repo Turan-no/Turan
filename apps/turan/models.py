@@ -521,6 +521,10 @@ def parse_sensordata(event, event_type):
         if parser.temperature:
             event.temperature = parser.temperature
 
+    if hasattr(parser, 'comment'): # Polar has this
+        if parser.comment: # comment isn't always set
+            event.comment = parser.comment
+
 
     if not event.route.distance:
         if parser.distance_sum:
