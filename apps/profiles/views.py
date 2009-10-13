@@ -20,6 +20,8 @@ from profiles.models import Profile, UserProfileDetail
 from profiles.forms import ProfileForm
 
 from avatar.templatetags.avatar_tags import avatar
+
+from itertools import groupby
 #from gravatar.templatetags.gravatar import gravatar as avatar
 
 if "notification" in settings.INSTALLED_APPS:
@@ -191,7 +193,11 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
         total_avg_speed = total_avg_speed/nr_trips
 
     total_kcals = max(0, other_user.cycletrip_set.aggregate(Sum('kcal'))['kcal__sum'])
+    total_kcals += max(0, other_user.otherexercise_set.aggregate(Sum('kcal'))['kcal__sum'])
+    total_kcals += max(0, other_user.hike_set.aggregate(Sum('kcal'))['kcal__sum'])
 
+
+    workouts = [] # all workouts for a user
 
     if cycleqs:
         days_since_start = (datetime.now() - datetime(cycleqs[0].date.year, cycleqs[0].date.month, cycleqs[0].date.day, 0, 0, 0)).days
@@ -200,5 +206,16 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
         km_per_day = total_distance / days_since_start
         kcal_per_day = total_kcals / days_since_start
         time_per_day = total_duration / days_since_start
+
+        workouts.extend(cycleqs)
+
+    hikeqs = other_user.hike_set.order_by('date')
+    workouts.extend(hikeqs)
+
+    otherexerciseqs = other_user.otherexercise_set.order_by('date')
+    workouts.extend(otherexerciseqs)
+
+
+    workouts_by_week =  dict( [(week, list(items)) for week, items in groupby(workouts, lambda workout: workout.date.strftime('%W'))])
     return render_to_response(template_name, locals(),
             context_instance=RequestContext(request))
