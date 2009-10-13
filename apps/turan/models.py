@@ -222,6 +222,7 @@ class Hike(Event):
     class Meta:
         verbose_name = _("Hike")
         verbose_name_plural = _("Hikes")
+        ordering = ('-date','-time')
 
 class ExerciseType(models.Model):
 
@@ -263,6 +264,7 @@ class OtherExercise(Event):
     class Meta:
         verbose_name = _("Other Exercise")
         verbose_name_plural = _("Other Exercises")
+        ordering = ('-date','-time')
 
 
 class CycleTripManager(models.Manager):
@@ -335,6 +337,7 @@ class CycleTrip(Event):
     class Meta:
         verbose_name = _("Cycle Trip")
         verbose_name_plural = _("Cycle Trips")
+        ordering = ('-date','-time')
 
 class ExerciseDetail(models.Model):
 
