@@ -486,10 +486,12 @@ def calendar_month(request, year, month, user_id=False):
     hikes = Hike.objects.select_related().order_by('date').filter(**lookup_kwargs)
     exercices = OtherExercise.objects.select_related().order_by('date').filter(**lookup_kwargs)
 
-    if user_id:
-        cycletrips = cycletrips.filter(user=user_id)
-        hikes = hikes.filter(user=user_id)
-        exercices = exercices.filter(user=user_id)
+    username = request.GET.get('username', '')
+    if username:
+        user = get_object_or_404(User, username=username)
+        cycletrips = cycletrips.filter(user=user)
+        hikes = hikes.filter(user=user)
+        exercices = exercices.filter(user=user)
 
     # Calculate the next month, if applicable.
     if allow_future:

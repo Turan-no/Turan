@@ -33,6 +33,8 @@ class HRMParser(object):
     distance_sum = 0
     kcal_sum = 0
 
+    comment = ''
+
 
     def parse_uploaded_file(self, f):
         f = f.readlines()
@@ -41,6 +43,7 @@ class HRMParser(object):
         laprow = 0
         hrstarted = False
         lapstarted = False
+        notestarted = False
         for line in f:
             if hrstarted:
                 line = line.strip()
@@ -89,6 +92,8 @@ class HRMParser(object):
                     splitted = line.split('\t')
                     self.temperature = float(splitted[3])/10
                     lapstarted = False # reset
+            elif notestarted:
+                self.comment = line.strip()
             elif line.startswith('[IntTimes]'): #IntTimes = GoodTimes ?
                 lapstarted = True
             elif line.startswith('Date'):
@@ -101,6 +106,8 @@ class HRMParser(object):
                 self.interval = int(line[9:10])
             elif line.startswith('[HRData]'):
                 hrstarted = True
+            elif line.startswith('[Note]'):
+                notestarted = True
             elif line.startswith('SMode'):
                 self.smode = line[6:].strip()
             elif line.startswith('Length'):

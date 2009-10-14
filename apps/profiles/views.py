@@ -174,7 +174,15 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     pulseqs = other_user.get_profile().userprofiledetail_set.filter(resting_hr__isnull=False).order_by('time')
     for hrtuple in pulseqs.values_list('time', 'resting_hr'):
         pulsedataseries += '[%s, %s],' % (datetime2jstimestamp(hrtuple[0]), hrtuple[1])
+    hikeqs = other_user.hike_set.order_by('date')
+
+    otherexerciseqs = other_user.otherexercise_set.order_by('date')
     cycleqs = other_user.cycletrip_set.order_by('date')
+    workouts = [] # all workouts for a user
+    workouts.extend(hikeqs)
+    workouts.extend(otherexerciseqs)
+    workouts.extend(cycleqs)
+
     for trip in cycleqs:
         tripdataseries += '[%s, %s],' % ( nr_trips, trip.route.distance)
 
@@ -196,24 +204,18 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     total_kcals += max(0, other_user.otherexercise_set.aggregate(Sum('kcal'))['kcal__sum'])
     total_kcals += max(0, other_user.hike_set.aggregate(Sum('kcal'))['kcal__sum'])
 
-
-    workouts = [] # all workouts for a user
+# TODO fix total_duration for hike and otherexercise
 
     if cycleqs:
         days_since_start = (datetime.now() - datetime(cycleqs[0].date.year, cycleqs[0].date.month, cycleqs[0].date.day, 0, 0, 0)).days
+# TODO check in exercise and hike for first
         if days_since_start == 0: # if they only have one trip and it was today
             days_since_start = 1
         km_per_day = total_distance / days_since_start
         kcal_per_day = total_kcals / days_since_start
         time_per_day = total_duration / days_since_start
 
-        workouts.extend(cycleqs)
 
-    hikeqs = other_user.hike_set.order_by('date')
-    workouts.extend(hikeqs)
-
-    otherexerciseqs = other_user.otherexercise_set.order_by('date')
-    workouts.extend(otherexerciseqs)
 
 
     workouts_by_week =  dict( [(week, list(items)) for week, items in groupby(workouts, lambda workout: workout.date.strftime('%W'))])
