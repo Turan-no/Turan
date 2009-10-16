@@ -91,7 +91,7 @@ class WorkoutCalendar(LocaleHTMLCalendar):
 
 
     def group_by_week(self, workouts):
-        field = lambda workout: int(workout.date.strftime('%W'))+0
+        field = lambda workout: int(workout.date.strftime('%W'))+1
         return dict(
             [(week, list(items)) for week, items in groupby(workouts, field)]
         )
