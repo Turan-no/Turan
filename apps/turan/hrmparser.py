@@ -91,9 +91,10 @@ class HRMParser(object):
                 if laprow == 4:
                     splitted = line.split('\t')
                     self.temperature = float(splitted[3])/10
-                    lapstarted = False # reset
+                    lapstarted = False # reset state
             elif notestarted:
-                self.comment = line.strip()
+                self.comment = line.strip().decode('ISO-8859-1')
+                notestarted = False # reset state
             elif line.startswith('[IntTimes]'): #IntTimes = GoodTimes ?
                 lapstarted = True
             elif line.startswith('Date'):
