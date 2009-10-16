@@ -30,7 +30,14 @@ class WorkoutCalendar(LocaleHTMLCalendar):
                     body.append('<li>')
                     body.append('<a href="%s">' % workout.get_absolute_url())
                     body.append(esc(workout))
-                    body.append('</a></li>')
+                    body.append('</a>')
+                    if workout.route.distance:
+                        body.append('<br>%s km' %workout.route.distance)
+                    body.append('<br>')
+                    body.append(esc(workout.kcal) + ' kcal')
+                    body.append('<br>')
+                    body.append(esc(workout.duration))
+                    body.append('</li>')
                 body.append('</ul>')
                 return self.day_cell(cssclass, '%d %s' % (day, ''.join(body)))
             return self.day_cell(cssclass, day)
@@ -70,9 +77,12 @@ class WorkoutCalendar(LocaleHTMLCalendar):
             week.update(self.sums)
         self.current_week += 1
         return '<tr>%(days)s<td> \
-                Kcal: %(kcal_sum)s\
-                Duration: %(duration_sum)s\
+                <br>\
                 Distance: %(distance_sum)s\
+                <br>\
+                Kcal: %(kcal_sum)s\
+                <br>\
+                Duration: %(duration_sum)s\
                 </td></tr>' % week
 
     def formatmonth(self, year, month):
