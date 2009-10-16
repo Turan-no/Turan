@@ -32,7 +32,13 @@
                 y2axis: { min: 80 },
                 xaxis: xaxisattrs,
                 legend: { container: $("#tripdiv_legend{{object.id}}") },
-                grid: { hoverable: true, clickable: true },
+                grid: { 
+                    hoverable: true, 
+                    clickable: true,
+//                    markings: [ { xaxis: { from: 0, to: 50 }, 
+//                                  y2axis: { from: 160, to: 180 }, 
+//                                  color: rgba(20%, 40%, 90%, 0.2) }, ],
+                },
                 selection: { mode: "x" }
             });
         }
