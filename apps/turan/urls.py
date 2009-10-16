@@ -26,7 +26,6 @@ urlpatterns = patterns('',
 
     url(r'^calendar/(?P<year>\d+)/(?P<month>\d+)/(?P<user_id>\d+)', calendar_month, name='calendar-date-user'),
     url(r'^calendar/(?P<year>\d+)/(?P<month>\d+)', calendar_month, name='calendar'),
-    url(r'^calendar/user/(?P<user_id>\d+)/$', calendar, name='calendar-user'),
     url(r'^calendar/$', calendar, name='calendar-index'),
 
     url(r'^json/comment/random/?$', json_serializer, { 'queryset': Comment.objects.order_by('?')[:10], 'relations': ('content_type',) }, name='json_comments'),

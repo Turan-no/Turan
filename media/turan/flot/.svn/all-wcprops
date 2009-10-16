@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 23
-/svn/!svn/ver/203/trunk
+/svn/!svn/ver/205/trunk
 END
 PLUGINS.txt
 K 25
@@ -37,7 +37,7 @@ API.txt
 K 25
 svn:wc:ra_dav:version-url
 V 31
-/svn/!svn/ver/202/trunk/API.txt
+/svn/!svn/ver/205/trunk/API.txt
 END
 jquery.flot.threshold.js
 K 25
@@ -55,7 +55,7 @@ NEWS.txt
 K 25
 svn:wc:ra_dav:version-url
 V 32
-/svn/!svn/ver/202/trunk/NEWS.txt
+/svn/!svn/ver/205/trunk/NEWS.txt
 END
 jquery.js
 K 25
@@ -79,7 +79,7 @@ jquery.flot.js
 K 25
 svn:wc:ra_dav:version-url
 V 38
-/svn/!svn/ver/203/trunk/jquery.flot.js
+/svn/!svn/ver/205/trunk/jquery.flot.js
 END
 jquery.flot.image.js
 K 25

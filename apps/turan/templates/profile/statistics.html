@@ -12,3 +12,14 @@
     <li><span class="label">{% trans "Avg time/day"%}:</span> {{ time_per_day|floatformat}} </li>
     <li><span class="label">{% trans "Total energy expenditure"%}:</span> {{ total_kcals }} {% trans "kcal" %} (= {{total_kcals|bodyfat|floatformat}} {% trans "kg" %} {% trans "fat" %} ) </li>
 </ul>
+<div id="workouts_by_week" style="width:400px;height:200px"></div>
+<script id="source" language="javascript" type="text/javascript">
+$(function () {
+    var d1 = { color: 2, data: [
+        {% for week, workouts in workouts_by_week %}
+         [{{ week }}, 0],
+         {% endfor %}
+        ], };
+    $.plot($("#workouts_by_week"), [d1]);
+});
+</script>
