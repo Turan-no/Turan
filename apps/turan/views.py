@@ -906,7 +906,7 @@ def hike(request, object_id):
     details = object.hikedetail_set.all()
     if details:
         zones = getzones(details)
-        datasets = js_trip_series(details)
+        datasets = js_trip_series(details, time_xaxis=True)
     return render_to_response('turan/hike_detail.html', locals(), context_instance=RequestContext(request))
 
 def json_serializer(request, queryset, root_name = None, relations = (), extras = ()):
