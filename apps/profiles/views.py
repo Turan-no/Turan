@@ -207,17 +207,18 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
 # TODO fix total_duration for hike and otherexercise
 
     if cycleqs:
-        days_since_start = (datetime.now() - datetime(cycleqs[0].date.year, cycleqs[0].date.month, cycleqs[0].date.day, 0, 0, 0)).days
+        if cycleqs[0].date:
+            days_since_start = (datetime.now() - datetime(cycleqs[0].date.year, cycleqs[0].date.month, cycleqs[0].date.day, 0, 0, 0)).days
 # TODO check in exercise and hike for first
-        if days_since_start == 0: # if they only have one trip and it was today
-            days_since_start = 1
-        km_per_day = total_distance / days_since_start
-        kcal_per_day = total_kcals / days_since_start
-        time_per_day = total_duration / days_since_start
+            if days_since_start == 0: # if they only have one trip and it was today
+                days_since_start = 1
+            km_per_day = total_distance / days_since_start
+            kcal_per_day = total_kcals / days_since_start
+            time_per_day = total_duration / days_since_start
 
 
 
-
+# TODO check for faulty date
     workouts_by_week =  dict( [(week, list(items)) for week, items in groupby(workouts, lambda workout: workout.date.strftime('%W'))])
     return render_to_response(template_name, locals(),
             context_instance=RequestContext(request))

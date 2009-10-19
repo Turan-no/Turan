@@ -1,3 +1,0 @@
-{% load i18n %}{% blocktrans with exercise.get_absolute_url as item_url %}  
-{{ sender }} has been busy! A new exercise was logged
-http://{{ current_site }}{{ item_url }}{% endblocktrans %}  
