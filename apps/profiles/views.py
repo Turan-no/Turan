@@ -154,6 +154,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     total_distance = 0
     total_avg_speed = 0
     nr_trips = 0
+    nr_hr_trips = 0
     longest_trip = 0
     avg_length = 0
     avg_duration = 0
@@ -163,6 +164,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     pulsedataseries = ""
     tripdataseries = ""
     avgspeeddataseries = ""
+	avghrdataseries = ""
     height = other_user.get_profile().height
     if height:
         height = float(other_user.get_profile().height)/100
@@ -197,8 +199,14 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
             avgspeeddataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed)
             total_avg_speed += trip.avg_speed
             nr_trips += 1
+		if trip.avg_hr:
+			avghrdataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_hr)
+			total_avg_hr += trip.avg_hr
+			nr_hr_trips += 1
     if total_avg_speed:
         total_avg_speed = total_avg_speed/nr_trips
+	if total_avg_hr:
+		total_avg_hr = total_avg_hr/nr_hr-trips
 
     total_kcals = max(0, other_user.cycletrip_set.aggregate(Sum('kcal'))['kcal__sum'])
     total_kcals += max(0, other_user.otherexercise_set.aggregate(Sum('kcal'))['kcal__sum'])
