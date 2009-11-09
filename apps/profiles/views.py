@@ -199,14 +199,14 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
             avgspeeddataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed)
             total_avg_speed += trip.avg_speed
             nr_trips += 1
-		if trip.avg_hr:
-			avghrdataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_hr)
-			total_avg_hr += trip.avg_hr
-			nr_hr_trips += 1
+        if trip.avg_hr:
+            avghrdataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_hr)
+            total_avg_hr += trip.avg_hr
+            nr_hr_trips += 1
     if total_avg_speed:
         total_avg_speed = total_avg_speed/nr_trips
-	if total_avg_hr:
-		total_avg_hr = total_avg_hr/nr_hr_trips
+    if total_avg_hr:
+        total_avg_hr = total_avg_hr/nr_hr_trips
 
     total_kcals = max(0, other_user.cycletrip_set.aggregate(Sum('kcal'))['kcal__sum'])
     total_kcals += max(0, other_user.otherexercise_set.aggregate(Sum('kcal'))['kcal__sum'])
