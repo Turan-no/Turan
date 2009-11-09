@@ -25,6 +25,8 @@
     <div id="tripdiv" style="width:300px;height:150px"></div>
     <h3>{% trans "Avg speed trend"%}</h2>
     <div id="avgspeeddiv" style="width:300px;height:150px"></div>
+    <h3>{% trans "Avg HR trend"%}</h2>
+    <div id="avghrdiv" style="width:300px;height:150px"></div>
     <h3>{% trans "BMI graph"%}</h2>
     <div id="bmidiv" style="width:300px;height:150px"></div>
     <h3>{% trans "Resting pulse graph"%}</h2>
@@ -48,6 +50,12 @@ $(function () {
     $.plot($("#avgspeeddiv"), [{
             color: 3,
             data: [{{avgspeeddataseries}}],
+            lines: { show: true },
+            //label: "km",
+        }], options );
+    $.plot($("#avghrdiv"), [{
+            color: 2,
+            data: [{{avghrdataseries}}],
             lines: { show: true },
             //label: "km",
         }], options );
