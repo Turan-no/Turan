@@ -186,7 +186,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     workouts.extend(hikeqs)
     workouts.extend(otherexerciseqs)
     workouts.extend(cycleqs)
-	workouts = sorted(workouts, key=lambda x: x.date)
+    workouts = sorted(workouts, key=lambda x: x.date)
 
     for trip in cycleqs:
         tripdataseries += '[%s, %s],' % ( nr_trips, trip.route.distance)
