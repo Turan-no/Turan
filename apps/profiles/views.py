@@ -153,6 +153,8 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     total_duration = timedelta()
     total_distance = 0
     total_avg_speed = 0
+    total_avg_hr = 0
+
     nr_trips = 0
     nr_hr_trips = 0
     longest_trip = 0
