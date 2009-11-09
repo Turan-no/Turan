@@ -164,7 +164,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     pulsedataseries = ""
     tripdataseries = ""
     avgspeeddataseries = ""
-	avghrdataseries = ""
+    avghrdataseries = ""
     height = other_user.get_profile().height
     if height:
         height = float(other_user.get_profile().height)/100
@@ -206,7 +206,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     if total_avg_speed:
         total_avg_speed = total_avg_speed/nr_trips
 	if total_avg_hr:
-		total_avg_hr = total_avg_hr/nr_hr-trips
+		total_avg_hr = total_avg_hr/nr_hr_trips
 
     total_kcals = max(0, other_user.cycletrip_set.aggregate(Sum('kcal'))['kcal__sum'])
     total_kcals += max(0, other_user.otherexercise_set.aggregate(Sum('kcal'))['kcal__sum'])
