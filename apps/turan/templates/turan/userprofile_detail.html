@@ -107,13 +107,11 @@ $(function () {
             lines: { show: true },
             //label: "km",
         }], options );
-	$.plot($("#avghrdiv"), [{
-			color: 2,
-			data: [{{avghrdataseries}}],
-			lines: { show: true },
-		}], options );
-
-
+    $.plot($("#avghrdiv"), [{
+            color: 2,
+            data: [{{avghrdataseries}}],
+            lines: { show: true },
+        }], options );
 });
 </script>
 {% endblock content %}
