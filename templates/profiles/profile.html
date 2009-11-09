@@ -37,6 +37,7 @@ $(function () {
     var d2 = { color: 4, data: [{{bmidataseries}}], }
     var bmiline = { color: 2, data: [{{bmiline}}], }
     var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0} }
+	var hroptions = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 140, max: 205 } }
     var d2options =  { yaxis: { min: 20, max: 45 }, xaxis: { mode: "time", timeformat: "%y/%m/%d" } }
     var d3options =  { xaxis: { mode: "time", timeformat: "%y/%m/%d" } }
     $.plot($("#pulsediv"), [d1], options);
@@ -58,7 +59,7 @@ $(function () {
             data: [{{avghrdataseries}}],
             lines: { show: true },
             //label: "km",
-        }], options );
+        }], hroptions );
 
 });
 </script>
