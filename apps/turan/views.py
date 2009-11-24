@@ -251,12 +251,16 @@ def events(request, group_slug=None, bridge=None, username=None):
 def route_detail(request, object_id):
     object = get_object_or_404(Route, pk=object_id)
     speeddataseries = ''
-    for trip in sorted(object.get_trips(), key=lambda x:x.date):
-        try:
-            time = trip.duration.seconds/60
-            speeddataseries +=  '[%s, %s],' % (datetime2jstimestamp(trip.date), time)
-        except AttributeError:
-            pass # stupid decimal value in trip duration!
+    try:
+        for trip in sorted(object.get_trips(), key=lambda x:x.date):
+            try:
+                time = trip.duration.seconds/60
+                speeddataseries +=  '[%s, %s],' % (datetime2jstimestamp(trip.date), time)
+            except AttributeError:
+                pass # stupid decimal value in trip duration!
+    except TypeError:
+        pass
+        # bug for trips without date
     return render_to_response('turan/route_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):
