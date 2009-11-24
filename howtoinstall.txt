@@ -1,16 +1,30 @@
-wget http://github.com/pinax/pinax/raw/master/scripts/pinax-boot.py
-python pinax-boot.py --development ./pinax-env
-source ./pinax-env/bin/activate
-cd pinax-env/
-vim src/pinax/requirements/libs.txt
+# wget http://github.com/pinax/pinax/raw/master/scripts/pinax-boot.py
+#
+cd ~
+wget http://downloads.pinaxproject.com/Pinax-0.7.1-bundle.tar.gz
+tar xvfz Pinax-0.7.1-bundle.tar.gz
+cd Pinax-0.7.1-bundle
+
+#vim src/pinax/requirements/libs.txt
+vim requirements/libs.txt
+
 
 Modify django 1.03 to django 1.1
 BeautifulSoup>=3.0.7a
 Django==1.1
 wadofstuff-django-serializers==1.0.0
 
+cd pinax-env/
+#python pinax-boot.py ../pinax-env
+python scripts/pinax-boot.py ../pinax-env
+source ../pinax-env/bin/activate
+cd ../pinax-env
+vim ./lib/python2.6/site-packages/requirements/libs.txt
+fikse libs som sagt over
 
-pip install --upgrade --requirement src/pinax/requirements/external_apps.txt
+pip install --upgrade --requirement ./lib/python2.6/site-packages/requirements/libs.txt 
+
+#pip install --upgrade --requirement src/pinax/requirements/external_apps.txt
 (pip install --upgrade django) ?
 
 # Remove old django (pinax uses 1.0.3 but this project requires 1.1)
