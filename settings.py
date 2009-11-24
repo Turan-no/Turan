@@ -65,6 +65,24 @@ MEDIA_ROOT = os.path.join(PROJECT_ROOT, "site_media")
 # Example: "http://media.lawrence.com"
 MEDIA_URL = '/site_media/'
 
+# Absolute path to the directory that holds static files like app media.
+# Example: "/home/media/media.lawrence.com/apps/"
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'static')
+
+# URL that handles the static files like app media.
+# Example: "http://media.lawrence.com"
+STATIC_URL = '/site_media/static/'
+
+# Additional directories which hold static files
+STATICFILES_DIRS = (
+    ('turansite', os.path.join(PROJECT_ROOT, 'media')),
+    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+)
+
+STATICFILES_EXTRA_MEDIA = (
+    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+    ('turansite', os.path.join(PROJECT_ROOT, 'media')),
+)
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
@@ -161,7 +179,7 @@ INSTALLED_APPS = (
     'wiki',
 #    'swaps',
     'timezones',
-    'app_plugins',
+#    'app_plugins',
     'voting',
     'voting_extras',
     'tagging',
@@ -274,10 +292,6 @@ WIKI_REQUIRES_LOGIN = True
 # following URL: https://developer.yahoo.com/wsregapp/
 # YAHOO_MAPS_API_KEY = ''
 
-STATICFILES_EXTRA_MEDIA = (
-    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
-    ('turansite', os.path.join(PROJECT_ROOT, 'media')),
-)
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:
