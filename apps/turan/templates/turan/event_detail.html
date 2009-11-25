@@ -11,6 +11,12 @@
     {% include "turan/maphead.html" %}
 {% endwith %}
 {% endblock %}
+
+{% block extramenu %}
+<div class="modify">
+<a name="fb_share" type="button" href="http://www.facebook.com/sharer.php">Share</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+</div>
+{% endblock %}
 {% block content %}
 {% if object.route.gpx_file %}
     <div class="mapcontainer"><div class="map" id="map"></div></div>

@@ -6,6 +6,7 @@
 {% trans "Cycle trip" %} {{ object }}
 {% endblock %}
 {% block extramenu %}
+{{ block.super }}
 {% ifequal user object.user %}
         <li class="modify"><a href="{% url trip_update object.id %}">{% trans "Modify" %}</a></li>
         <li class="modify delete"><a href="{% url trip_delete object.id %}">{% trans "Delete" %}</a></li>
