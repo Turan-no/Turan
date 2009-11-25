@@ -57,7 +57,7 @@ class Route(models.Model):
 
     objects = RouteManager()
 
-    def save(self):
+    def save(self, force_insert=False, force_update=False):
         # If we have gpx file set but not start_lat set, parse gpx and set start and end positions
         if self.gpx_file:
             # set coordinates for route if it doesn't exist
@@ -70,7 +70,7 @@ class Route(models.Model):
                     self.end_lat = g.end_lat
                 except:
                     pass
-        super(Route, self).save()
+        super(Route, self).save(force_insert, force_update)
         if self.gpx_file:
             # generate svg if it doesn't exist (after save, it uses id for filename)
             filename = 'svg/%s.svg' %self.id
