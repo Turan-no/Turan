@@ -1,6 +1,6 @@
 #!/bin/sh
 
-WORKON_HOME=/home/turan.lart.no/pinax-env
+WORKON_HOME=/home/turan.lart.no/
 PROJECT_ROOT=/home/turan.lart.no/pinax-env/turansite
 
 # activate virtual environment

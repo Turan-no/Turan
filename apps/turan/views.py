@@ -26,6 +26,8 @@ from django.views.decorators.cache import cache_page
 from django.utils.decorators import decorator_from_middleware
 from django.utils.datastructures import SortedDict
 from django.middleware.gzip import GZipMiddleware
+from django.utils.datastructures import SortedDict
+
 
 
 from tagging.models import Tag
