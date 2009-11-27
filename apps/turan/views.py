@@ -189,18 +189,23 @@ def trip_compare(request, event_type, trip1, trip2):
 
 class TripsFeed(Feed):
     title = "lart.no turan trips"
-    link = "https://lart.no/turan/"
+    link = "http://turan.lart.no/turan/"
     description = "Trips from lart.no/turan"
 
     def items(self):
-        return CycleTrip.objects.order_by('-date')[:20]
+        workouts = []
+        workouts.extend(OtherExercise.objects.order_by['-date'][:20])
+        workouts.extend(CycleTrip.objects.order_by['-date'][:20])
+        workouts.extend(Hike.objects.order_by['-date'][:20])
+        workouts = sorted(workouts, key=lambda x: x.date)
+        return workouts
 
     def item_author_name(self, obj):
         "Item author"
         return obj.user
 
     def item_link(self, obj):
-        return reverse('cycletrip', kwargs={ 'object_id': obj.id })
+        return  obj.get_absolute_url()
 
     def item_pubdate(self, obj):
         try:
@@ -208,10 +213,6 @@ class TripsFeed(Feed):
         except AttributeError:
             pass # Some trips just doesn't have time set
         return
-
-def logout_view(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('turanindex'))
 
 def events(request, group_slug=None, bridge=None, username=None):
     object_list = []
