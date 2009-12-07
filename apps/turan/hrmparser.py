@@ -37,14 +37,13 @@ class HRMParser(object):
 
 
     def parse_uploaded_file(self, f):
-        f = f.readlines()
 
         i = 0
         laprow = 0
         hrstarted = False
         lapstarted = False
         notestarted = False
-        for line in f:
+        for line in f.readlines():
             if hrstarted:
                 line = line.strip()
                 if line:
