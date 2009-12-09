@@ -38,6 +38,8 @@ class HRMParser(object):
 
     def parse_uploaded_file(self, f):
 
+        f.seek(0)
+
         i = 0
         laprow = 0
         hrstarted = False

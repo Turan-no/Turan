@@ -3,7 +3,7 @@ from django.http import Http404
 
 from datetime import datetime
 
-from models import CycleTrip, Route, Hike, OtherExercise
+from models import Route, Exercise
 
 from ical import ICalendarFeed
 
@@ -19,7 +19,7 @@ class ExerciseCalendar(ICalendarFeed):
         self.user = User.objects.get(username=username)
 
     def items(self):
-        return CycleTrip.objects.filter(user=self.user)
+        return Exercise.objects.filter(user=self.user)
 
     def item_uid(self, item):
         return str(item.id)

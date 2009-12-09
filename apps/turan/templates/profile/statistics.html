@@ -4,8 +4,7 @@
     <li><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
     <li><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
     <li><span class="label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>
-    <li><span class="label">{% trans "Total cycle trip count"%}:</span> {{ cycleqs.count}} {% trans "trips" %}</li>
-    <li><span class="label">{% trans "Total hike count"%}:</span> {{ hikeqs.count}} {% trans "trips" %}</li>
+    <li><span class="label">{% trans "Total exercise count"%}:</span> {{ exerciseqs.count}} {% trans "trips" %}</li>
     <li><span class="label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
     <li><span class="label">{% trans "Avg distance/day"%}:</span> {{ km_per_day|floatformat}} {% trans "km/d" %}</li>
     <li><span class="label">{% trans "Avg kcal/day"%}:</span> {{ kcal_per_day|floatformat}} {% trans "kcal/d" %}</li>

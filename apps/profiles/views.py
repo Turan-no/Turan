@@ -178,17 +178,10 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     pulseqs = other_user.get_profile().userprofiledetail_set.filter(resting_hr__isnull=False).order_by('time')
     for hrtuple in pulseqs.values_list('time', 'resting_hr'):
         pulsedataseries += '[%s, %s],' % (datetime2jstimestamp(hrtuple[0]), hrtuple[1])
-    hikeqs = other_user.hike_set.order_by('date')
 
-    otherexerciseqs = other_user.otherexercise_set.order_by('date')
-    cycleqs = other_user.cycletrip_set.order_by('date')
-    workouts = [] # all workouts for a user
-    workouts.extend(hikeqs)
-    workouts.extend(otherexerciseqs)
-    workouts.extend(cycleqs)
-    workouts = sorted(workouts, key=lambda x: x.date)
+    exerciseqs = other_user.exercise_set.order_by('date')
 
-    for trip in cycleqs:
+    for trip in exerciseqs:
         tripdataseries += '[%s, %s],' % ( nr_trips, trip.route.distance)
 
         if trip.route.distance > longest_trip:
@@ -205,7 +198,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     if total_avg_speed:
         total_avg_speed = total_avg_speed/nr_trips
 
-    for event in workouts:
+    for event in exerciseqs:
         if event.avg_hr:
             avghrdataseries += '[%s, %s],' % (datetime2jstimestamp(event.date), event.avg_hr)
             total_avg_hr += event.avg_hr
@@ -214,15 +207,14 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     if total_avg_hr:
         total_avg_hr = total_avg_hr/nr_hr_trips
 
-    total_kcals = max(0, other_user.cycletrip_set.aggregate(Sum('kcal'))['kcal__sum'])
-    total_kcals += max(0, other_user.otherexercise_set.aggregate(Sum('kcal'))['kcal__sum'])
-    total_kcals += max(0, other_user.hike_set.aggregate(Sum('kcal'))['kcal__sum'])
+    total_kcals = max(0, other_user.exercise_set.aggregate(Sum('kcal'))['kcal__sum'])
 
 # TODO fix total_duration for hike and otherexercise
+# Todo filter ?
 
-    if cycleqs:
-        if cycleqs[0].date:
-            days_since_start = (datetime.now() - datetime(cycleqs[0].date.year, cycleqs[0].date.month, cycleqs[0].date.day, 0, 0, 0)).days
+    for cycletrip in exerciseqs:
+        if exerciseqs[0].date:
+            days_since_start = (datetime.now() - datetime(exerciseqs[0].date.year, exerciseqs[0].date.month, exerciseqs[0].date.day, 0, 0, 0)).days
 # TODO check in exercise and hike for first
             if days_since_start == 0: # if they only have one trip and it was today
                 days_since_start = 1
@@ -233,6 +225,6 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
 
 
 # TODO check for faulty date
-    workouts_by_week =  dict( [(week, list(items)) for week, items in groupby(workouts, lambda workout: workout.date.strftime('%W'))])
+    workouts_by_week =  dict( [(week, list(items)) for week, items in groupby(exerciseqs, lambda workout: workout.date.strftime('%W'))])
     return render_to_response(template_name, locals(),
             context_instance=RequestContext(request))

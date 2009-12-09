@@ -54,102 +54,14 @@ def datetime2jstimestamp(obj):
     ''' Helper to generate js timestamp for usage in flot '''
     return mktime(obj.timetuple())*1000
 
-#def profile(request, object_id):
-#    ''' View for profile page for a user '''
-#
-#    object = get_object_or_404(UserProfile, pk=object_id)
-#
-#    weights = []
-#    wdates = []
-#
-#    total_duration = timedelta()
-#    total_distance = 0
-#    total_avg_speed = 0
-#    nr_trips = 0
-#    longest_trip = 0
-#    avg_length = 0
-#    avg_duration = 0
-#
-#
-#    hrs = []
-#    hrs_dates = []
-#
-#    height = float(object.height)/100
-#
-#    bmidataseries = ""
-#    bmiline = ''
-#    pulsedataseries = ""
-#    tripdataseries = ""
-#    avgspeeddataseries = ""
-#
-#    weightqs = UserProfileDetail.objects.filter(userprofile=object_id).filter(weight__isnull=False).order_by('time')
-#
-#    for wtuple in weightqs.values_list('time', 'weight'):
-#        bmidataseries += '[%s, %s],' % (datetime2jstimestamp(wtuple[0]), wtuple[1]/(height*height))
-#        bmiline += '[%s, 25],' %datetime2jstimestamp(wtuple[0])
-#
-#    pulseqs = UserProfileDetail.objects.filter(userprofile=object_id).filter(resting_hr__isnull=False).order_by('time')
-#    for hrtuple in pulseqs.values_list('time', 'resting_hr'):
-#        pulsedataseries += '[%s, %s],' % (datetime2jstimestamp(hrtuple[0]), hrtuple[1])
-#    pulsedataseries = pulsedataseries.rstrip(',')
-#
-#    hikeqs = Hike.objects.filter(user=object.user).order_by('date')
-#    for trip in hikeqs:
-#        if trip.route.distance > longest_trip:
-#            longest_trip = trip.route.distance
-#        if trip.duration:
-#            total_duration += trip.duration
-#        total_distance += trip.route.distance
-#
-#    cycleqs = CycleTrip.objects.filter(user=object.user).order_by('date')
-#    for trip in cycleqs:
-#        tripdataseries += '[%s, %s],' % ( nr_trips, trip.route.distance)
-#
-#        if trip.route.distance > longest_trip:
-#            longest_trip = trip.route.distance
-#
-#        if trip.duration:
-#            total_duration += trip.duration
-#        total_distance += trip.route.distance
-#        if trip.avg_speed:
-#            # only increase counter if trip has speed
-#            avgspeeddataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed)
-#            total_avg_speed += trip.avg_speed
-#            nr_trips += 1
-#    if total_avg_speed:
-#        total_avg_speed = total_avg_speed/nr_trips
-#
-#    total_kcals = 0
-#    try:
-#        total_kcals += CycleTrip.objects.filter(user=object.user).aggregate(Sum('kcal'))['kcal__sum']
-#    except TypeError:
-#        pass
-#    try:
-#        total_kcals += Hike.objects.filter(user=object.user).aggregate(Sum('kcal'))['kcal__sum']
-#    except TypeError:
-#        pass
-#
-#    #avg_speed_dict = CycleTrip.objects.filter(user=object.user).aggregate(Avg('avg_speed'), Max('avg_speed'), Min('avg_speed'), Variance('avg_speed'), StdDev('avg_speed'))
-#    #hr_dict = CycleTrip.objects.filter(user=object.user).aggregate(Avg('avg_hr'), Max('avg_hr'), Min('avg_hr'), Variance('avg_hr'), StdDev('avg_hr'))
-#    #cadence_dict = CycleTrip.objects.filter(user=object.user).aggregate(Avg('avg_cadence'), Max('avg_cadence'), Min('avg_cadence'), Variance('avg_cadence'), StdDev('avg_cadence'))
-#    #duration_dict = CycleTrip.objects.filter(user=object.user).aggregate(Avg('duration'), Max('duration'), Min('duration'), Variance('duration'), StdDev('duration'))
-#    #distance_dict = CycleTrip.objects.filter(user=object.user).aggregate(Avg('route__distance'), Max('route__distance'), Min('route__distance'), Variance('route__distance'), StdDev('route__distance'))
-#
-#
-#
-#    return render_to_response('turan/userprofile_detail.html', locals(), context_instance=RequestContext(request))
-
-
 def index(request):
     ''' Index view for Turan '''
 
-    cycletrip_list = CycleTrip.objects.all().order_by('-date', '-time')[:5]
-    hike_list = Hike.objects.all().order_by('-date', '-time')[:5]
-    exercise_list = OtherExercise.objects.all().order_by('-date', '-time')[:15]
+    exercise_list = Exercise.objects.all()[:15]
     comment_list = Comment.objects.order_by('-submit_date', '-time')[:5]
 
     route_list = Route.objects.all()
-    route_list = sorted(route_list, key=lambda x: -x.cycletrip_set.count()-x.hike_set.count())[:15]
+    route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
 
     tag_list = Tag.objects.all()
 
@@ -157,19 +69,8 @@ def index(request):
 
 def trip_compare(request, event_type, trip1, trip2):
 
-    if event_type == 'cycletrip' or event_type == 'trip':
-        trip1 = get_object_or_404(CycleTrip, pk=trip1)
-        trip2 = get_object_or_404(CycleTrip, pk=trip2)
-        if event_type == 'trip':
-            event_type = 'cycletrip'
-    elif event_type == 'hike':
-        trip1 = get_object_or_404(Hike, pk=trip1)
-        trip2 = get_object_or_404(Hike, pk=trip2)
-    elif event_type == 'exercise':
-        trip1 = get_object_or_404(OtherExercise, pk=trip1)
-        trip2 = get_object_or_404(OtherExercise, pk=trip2)
-    else:
-        return HttpResponse('unsupported type')
+    trip1 = get_object_or_404(Exercise, pk=trip1)
+    trip2 = get_object_or_404(Exercise, pk=trip2)
 
     #t1_speed = tripdetail_js(event_type, trip1.id, 'speed')
     #t2_speed = tripdetail_js(event_type, trip2.id, 'speed')
@@ -193,12 +94,7 @@ class TripsFeed(Feed):
     description = "Trips from lart.no/turan"
 
     def items(self):
-        workouts = []
-        workouts.extend(OtherExercise.objects.order_by['-date'][:20])
-        workouts.extend(CycleTrip.objects.order_by['-date'][:20])
-        workouts.extend(Hike.objects.order_by['-date'][:20])
-        workouts = sorted(workouts, key=lambda x: x.date)
-        return workouts
+        return Exercise.objects.order_by('-date')[:20]
 
     def item_author_name(self, obj):
         "Item author"
@@ -226,26 +122,14 @@ def events(request, group_slug=None, bridge=None, username=None):
         group = None
 
     if group:
-        cycleqs = group.content_objects(CycleTrip)
-        hikeqs = group.content_objects(Hike)
-        exerciseqs = group.content_objects(OtherExercise)
+        exerciseqs = group.content_objects(Exercise)
     else:
-        cycleqs = CycleTrip.objects.select_related().filter(date__isnull=False)
-        hikeqs = Hike.objects.select_related().filter(date__isnull=False)
-        exerciseqs = OtherExercise.objects.select_related().filter(date__isnull=False)
+        exerciseqs = Exercise.objects.select_related().filter(date__isnull=False)
         if username:
             user = get_object_or_404(User, username=username)
-            cycleqs = cycleqs.filter(user=user)
-            hikeqs = hikeqs.filter(user=user)
             exerciseqs = exerciseqs.filter(user=user)
 
-
-    object_list.extend(cycleqs)
-    object_list.extend(hikeqs)
-    object_list.extend(exerciseqs)
-
-    object_list = sorted(object_list, key=lambda x: x.date)
-    object_list.reverse()
+    object_list = exerciseqs
 
     return render_to_response('turan/event_list.html', locals(), context_instance=RequestContext(request))
 
@@ -489,15 +373,11 @@ def calendar_month(request, year, month, user_id=False):
         lookup_kwargs['%s__lte' % date_field] = now
 
 
-    cycletrips = CycleTrip.objects.select_related().order_by('date').filter(**lookup_kwargs)
-    hikes = Hike.objects.select_related().order_by('date').filter(**lookup_kwargs)
-    exercices = OtherExercise.objects.select_related().order_by('date').filter(**lookup_kwargs)
+    exercices = Exercise.objects.select_related().order_by('date').filter(**lookup_kwargs)
 
     username = request.GET.get('username', '')
     if username:
         user = get_object_or_404(User, username=username)
-        cycletrips = cycletrips.filter(user=user)
-        hikes = hikes.filter(user=user)
         exercices = exercices.filter(user=user)
 
     # Calculate the next month, if applicable.
@@ -515,16 +395,11 @@ def calendar_month(request, year, month, user_id=False):
         previous_month = first_day.replace(month=first_day.month-1)
 
     months = []
-    workouts = []
-    workouts.extend(cycletrips)
-    workouts.extend(hikes)
-    workouts.extend(exercices)
-    workouts = sorted(workouts, key=lambda x: x.date)
 
    # FIXME django locale
     # stupid calendar needs int
     year, month = int(year), int(month)
-    cal = WorkoutCalendar(workouts, locale.getdefaultlocale()).formatmonth(year, month)
+    cal = WorkoutCalendar(exercices, locale.getdefaultlocale()).formatmonth(year, month)
     return render_to_response('turan/calendar.html',
             {'calendar': mark_safe(cal),
              'months': months,
@@ -539,12 +414,7 @@ def geojson(request, event_type, object_id):
     ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
     give each line a zone property so it can be styled differently'''
 
-    if event_type == 'cycletrip':
-        qs = CycleTripDetail.objects.filter(trip=object_id)
-    elif event_type == 'hike':
-        qs = HikeDetail.objects.filter(trip=object_id)
-    elif event_type == 'exercise':
-        qs = OtherExerciseDetail.objects.filter(trip=object_id)
+    qs = ExerciseDetail.objects.filter(exercise=object_id)
 
     qs = qs.exclude(lon=0).exclude(lat=0)
     if qs.count() == 0:
@@ -629,12 +499,8 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
         start = int(start)
     if stop:
         stop = int(stop)
-    if event_type == 'cycletrip':
-        qs = CycleTripDetail.objects.filter(trip=object_id)
-    elif event_type == 'hike':
-        qs = HikeDetail.objects.filter(trip=object_id)
-    elif event_type == 'exercise':
-        qs = OtherExerciseDetail.objects.filter(trip=object_id)
+
+    qs = ExerciseDetail.objects.filter(exercise=object_id)
 
     distance = 0
     previous_time = False
@@ -654,7 +520,7 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
             js += '[%s, %s],' % (distance, dval)
     return js
 
-def js_trip_series(details,  start=False, stop=False, time_xaxis=False):
+def js_trip_series(details,  start=False, stop=False, time_xaxis=True):
 
     # The JS arrays
     js_strings = {
@@ -736,7 +602,7 @@ def getinclinesummary(values):
 def getzones(values):
     ''' Calculate time in different sport zones given trip details '''
 
-    max_hr = values[0].trip.user.get_profile().max_hr
+    max_hr = values[0].exercise.user.get_profile().max_hr
     if not max_hr:
         return []
 
@@ -879,11 +745,11 @@ def calcpower(userweight, eqweight, gradient, speed,
     windforce = 0.5**2 * speed**2  * airdensity * frontarea
     return (gforce + frictionforce + windforce)*speed
 
-def cycletrip(request, object_id):
-    ''' View for cycletrip detail '''
+def exercise(request, object_id):
+    ''' View for exercise detail '''
 
-    object = get_object_or_404(CycleTrip, pk=object_id)
-    details = object.cycletripdetail_set.all()
+    object = get_object_or_404(Exercise, pk=object_id)
+    details = object.exercisedetail_set.all()
     if details:
         #userweight = object.user.userprofile_set.all()[0].weight
         userweight = object.user.get_profile().weight
@@ -899,22 +765,6 @@ def cycletrip(request, object_id):
         inclinesummary = getinclinesummary(details)
     datasets = js_trip_series(details)
     return render_to_response('turan/cycletrip_detail.html', locals(), context_instance=RequestContext(request))
-
-def exercise(request, object_id):
-    object = get_object_or_404(OtherExercise, pk=object_id)
-    details = object.otherexercisedetail_set.all()
-    if details:
-        zones = getzones(details)
-        datasets = js_trip_series(details, time_xaxis=True)
-    return render_to_response('turan/otherexercise_detail.html', locals(), context_instance=RequestContext(request))
-
-def hike(request, object_id):
-    object = get_object_or_404(Hike, pk=object_id)
-    details = object.hikedetail_set.all()
-    if details:
-        zones = getzones(details)
-        datasets = js_trip_series(details, time_xaxis=True)
-    return render_to_response('turan/hike_detail.html', locals(), context_instance=RequestContext(request))
 
 def json_serializer(request, queryset, root_name = None, relations = (), extras = ()):
     if root_name == None:
