@@ -11,7 +11,12 @@
         <ul>
     {% for trip in exerciseqs reversed %}
         <li>
-            <a href="{{ trip.get_absolute_url }}">{{ trip }}</a>, {{ trip.route.distance|floatformat}} km, {{ trip.date|naturalday }}
+        <a href="{{ trip.get_absolute_url }}">{{ trip.exercise_type }} {{ trip }}</a> 
+        {% if trip.route.distance %}
+        {{ trip.route.distance|floatformat}} km
+        {%endif%}
+        {{ trip.duration }}
+        {{ trip.date|naturalday }}
         </li>
     {% endfor %}
         </ul>
