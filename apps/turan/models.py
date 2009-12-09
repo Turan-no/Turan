@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday
 from django.core.urlresolvers import reverse
@@ -154,10 +155,15 @@ class ExerciseType(models.Model):
     name = models.CharField(max_length=40)
 
     def __unicode__(self):
-        return self.name
+        return ugettext(self.name)
 
     def __repr__(self):
         return unicode(self.type).lower()
+
+    class Meta:
+        verbose_name = _("Exercise Type")
+        verbose_name_plural = _("Exercise Types")
+        ordering = ('name',)
 
 class Exercise(models.Model):
 
@@ -230,6 +236,10 @@ class Exercise(models.Model):
         name = _('Unnamed trip')
         if self.route.name:
             name = self.route.name
+# FIXME 
+            if name == '/dev/null':
+                name = ''
+
         return u'%s' %(name)
     
 class ExerciseDetail(models.Model):
