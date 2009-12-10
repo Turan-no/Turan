@@ -4,58 +4,25 @@
 {% load threadedcommentstags %}
 
 
-{% if other_user.cycletrip_set.all %}
-<h2>{% trans "Cycle Trips" %}</h2>
-<a href="{% url cycletrips %}?username={{other_user.username}}">{% trans "Show all" %}</a>
+{% if exerciseqs.count %}
+<h2>{% trans "Exercises" %}</h2>
+<a href="{% url events %}?username={{other_user.username}}">{% trans "Show all" %}</a>
     <div class="gg">
         <ul>
-    {% for trip in other_user.cycletrip_set.select_related.all reversed %}
+    {% for trip in exerciseqs reversed %}
         <li>
-            <a href="{{ trip.get_absolute_url }}">{{ trip }}</a>, {{ trip.route.distance|floatformat}} km, {{ trip.date|naturalday }}
+        <a href="{{ trip.get_absolute_url }}">{{ trip.exercise_type }} {{ trip }}</a> 
+        {% if trip.route.distance %}
+        {{ trip.route.distance|floatformat}} km
+        {%endif%}
+        {{ trip.duration }}
+        {{ trip.date|naturalday }}
         </li>
     {% endfor %}
         </ul>
     </div>
 {% else %}
 {% comment %}
-   {% trans "No cycle trips added yet." %}
-{% endcomment %}
-{% endif %}
-
-
-{% if other_user.hike_set.select_related.all %}
-<h2>{% trans "Hikes" %}</h2>
-<a href="{% url hikes %}?username={{other_user.username}}">{% trans "Show all" %}</a>
-    <div class="gg">
-        <ul>
-    {% for trip in other_user.hike_set.all reversed %}
-        <li>
-        <a href="{{ trip.get_absolute_url }}">{{ trip }}</a>, {{ trip.route.distance|floatformat}} km, {{ trip.date|naturalday }}
-        </li>
-    {% endfor %}
-        </ul>
-    </div>
-{% else %}
-{% comment %}
-   {% trans "No hikes added yet." %}
-{% endcomment %}
-{% endif %}
-
-
-{% if other_user.otherexercise_set.all %}
-<h2>{% trans "Other Exercises" %}</h2>
-<a href="{% url exercises %}?username={{other_user.username}}">{% trans "Show all" %}</a>
-    <div class="gg">
-        <ul>
-    {% for trip in other_user.otherexercise_set.select_related.all reversed %}
-        <li>
-            <a href="{{ trip.get_absolute_url }}">{{ trip }}</a>, {{ trip.date|naturalday }}
-        </li>
-    {% endfor %}
-        </ul>
-    </div>
-{% else %}
-{% comment %}
-   {% trans "No other exercises added yet." %}
+   {% trans "No exercises added yet." %}
 {% endcomment %}
 {% endif %}

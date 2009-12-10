@@ -7,7 +7,7 @@ from photos.models import Image
 from bookmarks.models import BookmarkInstance
 # from tribes.models import Tribe
 # from tribes.models import Topic as TribeTopic
-from turan.models import Route, CycleTrip, OtherExercise, Hike
+from turan.models import Route, Exercise
 
 from wiki.models import Article as WikiArticle
 
@@ -28,7 +28,7 @@ def tags(request, tag, template_name='tags/index.html'):
 
     route_tags = TaggedItem.objects.get_by_model(Route, tag)
 
-    cycletrip_tags = TaggedItem.objects.get_by_model(CycleTrip, tag)
+    exercise_tags = TaggedItem.objects.get_by_model(Exercise, tag)
     
     return render_to_response(template_name, locals(),
 #{

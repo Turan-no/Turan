@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday
 from django.core.urlresolvers import reverse
@@ -107,10 +108,7 @@ class Route(models.Model):
         ordering = ('-created','name')
 
     def get_trips(self):
-        trip_list = []
-        trip_list.extend(self.cycletrip_set.all())
-        trip_list.extend(self.hike_set.all())
-        trip_list.extend(self.otherexercise_set.all())
+        trip_list = self.exercise_set.all()
         try:
             trip_list = sorted(trip_list, key=lambda x: x.duration)
         except TypeError, e:
@@ -152,10 +150,25 @@ class Route(models.Model):
 #    class Meta:
 #        verbose_name = _("Team Membership")
 #        verbose_name_plural = _("Team Memberships")
+class ExerciseType(models.Model):
 
-class Event(models.Model):
+    name = models.CharField(max_length=40)
+
+    def __unicode__(self):
+        return ugettext(self.name)
+
+    def __repr__(self):
+        return unicode(self.type).lower()
+
+    class Meta:
+        verbose_name = _("Exercise Type")
+        verbose_name_plural = _("Exercise Types")
+        ordering = ('name',)
+
+class Exercise(models.Model):
 
     user = models.ForeignKey(User)
+    exercise_type = models.ForeignKey(ExerciseType)
     route = models.ForeignKey(Route, help_text=_("Search existing routes"))
     duration = DurationField(blank=True, default=0, help_text='18h 30min 23s 10ms 150mis')
     date = models.DateField(blank=True, null=True, help_text=_("year-mo-dy"))
@@ -164,11 +177,20 @@ class Event(models.Model):
     comment = models.TextField(blank=True)
     url = models.URLField(blank=True)
 
+    avg_speed = models.FloatField(blank=True, null=True) #kmt
+    avg_cadence = models.IntegerField(blank=True, null=True) # rpm
+    avg_power = models.IntegerField(blank=True, null=True) # W
+
+    max_speed = models.FloatField(blank=True, null=True) #kmt
+    max_cadence = models.IntegerField(blank=True, null=True) # rpm
+    max_power = models.IntegerField(blank=True, null=True) # W
+
     avg_hr = models.IntegerField(blank=True, null=True) # bpm 
     max_hr = models.IntegerField(blank=True, null=True) # bpm 
     
     kcal = models.IntegerField(blank=True, default=0, help_text=_('Only needed for Polar products'))
 
+    temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.tcx, .hrm, .gmd)'))
 
     object_id = models.IntegerField(null=True)
@@ -177,94 +199,67 @@ class Event(models.Model):
 
     tags = TagField(help_text='f.eks. sol regn uhell punktering')
 
-    temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
+    #objects = models.Manager() # default manager
+
+    #testm = CycleTripManager()
+#    objects = CycleTripManager()
+
+    def get_details(self):
+        return self.exercisedetail_set
+
+    def save(self):
+        ''' if sensor_file is set and children count is 0, parser sensor
+        file and create children '''
+        super(Exercise, self).save() # sensor parser needs id
+        if self.sensor_file:
+            parse_sensordata(self)
+            create_gpx_from_details(self)
+
+        super(Exercise, self).save(force_update=True)
+
+    def get_absolute_url(self):
+        return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + slugify(self.route.name)
+
+    def get_geojson_url(self):
+        return reverse('geojson', kwargs={'event_type': 'cycletrip', 'object_id': self.id})
 
 
+    def icon(self):
+        return '<img alt="Cyclist" src="/site_media/turan/cyclist.png">'
+
+    class Meta:
+        verbose_name = _("Exercise")
+        verbose_name_plural = _("Exercises")
+        ordering = ('-date','-time')
 
     def __unicode__(self):
         name = _('Unnamed trip')
         if self.route.name:
             name = self.route.name
+# FIXME 
+            if name == '/dev/null':
+                name = ''
+
         return u'%s' %(name)
     
-    class Meta:
-        abstract = True
-        ordering = ('-date','-time')
+class ExerciseDetail(models.Model):
 
+    exercise = models.ForeignKey(Exercise)
+    time = models.DateTimeField()
+    speed = models.FloatField(blank=True, null=True)
+    hr = models.IntegerField(blank=True, null=True)
+    altitude = models.IntegerField(blank=True, null=True)
+    lat = models.FloatField(blank=True, null=True)
+    lon = models.FloatField(blank=True, null=True)
+    cadence = models.IntegerField(blank=True, null=True)
+    power = models.IntegerField(blank=True, null=True)
 
-class Hike(Event):
-
-    avg_speed = models.FloatField(blank=True, null=True) #kmt
-    max_speed = models.FloatField(blank=True, null=True) #kmt
-
-    def get_details(self):
-        return self.hikedetail_set
-
-    def get_absolute_url(self):
-        return reverse('hike', kwargs={ 'object_id': self.id }) + '/' + slugify(self.route.name)
-
-    def get_geojson_url(self):
-        return reverse('geojson', kwargs={'event_type': 'hike', 'object_id': self.id})
-
-    def icon(self):
-        return '<img alt="Hiker" src="/site_media/turan/hiker.png">'
-
-    def save(self):
-        ''' if sensor_file is set and children count is 0, parser sensor
-        file and create children '''
-        super(Hike, self).save() # sensor parser needs id
-        if self.sensor_file:
-            parse_sensordata(self, 'hike')
-            create_gpx_from_details(self)
-
-        super(Hike, self).save(force_update=True)
+    def get_relative_time(self):
+        start_time = datetime(self.time.year, self.time.month, self.time.day, self.trip.time.hour, self.trip.time.minute, self.trip.time.second)
+        return self.time - start_time
 
     class Meta:
-        verbose_name = _("Hike")
-        verbose_name_plural = _("Hikes")
-        ordering = ('-date','-time')
-
-class ExerciseType(models.Model):
-
-    name = models.CharField(max_length=40)
-
-    def __unicode__(self):
-        return self.name
-
-    def __repr__(self):
-        return unicode(self.type).lower()
-
-class OtherExercise(Event):
-
-    exercise_type = models.ForeignKey(ExerciseType)
-
-    def get_details(self):
-        return self.otherexercisedetail_set
-
-    def save(self):
-        ''' if sensor_file is set and children count is 0, parser sensor
-        file and create children '''
-        super(OtherExercise, self).save() # sensor parser needs id
-        if self.sensor_file:
-            parse_sensordata(self, 'exercise')
-        super(OtherExercise, self).save(force_update=True)
-
-    def __unicode__(self):
-        name = _('Other Exercise')
-        if self.exercise_type:
-            name = self.exercise_type
-        return u'%s' %(name)
-
-    def get_absolute_url(self):
-        return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + slugify(self.exercise_type)
-
-    def icon(self):
-        return '<img alt="Hiker" src="/site_media/turan/hiker.png">'
-
-    class Meta:
-        verbose_name = _("Other Exercise")
-        verbose_name_plural = _("Other Exercises")
-        ordering = ('-date','-time')
+        ordering = ('time',)
 
 
 class CycleTripManager(models.Manager):
@@ -296,79 +291,7 @@ def create_gpx_from_details(trip):
             # Save the Route (because of triggers for pos setting and such)
             trip.route.save()
 
-class CycleTrip(Event):
 
-    avg_speed = models.FloatField(blank=True, null=True) #kmt
-    avg_cadence = models.IntegerField(blank=True, null=True) # rpm
-    avg_power = models.IntegerField(blank=True, null=True) # W
-
-    max_speed = models.FloatField(blank=True, null=True) #kmt
-    max_cadence = models.IntegerField(blank=True, null=True) # rpm
-    max_power = models.IntegerField(blank=True, null=True) # W
-
-    #objects = models.Manager() # default manager
-
-    #testm = CycleTripManager()
-    objects = CycleTripManager()
-
-    def get_details(self):
-        return self.cycletripdetail_set
-
-    def save(self):
-        ''' if sensor_file is set and children count is 0, parser sensor
-        file and create children '''
-        super(CycleTrip, self).save() # sensor parser needs id
-        if self.sensor_file:
-            parse_sensordata(self, 'cycletrip')
-            create_gpx_from_details(self)
-
-        super(CycleTrip, self).save(force_update=True)
-
-    def get_absolute_url(self):
-        return reverse('cycletrip', kwargs={ 'object_id': self.id }) + '/' + slugify(self.route.name)
-
-    def get_geojson_url(self):
-        return reverse('geojson', kwargs={'event_type': 'cycletrip', 'object_id': self.id})
-
-
-    def icon(self):
-        return '<img alt="Cyclist" src="/site_media/turan/cyclist.png">'
-
-    class Meta:
-        verbose_name = _("Cycle Trip")
-        verbose_name_plural = _("Cycle Trips")
-        ordering = ('-date','-time')
-
-class ExerciseDetail(models.Model):
-
-    time = models.DateTimeField()
-    speed = models.FloatField(blank=True, null=True)
-    hr = models.IntegerField(blank=True, null=True)
-    altitude = models.IntegerField(blank=True, null=True)
-    lat = models.FloatField(blank=True, null=True)
-    lon = models.FloatField(blank=True, null=True)
-
-
-    class Meta:
-        abstract = True
-        ordering = ('time',)
-
-class CycleTripDetail(ExerciseDetail):
-    trip = models.ForeignKey(CycleTrip)
-    cadence = models.IntegerField(blank=True, null=True)
-    power = models.IntegerField(blank=True, null=True)
-
-    def get_relative_time(self):
-        start_time = datetime(self.time.year, self.time.month, self.time.day, self.trip.time.hour, self.trip.time.minute, self.trip.time.second)
-        return self.time - start_time
-
-class HikeDetail(ExerciseDetail):
-    trip = models.ForeignKey(Hike)
-
-class OtherExerciseDetail(ExerciseDetail):
-    trip = models.ForeignKey(OtherExercise)
-    cadence = models.IntegerField(blank=True, null=True)
-    power = models.IntegerField(blank=True, null=True)
 
 #class UserProfile(models.Model):
 #    user = models.ForeignKey(User, unique=True)
@@ -435,7 +358,7 @@ class Location(models.Model):
         verbose_name_plural = _("Locations")
 
 
-def parse_sensordata(event, event_type):
+def parse_sensordata(event):
     ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
 
 
@@ -466,14 +389,9 @@ def parse_sensordata(event, event_type):
         gpxvalues = GPXParser(event.route.gpx_file.file).entries
 
     for i, val in enumerate(values):
-        if event_type == 'hike':
-            d = HikeDetail()
-        elif event_type == 'cycletrip':
-            d = CycleTripDetail()
-        elif event_type == 'exercise':
-            d = OtherExerciseDetail()
+        d = ExerciseDetail()
 
-        d.trip_id = event.id
+        d.exercise_id = event.id
         d.time = val.time
         d.hr = val.hr
         d.altitude = val.altitude

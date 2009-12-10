@@ -1,5 +1,5 @@
 from django import forms
-from models import Route, CycleTrip, Hike, OtherExercise
+from models import Route, Exercise
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
@@ -76,12 +76,12 @@ class ForeignKeySearchInput(forms.HiddenInput):
             'route_create': reverse('route_create'),
         }
 
-class EventForm(forms.ModelForm):
+class ExerciseForm(forms.ModelForm):
     route = forms.CharField(widget=ForeignKeySearchInput('Route'))#, 'turan'))
 
     class Meta:
-        model = CycleTrip
-        fields = ['route', 'sensor_file', 'comment', 'tags', 'kcal', 'url']
+        model = Exercise
+        fields = ['exercise_type', 'route', 'sensor_file', 'comment', 'tags', 'kcal', 'url']
 
     def clean_route(self):
         '''Translate number from autocomplete to object '''
@@ -89,37 +89,12 @@ class EventForm(forms.ModelForm):
         data = Route.objects.get(pk=data)
         return data
     
-class CycleTripForm(EventForm):
-    pass
-
-class HikeForm(EventForm):
-    class Meta(EventForm.Meta):
-        model = Hike
-
-class ExerciseForm(EventForm):
-    class Meta(EventForm.Meta):
-        model = OtherExercise
-        fields = ('route', 'exercise_type', 'comment', 'sensor_file', 'duration', 'date', 'time', 'kcal', 'url')
-
 class RouteForm(forms.ModelForm):
     class Meta:
         model = Route
         exclude = ('single_serving', 'start_lat', 'start_lon', 'end_lat', 'end_lon')
 
-class FullCycleTripForm(forms.ModelForm):
-    class Meta:
-        model = CycleTrip
-        exclude = ('user', 'content_type', 'object_id')
-
-class FullHikeForm(forms.ModelForm):
-    class Meta:
-        model = Hike
-        exclude = ('user', 'content_type', 'object_id')
-
-
 class FullExerciseForm(forms.ModelForm):
     class Meta:
-        model = OtherExercise
+        model = Exercise
         exclude = ('user', 'content_type', 'object_id')
-
-

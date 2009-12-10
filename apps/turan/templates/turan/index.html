@@ -93,59 +93,26 @@ $('#tabs ul li.tab').each(function () {
 <div class="half leftcol">
     <img alt="{% trans "Cyclist"%}" style="float:right" src="{{MEDIA_URL}}turan/cyclist.png">
     <h1>
-        <a href="{% url cycletrips %}">{% trans "Cycle trips" %}</a>
+        <a href="{% url exercises %}">{% trans "Latest exercises" %}</a>
     </h1>
     <ul class="trips iconlist">
-    {% for object in cycletrip_list %}
-    <li class="{% cycle "even" "odd" %}">
-    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
-    <a href="{{ object.get_absolute_url }}">{{ object.route.name|slice:":35" }}</a>, 
-        {% if object.route.distance %}
-            {{ object.route.distance|floatformat }} {% trans "km" %}
-        {% endif %}
-        {{ object.date|naturalday}}
-    </li>
-    {%endfor %}
-    </ul>
-
-    <img alt="{% trans "Hiker"%}" style="float:right" src="{{MEDIA_URL}}turan/hiker.png">
-    <h1>
-        <a href="{% url hikes %}">{% trans "Hikes" %}</a>
-    </h1>
-    <ul class="hikes iconlist">
-    {% for object in hike_list %}
-    <li class="{% cycle "even" "odd" %}">
-    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
-    <a href="{{ object.get_absolute_url }}">{{ object.route.name|slice:":35" }}</a>, 
-        {% if object.route.distance %}
-            {{ object.route.distance|floatformat }} {% trans "km" %},
-        {% endif %}
-        {{ object.date|naturalday}}
-    </li>
-    {%endfor %}
-    </ul>
-
-    <img alt="{% trans "Other Exercises"%}" style="float:right" src="{{MEDIA_URL}}turan/hikerold.png">
-    <h1>
-        <a href="{% url exercises %}">{% trans "Other Exercises" %}</a>
-    </h1>
-    <ul class="exercises iconlist">
     {% for object in exercise_list %}
     <li class="{% cycle "even" "odd" %}">
     <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
     <a href="{{ object.get_absolute_url }}">
-        {% if object.exercise_type %}{{ object.exercise_type }}
-        {% else %}
-           {% trans "Other Exercise" %}
+    {{ object.exercise_type }}
+        {{ object|slice:":35" }}</a>
+        {% if object.route.distance %}
+            {{ object.route.distance|floatformat }} {% trans "km" %}
         {% endif %}
-    </a>, 
         {% if object.duration %}
-           {{ object.duration}},
+            {{ object.duration}}
         {% endif %}
         {{ object.date|naturalday}}
     </li>
     {%endfor %}
     </ul>
+
 </div>
 {% endblock content %}
 
