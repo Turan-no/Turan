@@ -24,7 +24,6 @@ urlpatterns = patterns('',
     url(r'^week/(?P<week>\d+)', week, name='week-all'),
     url(r'^week/(?P<week>\d+)/(?P<user_id>)', week, name='week'),
 
-    url(r'^calendar/(?P<year>\d+)/(?P<month>\d+)/(?P<user_id>\d+)', calendar_month, name='calendar-date-user'),
     url(r'^calendar/(?P<year>\d+)/(?P<month>\d+)', calendar_month, name='calendar'),
     url(r'^calendar/$', calendar, name='calendar-index'),
 

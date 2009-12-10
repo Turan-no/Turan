@@ -342,11 +342,11 @@ def generate_tshirt(request):
     return HttpResponse(data.read(), mimetype='image/png',status=200)
 
 
-def calendar(request, user_id=False):
+def calendar(request):
     now = datetime.now()
-    return calendar_month(request, now.year, now.month, user_id)
+    return calendar_month(request, now.year, now.month)
 
-def calendar_month(request, year, month, user_id=False):
+def calendar_month(request, year, month):
     ''' the calendar view, some code stolen from archive_month generic view '''
 
     month_format = '%m' 
