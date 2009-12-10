@@ -132,15 +132,31 @@ $(function () {
 
             {% if total_duration %}
             <h1>{% trans "Statistics" %}</h1>
-            {% include "profile/statistics.html" %}
+            <ul>
+                <li><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
+                <li><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
+                <li><span class="label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>
+                <li><span class="label">{% trans "Total exercise count"%}:</span> {{ exerciseqs.count}} {% trans "trips" %}</li>
+                <li><span class="label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
+                <li><span class="label">{% trans "Total energy expenditure"%}:</span> {{ total_kcals }} {% trans "kcal" %} (= {{total_kcals|bodyfat|floatformat}} {% trans "kg" %} {% trans "fat" %} ) </li>
+            {% for item, val in avg_speed_dict.items %}
+            <li>{{item}}: {{val|floatformat}}</li>
+            {% endfor %}
+            {% for item, val in hr_dict.items %}
+            <li>{{item}}: {{val|floatformat}}</li>
+            {% endfor %}
+            {% for item, val in cadence_dict.items %}
+            <li>{{item}}: {{val|floatformat}}</li>
+            {% endfor %}
+            {% for item, val in duration_dict.items %}
+            <li>{{item}}: {{val|floatformat}}</li>
+            {% endfor %}
+            {% for item, val in distance_dict.items %}
+            <li>{{item}}: {{val|floatformat}}</li>
+            {% endfor %}
+            </ul>
             {% endif %}
 
-            {% load i18n %}
-            {% load tagging_tags %}
-            {% load humanize %}
-            {% load threadedcommentstags %}
-            
-            
             {% if exerciseqs.count %}
             <h2>{% trans "Exercises" %}</h2>
             <a href="{% url exercises %}?username={{other_user.username}}">{% trans "Show all" %}</a>
