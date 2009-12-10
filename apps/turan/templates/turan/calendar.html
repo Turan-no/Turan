@@ -12,11 +12,11 @@
 </h1>
 <ul class="buttons">
     <li>
-    <a href="{% url calendar previous_month.year previous_month.month %}">
+    <a href="{% url calendar previous_month.year previous_month.month %}{% if username %}/?username={{username}}{% endif %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/date_previous.png" alt="{% trans "Previous"%}" />
         {% trans "Previous" %}
     </a>
-    <a href="{% url calendar next_month.year next_month.month %}">
+    <a href="{% url calendar next_month.year next_month.month %}{% if username %}/?username={{username}}{% endif %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/date_next.png" alt="{% trans "Next"%}" />
         {% trans "Next" %}
     </a>

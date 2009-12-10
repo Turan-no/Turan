@@ -107,6 +107,7 @@ $(function () {
                     {% if object.info %}
                     <li><span class="label">{% trans "About" %}:</span> {{ object.info }}</li>
                     {% endif %}
+                    <li><a href="{% url calendar-index %}?username={{ other_user }}">{% trans "Show " %}{{ other_user.get_profile.name }}{% trans "'s calendar" %}</a></li>
                 </ul>
                 {% endwith %}
             </div>

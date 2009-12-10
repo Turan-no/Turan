@@ -375,11 +375,6 @@ def calendar_month(request, year, month):
 
     exercices = Exercise.objects.select_related().order_by('date').filter(**lookup_kwargs)
 
-    username = request.GET.get('username', '')
-    if username:
-        user = get_object_or_404(User, username=username)
-        exercices = exercices.filter(user=user)
-
     # Calculate the next month, if applicable.
     if allow_future:
         next_month = last_day
@@ -396,6 +391,12 @@ def calendar_month(request, year, month):
 
     months = []
 
+    username = request.GET.get('username', '')
+    if username:
+        user = get_object_or_404(User, username=username)
+        exercices = exercices.filter(user=user)
+
+
    # FIXME django locale
     # stupid calendar needs int
     year, month = int(year), int(month)
@@ -403,6 +404,7 @@ def calendar_month(request, year, month):
     return render_to_response('turan/calendar.html',
             {'calendar': mark_safe(cal),
              'months': months,
+             'username': username,
              'previous_month': previous_month,
              'next_month': next_month,
              },
