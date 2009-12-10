@@ -135,7 +135,35 @@ $(function () {
             {% include "profile/statistics.html" %}
             {% endif %}
 
-            {% include "profile/extra_profile.html"  %}
+            {% load i18n %}
+            {% load tagging_tags %}
+            {% load humanize %}
+            {% load threadedcommentstags %}
+            
+            
+            {% if exerciseqs.count %}
+            <h2>{% trans "Exercises" %}</h2>
+            <a href="{% url events %}?username={{other_user.username}}">{% trans "Show all" %}</a>
+                <div class="gg">
+                    <ul>
+                {% for trip in exerciseqs reversed %}
+                    <li>
+                    <a href="{{ trip.get_absolute_url }}">{{ trip.exercise_type }} {{ trip }}</a> 
+                    {% if trip.route.distance %}
+                    {{ trip.route.distance|floatformat}} km
+                    {%endif%}
+                    {{ trip.duration }}
+                    {{ trip.date|naturalday }}
+                    </li>
+                {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+            {% comment %}
+               {% trans "No exercises added yet." %}
+            {% endcomment %}
+            {% endif %}
+
             {% if user.is_authenticated %}
                 {% if is_me %}
                 {% else %}
