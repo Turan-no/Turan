@@ -45,7 +45,7 @@ class HRMParser(object):
         hrstarted = False
         lapstarted = False
         notestarted = False
-        for line in f.readlines():
+        for line in f:
             if hrstarted:
                 line = line.strip()
                 if line:
