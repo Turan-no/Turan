@@ -225,6 +225,9 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
 
 
 # TODO check for faulty date
-    workouts_by_week =  dict( [(week, list(items)) for week, items in groupby(exerciseqs, lambda workout: workout.date.strftime('%W'))])
+    try:
+        workouts_by_week =  dict( [(week, list(items)) for week, items in groupby(exerciseqs, lambda workout: workout.date.strftime('%W'))])
+    except:
+        pass
     return render_to_response(template_name, locals(),
             context_instance=RequestContext(request))

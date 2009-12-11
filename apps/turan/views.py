@@ -349,11 +349,11 @@ def generate_tshirt(request):
     return HttpResponse(data.read(), mimetype='image/png',status=200)
 
 
-def calendar(request, user_id=False):
+def calendar(request):
     now = datetime.now()
-    return calendar_month(request, now.year, now.month, user_id)
+    return calendar_month(request, now.year, now.month)
 
-def calendar_month(request, year, month, user_id=False):
+def calendar_month(request, year, month):
     ''' the calendar view, some code stolen from archive_month generic view '''
 
     month_format = '%m' 
@@ -382,11 +382,6 @@ def calendar_month(request, year, month, user_id=False):
 
     exercices = Exercise.objects.select_related().order_by('date').filter(**lookup_kwargs)
 
-    username = request.GET.get('username', '')
-    if username:
-        user = get_object_or_404(User, username=username)
-        exercices = exercices.filter(user=user)
-
     # Calculate the next month, if applicable.
     if allow_future:
         next_month = last_day
@@ -403,6 +398,12 @@ def calendar_month(request, year, month, user_id=False):
 
     months = []
 
+    username = request.GET.get('username', '')
+    if username:
+        user = get_object_or_404(User, username=username)
+        exercices = exercices.filter(user=user)
+
+
    # FIXME django locale
     # stupid calendar needs int
     year, month = int(year), int(month)
@@ -410,6 +411,7 @@ def calendar_month(request, year, month, user_id=False):
     return render_to_response('turan/calendar.html',
             {'calendar': mark_safe(cal),
              'months': months,
+             'username': username,
              'previous_month': previous_month,
              'next_month': next_month,
              },
@@ -417,7 +419,7 @@ def calendar_month(request, year, month, user_id=False):
 
 #@cache_page(86400*7)
 #@decorator_from_middleware(GZipMiddleware)
-def geojson(request, event_type, object_id):
+def geojson(request, object_id):
     ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
     give each line a zone property so it can be styled differently'''
 

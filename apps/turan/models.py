@@ -221,7 +221,7 @@ class Exercise(models.Model):
         return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + slugify(self.route.name)
 
     def get_geojson_url(self):
-        return reverse('geojson', kwargs={'event_type': 'cycletrip', 'object_id': self.id})
+        return reverse('geojson', kwargs={'object_id': self.id})
 
 
     def icon(self):

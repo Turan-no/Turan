@@ -4,6 +4,8 @@
 {% load avatar_tags %}
 {% load uni_form %}
 {% load microblogging_tags %}
+{% load turan_extras %}
+{% load humanize %}
 
 {% block head_title %}{% blocktrans %}Profile for {{ other_user }}{% endblocktrans %}{% endblock %}
 
@@ -107,6 +109,7 @@ $(function () {
                     {% if object.info %}
                     <li><span class="label">{% trans "About" %}:</span> {{ object.info }}</li>
                     {% endif %}
+                    <li><a href="{% url calendar-index %}?username={{ other_user }}">{% trans "Show " %}{{ other_user.get_profile.name }}{% trans "'s calendar" %}</a></li>
                 </ul>
                 {% endwith %}
             </div>
@@ -131,10 +134,55 @@ $(function () {
 
             {% if total_duration %}
             <h1>{% trans "Statistics" %}</h1>
-            {% include "profile/statistics.html" %}
+            <ul>
+                <li><a href="{% url statistics %}?username={{other_user.username}}">{% trans "Show all" %}</a></li>
+                <li><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
+                <li><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
+                <li><span class="label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>
+                <li><span class="label">{% trans "Total exercise count"%}:</span> {{ exerciseqs.count}} {% trans "trips" %}</li>
+                <li><span class="label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
+                <li><span class="label">{% trans "Total energy expenditure"%}:</span> {{ total_kcals }} {% trans "kcal" %} (= {{total_kcals|bodyfat|floatformat}} {% trans "kg" %} {% trans "fat" %} ) </li>
+            {% for item, val in avg_speed_dict.items %}
+            <li>{{item}}: {{val|floatformat}}</li>
+            {% endfor %}
+            {% for item, val in hr_dict.items %}
+            <li>{{item}}: {{val|floatformat}}</li>
+            {% endfor %}
+            {% for item, val in cadence_dict.items %}
+            <li>{{item}}: {{val|floatformat}}</li>
+            {% endfor %}
+            {% for item, val in duration_dict.items %}
+            <li>{{item}}: {{val|floatformat}}</li>
+            {% endfor %}
+            {% for item, val in distance_dict.items %}
+            <li>{{item}}: {{val|floatformat}}</li>
+            {% endfor %}
+            </ul>
             {% endif %}
 
-            {% include "profile/extra_profile.html"  %}
+            {% if exerciseqs.count %}
+            <h2>{% trans "Exercises" %}</h2>
+            <a href="{% url exercises %}?username={{other_user.username}}">{% trans "Show all" %}</a>
+                <div class="gg">
+                    <ul>
+                {% for trip in exerciseqs reversed %}
+                    <li>
+                    <a href="{{ trip.get_absolute_url }}">{{ trip.exercise_type }} {{ trip }}</a> 
+                    {% if trip.route.distance %}
+                    {{ trip.route.distance|floatformat}} km
+                    {%endif%}
+                    {{ trip.duration }}
+                    {{ trip.date|naturalday }}
+                    </li>
+                {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+            {% comment %}
+               {% trans "No exercises added yet." %}
+            {% endcomment %}
+            {% endif %}
+
             {% if user.is_authenticated %}
                 {% if is_me %}
                 {% else %}
