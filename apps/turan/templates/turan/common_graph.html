@@ -60,8 +60,14 @@
 
     var previousPoint = null;
     $("#tripdiv{{object.id}}").bind("plothover", function (event, pos, item) {
+        var y = 0;
+        if (pos.y)
+            y = pos.y;
+        else
+            y = pos.y2;
+
         $("#x").text(pos.x.toFixed(2));
-        $("#y").text(pos.y.toFixed(2));
+        $("#y").text(y.toFixed(2));
 
             if (item) {
                 if (previousPoint != item.datapoint) {
