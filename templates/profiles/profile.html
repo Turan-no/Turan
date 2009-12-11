@@ -135,7 +135,7 @@ $(function () {
             {% if total_duration %}
             <h1>{% trans "Statistics" %}</h1>
             <ul>
-                <li><a href="{% url statistics %}?username={{other_user.username}}">{% trans "Show all" %}</a></li>
+                <li><a href="{% url profile_statistics other_user %}">{% trans "Show all" %}</a></li>
                 <li><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
                 <li><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
                 <li><span class="label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>

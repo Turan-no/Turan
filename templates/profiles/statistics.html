@@ -1,0 +1,60 @@
+{% extends "profiles/base.html" %}
+
+{% load i18n %}
+{% load avatar_tags %}
+{% load uni_form %}
+{% load microblogging_tags %}
+
+{% block head_title %}{% blocktrans %}Statistics for {{ other_user }}{% endblocktrans %}{% endblock %}
+{% block body %}
+<script id="source" language="javascript" type="text/javascript">
+$(function () {
+    var d1 = { color: 2, data: [{{pulsedataseries}}], };
+    var d2 = { color: 4, data: [{{bmidataseries}}], };
+    var bmiline = { color: 2, data: [{{bmiline}}], };
+    var d5 = { label: "kcal",  color: 6, yaxis: 2, data: [{{weekseries_kcal}}], };
+    var d4 = { label: "km", color: 7, yaxis: 1, data: [{{weekseries_km}}], };
+    var d6 = { label: "trips",  color: 8, data: [{{weekseries_trips}}], };
+    var d7 = { label: "avg hr", color: 9, data: [{{weekseries_avg_hr}}], };
+    var d8 = { label: "avg speed", color: 5, data: [{{weekseries_avg_speed}}], };
+    var d9 = { label: "duration", color: 0, data: [{{weekseries_duration}}], };
+    var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0} };
+	var hroptions = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 100, max: 200 } };
+    var d2options =  { yaxis: { min: 20, max: 45 }, xaxis: { mode: "time", timeformat: "%y/%m/%d" } };
+    var d3options =  { xaxis: { mode: "time", timeformat: "%y/%m/%d" } };
+    var pieoptions = { pie: {show: true, autoScale: true, fillOpacity: 1 } };
+    var weekoptions = { yaxis: { max: 600 }, hoverable: true, clickable: true };
+
+    $.plot($("#weeks"), [d5, d4, d6, d7, d8, d9], weekoptions);
+    $.plot($("#pulsediv"), [d1], options);
+    $.plot($("#bmidiv"), [d2, bmiline], d2options);
+    $.plot($("#piechart"), [{{piechartdata}}], pieoptions);
+    $.plot($("#avgspeeddiv"), [{
+            color: 3,
+            data: [{{avgspeeddataseries}}],
+            lines: { show: true },
+            //label: "km",
+        }], options );
+    $.plot($("#avghrdiv"), [{
+            color: 2,
+            data: [{{avghrdataseries}}],
+            lines: { show: true },
+            //label: "km",
+        }], hroptions );
+});
+</script>
+<h2>Statistics for {{ other_user.get_profile.name }}</h2>
+    <h3>{% trans "Avg speed"%}</h2>
+    <div id="avgspeeddiv" style="width:900px;height:400px"></div>
+    <h3>{% trans "Avg HR"%}</h2>
+    <div id="avghrdiv" style="width:900px;height:400px"></div>
+    <h3>{% trans "BMI graph"%}</h2>
+    <div id="bmidiv" style="width:900px;height:400px"></div>
+    <h3>{% trans "Resting pulse graph"%}</h2>
+    <div id="pulsediv" style="width:900px;height:400px"></div>
+    <h3>{% trans "Type exercise graph"%}</h2>
+    <div id="piechart" style="width:900px;height:400px"></div>
+    <h3>{% trans "Weekstats graph"%}</h2>
+    <div id="weeks" style="width:900px;height:700px"></div>
+
+{% endblock %}
