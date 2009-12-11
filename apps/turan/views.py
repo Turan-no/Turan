@@ -766,7 +766,7 @@ def exercise(request, object_id):
         zones = getzones(details)
         inclinesummary = getinclinesummary(details)
     datasets = js_trip_series(details)
-    return render_to_response('turan/cycletrip_detail.html', locals(), context_instance=RequestContext(request))
+    return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
 
 def json_serializer(request, queryset, root_name = None, relations = (), extras = ()):
     if root_name == None:
