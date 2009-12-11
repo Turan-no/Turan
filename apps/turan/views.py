@@ -412,7 +412,7 @@ def calendar_month(request, year, month):
 
 #@cache_page(86400*7)
 #@decorator_from_middleware(GZipMiddleware)
-def geojson(request, event_type, object_id):
+def geojson(request, object_id):
     ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
     give each line a zone property so it can be styled differently'''
 
