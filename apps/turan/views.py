@@ -210,13 +210,15 @@ def statistics(request, year=None, month=None, day=None, week=None):
     tfilter = {}
     tfilter.update(exercisefilter)
     tfilter.update(datefilter)
-    stats_dict = Exercise.objects.filter(**exercisefilter).aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
+    stats_dict = Exercise.objects.filter(**tfilter).aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
     total_duration = stats_dict['duration__sum']
     total_distance = stats_dict['route__distance__sum']
     total_avg_speed = stats_dict['avg_speed__avg']
     longest_trip = stats_dict['route__distance__max']
     if not total_duration:
         return HttpResponse('No trips found')
+
+    exercise_count = Exercise.objects.all().count()
 
     userstats = statsprofiles.filter(**tfilter).annotate( \
             avg_avg_speed = Avg('user__exercise__avg_speed'), \
