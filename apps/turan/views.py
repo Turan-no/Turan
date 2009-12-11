@@ -864,7 +864,7 @@ def turan_object_list(request, queryset):
         user = get_object_or_404(User, username=username)
         queryset = queryset.filter(user=user)
 
-    return object_list(request, queryset=queryset)
+    return object_list(request, queryset=queryset, extra_context=locals())
 
 
 def autocomplete_route(request, app_label, model):

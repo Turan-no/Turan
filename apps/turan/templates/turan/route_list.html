@@ -8,35 +8,19 @@
 {% trans "Routes" %}
 {% endblock %}
 {% block content %}
+{% autopaginate object_list %}
 
-<div style="float: right">
-<form action="" method="GET">
-	<input id="routeSearch" type="text" name="q" value="{% trans "Search for route" %}">
-    <input type="submit" value="{% trans "Search" %}">
-</form>
-<script type="text/javascript" language="javascript">
-	$('#routeSearch').bind("focus", function (evt) {
-		if ($(this).val() == $(this).data("text")) {
-			$(this).data("text", $(this).val());
-			$(this).val("");
-		}
-	});
-	$('#routeSearch').bind("blur", function (evt) {
-		if ($(this).val().length == 0)
-			$(this).val($(this).data("text"));
-	});
-	$('#routeSearch').data("text", $('#routeSearch').val());
+{% include "turan/search_head.html" %}
 
-</script>
-</div>
+{% if search_query %}
+<h4>{% trans "Search results for " %}{{search_query}} <a class="remove" title="{% trans "Clear search query" %}" href="{% url events %}">[X]</a></h4>
+{% endif %}
 
 <h1>
     {% trans "Routes" %}
 </h1>
 
-{% autosort object_list %}
-{% autopaginate object_list %}
-<span class="floatright" style="clear: right;">
+<span class="floatright">
 {% paginate %}
 </span>
 
