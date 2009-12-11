@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<div style="float: right">
+<form action="" method="GET">
+	<input id="listSearch" type="text" name="q" value="{% trans "Search" %}">
+    <input type="submit" value="{% trans "Search" %}">
+</form>
+<script type="text/javascript" language="javascript">
+	$('#listSearch').bind("focus", function (evt) {
+		if ($(this).val() == $(this).data("text")) {
+			$(this).data("text", $(this).val());
+			$(this).val("");
+		}
+	});
+	$('#listSearch').bind("blur", function (evt) {
+		if ($(this).val().length == 0)
+			$(this).val($(this).data("text"));
+	});
+	$('#listSearch').data("text", $('#listSearch').val());
+
+</script>
+</div>
+

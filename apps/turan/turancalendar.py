@@ -29,6 +29,7 @@ class WorkoutCalendar(LocaleHTMLCalendar):
                 for workout in self.workouts[day]:
                     body.append('<li>')
                     body.append('<a href="%s">' % workout.get_absolute_url())
+                    body.append(esc(workout.exercise_type) + ": ")
                     body.append(esc(workout))
                     body.append('</a>')
                     if workout.route.distance:

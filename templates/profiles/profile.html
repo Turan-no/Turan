@@ -161,11 +161,11 @@ $(function () {
             {% endif %}
 
             {% if exerciseqs.count %}
-            <h2>{% trans "Exercises" %}</h2>
+            <h2>{% trans "Latest exercises" %}</h2>
             <a href="{% url exercises %}?username={{other_user.username}}">{% trans "Show all" %}</a>
                 <div class="gg">
                     <ul>
-                {% for trip in exerciseqs reversed %}
+                {% for trip in latest_exercises %}
                     <li>
                     <a href="{{ trip.get_absolute_url }}">{{ trip.exercise_type }} {{ trip }}</a> 
                     {% if trip.route.distance %}

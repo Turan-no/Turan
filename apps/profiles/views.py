@@ -222,6 +222,9 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
             kcal_per_day = total_kcals / days_since_start
             time_per_day = total_duration / days_since_start
 
+    
+
+    latest_exercises = other_user.exercise_set.order_by('-date')[:20]
 
 
     return render_to_response(template_name, locals(),

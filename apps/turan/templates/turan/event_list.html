@@ -1,20 +1,26 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
+{% load pagination_tags %}
 {% load i18n %}
 {% block title %}
-{% load pagination_tags %}
 {% trans "Events" %}
 {% endblock %}
 {% block content %}
 {% autopaginate object_list %}
 
-<span class="floatright">
-{% paginate %}
-</span>
+{% include "turan/search_head.html" %}
+
+{% if search_query %}
+<h4>{% trans "Search results for " %}{{search_query}} <a class="remove" title="{% trans "Clear search query" %}" href="{% url events %}">[X]</a></h4>
+{% endif %}
 
 <h1>
     {% trans "Events" %}
 </h1>
+
+<span class="floatright">
+{% paginate %}
+</span>
 
 <table>
     <tr>
