@@ -196,7 +196,11 @@ def statistics(request, year=None, month=None, day=None, week=None):
 
     exercisefilter = { "user__exercise__exercise_type": exercise }
     datefilter["user__exercise__exercise_type"] = exercise
-    stats_dict = Exercise.objects.filter(**datefilter).aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
+
+    tfilter = {}
+    tfilter.update(exercisefilter)
+    tfilter.update(datefilter)
+    stats_dict = Exercise.objects.filter(**exercisefilter).aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
     total_duration = stats_dict['duration__sum']
     total_distance = stats_dict['route__distance__sum']
     total_avg_speed = stats_dict['avg_speed__avg']
@@ -204,7 +208,7 @@ def statistics(request, year=None, month=None, day=None, week=None):
     if not total_duration:
         return HttpResponse('No trips found')
 
-    userstats = statsprofiles.filter(**datefilter).annotate( \
+    userstats = statsprofiles.filter(**tfilter).annotate( \
             avg_avg_speed = Avg('user__exercise__avg_speed'), \
             max_avg_speed = Max('user__exercise__avg_speed'), \
             max_speed = Max('user__exercise__max_speed'), \
@@ -236,7 +240,7 @@ def statistics(request, year=None, month=None, day=None, week=None):
 
     routefilter = {"ascent__gt" : 0, "distance__gt" : 0 }
     validroutes = Route.objects.filter(**routefilter)
-    tfilter = datefilter.copy()
+
     tfilter["user__exercise__route__in"] = validroutes
     climbstats = statsprofiles.filter(**tfilter).annotate( \
             distance = Sum('user__exercise__route__distance'), \
