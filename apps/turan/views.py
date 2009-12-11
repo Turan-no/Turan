@@ -134,7 +134,8 @@ def events(request, group_slug=None, bridge=None, username=None):
         qset = (
             Q(route__name__icontains=search_query) |
             Q(comment__icontains=search_query) |
-            Q(tags__contains=search_query)
+            Q(tags__contains=search_query) |
+            Q(user__contains==search_query)
         )
         exerciseqs = exerciseqs.filter(qset).distinct()
 
