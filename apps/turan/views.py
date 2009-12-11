@@ -173,27 +173,22 @@ def week(request, week, user_id='all'):
 
 def statistics(request, year=None, month=None, day=None, week=None):
     if year:
-        cycletripfilter = {"user__cycletrip__date__year": year}
-        hikefilter = {"user__hike__date__year": year}
+        datefilter = {"user__exercise__date__year": year}
         if month:
-            cycletripfilter["user__cycletrip__date__month"] = month
-            hikefilter["user__hike__date__month"] = month
+            datefilter["user__exercise__date__month"] = month
             if day:
-                cycletripfilter["user__cycletrip__date__day"] = day
-                hikefilter["user__hike__date__day"] = day
+                datefilter["user__exercise__date__day"] = day
         if week:
             tt = strptime(year+'-1-' + str(int(week)-1), '%Y-%w-%W')
             date = datetimedate(*tt[:3])
             first_day = date
             last_day = date + timedelta(days=7)
-            cycletripfilter= {"user__cycletrip__date__gte":  first_day, 'user__cycletrip__date__lt': last_day}
-            hikefilter= {"user__hike__date__gte":  first_day, 'user__hike__date__lt': last_day}
+            datefilter= {"user__exercise__date__gte":  first_day, 'user__exercise__date__lt': last_day}
     else:
         # silly, but can't find a suitable noop for filter, and ** can't unpack
         # empty dict into zero arguments - wah
         dummystart = datetime(1970,1,1)
-        cycletripfilter = { "user__cycletrip__date__gte": dummystart }
-        hikefilter = {"user__hike__date__gte": dummystart }
+        datefilter = { "user__exercise__date__gte": dummystart }
 
     teamname = request.GET.get('team')
     statsprofiles = Profile.objects.all()
@@ -202,7 +197,20 @@ def statistics(request, year=None, month=None, day=None, week=None):
         statsusers = team.members.all()
         statsprofiles = statsprofiles.filter(user__in=statsusers)
 
-    stats_dict = CycleTrip.objects.filter(**cycletripfilter).aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
+    exercisename = request.GET.get('exercise')
+
+    if exercisename:
+        exercise = get_object_or_404(ExerciseType, name=exercisename)
+    else:
+        exercise = get_object_or_404(ExerciseType, name='Cycling')
+
+    exercisefilter = { "user__exercise__exercise_type": exercise }
+    datefilter["user__exercise__exercise_type"] = exercise
+
+    tfilter = {}
+    tfilter.update(exercisefilter)
+    tfilter.update(datefilter)
+    stats_dict = Exercise.objects.filter(**exercisefilter).aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
     total_duration = stats_dict['duration__sum']
     total_distance = stats_dict['route__distance__sum']
     total_avg_speed = stats_dict['avg_speed__avg']
@@ -210,16 +218,16 @@ def statistics(request, year=None, month=None, day=None, week=None):
     if not total_duration:
         return HttpResponse('No trips found')
 
-    userstats = statsprofiles.filter(**cycletripfilter).annotate( \
-            avg_avg_speed = Avg('user__cycletrip__avg_speed'), \
-            max_avg_speed = Max('user__cycletrip__avg_speed'), \
-            max_speed = Max('user__cycletrip__max_speed'), \
-            num_trips = Count('user__cycletrip'), \
-            sum_distance = Sum('user__cycletrip__route__distance'), \
-            sum_duration = Sum('user__cycletrip__duration'), \
-            sum_energy = Sum('user__cycletrip__kcal'), \
-            sum_ascent = Sum('user__cycletrip__route__ascent'), \
-            avg_avg_hr = Avg('user__cycletrip__avg_hr') \
+    userstats = statsprofiles.filter(**tfilter).annotate( \
+            avg_avg_speed = Avg('user__exercise__avg_speed'), \
+            max_avg_speed = Max('user__exercise__avg_speed'), \
+            max_speed = Max('user__exercise__max_speed'), \
+            num_trips = Count('user__exercise'), \
+            sum_distance = Sum('user__exercise__route__distance'), \
+            sum_duration = Sum('user__exercise__duration'), \
+            sum_energy = Sum('user__exercise__kcal'), \
+            sum_ascent = Sum('user__exercise__route__ascent'), \
+            avg_avg_hr = Avg('user__exercise__avg_hr') \
             )
 
     maxavgspeeds = userstats.filter(max_avg_speed__gt=0.0).order_by('max_avg_speed').reverse()
@@ -240,12 +248,15 @@ def statistics(request, year=None, month=None, day=None, week=None):
             u.avgavghrpercent = 0
     avgavghrs = sorted(avgavghrs, key=lambda x:-x.avgavghrpercent)
 
-    validroutes = Route.objects.filter(ascent__gt=0).filter(distance__gt=0)
-    climbstats = statsprofiles.filter(**cycletripfilter).filter(user__cycletrip__route__in=validroutes).annotate( \
-            distance = Sum('user__cycletrip__route__distance'), \
-            height = Sum('user__cycletrip__route__ascent'),  \
-            duration = Sum('user__cycletrip__duration'), \
-            trips = Count('user__cycletrip') \
+    routefilter = {"ascent__gt" : 0, "distance__gt" : 0 }
+    validroutes = Route.objects.filter(**routefilter)
+
+    tfilter["user__exercise__route__in"] = validroutes
+    climbstats = statsprofiles.filter(**tfilter).annotate( \
+            distance = Sum('user__exercise__route__distance'), \
+            height = Sum('user__exercise__route__ascent'),  \
+            duration = Sum('user__exercise__duration'), \
+            trips = Count('user__exercise') \
             ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0).filter(trips__gt=0)
 
     for u in climbstats:
@@ -256,46 +267,46 @@ def statistics(request, year=None, month=None, day=None, week=None):
     climbstatsbytime = sorted(climbstats, key=lambda x:-x.avgclimbperhour)
     lengthstats = sorted(climbstats, key=lambda x: -x.avglen)
 
-    hikestats = statsprofiles.filter(**hikefilter).annotate( \
-            hike_avg_avg_speed = Avg('user__hike__avg_speed'), \
-            hike_max_avg_speed = Max('user__hike__avg_speed'), \
-            hike_max_speed = Max('user__hike__max_speed'), \
-            hike_num_trips = Count('user__hike'), \
-            hike_sum_distance = Sum('user__hike__route__distance'), \
-            hike_sum_duration = Sum('user__hike__duration'), \
-            hike_sum_energy = Sum('user__hike__kcal'), \
-            hike_sum_ascent = Sum('user__hike__route__ascent'), \
-            hike_avg_avg_hr = Avg('user__hike__avg_hr') \
-            )
+#    hikestats = statsprofiles.filter(**hikefilter).annotate( \
+#            hike_avg_avg_speed = Avg('user__hike__avg_speed'), \
+#            hike_max_avg_speed = Max('user__hike__avg_speed'), \
+#            hike_max_speed = Max('user__hike__max_speed'), \
+#            hike_num_trips = Count('user__hike'), \
+#            hike_sum_distance = Sum('user__hike__route__distance'), \
+#            hike_sum_duration = Sum('user__hike__duration'), \
+#            hike_sum_energy = Sum('user__hike__kcal'), \
+#            hike_sum_ascent = Sum('user__hike__route__ascent'), \
+#            hike_avg_avg_hr = Avg('user__hike__avg_hr') \
+#            )
 
-    hike_maxavgspeeds = hikestats.filter(hike_max_avg_speed__gt=0.0).order_by('hike_max_avg_speed').reverse()
-    hike_maxspeeds = hikestats.filter(hike_max_speed__gt=0.0).order_by('hike_max_speed').reverse()
-    hike_avgspeeds = hikestats.filter(hike_avg_avg_speed__gt=0.0).order_by('hike_avg_avg_speed').reverse()
-    hike_numtrips = hikestats.filter(hike_num_trips__gt=0).order_by('hike_num_trips').reverse()
-    hike_distsums = hikestats.filter(hike_sum_distance__gt=0).order_by('hike_sum_distance').reverse()
-    hike_dursums = hikestats.filter(hike_sum_duration__gt=0).order_by('hike_sum_duration').reverse()
-    hike_energysums = hikestats.filter(hike_sum_energy__gt=0).order_by('hike_sum_energy').reverse()
-    hike_ascentsums = hikestats.filter(hike_sum_ascent__gt=0).order_by('hike_sum_ascent').reverse()
-    hike_avgavghrs = hikestats.filter(hike_avg_avg_hr__gt=0).filter(max_hr__gt=0)
+#    hike_maxavgspeeds = hikestats.filter(hike_max_avg_speed__gt=0.0).order_by('hike_max_avg_speed').reverse()
+#    hike_maxspeeds = hikestats.filter(hike_max_speed__gt=0.0).order_by('hike_max_speed').reverse()
+#    hike_avgspeeds = hikestats.filter(hike_avg_avg_speed__gt=0.0).order_by('hike_avg_avg_speed').reverse()
+#    hike_numtrips = hikestats.filter(hike_num_trips__gt=0).order_by('hike_num_trips').reverse()
+#    hike_distsums = hikestats.filter(hike_sum_distance__gt=0).order_by('hike_sum_distance').reverse()
+#    hike_dursums = hikestats.filter(hike_sum_duration__gt=0).order_by('hike_sum_duration').reverse()
+#    hike_energysums = hikestats.filter(hike_sum_energy__gt=0).order_by('hike_sum_energy').reverse()
+#    hike_ascentsums = hikestats.filter(hike_sum_ascent__gt=0).order_by('hike_sum_ascent').reverse()
+#    hike_avgavghrs = hikestats.filter(hike_avg_avg_hr__gt=0).filter(max_hr__gt=0)
 
-    for u in hike_avgavghrs:
-        u.avgavghrpercent = float(u.hike_avg_avg_hr)/u.max_hr*100
-    hike_avgavghrs = sorted(hike_avgavghrs, key=lambda x:-x.avgavghrpercent)
+#    for u in hike_avgavghrs:
+#        u.avgavghrpercent = float(u.hike_avg_avg_hr)/u.max_hr*100
+#    hike_avgavghrs = sorted(hike_avgavghrs, key=lambda x:-x.avgavghrpercent)
+#
+#    hike_climbstats = statsprofiles.filter(**hikefilter).filter(user__hike__route__in=validroutes).annotate( \
+#            distance = Sum('user__hike__route__distance'), \
+#            height = Sum('user__hike__route__ascent'), \
+#            duration = Sum('user__hike__duration'), \
+#            hikes = Count('user__hike') \
+#            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0).filter(hikes__gt=0)
 
-    hike_climbstats = statsprofiles.filter(**hikefilter).filter(user__hike__route__in=validroutes).annotate( \
-            distance = Sum('user__hike__route__distance'), \
-            height = Sum('user__hike__route__ascent'), \
-            duration = Sum('user__hike__duration'), \
-            hikes = Count('user__hike') \
-            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0).filter(hikes__gt=0)
-
-    for u in hike_climbstats:
-        u.avgclimb = u.height/u.distance
-        u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
-        u.avglen = float(u.distance)/u.hikes
-    hike_climbstats = sorted(hike_climbstats, key=lambda x: -x.avgclimb)
-    hike_climbstatsbytime = sorted(hike_climbstats, key=lambda x:-x.avgclimbperhour)
-    hike_lengthstats = sorted(hike_climbstats, key=lambda x: -x.avglen)
+#    for u in hike_climbstats:
+#        u.avgclimb = u.height/u.distance
+#        u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
+#        u.avglen = float(u.distance)/u.hikes
+#    hike_climbstats = sorted(hike_climbstats, key=lambda x: -x.avgclimb)
+#    hike_climbstatsbytime = sorted(hike_climbstats, key=lambda x:-x.avgclimbperhour)
+#    hike_lengthstats = sorted(hike_climbstats, key=lambda x: -x.avglen)
 
     team_list = Tribe.objects.all()
 
