@@ -129,6 +129,15 @@ def events(request, group_slug=None, bridge=None, username=None):
             user = get_object_or_404(User, username=username)
             exerciseqs = exerciseqs.filter(user=user)
 
+    search_query = request.GET.get('q', '')
+    if search_query:
+        qset = (
+            Q(route__name__icontains=search_query) |
+            Q(comment__icontains=search_query) |
+            Q(tags__contains=search_query)
+        )
+        exerciseqs = exerciseqs.filter(qset).distinct()
+
     object_list = exerciseqs
 
     return render_to_response('turan/event_list.html', locals(), context_instance=RequestContext(request))
