@@ -7,6 +7,7 @@ from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
+from django.utils.safestring import mark_safe
 
 from time import mktime
 from datetime import timedelta, datetime
@@ -20,7 +21,6 @@ from profiles.models import Profile, UserProfileDetail
 from profiles.forms import ProfileForm
 
 from avatar.templatetags.avatar_tags import avatar
-
 from itertools import groupby
 #from gravatar.templatetags.gravatar import gravatar as avatar
 
@@ -222,9 +222,130 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
             kcal_per_day = total_kcals / days_since_start
             time_per_day = total_duration / days_since_start
 
+    
+
+    latest_exercises = other_user.exercise_set.order_by('-date')[:20]
 
 
-# TODO check for faulty date
-    workouts_by_week =  dict( [(week, list(items)) for week, items in groupby(exerciseqs, lambda workout: workout.date.strftime('%W'))])
     return render_to_response(template_name, locals(),
             context_instance=RequestContext(request))
+
+def profile_statistics(request, username, template_name="profiles/statistics.html"):
+
+    other_user = get_object_or_404(User, username=username)
+
+    total_duration = timedelta()
+    total_distance = 0
+    total_avg_speed = 0
+    total_avg_hr = 0
+
+    nr_trips = 0
+    nr_hr_trips = 0
+    longest_trip = 0
+    avg_length = 0
+    avg_duration = 0
+
+    bmidataseries = ''
+    bmiline = ''
+    pulsedataseries = ""
+    tripdataseries = ""
+    avgspeeddataseries = ""
+    avghrdataseries = ""
+
+    typestats = {}
+
+    height = other_user.get_profile().height
+
+    if height:
+        height = float(other_user.get_profile().height)/100
+        weightqs = other_user.get_profile().userprofiledetail_set.filter(weight__isnull=False).order_by('time')
+        for wtuple in weightqs.values_list('time', 'weight'):
+            bmidataseries += '[%s, %s],' % (datetime2jstimestamp(wtuple[0]), wtuple[1]/(height*height))
+            bmiline += '[%s, 25],' %datetime2jstimestamp(wtuple[0])
+
+    pulseqs = other_user.get_profile().userprofiledetail_set.filter(resting_hr__isnull=False).order_by('time')
+    for hrtuple in pulseqs.values_list('time', 'resting_hr'):
+        pulsedataseries += '[%s, %s],' % (datetime2jstimestamp(hrtuple[0]), hrtuple[1])
+
+    exerciseqs = other_user.exercise_set.order_by('date')
+
+    for trip in exerciseqs:
+        if trip.avg_speed:
+            # only increase counter if trip has speed
+            avgspeeddataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed)
+            total_avg_speed += trip.avg_speed
+            nr_trips += 1
+    if total_avg_speed:
+        total_avg_speed = total_avg_speed/nr_trips
+
+    for event in exerciseqs:
+        if event.avg_hr:
+            avghrdataseries += '[%s, %s],' % (datetime2jstimestamp(event.date), event.avg_hr)
+            total_avg_hr += event.avg_hr
+            nr_hr_trips += 1
+        if event.exercise_type.name not in typestats:
+            typestats[event.exercise_type.name] = 1
+        else:
+            typestats[event.exercise_type.name] += 1
+            
+    piechartdata = ""
+    for exercisetype, value in typestats.items():
+        piechartdata += '{ label: \'%s: %d\', data: %d } ,' % (exercisetype, value, value)
+
+    piechartdata = piechartdata.rstrip(' ,')
+    piechartdata = mark_safe(piechartdata)
+    if total_avg_hr:
+        total_avg_hr = total_avg_hr/nr_hr_trips
+
+    workouts_by_week =  dict( [(week, list(items)) for week, items in groupby(exerciseqs, lambda workout: workout.date.strftime('%Y%W'))])
+
+    weekseries_avg_hr = ""
+    weekseries_km = ""
+    weekseries_kcal = ""
+    weekseries_avg_speed = ""
+    weekseries_trips = ""
+    weekseries_duration = ""
+    for week, exercises in sorted(workouts_by_week.items()):
+        trips = 0
+        km = 0
+        kcal = 0
+        duration = 0
+        avg_hr = 0
+        avg_hr_trips = 0
+        avg_speed = 0
+        avg_speed_trips = 0
+        for exercise in exercises:
+            trips += 1
+            if exercise.duration:
+                duration += exercise.duration.seconds/60
+            km += exercise.route.distance
+            kcal += exercise.kcal
+            if exercise.avg_hr:
+                avg_hr += exercise.avg_hr
+                avg_hr_trips += 1
+            if exercise.avg_speed:
+                avg_speed += exercise.avg_speed
+                avg_speed_trips += 1
+        kcal = kcal / 100.0
+        if avg_hr_trips:
+            avg_hr = avg_hr / avg_hr_trips
+            weekseries_avg_hr += "[%s, %d]," % (week, avg_hr)
+        if avg_speed_trips:
+            avg_speed = avg_speed / avg_speed_trips
+            weekseries_avg_speed += "[%s, %d]," % (week, avg_speed)
+        weekseries_km += "[%s, %d]," % (week, km)
+        weekseries_kcal += "[%s, %d]," % (week, kcal)
+        weekseries_trips += "[%s, %d]," % (week, trips)
+        weekseries_duration += "[%s, %d]," % (week, duration)
+
+    """    weekseries_km = weekseries_km.rstrip(' ,')
+    weekseries_kcal = weekseries_kcal.rstrip(' ,')
+    weekseries_trips = weekseries_trips.rstrip(' ,')"""
+
+    #assert False, workouts_by_week
+
+    return render_to_response(template_name, locals(),
+            context_instance=RequestContext(request))
+
+
+
