@@ -1,7 +1,12 @@
 /*
 Flot plugin for stacking data sets, i.e. putting them on top of each
-other, for accumulative graphs. Note that the plugin assumes the data
-is sorted on x. Also note that stacking a mix of positive and negative
+other, for accumulative graphs.
+
+The plugin assumes the data is sorted on x. For line charts, it is
+assumed that if a line has an undefined gap (from a null point), then
+the line above it should have the same gap - insert zeros instead of
+"null" if you want another behaviour. This also holds for the start
+and end of the chart. Note that stacking a mix of positive and negative
 values in most instances doesn't make sense (so it looks weird).
 
 Two or more series are stacked when their "stack" attribute is set to
@@ -14,15 +19,15 @@ specify the default stack, you can set
 
 or specify it for a specific series
 
-  $.plot($("#placeholder"), [{ data: [ ... ], stack: true ])
+  $.plot($("#placeholder"), [{ data: [ ... ], stack: true }])
   
 The stacking order is determined by the order of the data series in
 the array (later series end up on top of the previous).
 
 Internally, the plugin modifies the datapoints in each series, adding
 an offset to the y value. For line series, extra data points are
-inserted through interpolation. For bar charts, the second y value is
-also adjusted.
+inserted through interpolation. If there's a second y value, it's also
+adjusted (e.g for bar charts or filled areas).
 */
 
 (function ($) {
@@ -51,15 +56,17 @@ also adjusted.
             var other = findMatchingSeries(s, plot.getData());
             if (!other)
                 return;
-            
+
             var ps = datapoints.pointsize,
                 points = datapoints.points,
                 otherps = other.datapoints.pointsize,
                 otherpoints = other.datapoints.points,
                 newpoints = [],
                 px, py, intery, qx, qy, bottom,
-                withlines = s.lines.show, withbars = s.bars.show,
+                withlines = s.lines.show,
+                withbottom = ps > 2 && datapoints.format[2].y,
                 withsteps = withlines && s.lines.steps,
+                fromgap = true,
                 i = 0, j = 0, l;
 
             while (true) {
@@ -68,13 +75,26 @@ also adjusted.
 
                 l = newpoints.length;
 
-                if (j >= otherpoints.length
-                    || otherpoints[j] == null
-                    || points[i] == null) {
-                    // degenerate cases
+                if (points[i] == null) {
+                    // copy gaps
                     for (m = 0; m < ps; ++m)
                         newpoints.push(points[i + m]);
                     i += ps;
+                }
+                else if (j >= otherpoints.length) {
+                    // for lines, we can't use the rest of the points
+                    if (!withlines) {
+                        for (m = 0; m < ps; ++m)
+                            newpoints.push(points[i + m]);
+                    }
+                    i += ps;
+                }
+                else if (otherpoints[j] == null) {
+                    // oops, got a gap
+                    for (m = 0; m < ps; ++m)
+                        newpoints.push(null);
+                    fromgap = true;
+                    j += otherps;
                 }
                 else {
                     // cases where we actually got two points
@@ -108,21 +128,29 @@ also adjusted.
 
                         j += otherps;
                     }
-                    else {
+                    else { // px < qx
+                        if (fromgap && withlines) {
+                            // if we come from a gap, we just skip this point
+                            i += ps;
+                            continue;
+                        }
+                            
                         for (m = 0; m < ps; ++m)
                             newpoints.push(points[i + m]);
                         
                         // we might be able to interpolate a point below,
                         // this can give us a better y
-                        if (withlines && j > 0 && otherpoints[j - ps] != null)
-                            bottom = qy + (otherpoints[j - ps + 1] - qy) * (px - qx) / (otherpoints[j - ps] - qx);
+                        if (withlines && j > 0 && otherpoints[j - otherps] != null)
+                            bottom = qy + (otherpoints[j - otherps + 1] - qy) * (px - qx) / (otherpoints[j - otherps] - qx);
 
                         newpoints[l + 1] += bottom;
                         
                         i += ps;
                     }
+
+                    fromgap = false;
                     
-                    if (l != newpoints.length && withbars)
+                    if (l != newpoints.length && withbottom)
                         newpoints[l + 2] += bottom;
                 }
 
@@ -136,7 +164,7 @@ also adjusted.
                     newpoints[l + 1] = newpoints[l - ps + 1];
                 }
             }
-            
+
             datapoints.points = newpoints;
         }
         
@@ -147,6 +175,6 @@ also adjusted.
         init: init,
         options: options,
         name: 'stack',
-        version: '1.0'
+        version: '1.1'
     });
 })(jQuery);
