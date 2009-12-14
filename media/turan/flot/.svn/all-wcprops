@@ -1,43 +1,31 @@
 K 25
 svn:wc:ra_dav:version-url
 V 23
-/svn/!svn/ver/205/trunk
+/svn/!svn/ver/229/trunk
 END
-PLUGINS.txt
+jquery.flot.selection.js
 K 25
 svn:wc:ra_dav:version-url
-V 35
-/svn/!svn/ver/184/trunk/PLUGINS.txt
-END
-jquery.flot.stack.js
-K 25
-svn:wc:ra_dav:version-url
-V 44
-/svn/!svn/ver/176/trunk/jquery.flot.stack.js
+V 48
+/svn/!svn/ver/220/trunk/jquery.flot.selection.js
 END
 excanvas.js
 K 25
 svn:wc:ra_dav:version-url
 V 35
-/svn/!svn/ver/151/trunk/excanvas.js
+/svn/!svn/ver/223/trunk/excanvas.js
 END
 FAQ.txt
 K 25
 svn:wc:ra_dav:version-url
 V 31
-/svn/!svn/ver/165/trunk/FAQ.txt
-END
-excanvas.min.js
-K 25
-svn:wc:ra_dav:version-url
-V 39
-/svn/!svn/ver/151/trunk/excanvas.min.js
+/svn/!svn/ver/225/trunk/FAQ.txt
 END
 API.txt
 K 25
 svn:wc:ra_dav:version-url
 V 31
-/svn/!svn/ver/205/trunk/API.txt
+/svn/!svn/ver/229/trunk/API.txt
 END
 jquery.flot.threshold.js
 K 25
@@ -49,13 +37,19 @@ jquery.flot.crosshair.js
 K 25
 svn:wc:ra_dav:version-url
 V 48
-/svn/!svn/ver/159/trunk/jquery.flot.crosshair.js
+/svn/!svn/ver/220/trunk/jquery.flot.crosshair.js
+END
+jquery.colorhelpers.js
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/219/trunk/jquery.colorhelpers.js
 END
 NEWS.txt
 K 25
 svn:wc:ra_dav:version-url
 V 32
-/svn/!svn/ver/205/trunk/NEWS.txt
+/svn/!svn/ver/229/trunk/NEWS.txt
 END
 jquery.js
 K 25
@@ -69,17 +63,59 @@ svn:wc:ra_dav:version-url
 V 47
 /svn/!svn/ver/201/trunk/jquery.flot.navigate.js
 END
-README.txt
+jquery.flot.fillbetween.js
 K 25
 svn:wc:ra_dav:version-url
-V 34
-/svn/!svn/ver/163/trunk/README.txt
+V 50
+/svn/!svn/ver/229/trunk/jquery.flot.fillbetween.js
 END
 jquery.flot.js
 K 25
 svn:wc:ra_dav:version-url
 V 38
-/svn/!svn/ver/205/trunk/jquery.flot.js
+/svn/!svn/ver/229/trunk/jquery.flot.js
+END
+PLUGINS.txt
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/184/trunk/PLUGINS.txt
+END
+LICENSE.txt
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/211/trunk/LICENSE.txt
+END
+jquery.flot.stack.js
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/229/trunk/jquery.flot.stack.js
+END
+excanvas.min.js
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/223/trunk/excanvas.min.js
+END
+jquery.flot.pie.js
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/228/trunk/jquery.flot.pie.js
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/222/trunk/README.txt
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/226/trunk/Makefile
 END
 jquery.flot.image.js
 K 25

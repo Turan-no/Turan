@@ -52,8 +52,9 @@ drawing. As a special case, a null value for lines is interpreted as a
 line segment end, i.e. the points before and after the null value are
 not connected.
 
-Lines and points take two coordinates. For bars, you can specify a
-third coordinate which is the bottom of the bar (defaults to 0).
+Lines and points take two coordinates. For filled lines and bars, you
+can specify a third coordinate which is the bottom of the filled
+area/bar (defaults to 0).
 
 The format of a single series object is as follows:
 
@@ -479,7 +480,7 @@ The most important options are "lines", "points" and "bars" that
 specify whether and how lines, points and bars should be shown for
 each data series. In case you don't specify anything at all, Flot will
 default to showing lines (you can turn this off with
-lines: { show: false}). You can specify the various types
+lines: { show: false }). You can specify the various types
 independently of each other, and Flot will happily draw each of them
 in turn (this is probably only useful for lines and points), e.g.
 
@@ -665,39 +666,6 @@ can set "hoverable" and "clickable" to false in the options for that
 series, like this { data: [...], label: "Foo", clickable: false }.
 
 
-Customizing the selection
-=========================
-
-  selection: {
-    mode: null or "x" or "y" or "xy",
-    color: color
-  }
-
-You enable selection support by setting the mode to one of "x", "y" or
-"xy". In "x" mode, the user will only be able to specify the x range,
-similarly for "y" mode. For "xy", the selection becomes a rectangle
-where both ranges can be specified. "color" is color of the selection.
-
-When selection support is enabled, a "plotselected" event will be emitted
-on the DOM element you passed into the plot function. The event
-handler gets one extra parameter with the ranges selected on the axes,
-like this:
-
-  placeholder.bind("plotselected", function(event, ranges) {
-    alert("You selected " + ranges.xaxis.from + " to " + ranges.xaxis.to)
-    // similar for yaxis, secondary axes are in x2axis
-    // and y2axis if present
-  });
-
-The "plotselected" event is only fired when the user has finished
-making the selection. A "plotselecting" event is fired during the
-process with the same parameters as the "plotselected" event, in case
-you want to know what's happening while it's happening,
-
-A "plotunselected" event with no arguments is emitted when the user
-clicks the mouse to remove the selection.
-
-
 Specifying gradients
 ====================
 
@@ -716,10 +684,18 @@ For the series you can specify the gradient as an object that
 specifies the scaling of the brightness and the opacity of the series
 color, e.g.
 
-  { colors: [{ opacity: 0.8 }, { brightness: 0.6, opacity: 0.8 } ]
+  { colors: [{ opacity: 0.8 }, { brightness: 0.6, opacity: 0.8 } ] }
 
 where the first color simply has its alpha scaled, whereas the second
-is also darkened.
+is also darkened. For instance, for bars the following makes the bars
+gradually disappear, without outline:
+
+  bars: {
+      show: true,
+      lineWidth: 0,
+      fill: true,
+      fillColor: { colors: [ { opacity: 0.8 }, { opacity: 0.1 } ] }
+  }
   
 Flot currently only supports vertical gradients drawn from top to
 bottom because that's what works with IE.
@@ -730,34 +706,6 @@ Plot Methods
 
 The Plot object returned from the plot function has some methods you
 can call:
-
-  - setSelection(ranges, preventEvent)
-
-    Set the selection rectangle. The passed in ranges is on the same
-    form as returned in the "plotselected" event. If the selection
-    mode is "x", you should put in either an xaxis (or x2axis) object,
-    if the mode is "y" you need to put in an yaxis (or y2axis) object
-    and both xaxis/x2axis and yaxis/y2axis if the selection mode is
-    "xy", like this:
-
-      setSelection({ xaxis: { from: 0, to: 10 }, yaxis: { from: 40, to: 60 } });
-
-    setSelection will trigger the "plotselected" event when called. If
-    you don't want that to happen, e.g. if you're inside a
-    "plotselected" handler, pass true as the second parameter.
-
-    
-  - clearSelection(preventEvent)
-
-    Clear the selection rectangle. Pass in true to avoid getting a
-    "plotunselected" event.
-
-  - getSelection()
-
-    Returns the current selection in the same format as the
-    "plotselected" event. If there's currently no selection, it
-    returns null.
-    
 
   - highlight(series, datapoint)
 
@@ -807,7 +755,7 @@ can call:
   - triggerRedrawOverlay()
 
     Schedules an update of an overlay canvas used for drawing
-    interactive things like the selection and point highlights. This
+    interactive things like a selection and point highlights. This
     is mostly useful for writing plugins. The redraw doesn't happen
     immediately, instead a timer is set to catch multiple successive
     redraws (e.g. from a mousemove).
@@ -919,18 +867,23 @@ Here's an overview of the phases Flot goes through:
 
   7. Responding to events, if any
 
-The hooks are simple arrays. They are available on the "hooks"
-sub-object on the Plot object with the names mentioned below, e.g.
+Each hook is simply a function which is put in the appropriate array.
+You can add them through the "hooks" option, and they are also available
+after the plot is constructed as the "hooks" attribute on the returned
+plot object, e.g.
 
-  var plot = $.plot(...);
+  // define a simple draw hook
+  function hellohook(plot, canvascontext) { alert("hello!"); };
 
-  function f(plot, series, datapoints) { alert("hello!")};
-  
-  plot.hooks.processDatapoints.push(f);
+  // pass it in, in an array since we might want to specify several
+  var plot = $.plot(placeholder, data, { hooks: { draw: [hellohook] } });
 
-All hooks get the plot object as first parameter.
+  // we can now find it again in plot.hooks.draw[0] unless a plugin
+  // has added other hooks
 
-Currently available hooks (when in doubt, check the Flot source):
+The available hooks are described below. All hook callbacks get the
+plot object as first parameter. You can find some examples of defined
+hooks in the plugins bundled with Flot.
 
  - processOptions  [phase 1]
 
@@ -1055,7 +1008,7 @@ Plugins extend the functionality of Flot. To use a plugin, simply
 include its Javascript file after Flot in the HTML page.
 
 If you're worried about download size/latency, you can concatenate all
-the plugins you use and Flot itself for that matter into one big file
+the plugins you use, and Flot itself for that matter, into one big file
 (make sure you get the order right), then optionally run it through a
 Javascript minifier such as YUI Compressor.
 
@@ -1068,4 +1021,5 @@ from its "option" attribute. The init function gets a reference to the
 plot object created and uses this to register hooks and add new public
 methods if needed.
 
-See the PLUGINS.txt file for details on how to write a plugin.
+See the PLUGINS.txt file for details on how to write a plugin. As the
+above description hints, it's actually pretty easy.
