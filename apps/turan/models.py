@@ -160,6 +160,13 @@ class ExerciseType(models.Model):
     def __repr__(self):
         return unicode(self.type).lower()
 
+    def icon(self):
+        # TODO: do this dynamically based on sql icon
+        if self.name == 'Skating':
+            return '<img alt="Speed skater" src="/site_media/turan/speedskating.gif">'
+        return '<img alt="Cyclist" src="/site_media/turan/cyclist.png">'
+
+
     class Meta:
         verbose_name = _("Exercise Type")
         verbose_name_plural = _("Exercise Types")
@@ -225,7 +232,7 @@ class Exercise(models.Model):
 
 
     def icon(self):
-        return '<img alt="Cyclist" src="/site_media/turan/cyclist.png">'
+        return self.exercise_type.icon()
 
     class Meta:
         verbose_name = _("Exercise")
