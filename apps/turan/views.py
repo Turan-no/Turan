@@ -57,7 +57,7 @@ def datetime2jstimestamp(obj):
 def index(request):
     ''' Index view for Turan '''
 
-    exercise_list = Exercise.objects.all()[:15]
+    exercise_list = Exercise.objects.all()[:10]
     comment_list = Comment.objects.order_by('-submit_date', '-time')[:5]
 
     route_list = Route.objects.all()
