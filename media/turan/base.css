@@ -92,7 +92,7 @@ form#feedback textarea {
 
 /* Text */
 p, ul {
-	font-size: 108%;
+	font-size: 100%;
 }
 em {
 	font-style: italic;
@@ -274,6 +274,10 @@ h1 a
 /* Emphasizing */
 .title {
 	font-weight: bolder;
+}
+
+.smaller {
+    font-size: 75%;
 }
 
 /* Alignment */

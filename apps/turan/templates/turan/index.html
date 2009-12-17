@@ -14,6 +14,52 @@
 {% block content %}
 
 <div class="half floatright">
+    <img alt="{% trans "Cyclist"%}" style="float:right" src="{{MEDIA_URL}}turan/cyclist.png">
+    <h1>
+        <a href="{% url exercises %}">{% trans "Latest exercises" %}</a>
+    </h1>
+    <ul class="trips iconlist">
+    {% for object in exercise_list %}
+    <li class="{% cycle "even" "odd" %}">
+    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
+    <a href="{{ object.get_absolute_url }}">
+    {{ object.exercise_type }}
+        {{ object|slice:":35" }}</a>
+    <span class="smaller">
+        {% if object.route.distance %}
+            {{ object.route.distance|floatformat }} {% trans "km" %}
+        {% endif %}
+        {% if object.duration %}
+            {{ object.duration}}
+        {% endif %}
+        {{ object.date|naturalday}}
+    </span>
+    </li>
+    {%endfor %}
+    </ul>
+
+
+    <img alt="{% trans "Compass" %}" style="float:right" src="{{MEDIA_URL}}turan/compass.png">
+    <h1>
+        <a href="{% url routes %}">{% trans "Most popular routes" %}</a>
+    </h1>
+    <ul class="routes">
+    {% for object in route_list %}
+    <li class="{% cycle "even" "odd" %}">
+    {% comment %}
+    Silly SVG
+        {% if object.gpx_file %}
+            <object width="50" height="50" type="image/svg+xml" data="{{ object.get_svg_url }}"></object>
+        {% endif %}
+    {% endcomment %}
+
+        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> <span class="trip_count">{{ object.get_trips|length }} {% trans "trips" %}</span>
+    </li>
+    {%endfor %}
+    </ul>
+</div>
+
+<div class="half leftcol">
     <h1>
         {% trans "Welcome to Turan" %}!
     </h1>
@@ -33,7 +79,9 @@
 		<li><img src="http://img.kelkoo.com/no/medium/443/175/51840314640600011209892338671996175443.jpg" height="30"><a href="http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=polar+rs">Polar RS</a></li>
 		<li><img src="http://img.kelkoo.com/no/medium/795/523/3972572682238954048978020975365523795.jpg" height="30"><a href="http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=powertap">PowerTap</a></li>
 	</ul>
-	<p>Turan is currently categorized into cycletrips, hikes and other exercises. Spinning and other indoor activity ends up in the latter category. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.</p>
+    <p>Turan is currently categorized into cycletrips, hikes and other exercises. Spinning and other indoor activity ends up in the latter category. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.</p>
+    
+    
         
         {% endblocktrans %}
     </div>
@@ -70,48 +118,6 @@ $('#tabs ul li.tab').each(function () {
         });
 </script>
 
-    <img alt="{% trans "Compass" %}" style="float:right" src="{{MEDIA_URL}}turan/compass.png">
-    <h1>
-        <a href="{% url routes %}">{% trans "Most popular routes" %}</a>
-    </h1>
-    <ul class="routes">
-    {% for object in route_list %}
-    <li class="{% cycle "even" "odd" %}">
-    {% comment %}
-    Silly SVG
-        {% if object.gpx_file %}
-            <object width="50" height="50" type="image/svg+xml" data="{{ object.get_svg_url }}"></object>
-        {% endif %}
-    {% endcomment %}
-
-        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> <span class="trip_count">{{ object.get_trips|length }} {% trans "trips" %}</span>
-    </li>
-    {%endfor %}
-    </ul>
-</div>
-
-<div class="half leftcol">
-    <img alt="{% trans "Cyclist"%}" style="float:right" src="{{MEDIA_URL}}turan/cyclist.png">
-    <h1>
-        <a href="{% url exercises %}">{% trans "Latest exercises" %}</a>
-    </h1>
-    <ul class="trips iconlist">
-    {% for object in exercise_list %}
-    <li class="{% cycle "even" "odd" %}">
-    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
-    <a href="{{ object.get_absolute_url }}">
-    {{ object.exercise_type }}
-        {{ object|slice:":35" }}</a>
-        {% if object.route.distance %}
-            {{ object.route.distance|floatformat }} {% trans "km" %}
-        {% endif %}
-        {% if object.duration %}
-            {{ object.duration}}
-        {% endif %}
-        {{ object.date|naturalday}}
-    </li>
-    {%endfor %}
-    </ul>
 
 </div>
 {% endblock content %}
