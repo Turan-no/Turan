@@ -62,6 +62,6 @@ urlpatterns += patterns('django.views.generic.create_update',
     url(r'^exercise/delete/(?P<object_id>\d+)', turan_delete_object, {'model': Exercise, 'login_required': True,},name='exercise_delete'),
 
 # Detail deletes
-    url(r'^exercise/detail_delete/(?P<object_id>\d+)/(?P<value>\w+)/', turan_delete_detailset_value, {'model': Exercise, },name='exercise_detail_delete'),
+#    url(r'^exercise/detail_delete/(?P<object_id>\d+)/(?P<value>\w+)/', turan_delete_detailset_value, {'model': Exercise, },name='exercise_detail_delete'),
 )
 
