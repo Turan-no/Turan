@@ -546,6 +546,9 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
 
 def js_trip_series(details,  start=False, stop=False, time_xaxis=True):
 
+    if not details:
+        return
+
     # The JS arrays
     js_strings = {
             'speed': '',
