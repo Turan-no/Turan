@@ -60,6 +60,9 @@ class HRMParser(object):
                     elif self.smode == '101000100':
                         hr, speed, altitude = line.split('\t')
                         cadence = 0
+                    elif self.smode == '010000100':
+                        hr, cadence = line.split('\t')
+                        speed, altitude = 0, 0
                     elif self.smode == '000000000':
                         hr = line.strip()
                         speed, altitude, cadence = 0, 0, 0
