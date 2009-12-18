@@ -557,6 +557,12 @@ def js_trip_series(details,  start=False, stop=False, time_xaxis=True):
 
     x = 0
     previous_time = False
+
+# Check if we should export altitude to graph
+    has_altitude = details[0].exercise.exercise_type.altitude
+    if not has_altitude:
+        del js_strings['altitude']
+
     for i, d in enumerate(details):
         if start and start < i:
             continue

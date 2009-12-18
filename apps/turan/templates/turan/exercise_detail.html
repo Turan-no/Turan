@@ -17,14 +17,22 @@
 <div id="tabs">
     <ul>
         <li class="selected" id="tabs-select-1">{% trans "Graph" %}</li>
-        <li id="tabs-select-2">{% trans "Slopes" %}</li>
-        <li id="tabs-select-3">{% trans "Zones" %}</li>
+        <li id="tabs-select-2">{% trans "Zones" %}</li>
+    {% ifequal object.exercise_type.slopes 1 %}
+        <li id="tabs-select-3">{% trans "Slopes" %}</li>
+    {% endifequal %}
+    {% ifequal object.exercise_type.altitude 1 %}
         <li id="tabs-select-4">{% trans "Inclinesums" %}</li>
+    {% endifequal %}
     </ul>
     <div id="tabs-1" class="graph visible">
         {% include "turan/cycletrip/graph.html" %}
     </div>
-    <div id="tabs-2" class="slope_tab">
+    <div id="tabs-2" class="zone_tab">
+        {% include "turan/event/zone_tab.html" %}
+    </div>
+    {% ifequal object.exercise_type.slopes 1 %}
+    <div id="tabs-3" class="slope_tab">
         <table>
             <tr>
                 <th>
@@ -69,12 +77,12 @@
         {% endfor %}
         </table>
     </div>
-    <div id="tabs-3" class="zone_tab">
-        {% include "turan/event/zone_tab.html" %}
-    </div>
+    {% endifequal %}
+    {% ifequal object.exercise_type.altitude 1 %}
     <div id="tabs-4">
         {% include "turan/event/incline_tab.html" %}
     </div>
+    {% endifequal %}
 </div>
 <script type="text/javascript">
     function selectTab(evt) {

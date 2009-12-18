@@ -153,12 +153,15 @@ class Route(models.Model):
 class ExerciseType(models.Model):
 
     name = models.CharField(max_length=40)
+    logo = models.ImageField(upload_to='exerciselogos', blank=True, storage=gpxstore)
+    altitude = models.BooleanField(blank=True, default=0)
+    slopes = models.BooleanField(blank=True, default=0)
 
     def __unicode__(self):
         return ugettext(self.name)
 
     def __repr__(self):
-        return unicode(self.type).lower()
+        return unicode(self.name)
 
     def icon(self):
         # TODO: do this dynamically based on sql icon
@@ -245,7 +248,7 @@ class Exercise(models.Model):
             name = self.route.name
 # FIXME 
             if name == '/dev/null':
-                name = ''
+                name = unicode(self.exercise_type)
 
         return u'%s' %(name)
     

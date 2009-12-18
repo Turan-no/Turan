@@ -23,7 +23,6 @@
     <li class="{% cycle "even" "odd" %}">
     <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
     <a href="{{ object.get_absolute_url }}">
-    {{ object.exercise_type }}
         {{ object|slice:":35" }}</a>
     <span class="smaller">
         {% if object.route.distance %}
