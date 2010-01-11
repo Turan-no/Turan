@@ -9,8 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.utils.safestring import mark_safe
 
-from time import mktime
-from datetime import timedelta, datetime
+from time import mktime, strptime
+from datetime import timedelta, datetime, date as datetimedate
 
 from friends.forms import InviteFriendForm
 from friends.models import FriendshipInvitation, Friendship
@@ -230,7 +230,78 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     return render_to_response(template_name, locals(),
             context_instance=RequestContext(request))
 
-def profile_statistics(request, username, template_name="profiles/statistics.html"):
+def profile_statistics(request, username, template_name="profiles/statistics.html", year=None, month=None ):
+
+    month_format = '%m' 
+    allow_future = True
+    date_field = 'date'
+    now = datetime.now()
+
+    timefilter = {}
+    datefilter = {}
+
+    if year:
+        datefilter = {"date__year": year}
+        previous_year = int(year)-1
+        next_year = int(year)+1
+        timefilter = {"time__year": year}
+        tt = strptime("%s" % (year), '%s' % ('%Y'))
+        if month:
+            datefilter["date__month"] = month
+            timefilter["time__month"] = month
+            tt = strptime("%s-%s" % (year, month), '%s-%s' % ('%Y', month_format))
+    else:
+        dummystart = datetime(1970,1,1)
+        datefilter = { "date__gte": dummystart }
+        previous_year = int(now.year)-1
+        next_year = int(now.year)+1
+        tt = strptime("%s" % (now.year), '%s' % ('%Y'))
+        year = now.year
+
+
+
+    date = datetimedate(*tt[:3])
+
+    
+    # Calculate first and last day of month, for use in a date-range lookup.
+    first_day = date.replace(day=1)
+    if first_day.month == 12:
+        last_day = first_day.replace(year=first_day.year + 1, month=1)
+    else:
+        last_day = first_day.replace(month=first_day.month + 1)
+    lookup_kwargs = {
+        '%s__gte' % date_field: first_day,
+        '%s__lt' % date_field: last_day,
+    }
+
+    # Calculate the next month, if applicable.
+    if allow_future:
+        next_month = last_day
+    elif last_day <= datetime.date.today():
+        next_month = last_day
+    else:
+        next_month = None
+
+    # Calculate the previous month
+    if first_day.month == 1:
+        previous_month = first_day.replace(year=first_day.year-1,month=12)
+    else:
+        previous_month = first_day.replace(month=first_day.month-1)
+
+    tfilter = {}
+    tfilter2 = {}
+    tfilter3 = {}
+    if datefilter:
+        tfilter.update(datefilter)
+        tfilter3.update(timefilter)
+    if timefilter:
+        tfilter2.update(timefilter)
+
+    hrfilter = {'resting_hr__isnull':False }
+    tfilter3.update(hrfilter)
+    weightfilter = {'weight__isnull':False }
+    tfilter2.update(weightfilter)
+
 
     other_user = get_object_or_404(User, username=username)
 
@@ -258,16 +329,16 @@ def profile_statistics(request, username, template_name="profiles/statistics.htm
 
     if height:
         height = float(other_user.get_profile().height)/100
-        weightqs = other_user.get_profile().userprofiledetail_set.filter(weight__isnull=False).order_by('time')
+        weightqs = other_user.get_profile().userprofiledetail_set.filter(**tfilter2).order_by('time')
         for wtuple in weightqs.values_list('time', 'weight'):
             bmidataseries += '[%s, %s],' % (datetime2jstimestamp(wtuple[0]), wtuple[1]/(height*height))
             bmiline += '[%s, 25],' %datetime2jstimestamp(wtuple[0])
 
-    pulseqs = other_user.get_profile().userprofiledetail_set.filter(resting_hr__isnull=False).order_by('time')
+    pulseqs = other_user.get_profile().userprofiledetail_set.filter(**tfilter3).order_by('time')
     for hrtuple in pulseqs.values_list('time', 'resting_hr'):
         pulsedataseries += '[%s, %s],' % (datetime2jstimestamp(hrtuple[0]), hrtuple[1])
 
-    exerciseqs = other_user.exercise_set.order_by('date')
+    exerciseqs = other_user.exercise_set.filter(**tfilter).order_by('date')
 
     for trip in exerciseqs:
         if trip.avg_speed:
