@@ -180,6 +180,26 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
         pulsedataseries += '[%s, %s],' % (datetime2jstimestamp(hrtuple[0]), hrtuple[1])
 
     exerciseqs = other_user.exercise_set.order_by('date')
+    exerciseqs_dataseries = other_user.exercise_set.order_by('date')[:7]
+
+    i = 0
+
+    for trip in reversed(exerciseqs):
+        if trip.avg_speed and trip.exercise_type.name=="Cycling":
+            # only increase counter if trip has speed
+            avgspeeddataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed)
+            i += 1
+        if i > 7:
+            break
+
+    i = 0
+        
+    for trip in reversed(exerciseqs):
+        if trip.avg_hr:
+            avghrdataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_hr)
+            i += 1
+        if i > 7:
+            break
 
     for trip in exerciseqs:
         tripdataseries += '[%s, %s],' % ( nr_trips, trip.route.distance)
@@ -192,7 +212,6 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
         total_distance += trip.route.distance
         if trip.avg_speed:
             # only increase counter if trip has speed
-            avgspeeddataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed)
             total_avg_speed += trip.avg_speed
             nr_trips += 1
     if total_avg_speed:
@@ -200,7 +219,6 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
 
     for event in exerciseqs:
         if event.avg_hr:
-            avghrdataseries += '[%s, %s],' % (datetime2jstimestamp(event.date), event.avg_hr)
             total_avg_hr += event.avg_hr
             nr_hr_trips += 1
 
