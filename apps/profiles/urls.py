@@ -8,6 +8,8 @@ urlpatterns = patterns('',
     url(r'^$', profiles, name='profile_list'),
     url(r'^(?P<username>[\w\._-]+)/$', profile, name='profile_detail'),
     url(r'^(?P<username>[\w\._-]+)/statistics/$', profile_statistics, name='profile_statistics'),
+    url(r'^(?P<username>[\w\._-]+)/statistics/(?P<year>\d+)$', profile_statistics, name='profile_statistics'),
+    url(r'^(?P<username>[\w\._-]+)/statistics/(?P<year>\d+)/(?P<month>\d+)$', profile_statistics, name='profile_statistics'),
 )
 urlpatterns += patterns('',
     url(r'^userprofiledetail/create/$', create_object, {'login_required': True, 'form_class': UserProfileDetailForm, 'profile_required': True},name='userprofiledetail_create'),
