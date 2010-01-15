@@ -48,16 +48,8 @@ def profiles(request, template_name="profiles/profiles.html", extra_context=None
     elif order == 'name':
         users = users.order_by("username")
     elif order == 'time':
-
-        users = users.annotate(c =
-                Sum('cycletrip__duration'),h =
-                Sum('hike__duration'),e =
-                Sum('otherexercise__duration'))
-        for u in users:
-            if not u.e: u.e = 0
-            if not u.h: u.h = 0
-            if not u.c: u.c = 0
-        users = sorted(users, key=lambda x: -x.c-x.h-x.e)
+        # FIXME Isn't working :(
+        users = users.annotate(e = Sum('exercise__duration'))
     return render_to_response(template_name, dict({
         'users': users,
         'order': order,
