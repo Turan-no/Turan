@@ -717,6 +717,8 @@ def getslopes(values):
                 stop_duration = (values[i].time - values[stop_since].time).seconds
             else:
                 stop_duration = 0
+            if (values[i].time - values[i-1].time).seconds > 60:
+                stop_duration = (values[i].time - values[i-1].time).seconds
             if values[i].altitude < values[cur_start].altitude + hdelta*0.9 \
                     or i == len(values) \
                     or stop_duration > 60:
