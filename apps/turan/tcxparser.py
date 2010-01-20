@@ -101,6 +101,7 @@ class TCXParser(object):
 
         self.heartbeats = 0
         self.rotations = 0
+        self.powersum = 0
         for e in t.getiterator(tag="{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint"):
             try:
                 tstring = e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Time").text
@@ -137,7 +138,10 @@ class TCXParser(object):
             except AttributeError:
                 lat = 0.0
 
-            power = 0 # not yet
+            try:
+                power = int(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Extensions").find("{http://www.garmin.com/xmlschemas/ActivityExtension/v2}TPX").find("{http://www.garmin.com/xmlschemas/ActivityExtension/v2}Watts").text)
+            except AttributeError:
+                power = 0
 
             time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").strip("Z").split("-")))
 
@@ -169,6 +173,8 @@ class TCXParser(object):
             if timedelta <= 60:
                 self.heartbeats += hr*timedelta
                 self.rotations += cadence*timedelta
+                if power:
+                    self.powersum += power*timedelta
 
             self.entries.append(TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power))
             self.cur_time = time
@@ -189,6 +195,9 @@ class TCXParser(object):
         self.avg_cadence = self.rotations/seconds
         self.avg_hr = self.heartbeats/seconds
         self.duration = '%is' % int(seconds)
+        if self.powersum:
+            self.avg_power = self.powersum/seconds
+            self.max_power = max([self.entries[i].power for i in xrange(0,len(self.entries))])
 
 if __name__ == '__main__':
     
