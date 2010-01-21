@@ -717,10 +717,13 @@ def getslopes(values):
                 stop_duration = (values[i].time - values[stop_since].time).seconds
             else:
                 stop_duration = 0
-            if values[i+1] and (values[i+1].time - values[i].time).seconds > 60:
-                stop_duration = max( \
-                        (values[i+1].time - values[i].time).seconds, \
-                        stop_duration )
+            try:
+                if (values[i+1].time - values[i].time).seconds > 60:
+                    stop_duration = max( \
+                            (values[i+1].time - values[i].time).seconds, \
+                            stop_duration )
+            except IndexError:
+                pass
             if values[i].altitude < values[cur_start].altitude + hdelta*0.9 \
                     or i == len(values) \
                     or stop_duration > 60:
@@ -731,8 +734,7 @@ def getslopes(values):
                     distance = values[cur_end].distance - values[cur_start].distance
                     if distance > 10:
                         slopes.append(Slope(cur_start, cur_end, distance, hdelta, hdelta/distance * 100, values[cur_start].distance/1000))
-                if values[i+1]:
-                    cur_start = i+1
+                cur_start = i+1
         elif values[i].altitude <= values[cur_start].altitude:
             cur_start = i
             cur_end  = i
