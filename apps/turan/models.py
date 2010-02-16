@@ -394,7 +394,6 @@ def parse_sensordata(event):
 
     parser.parse_uploaded_file(event.sensor_file.file)
     values = parser.entries
-
     if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
         gpxvalues = GPXParser(event.route.gpx_file.file).entries
 
