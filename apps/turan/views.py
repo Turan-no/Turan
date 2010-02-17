@@ -444,7 +444,7 @@ def geojson(request, object_id):
     if qs.count() == 0:
         return HttpResponse('{}')
 
-    max_hr = qs[0].trip.user.get_profile().max_hr
+    max_hr = qs[0].exercise.user.get_profile().max_hr
 
     class Feature(object):
 
