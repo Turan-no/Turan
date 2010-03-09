@@ -67,10 +67,10 @@ def index(request):
 
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))
 
-def trip_compare(request, event_type, trip1, trip2):
+def exercise_compare(request, exercise1, exercise2):
 
-    trip1 = get_object_or_404(Exercise, pk=trip1)
-    trip2 = get_object_or_404(Exercise, pk=trip2)
+    trip1 = get_object_or_404(Exercise, pk=exercise1)
+    trip2 = get_object_or_404(Exercise, pk=exercise2)
 
     #t1_speed = tripdetail_js(event_type, trip1.id, 'speed')
     #t2_speed = tripdetail_js(event_type, trip2.id, 'speed')
@@ -79,11 +79,11 @@ def trip_compare(request, event_type, trip1, trip2):
     #t1_cad = tripdetail_js(event_type, trip1.id, 'cadence')
     #t2_cad = tripdetail_js(event_type, trip2.id, 'cadence')
 
-    alt = tripdetail_js(event_type, trip1.id, 'altitude')
+    alt = tripdetail_js(None, trip1.id, 'altitude')
     alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
-    datasets1 = js_trip_series(trip1.get_details().all())
-    datasets2 = js_trip_series(trip2.get_details().all())
+    datasets1 = js_trip_series(trip1.get_details().all(), time_xaxis=False)
+    datasets2 = js_trip_series(trip2.get_details().all(), time_xaxis=False)
     datasets = mark_safe(datasets1 +',' +datasets2)
 
     return render_to_response('turan/cycletrip_compare.html', locals(), context_instance=RequestContext(request))

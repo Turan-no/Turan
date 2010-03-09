@@ -77,7 +77,7 @@ class ForeignKeySearchInput(forms.HiddenInput):
         }
 
 class ExerciseForm(forms.ModelForm):
-    route = forms.CharField(widget=ForeignKeySearchInput('Route'))#, 'turan'))
+    route = forms.CharField(widget=ForeignKeySearchInput('Route'), required=False)#, 'turan'))
 
     class Meta:
         model = Exercise
@@ -86,6 +86,8 @@ class ExerciseForm(forms.ModelForm):
     def clean_route(self):
         '''Translate number from autocomplete to object '''
         data = self.cleaned_data['route']
+        if not data:
+            return None
         data = Route.objects.get(pk=data)
         return data
     
