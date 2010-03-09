@@ -82,11 +82,11 @@ def exercise_compare(request, exercise1, exercise2):
     alt = tripdetail_js(None, trip1.id, 'altitude')
     alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
-    datasets1 = js_trip_series(trip1.get_details().all(), time_xaxis=False)
-    datasets2 = js_trip_series(trip2.get_details().all(), time_xaxis=False)
+    datasets1 = js_trip_series(trip1.get_details().all(), time_xaxis=True)
+    datasets2 = js_trip_series(trip2.get_details().all(), time_xaxis=True)
     datasets = mark_safe(datasets1 +',' +datasets2)
 
-    return render_to_response('turan/cycletrip_compare.html', locals(), context_instance=RequestContext(request))
+    return render_to_response('turan/exercise_compare.html', locals(), context_instance=RequestContext(request))
 
 class TripsFeed(Feed):
     title = "lart.no turan trips"
@@ -526,6 +526,7 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
 
     qs = ExerciseDetail.objects.filter(exercise=object_id)
 
+    x = 0
     distance = 0
     previous_time = False
     js = ''
@@ -539,9 +540,10 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
         time = d['time'] - previous_time
         previous_time = d['time']
         distance += ((d['speed']/3.6) * time.seconds)/1000
+        x += float(time.seconds)/60
         dval = d[val]
         if dval > 0: # skip zero values (makes prettier graph)
-            js += '[%s, %s],' % (distance, dval)
+            js += '[%s, %s],' % (x, dval)
     return js
 
 def js_trip_series(details,  start=False, stop=False, time_xaxis=True):
