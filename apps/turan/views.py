@@ -171,6 +171,49 @@ def week(request, week, user_id='all'):
     return render_to_response('turan/event_list.html', locals(), context_instance=RequestContext(request))
 
 def statistics(request, year=None, month=None, day=None, week=None):
+
+    month_format = '%m' 
+    date_field = 'date'
+    now = datetime.now()
+    if not year:
+        tt = strptime("%s-%s" % (now.year, now.month), '%s-%s' % ('%Y', month_format))
+    elif not month:
+        tt = strptime("%s-%s" % (now.year, now.month), '%s-%s' % ('%Y', month_format))
+    else:
+        tt = strptime("%s-%s" % (year, month), '%s-%s' % ('%Y', month_format))
+    date = datetimedate(*tt[:3])
+    allow_future = True
+
+    # Calculate first and last day of month, for use in a date-range lookup.
+    first_day = date.replace(day=1)
+    if first_day.month == 12:
+        last_day = first_day.replace(year=first_day.year + 1, month=1)
+    else:
+        last_day = first_day.replace(month=first_day.month + 1)
+    lookup_kwargs = {
+        '%s__gte' % date_field: first_day,
+        '%s__lt' % date_field: last_day,
+    }
+    
+    # Only bother to check current date if the month isn't in the past and future objects are requested.
+    if last_day >= now.date() and not allow_future:
+        lookup_kwargs['%s__lte' % date_field] = now
+    
+    # Calculate the next month, if applicable.
+    if allow_future:
+        next_month = last_day
+    elif last_day <= date.today():
+        next_month = last_day
+    else:
+        next_month = None
+
+    # Calculate the previous month
+    if first_day.month == 1:
+        previous_month = first_day.replace(year=first_day.year-1,month=12)
+    else:
+        previous_month = first_day.replace(month=first_day.month-1)
+
+
     if year:
         datefilter = {"user__exercise__date__year": year}
         if month:

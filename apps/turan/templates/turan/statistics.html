@@ -17,7 +17,31 @@
 </ul>
 </div>
 <h1>{% trans "Statistics" %}</h1>
-
+<h3>Month</h3>
+<ul class="buttons">
+    <li>
+    <a href="{% url statistics-month previous_month.year previous_month.month %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/date_previous.png" alt="{% trans "Previous"%}" />
+        {% trans "Previous" %}
+    </a>
+    <a href="{% url statistics-month next_month.year next_month.month %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/date_next.png" alt="{% trans "Next"%}" />
+        {% trans "Next" %}
+    </a>
+    </li>
+</ul>
+<table>
+    <tr>
+    <td> <a href="{% url statistics-year now.year %}?exercise=alpin"><img alt="{% trans "Alpine Skier"%}" style="float:left" src="{{MEDIA_URL}}turan/downhill.jpg"></a> </td>
+    <td> <a href="{% url statistics-year now.year %}?exercise=skiing"><img alt="{% trans "Cross Country Skiing"%}" style="float:left;height:62px" src="{{MEDIA_URL}}turan/skiing.png"></a> </td>
+    <td> <a href="{% url statistics-year now.year %}?exercise=cycling"><img alt="{% trans "Cyclist"%}" style="float:left" src="{{MEDIA_URL}}turan/cyclist.png"></a> </td>
+    <td> <a href="{% url statistics-year now.year %}?exercise=hike"><img alt="{% trans "Hiker"%}" style="float:left" src="{{MEDIA_URL}}turan/hiker.png"></a> </td>
+    <td> <a href="{% url statistics-year now.year %}?exercise=rollers"><img alt="{% trans "Roller"%}" style="float:left;height:62px" src="{{MEDIA_URL}}turan/rollers.jpg"></a> </td>
+    <td> <a href="{% url statistics-year now.year %}?exercise=skating"><img alt="{% trans "Speedskater"%}" style="float:left;height:62px" src="{{MEDIA_URL}}turan/speedskating.gif"></a> </td>
+    <td> <a href="{% url statistics-year now.year %}?exercise=spinning"><img alt="{% trans "Spinning"%}" style="float:left" src="{{MEDIA_URL}}turan/spinning.jpg"></a> </td>
+    <td> <a href="{% url statistics-year now.year %}?exercise=svømming"><img alt="{% trans "Swimming"%}" style="float:left" src="{{MEDIA_URL}}turan/swimming.jpg"></a> </td>
+    </tr>
+</table>
 <ul>
     <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration|retarddurationformat }}</li>
     <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
@@ -116,7 +140,7 @@
 
 {% endcomment %}
 <div class="toplist half">
-    <h2> {% trans "Bicycle statistics" %} </h2>
+    <h2> {% trans "Exercise Statistics" %} </h2>
     <h3> {% trans "Highest average speed for trip" %} </h3>
     <ol>
         {% for u in maxavgspeeds %}
