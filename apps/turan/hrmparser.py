@@ -67,6 +67,9 @@ class HRMParser(object):
                     elif self.smode == '000000100':
                         hr = line.strip()
                         speed, altitude, cadence = 0, 0, 0
+                    elif self.smode == '100000100':
+                        hr, speed = line.split('\t')
+                        altitude, cadence = 0, 0
                     else:
                         assert False, "Unknown smode (combination of sensors), please contact admins"
 
