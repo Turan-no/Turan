@@ -8,7 +8,7 @@
 {% endblock %}
 {% block content %}
 <div class="half floatright">
-<h1>{% trans "Filter by team" %}</h1>
+<h3>{% trans "Filter by team" %}</h3>
 <ul>
     <li><a href="{% url statistics%}">{% trans "No filter" %}</a></li> 
     {% for team in team_list %}
@@ -16,8 +16,7 @@
     {% endfor %}
 </ul>
 </div>
-<h1>{% trans "Statistics" %}</h1>
-<h3>Month</h3>
+<h2>{% trans "Month" %}</h2>
 <ul class="buttons">
     <li>
     <a href="{% url statistics-month previous_month.year previous_month.month %}">
@@ -30,6 +29,7 @@
     </a>
     </li>
 </ul>
+<h3>{% trans "Filter by exercise type" %}</h3>
 <table>
     <tr>
     <td> <a href="{% url statistics-year now.year %}?exercise=alpin"><img alt="{% trans "Alpine Skier"%}" style="float:left" src="{{MEDIA_URL}}turan/downhill.jpg"></a> </td>
@@ -42,6 +42,7 @@
     <td> <a href="{% url statistics-year now.year %}?exercise=svømming"><img alt="{% trans "Swimming"%}" style="float:left" src="{{MEDIA_URL}}turan/swimming.jpg"></a> </td>
     </tr>
 </table>
+{% comment %}
 <ul>
     <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration|retarddurationformat }}</li>
     <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
@@ -51,7 +52,6 @@
 </ul>
 <hr class="clear">
 
-{% comment %}
 <div class="toplist hike half floatright">
     <h2> {% trans "Hike statistics" %} </h2>
     <h3> {% trans "Highest average speed for trip" %} </h3>
