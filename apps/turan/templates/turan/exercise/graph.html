@@ -7,9 +7,101 @@
 
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
-        var datasets = {{ datasets }};
-        {% include "turan/common_graph.html" %}
+    var datasets = {{ datasets }};
+    var plot;
+    var choiceContainer = $("#choices");
+    $.each(datasets, function(key, val) {
+        choiceContainer.append('<br/><input type="checkbox" name="' + key +
+            '" checked="checked" id="chk_' + key + '"><label for="chk_' + key + 
+            '">' + val.label + '</label></input>');
+    });
+    choiceContainer.append('<br /><input type="reset" value="{% trans "Reset zoom" %}" />');
+    choiceContainer.find("input").click(plotAccordingToChoices);
 
+    $("#tripdiv{{object.id}}").bind("plotselected", function (event, ranges) {
+        plotAccordingToChoices(ranges);
+    });
+
+    function plotAccordingToChoices(ranges) {
+        var data = [];
+        var xaxisattrs = { tickDecimals: 0 };
+        if (ranges.xaxis != undefined) {
+            xaxisattrs.min = ranges.xaxis.from;
+            xaxisattrs.max = ranges.xaxis.to;
+        }
+        choiceContainer.find("input:checked").each(function () {
+            var key = $(this).attr("name");
+            if (key && datasets[key])
+                data.push(datasets[key]);
+        });
+
+        if (data.length > 0) {
+            plot = $.plot($("#tripdiv{{object.id}}"), data, {
+                yaxis: { min: 0 },
+                y2axis: { min: 80 },
+                xaxis: xaxisattrs,
+                legend: { container: $("#tripdiv_legend{{object.id}}") },
+                grid: { 
+                    hoverable: true, 
+                    clickable: true,
+//                    markings: [ { xaxis: { from: 0, to: 50 }, 
+//                                  y2axis: { from: 160, to: 180 }, 
+//                                  color: rgba(20%, 40%, 90%, 0.2) }, ],
+                },
+                selection: { mode: "x" }
+            });
+        }
+    }
+    plotAccordingToChoices({});
+
+    function showTooltip(x, y, contents) {
+        $('<div id="tooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            border: '1px solid #fdd',
+            padding: '2px',
+            'background-color': '#fee',
+            opacity: 0.80
+        }).appendTo("body").fadeIn(200);
+    }
+
+    var previousPoint = null;
+    $("#tripdiv{{object.id}}").bind("plothover", function (event, pos, item) {
+        var y = 0;
+        if (pos.y)
+            y = pos.y;
+        else
+            y = pos.y2;
+
+        $("#x").text(pos.x.toFixed(2));
+        $("#y").text(y.toFixed(2));
+
+            if (item) {
+                if (previousPoint != item.datapoint) {
+                    previousPoint = item.datapoint;
+                    
+                    $("#tooltip").remove();
+                    var x = item.datapoint[0].toFixed(2),
+                        y = item.datapoint[1].toFixed(2);
+                    
+                    showTooltip(item.pageX, item.pageY,
+                    item.series.label + " {% trans "at" %} " + x + " {% trans "is" %} " + y);
+                }
+            }
+            else {
+                $("#tooltip").remove();
+                previousPoint = null;            
+            }
+    });
+
+    $("#tripdiv{{object.id}}").bind("plotclick", function (event, pos, item) {
+        if (item) {
+            $("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
+            plot.highlight(item.series, item.datapoint);
+        }
+    });
 
 
 

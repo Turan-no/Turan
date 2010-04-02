@@ -38,6 +38,11 @@ class HRMParser(object):
 
     def parse_uploaded_file(self, f):
 
+        # Workaround for some race conditions (?) with file object
+        #
+
+        f = file(f.name, 'r')
+
         i = 0
         laprow = 0
         hrstarted = False

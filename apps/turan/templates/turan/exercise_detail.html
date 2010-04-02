@@ -26,10 +26,10 @@
     {% endifequal %}
     </ul>
     <div id="tabs-1" class="graph visible">
-        {% include "turan/cycletrip/graph.html" %}
+        {% include "turan/exercise/graph.html" %}
     </div>
     <div id="tabs-2" class="zone_tab">
-        {% include "turan/event/zone_tab.html" %}
+        {% include "turan/exercise/zone_tab.html" %}
     </div>
     {% ifequal object.exercise_type.slopes 1 %}
     <div id="tabs-3" class="slope_tab">
@@ -80,7 +80,7 @@
     {% endifequal %}
     {% ifequal object.exercise_type.altitude 1 %}
     <div id="tabs-4">
-        {% include "turan/event/incline_tab.html" %}
+        {% include "turan/exercise/incline_tab.html" %}
     </div>
     {% endifequal %}
 </div>
