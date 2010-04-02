@@ -112,7 +112,7 @@ class HRMParser(object):
                 hour, minute, second = int(line[10:12]), int(line[13:15]), int(line[16:18])
                 self.start_time = datetime.time(hour, minute, second)
             elif line.startswith('Interval'):
-                self.interval = int(line[9:10])
+                self.interval = int(line.split("=")[1])
             elif line.startswith('[HRData]'):
                 hrstarted = True
             elif line.startswith('[Note]'):

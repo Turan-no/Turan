@@ -835,11 +835,16 @@ def exercise(request, object_id):
 
     object = get_object_or_404(Exercise, pk=object_id)
     details = object.exercisedetail_set.all()
+    # Default is false, many exercises don't have distance, we try to detect later
+    time_xaxis = True
     if details:
         #userweight = object.user.userprofile_set.all()[0].weight
         userweight = object.user.get_profile().weight
         filldistance(details)
         slopes = getslopes(details)
+        if slopes:
+            # If we have slopes, we have distance use that for graph
+            time_xaxis = False
         for slope in slopes:
             slope.duration = details[slope.end].time - details[slope.start].time
             slope.speed = slope.length/slope.duration.seconds * 3.6
@@ -848,7 +853,7 @@ def exercise(request, object_id):
 
         zones = getzones(details)
         inclinesummary = getinclinesummary(details)
-    datasets = js_trip_series(details)
+    datasets = js_trip_series(details, time_xaxis=time_xaxis)
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
 
 def json_serializer(request, queryset, root_name = None, relations = (), extras = ()):
