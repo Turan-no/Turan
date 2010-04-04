@@ -250,7 +250,7 @@ class Exercise(models.Model):
             if name == '/dev/null':
                 name = unicode(self.exercise_type)
 
-        return u'%s' %(name)
+        return u'%s, %s %s' %(name, _('by'), self.user)
     
 class ExerciseDetail(models.Model):
 
