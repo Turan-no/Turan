@@ -53,7 +53,7 @@ class ForeignKeySearchInput(forms.HiddenInput):
 <input type="text" id="lookup_%(name)s" value="%(label)s" /> <br>Search for route or <a href="%(route_create)s">Create new</a> first
             <script type="text/javascript">
             jQuery("#lookup_%(name)s").autocomplete('%(url)s', {
-                max: 10,
+                max: 50,
                 highlight: false,
                 multiple: true,
                 multipleSeparator: "\\n",
