@@ -3,10 +3,11 @@
 {% load i18n %}
 {% load turan_extras %}
 {% block title %} {{trip1}} {% trans "versus" %} {{ trip2}}
-{% trans "Cycle trip" %} 
+{% trans "Exercise" %} 
 {% endblock %}
 {% block content %}
 <h1>{{trip1}} {{trip1.duration}} versus {{ trip2 }} {{trip2.duration }}</h1>
+First is yellow, second is blue !
 <h2>{% trans "Speed" %}</h1>
 <div id="speediv" style="width:1000px;height:200px"></div>
 <h2>{% trans "HR" %}</h1>
@@ -49,11 +50,11 @@ $(function () {
 
 
 {% with trip1 as object %}
-{% include "turan/cycletrip/attributes.html" %}
+{% include "turan/exercise/attributes.html" %}
 {% endwith %}
 
 {% with trip2 as object %}
-{% include "turan/cycletrip/attributes.html" %}
+{% include "turan/exercise/attributes.html" %}
 {% endwith %}
 {% endblock content %}
 

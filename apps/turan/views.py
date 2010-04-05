@@ -82,8 +82,8 @@ def exercise_compare(request, exercise1, exercise2):
     alt = tripdetail_js(None, trip1.id, 'altitude')
     alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
-    datasets1 = js_trip_series(trip1.get_details().all(), time_xaxis=True)
-    datasets2 = js_trip_series(trip2.get_details().all(), time_xaxis=True)
+    datasets1 = js_trip_series(trip1.get_details().all(), time_xaxis=False)
+    datasets2 = js_trip_series(trip2.get_details().all(), time_xaxis=False)
     datasets = mark_safe(datasets1 +',' +datasets2)
 
     return render_to_response('turan/exercise_compare.html', locals(), context_instance=RequestContext(request))
@@ -583,10 +583,10 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
         time = d['time'] - previous_time
         previous_time = d['time']
         distance += ((d['speed']/3.6) * time.seconds)/1000
-        x += float(time.seconds)/60
+        # time_xaxis = x += float(time.seconds)/60
         dval = d[val]
         if dval > 0: # skip zero values (makes prettier graph)
-            js += '[%s, %s],' % (x, dval)
+            js += '[%s, %s],' % (distance, dval)
     return js
 
 def js_trip_series(details,  start=False, stop=False, time_xaxis=True):
