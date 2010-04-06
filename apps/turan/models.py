@@ -164,10 +164,8 @@ class ExerciseType(models.Model):
         return unicode(self.name)
 
     def icon(self):
-        # TODO: do this dynamically based on sql icon
-        if self.name == 'Skating':
-            return '<img alt="Speed skater" src="/site_media/turan/speedskating.gif">'
-        return '<img alt="Cyclist" src="/site_media/turan/cyclist.png">'
+        # FIXME use media url
+        return '<img alt="%s" src="/site_media/turan/%s">' %(self.name, self.logo)
 
 
     class Meta:
