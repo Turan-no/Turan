@@ -770,7 +770,7 @@ def getslopes(values):
             except IndexError:
                 pass
             if values[i].altitude < values[cur_start].altitude + hdelta*0.9 \
-                    or i == len(values) \
+                    or i == len(values)-1 \
                     or stop_duration > 60:
                 if stop_duration > 60:
                     cur_stop = stop_since
