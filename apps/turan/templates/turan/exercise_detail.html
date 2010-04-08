@@ -57,6 +57,9 @@
                     {% trans "Avg power" %}
                 </th>
                 <th>
+                    {% trans "Avg power/kg" %}
+                </th>
+                <th>
                     {% trans "Avg HR" %}
                 </th>
             </tr>
@@ -69,6 +72,7 @@
                 <td>{{ slope.duration.seconds|durationformat }} </td>
                 <td>{{slope.speed|floatformat}} {% trans "km/h" %}</td>
                 <td>{{slope.avg_power|floatformat}} {% trans "W" %} </td>
+                <td>{{slope.avg_power_kg|floatformat}} {% trans "W/kg" %} </td>
                 <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}
                     {% if object.user.get_profile.max_hr %}
                     ({{ slope.avg_hr|percent:object.user.get_profile.max_hr }})
