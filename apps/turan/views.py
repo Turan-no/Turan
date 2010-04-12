@@ -606,6 +606,17 @@ def js_trip_series(details,  start=False, stop=False, time_xaxis=True):
     x = 0
     previous_time = False
 
+# Check for permission to display attributes
+    permission = details[0].exercise.exercisepermission
+    for val in js_strings.keys():
+        if val == 'altitude':
+            # Altitude doesn't have permission
+            continue
+                
+        if getattr(permission, val) == 'N':
+            del js_strings[val]
+        # TODO check for friends permission
+
 # Check if we should export altitude to graph
     has_altitude = details[0].exercise.exercise_type.altitude
     if not has_altitude:

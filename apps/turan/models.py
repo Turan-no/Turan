@@ -249,6 +249,18 @@ class Exercise(models.Model):
                 name = unicode(self.exercise_type)
 
         return u'%s, %s %s' %(name, _('by'), self.user)
+
+class ExercisePermission(models.Model):
+    permission_choices = (
+            ('A', 'All'),
+            ('F', 'Friends'),
+            ('N', 'None'),
+                    )
+    exercise = models.OneToOneField(Exercise, primary_key=True)
+    speed = models.CharField(max_length=1, choices=permission_choices, default='A')
+    power = models.CharField(max_length=1, choices=permission_choices, default='A')
+    cadence = models.CharField(max_length=1, choices=permission_choices, default='A')
+    hr = models.CharField(max_length=1, choices=permission_choices, default='A')
     
 class ExerciseDetail(models.Model):
 
