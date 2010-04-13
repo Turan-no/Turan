@@ -82,8 +82,8 @@ def exercise_compare(request, exercise1, exercise2):
     alt = tripdetail_js(None, trip1.id, 'altitude')
     alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
-    datasets1 = js_trip_series(trip1.get_details().all(), time_xaxis=False)
-    datasets2 = js_trip_series(trip2.get_details().all(), time_xaxis=False)
+    datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False)
+    datasets2 = js_trip_series(request, trip2.get_details().all(), time_xaxis=False)
     datasets = mark_safe(datasets1 +',' +datasets2)
 
     return render_to_response('turan/exercise_compare.html', locals(), context_instance=RequestContext(request))
@@ -589,7 +589,8 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
             js += '[%s, %s],' % (distance, dval)
     return js
 
-def js_trip_series(details,  start=False, stop=False, time_xaxis=True):
+def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True):
+    ''' Generate javascript to be used directly in flot code '''
 
     if not details:
         return
@@ -606,19 +607,26 @@ def js_trip_series(details,  start=False, stop=False, time_xaxis=True):
     x = 0
     previous_time = False
 
+    exercise = details[0].exercise
+# User always has permission for their own shit
+    if not exercise.user == request.user:
 # Check for permission to display attributes
-    try:
-        permission = details[0].exercise.exercisepermission
-        for val in js_strings.keys():
-            if val == 'altitude':
-                # Altitude doesn't have permission
-                continue
-                    
-            if getattr(permission, val) == 'N':
-                del js_strings[val]
-            # TODO check for friends permission
-    except ExercisePermission.DoesNotExist:
-        pass
+        try:
+# Try to find permission object for this exercise
+            permission = exercise.exercisepermission
+
+
+            for val in js_strings.keys():
+                if val == 'altitude':
+                    # Altitude doesn't have permission
+                    continue
+                        
+                if getattr(permission, val) == 'N':
+                    del js_strings[val]
+                # TODO check for friends permission
+        except ExercisePermission.DoesNotExist:
+            # No permissionojbect found
+            pass
 
 # Check if we should export altitude to graph
     has_altitude = details[0].exercise.exercise_type.altitude
@@ -875,12 +883,20 @@ def exercise(request, object_id):
             slope.speed = slope.length/slope.duration.seconds * 3.6
             slope.avg_hr = getavghr(details, slope.start, slope.end)
             slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
+<<<<<<< HEAD:apps/turan/views.py
             slope.avg_power_kg = slope.avg_power / userweight
             slope.actual_power = getavgpwr(details, slope.start, slope.end)
+=======
+            slope.actual_power = getavgpwr(details, slope.start, slope.end)
+            if slope.actual_power:
+                slope.avg_power_kg = slope.actual_power / userweight
+            else:
+                slope.avg_power_kg = slope.avg_power / userweight
+>>>>>>> 620a3ac2fe9964e38d7678cf686eb45a004d0aa1:apps/turan/views.py
 
         zones = getzones(details)
         inclinesummary = getinclinesummary(details)
-    datasets = js_trip_series(details, time_xaxis=time_xaxis)
+    datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
 
 def json_serializer(request, queryset, root_name = None, relations = (), extras = ()):
