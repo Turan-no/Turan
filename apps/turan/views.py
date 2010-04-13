@@ -863,8 +863,10 @@ def exercise(request, object_id):
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
     if details:
-        #userweight = object.user.userprofile_set.all()[0].weight
-        userweight = object.user.get_profile().weight
+        try:
+            userweight = object.user.get_profile().userprofiledetail_set.filter(weight__isnull=False).filter(time__lt=object.date).order_by("-time")[0].weight
+        except IndexError:
+            userweight = object.user.get_profile().weight
         filldistance(details)
         slopes = getslopes(details)
         if slopes:
