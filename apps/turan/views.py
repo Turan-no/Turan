@@ -825,6 +825,17 @@ def getavghr(values, start, end):
     delta_t = (values[end].time - values[start].time).seconds
     return float(hr)/delta_t
 
+def getavgpwr(values, start, end):
+    pwr = 0
+    for i in xrange(start+1, end+1):
+        delta_t = (values[i].time - values[i-1].time).seconds
+        try:
+            pwr += values[i].power*delta_t
+        except TypeError:
+            return None
+    delta_t = (values[end].time - values[start].time).seconds
+    return float(pwr)/delta_t
+
 class Slope(object):
     def __init__(self, start, end, length, hdelta, gradient, start_km):
         self.start = start
@@ -865,6 +876,7 @@ def exercise(request, object_id):
             slope.avg_hr = getavghr(details, slope.start, slope.end)
             slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
             slope.avg_power_kg = slope.avg_power / userweight
+            slope.actual_power = getavgpwr(details, slope.start, slope.end)
 
         zones = getzones(details)
         inclinesummary = getinclinesummary(details)
