@@ -875,8 +875,11 @@ def exercise(request, object_id):
             slope.speed = slope.length/slope.duration.seconds * 3.6
             slope.avg_hr = getavghr(details, slope.start, slope.end)
             slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
-            slope.avg_power_kg = slope.avg_power / userweight
             slope.actual_power = getavgpwr(details, slope.start, slope.end)
+            if slope.actual_power:
+                slope.avg_power_kg = slope.actual_power / userweight
+            else:
+                slope.avg_power_kg = slope.avg_power / userweight
 
         zones = getzones(details)
         inclinesummary = getinclinesummary(details)
