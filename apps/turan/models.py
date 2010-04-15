@@ -121,6 +121,18 @@ class Route(models.Model):
         return len(self.get_trips())
 
 
+class ExerciseManager(models.Manager):
+    ''' Some permission related purposes '''
+   
+    def get_query_set(self):
+        return super(ExerciseManager, self).get_query_set().exclude(exercise_permission='N')
+
+    #def get_by_userteams(self, user_id):
+    #    innerq = TeamMembership.objects.filter(user=user_id).values('team').query
+    #    return self.filter(user__team__in=innerq)
+
+    #def get_by_teamname(self, teamname):
+    #    return self.filter(user__team__name__exact=teamname)
 #class Team(models.Model):
 #    name = models.CharField(max_length=160, help_text=_('Team name'))
 #    description = models.TextField(help_text=_('info'))
@@ -175,6 +187,12 @@ class ExerciseType(models.Model):
         verbose_name_plural = _("Exercise Types")
         ordering = ('name',)
 
+permission_choices = (
+            ('A', 'All'),
+            ('F', 'Friends'),
+            ('N', 'None'),
+                    )
+
 class Exercise(models.Model):
 
     user = models.ForeignKey(User)
@@ -203,6 +221,8 @@ class Exercise(models.Model):
     temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.tcx, .hrm, .gmd)'))
 
+    exercise_permission = models.CharField(max_length=1, choices=permission_choices, default='A', help_text=_('Visibility choice'))
+
     object_id = models.IntegerField(null=True)
     content_type = models.ForeignKey(ContentType, null=True)
     group = generic.GenericForeignKey("object_id", "content_type")
@@ -212,7 +232,7 @@ class Exercise(models.Model):
     #objects = models.Manager() # default manager
 
     #testm = CycleTripManager()
-#    objects = CycleTripManager()
+#    objects = ExerciseManager()
 
     def get_details(self):
         return self.exercisedetail_set
@@ -256,11 +276,6 @@ class Exercise(models.Model):
         return u'%s, %s %s' %(name, _('by'), self.user)
 
 class ExercisePermission(models.Model):
-    permission_choices = (
-            ('A', 'All'),
-            ('F', 'Friends'),
-            ('N', 'None'),
-                    )
     exercise = models.OneToOneField(Exercise, primary_key=True)
     speed = models.CharField(max_length=1, choices=permission_choices, default='A')
     power = models.CharField(max_length=1, choices=permission_choices, default='A')
@@ -287,15 +302,6 @@ class ExerciseDetail(models.Model):
         ordering = ('time',)
 
 
-class CycleTripManager(models.Manager):
-    pass
-   
-    #def get_by_userteams(self, user_id):
-    #    innerq = TeamMembership.objects.filter(user=user_id).values('team').query
-    #    return self.filter(user__team__in=innerq)
-
-    #def get_by_teamname(self, teamname):
-    #    return self.filter(user__team__name__exact=teamname)
 
 
 def create_gpx_from_details(trip):

@@ -83,7 +83,7 @@ class ExerciseForm(forms.ModelForm):
 
     class Meta:
         model = Exercise
-        fields = ['exercise_type', 'route', 'sensor_file', 'comment', 'tags', 'kcal', 'url']
+        fields = ['exercise_type', 'route', 'sensor_file', 'comment', 'tags', 'kcal','exercise_permission', 'url']
 
     def clean_route(self):
         '''Translate number from autocomplete to object '''

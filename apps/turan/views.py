@@ -73,6 +73,9 @@ def exercise_compare(request, exercise1, exercise2):
 
     trip1 = get_object_or_404(Exercise, pk=exercise1)
     trip2 = get_object_or_404(Exercise, pk=exercise2)
+    if trip1.exercise_permission == 'N' or trip2.exercise_permission == 'N':
+        return HttpResponseForbidden(_('Private Exercise'))
+        # TODO Friend check
 
     #t1_speed = tripdetail_js(event_type, trip1.id, 'speed')
     #t2_speed = tripdetail_js(event_type, trip2.id, 'speed')
@@ -875,6 +878,18 @@ def exercise(request, object_id):
     ''' View for exercise detail '''
 
     object = get_object_or_404(Exercise, pk=object_id)
+    
+    # Permission checks
+    if not object.user == request.user:  # Allow self
+        if object.exercise_permission == 'N':
+            return HttpResponseForbidden(_('Private Exercise'))
+        elif object.exercise_permission == 'F':
+            is_friend = False
+            if request.user.is_authenticated():
+                is_friend = Friendship.objects.are_friends(request.user, exercise.user)
+            if not is_friend:
+                return HttpResponseForbidden(_('Private Exercise'))
+
     details = object.exercisedetail_set.all()
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
