@@ -32,7 +32,7 @@ class WorkoutCalendar(LocaleHTMLCalendar):
                     body.append(esc(workout.exercise_type) + ": ")
                     body.append(esc(workout))
                     body.append('</a>')
-                    if workout.route.distance:
+                    if workout.route and workout.route.distance:
                         body.append('<br>%s km' %workout.route.distance)
                     body.append('<br>')
                     body.append(esc(workout.kcal) + ' kcal')

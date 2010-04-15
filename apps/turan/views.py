@@ -1,5 +1,5 @@
 from models import *
-#from forms import *
+from forms import ExerciseForm
 from profiles.models import Profile
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseForbidden, Http404
@@ -9,6 +9,7 @@ from django.template import RequestContext, Context, loader
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django import forms
+from django.forms.models import inlineformset_factory
 from django.core.urlresolvers import reverse
 from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 from django.contrib.syndication.feeds import Feed
@@ -32,6 +33,7 @@ from django.utils.datastructures import SortedDict
 
 from tagging.models import Tag
 from tribes.models import Tribe
+from friends.models import Friendship
 
 import re
 from datetime import timedelta, datetime
@@ -608,22 +610,28 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True):
     previous_time = False
 
     exercise = details[0].exercise
-# User always has permission for their own shit
+    # User always has permission for their own shit
     if not exercise.user == request.user:
-# Check for permission to display attributes
+
+        is_friend = False
+        if request.user.is_authenticated():
+            is_friend = Friendship.objects.are_friends(request.user, exercise.user)
+        # Check for permission to display attributes
         try:
-# Try to find permission object for this exercise
+            # Try to find permission object for this exercise
             permission = exercise.exercisepermission
 
-
             for val in js_strings.keys():
-                if val == 'altitude':
-                    # Altitude doesn't have permission
-                    continue
-                        
-                if getattr(permission, val) == 'N':
-                    del js_strings[val]
-                # TODO check for friends permission
+                # Can't remove altitude for example 
+                if hasattr(permission, val):
+                    permission_val = getattr(permission, val)
+                    if permission_val == 'A':
+                        continue
+                    elif permission_val == 'F' and is_friend:
+                        continue
+                    else: #'N' or not friends
+                        del js_strings[val]
+
         except ExercisePermission.DoesNotExist:
             # No permissionojbect found
             pass
@@ -901,6 +909,37 @@ def json_serializer(request, queryset, root_name = None, relations = (), extras 
         root_name = queryset.model._meta.verbose_name_plural
     #hardcoded relations and extras while testing
     return HttpResponse(serializers.serialize('json', queryset, indent=4, relations=relations, extras=extras), mimetype='text/javascript')
+
+
+def create_exercise_with_route(request):
+    ''' Formset for exercise with permission and route inline '''
+
+    if not request.user.is_authenticated():
+        return redirect_to_login(request.path)
+    ExerciseFormSet = inlineformset_factory(Exercise, ExercisePermission, form=ExerciseForm)
+
+    if request.method == 'POST':
+        form = ExerciseFormSet(request.POST, request.FILES)
+        if form.is_valid():
+            new_object = form.save(commit=False)
+            if user_required:
+                new_object.user = request.user
+            if profile_required:
+                new_object.userprofile = request.user.get_profile()
+            new_object.save()
+
+            # notify friends of new object
+            if notification and user_required: # only notify for user owned objects
+                notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
+            
+
+            if request.user.is_authenticated():
+                request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": Exercise._meta.verbose_name})
+            return redirect(post_save_redirect, new_object)
+    else:
+        form = ExerciseFormSet()
+
+    return render_to_response('turan/exercise_form.html', locals(), context_instance=RequestContext(request))
 
 def create_object(request, model=None, template_name=None,
         template_loader=loader, extra_context=None, post_save_redirect=None,

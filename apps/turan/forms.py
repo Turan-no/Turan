@@ -4,7 +4,8 @@ from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
 from django.core.urlresolvers import reverse
-from views import autocomplete_route
+from django.utils.translation import ugettext as _
+#from views import autocomplete_route
 
 class ForeignKeySearchInput(forms.HiddenInput):
     """
@@ -38,7 +39,7 @@ class ForeignKeySearchInput(forms.HiddenInput):
         else:
             label = u''
         return rendered + mark_safe(u'''
-<tr><th><label>Route:</label></th><td>
+<tr><th><label>%(route)s:</label></th><td>
             <style type="text/css" media="screen">
                 #lookup_%(name)s {
                     padding-right:16px;
@@ -69,10 +70,11 @@ class ForeignKeySearchInput(forms.HiddenInput):
             </script>
 </td></tr>
         ''') % {
+            'route': _('Route'),
             'name': name,
             'label': label,
             'admin_media_prefix': settings.ADMIN_MEDIA_PREFIX,
-            'url': reverse(autocomplete_route, args=('a','b')),
+            'url': reverse('autocomplete_route', args=('a','b')),
             'route_create': reverse('route_create'),
         }
 

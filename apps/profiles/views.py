@@ -194,14 +194,15 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
             break
 
     for trip in exerciseqs:
-        tripdataseries += '[%s, %s],' % ( nr_trips, trip.route.distance)
+        if trip.route:
+            tripdataseries += '[%s, %s],' % ( nr_trips, trip.route.distance)
 
-        if trip.route.distance > longest_trip:
-            longest_trip = trip.route.distance
+            if trip.route.distance > longest_trip:
+                longest_trip = trip.route.distance
+            total_distance += trip.route.distance
 
         if trip.duration:
             total_duration += trip.duration
-        total_distance += trip.route.distance
         if trip.avg_speed:
             # only increase counter if trip has speed
             total_avg_speed += trip.avg_speed

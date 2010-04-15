@@ -176,7 +176,7 @@ class ExerciseType(models.Model):
 class Exercise(models.Model):
 
     user = models.ForeignKey(User)
-    exercise_type = models.ForeignKey(ExerciseType)
+    exercise_type = models.ForeignKey(ExerciseType, default=13) # FIXME hardcoded to cycling
     route = models.ForeignKey(Route, blank=True, null=True, help_text=_("Search existing routes"))
     duration = DurationField(blank=True, default=0, help_text='18h 30min 23s 10ms 150mis')
     date = models.DateField(blank=True, null=True, help_text=_("year-mo-dy"))
@@ -226,7 +226,10 @@ class Exercise(models.Model):
         super(Exercise, self).save(force_update=True)
 
     def get_absolute_url(self):
-        return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + slugify(self.route.name)
+        route_name = ''
+        if self.route:
+            route_name = slugify(self.route.name)
+        return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + route_name 
 
     def get_geojson_url(self):
         return reverse('geojson', kwargs={'object_id': self.id})
@@ -242,7 +245,7 @@ class Exercise(models.Model):
 
     def __unicode__(self):
         name = _('Unnamed trip')
-        if self.route.name:
+        if self.route and self.route.name:
             name = self.route.name
 # FIXME 
             if name == '/dev/null':
@@ -294,6 +297,8 @@ class CycleTripManager(models.Manager):
 
 
 def create_gpx_from_details(trip):
+    if not trip.route:
+        return
     # Check if the route has .gpx or not.
     # Since we at this point have trip details
     # we can generate gpx based on that
@@ -466,7 +471,7 @@ def parse_sensordata(event):
             event.comment = parser.comment
 
 
-    if not event.route.distance:
+    if event.route and not event.route.distance:
         if parser.distance_sum:
             # Sum is in meter, but routes like km.
             event.route.distance = parser.distance_sum/1000
