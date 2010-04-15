@@ -871,8 +871,10 @@ def exercise(request, object_id):
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
     if details:
-        #userweight = object.user.userprofile_set.all()[0].weight
-        userweight = object.user.get_profile().weight
+        try:
+            userweight = object.user.get_profile().userprofiledetail_set.filter(weight__isnull=False).filter(time__lt=object.date).order_by("-time")[0].weight
+        except IndexError:
+            userweight = object.user.get_profile().weight
         filldistance(details)
         slopes = getslopes(details)
         if slopes:
@@ -883,7 +885,6 @@ def exercise(request, object_id):
             slope.speed = slope.length/slope.duration.seconds * 3.6
             slope.avg_hr = getavghr(details, slope.start, slope.end)
             slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
-            slope.avg_power_kg = slope.avg_power / userweight
             slope.actual_power = getavgpwr(details, slope.start, slope.end)
             if slope.actual_power:
                 slope.avg_power_kg = slope.actual_power / userweight
