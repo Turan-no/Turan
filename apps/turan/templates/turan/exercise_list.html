@@ -50,7 +50,13 @@
         {{ object.date }}
     </td>
     <td>
-        <a href="{{ object.get_absolute_url }}">{{ object.route.name }}</a>
+        <a href="{{ object.get_absolute_url }}">
+            {% if object.route %}
+            {{ object.route.name }}
+            {% else %}
+            {{ object.exercise_type }}
+            {% endif %}
+        </a>
     </td>
     <td>
         {{ object.route.distance|floatformat }} {% trans "km" %}

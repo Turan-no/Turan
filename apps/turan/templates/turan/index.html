@@ -14,14 +14,14 @@
 {% block content %}
 
 <div class="half floatright">
-    <img alt="{% trans "Cyclist"%}" style="float:right" src="{{MEDIA_URL}}turan/cyclist.png">
     <h1>
         <a href="{% url exercises %}">{% trans "Latest exercises" %}</a>
     </h1>
     <ul class="trips iconlist">
     {% for object in exercise_list %}
     <li class="{% cycle "even" "odd" %}">
-    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
+    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 40 %}</a>
+    {{ object.icon|safe }}
     <a href="{{ object.get_absolute_url }}">
         {{ object|slice:":35" }}</a>
     <span class="smaller">
