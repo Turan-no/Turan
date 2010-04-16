@@ -886,7 +886,7 @@ def exercise(request, object_id):
         elif object.exercise_permission == 'F':
             is_friend = False
             if request.user.is_authenticated():
-                is_friend = Friendship.objects.are_friends(request.user, exercise.user)
+                is_friend = Friendship.objects.are_friends(request.user, object.user)
             if not is_friend:
                 return redirect_to_login(request.path)
 
