@@ -89,6 +89,8 @@ def exercise_compare(request, exercise1, exercise2):
 
     datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False)
     datasets2 = js_trip_series(request, trip2.get_details().all(), time_xaxis=False)
+    if not datasets1 or datsets2:
+        return HttpResponse(_('Missing exercise details.'))
     datasets = mark_safe(datasets1 +',' +datasets2)
 
     return render_to_response('turan/exercise_compare.html', locals(), context_instance=RequestContext(request))
