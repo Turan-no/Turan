@@ -400,7 +400,8 @@ def profile_statistics(request, username, template_name="profiles/statistics.htm
             trips += 1
             if exercise.duration:
                 duration += exercise.duration.seconds/60
-            km += exercise.route.distance
+            if exercise.route:
+                km += exercise.route.distance
             kcal += exercise.kcal
             if exercise.avg_hr:
                 avg_hr += exercise.avg_hr
