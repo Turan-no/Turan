@@ -89,7 +89,7 @@ def exercise_compare(request, exercise1, exercise2):
 
     datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False)
     datasets2 = js_trip_series(request, trip2.get_details().all(), time_xaxis=False)
-    if not datasets1 or datsets2:
+    if not datasets1 or datasets2:
         return HttpResponse(_('Missing exercise details.'))
     datasets = mark_safe(datasets1 +',' +datasets2)
 
