@@ -272,6 +272,8 @@ class Exercise(models.Model):
 # FIXME 
             if name == '/dev/null':
                 name = unicode(self.exercise_type)
+        else:
+            name = unicode(self.exercise_type)
 
         return u'%s, %s %s' %(name, _('by'), self.user)
 
