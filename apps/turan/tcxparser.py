@@ -48,7 +48,7 @@ class TCXParser(object):
                 startstring = dict(lap.items())["StartTime"]
             except:
                 startstring = t.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Courses").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Course").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Track").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Time").text
-            time = datetime.datetime(*map(int, startstring.replace("T","-").replace(":","-").strip("Z").split("-")))
+            time = datetime.datetime(*map(int, startstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
 
             try:
                 kcal_sum = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Calories").text)
@@ -143,7 +143,7 @@ class TCXParser(object):
             except AttributeError:
                 power = 0
 
-            time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").strip("Z").split("-")))
+            time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
 
             timedelta = (time - self.cur_time).seconds
             distdelta = 0
