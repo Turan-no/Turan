@@ -488,7 +488,32 @@ def parse_sensordata(event):
 
     # Normalize altitude, that is, if it's below zero scale every value up
     normalize_altitude(event)
+    calulate_ascent_descent(event)
     #e.save()
+def calulate_ascent_descent(event):
+    ''' Calculate ascent and descent for an exercise and put on the route '''
+
+    if event.route:
+        if event.route.ascent == 0 or event.route.descent == 0 \
+                or not event.route.ascent or not event.route.descent:
+            ascent = 0
+            descent = 0
+            previous = -1
+            for d in event.get_details().all():
+                if previous == -1:
+                    previous = d.altitude
+
+                if d.altitude > previous:
+                    ascent += (d.altitude - previous)
+                if d.altitude < previous:
+                    descent += (previous - d.altitude)
+
+                previous = d.altitude
+
+            event.route.ascent = ascent
+            event.route.descent = descent
+            event.route.save()
+
 
 def normalize_altitude(event):
     ''' Normalize altitude, that is, if it's below zero scale every value up '''
