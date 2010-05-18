@@ -892,6 +892,10 @@ def exercise(request, object_id):
             if not is_friend:
                 return redirect_to_login(request.path)
 
+    maxhr_js = ''
+    if object.user.get_profile().max_hr:
+        maxhr_js = ', max: %s' %object.user.get_profile().max_hr
+
     details = object.exercisedetail_set.all()
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
