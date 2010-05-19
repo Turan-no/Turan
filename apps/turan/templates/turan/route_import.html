@@ -1,0 +1,21 @@
+{% extends "turan/base.html" %}
+{{ block.super }}
+{% block content %}
+{% if form.errors %}
+<h4>Feil</h4>
+{{ form.errors }}
+{% endif %}
+<h2>Import trip from external site</h2>
+<p>Currently supported sites (formats):</p>
+<ul>
+    <li>
+        <strong>Sportypal:</strong> http://sportypal.com/Workouts/Details/&lt;id&gt;
+    </li>
+</ul>
+<form action="" method="post">
+    <table>
+    {{ form.as_table }}
+    </table>
+    <input type="submit" value="Importer og lag rute" />
+</form>
+{% endblock %}

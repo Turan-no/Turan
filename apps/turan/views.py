@@ -30,6 +30,14 @@ from django.middleware.gzip import GZipMiddleware
 from django.utils.datastructures import SortedDict
 
 
+from django.core.files.base import ContentFile
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import render_to_response
+from django import forms
+from turan.models import Route
+from urllib2 import urlopen
+from tempfile import NamedTemporaryFile
+
 
 from tagging.models import Tag
 from tribes.models import Tribe
@@ -1137,4 +1145,36 @@ def turan_delete_detailset_value(request, model, object_id, value=False):
         detail.save()
 
     return HttpResponseRedirect(obj.get_absolute_url())
+
+class ImportForm(forms.ModelForm):
+    import_url = forms.CharField(label='Url external route', required=True)
+
+    class Meta:
+        model = Route
+        exclude = ('gpx_file',)
+
+def route_import(request):
+    if request.method == 'POST':
+        route = Route()
+        form = ImportForm(request.POST, instance=route)
+        url = form.data['import_url']
+        if form.is_valid():
+            # Sportypal
+            if url.find("http://sportypal.com/Workouts/Details/") == 0:
+                id = url.split("/")[-1].rstrip("/")
+                url = "http://sportypal.com/Workouts/ExportGPX?workout_id=" + id
+
+            if id > 0:
+                content = ContentFile(urlopen(url).read())
+
+                route.gpx_file.save("gpx/sporty_" + id + ".gpx", content, save=True)
+                form.save()
+
+                return HttpResponseRedirect(route.get_absolute_url())
+            else:
+                raise Http404
+    else:
+        form = ImportForm()
+
+    return render_to_response("turan/route_import.html", {'form': form}, context_instance=RequestContext(request))
 
