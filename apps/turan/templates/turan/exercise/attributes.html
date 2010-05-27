@@ -49,6 +49,9 @@
     {% if object.avg_power %}
     <li class="power"><span class="label">{% trans "Avg Power" %}:</span> {{ object.avg_power }} {% trans "W" %}</li>
     {% endif %}
+    {% if object.normalized %}
+    <li class="power"><span class="label">{% trans "Normalized Power(tm)" %}:</span> {{ object.normalized }} {% trans "W" %}</li>
+    {% endif %}
     {% if object.max_speed %}
     <li class="speed"><span class="label">{% trans "Max Speed" %}:</span> {{ object.max_speed|floatformat }} {% trans "km/h" %}</li>
     {% endif %}

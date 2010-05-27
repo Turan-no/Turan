@@ -39,4 +39,12 @@
             color: 5,
             },
         {% endif %}
+        {% if poweravg30s%}
+        "poweravg30s": {
+            data: [ {{ poweravg30s}}],
+            label: "{% trans "Power Avg30" %}",
+            points: { show: false } ,
+            color: 4,
+            },
+        {% endif %}
 }
