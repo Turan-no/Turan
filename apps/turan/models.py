@@ -488,31 +488,51 @@ def parse_sensordata(event):
 
     # Normalize altitude, that is, if it's below zero scale every value up
     normalize_altitude(event)
-    calulate_ascent_descent(event)
-    #e.save()
-def calulate_ascent_descent(event):
-    ''' Calculate ascent and descent for an exercise and put on the route '''
 
+    # Auto calculate total ascent and descent
     if event.route:
         if event.route.ascent == 0 or event.route.descent == 0 \
                 or not event.route.ascent or not event.route.descent:
-            ascent = 0
-            descent = 0
-            previous = -1
-            for d in event.get_details().all():
-                if previous == -1:
-                    previous = d.altitude
-
-                if d.altitude > previous:
-                    ascent += (d.altitude - previous)
-                if d.altitude < previous:
-                    descent += (previous - d.altitude)
-
-                previous = d.altitude
-
-            event.route.ascent = ascent
-            event.route.descent = descent
+            event.route.ascent, event.route.descent = calculate_ascent_descent(event)
             event.route.save()
+
+def calculate_ascent_descent(event):
+    ''' Calculate ascent and descent for an exercise and put on the route.
+    Use the 2 previous and the 2 next samples for moving average
+    '''
+
+
+    average_altitudes = []
+    details = list(event.get_details().all())
+    for i, d in enumerate(details):
+        if i > 2 and i < (len(details)-2):
+            altitude = d.altitude
+            altitude += details[i-1].altitude
+            altitude += details[i-2].altitude
+            altitude += details[i+1].altitude
+            altitude += details[i+2].altitude
+            altitude = float(altitude) / 5 
+
+        else: # Don't worry about averages at start or end
+            altitude = d.altitude
+        average_altitudes.append(altitude)
+
+
+    ascent = 0
+    descent = 0
+    previous = -1
+
+    for a in average_altitudes:
+        if previous == -1:
+            previous = a
+
+        if a > previous:
+            ascent += (a - previous)
+        if a < previous:
+            descent += (previous - a)
+
+        previous = a
+    return round(ascent), round(descent)
 
 
 def normalize_altitude(event):
