@@ -1167,6 +1167,7 @@ def route_import(request):
         url = form.data['import_url']
         if form.is_valid():
             # Sportypal
+            id = 0
             if url.find("http://sportypal.com/Workouts/Details/") == 0:
                 id = url.split("/")[-1].rstrip("/")
                 url = "http://sportypal.com/Workouts/ExportGPX?workout_id=" + id

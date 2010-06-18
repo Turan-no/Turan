@@ -13,6 +13,9 @@ class GMDEntry(object):
         self.lat = lat
     def __unicode__(self):
         return '[%s] hr: %s, speed: %s, cadence: %s, alt: %s, lon %s, lat: %s' % (self.time, self.hr, self.speed, self.cadence, self.altitude, self.lon, self.lat)
+    
+    def __str__(self):
+        return self.__unicode__()
 
 class GMDParser(object):
 
@@ -41,8 +44,10 @@ class GMDParser(object):
 
         lap = self.soup.find('lap')
 
-        self.start_time = datetime.datetime.strptime(lap['start'].split("+")[0], "%Y-%m-%dT%H:%M:%S")
-        self.cur_time = self.start_time
+        self.datetime = datetime.datetime.strptime(lap['start'].split("+")[0], "%Y-%m-%dT%H:%M:%S")
+        self.start_time = self.datetime.time()
+        self.date = self.datetime.date()
+        self.cur_time = self.datetime
         self.cur_distance = 0.0
         self.duration = "%sh %smin %ss" % tuple(lap['duration'].split(".")[0].split(":"))
         self.distance_sum = float(lap['distance'])
@@ -87,4 +92,11 @@ class GMDParser(object):
             e = GMDEntry(time, point['hr'], speed, cadence, point['alt'], point['lon'], point['lat'])
             self.entries.append(e)
 
+if __name__ == '__main__':
+    p = GMDParser()
+    f = open("test.gmd")
+    p.parse_uploaded_file(f)
+
+    for ent in p.entries:
+        print ent
 
