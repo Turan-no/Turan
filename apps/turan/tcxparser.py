@@ -97,6 +97,11 @@ class TCXParser(object):
         else:
             self.distance_sum = sum([self.laps[i].distance for i in xrange(0,len(self.laps))])
         self.max_hr = max([self.laps[i].max_hr for i in xrange(0,len(self.laps))])
+        tmp_avg_hr_index = sum([(self.laps[i].distance * self.laps[i].avg_hr) for i in xrange(0,len(self.laps))])
+        self.avg_hr = tmp_avg_hr_index / self.distance_sum
+        tmp_avg_cadence_index = sum([(self.laps[i].distance * self.laps[i].avg_cadence) for i in xrange(0,len(self.laps))])
+        self.avg_cadence = tmp_avg_cadence_index / self.distance_sum
+
         self.kcal_sum = sum([self.laps[i].kcal_sum for i in xrange(0,len(self.laps))])
 
         self.heartbeats = 0
@@ -192,8 +197,10 @@ class TCXParser(object):
                 self.max_speed = max(filter(lambda x: x<= 200,[self.entries[i].speed for i in xrange(0,len(self.entries))]))
  
         self.max_cadence = max([self.entries[i].cadence for i in xrange(0,len(self.entries))])
-        self.avg_cadence = self.rotations/seconds
-        self.avg_hr = self.heartbeats/seconds
+        if self.rotations > 1.0:
+            self.avg_cadence = self.rotations/seconds
+        if self.heartbeats > 1.0:
+            self.avg_hr = self.heartbeats/seconds
         self.duration = '%is' % int(seconds)
         if self.powersum:
             self.avg_power = self.powersum/seconds
