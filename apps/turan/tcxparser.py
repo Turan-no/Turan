@@ -97,10 +97,13 @@ class TCXParser(object):
         else:
             self.distance_sum = sum([self.laps[i].distance for i in xrange(0,len(self.laps))])
         self.max_hr = max([self.laps[i].max_hr for i in xrange(0,len(self.laps))])
-        tmp_avg_hr_index = sum([(self.laps[i].distance * self.laps[i].avg_hr) for i in xrange(0,len(self.laps))])
-        self.avg_hr = tmp_avg_hr_index / self.distance_sum
-        tmp_avg_cadence_index = sum([(self.laps[i].distance * self.laps[i].avg_cadence) for i in xrange(0,len(self.laps))])
-        self.avg_cadence = tmp_avg_cadence_index / self.distance_sum
+        try:
+            tmp_avg_hr_index = sum([(self.laps[i].distance * self.laps[i].avg_hr) for i in xrange(0,len(self.laps))])
+            self.avg_hr = tmp_avg_hr_index / self.distance_sum
+            tmp_avg_cadence_index = sum([(self.laps[i].distance * self.laps[i].avg_cadence) for i in xrange(0,len(self.laps))])
+            self.avg_cadence = tmp_avg_cadence_index / self.distance_sum
+        except ZeroDivisionError:
+            pass
 
         self.kcal_sum = sum([self.laps[i].kcal_sum for i in xrange(0,len(self.laps))])
 
