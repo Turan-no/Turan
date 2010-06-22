@@ -100,10 +100,14 @@ class TCXParser(object):
         try:
             tmp_avg_hr_index = sum([(self.laps[i].distance * self.laps[i].avg_hr) for i in xrange(0,len(self.laps))])
             self.avg_hr = tmp_avg_hr_index / self.distance_sum
+        except ZeroDivisionError:
+            self.avg_hr = 0
+
+        try:
             tmp_avg_cadence_index = sum([(self.laps[i].distance * self.laps[i].avg_cadence) for i in xrange(0,len(self.laps))])
             self.avg_cadence = tmp_avg_cadence_index / self.distance_sum
         except ZeroDivisionError:
-            pass
+            self.avg_cadence = None
 
         self.kcal_sum = sum([self.laps[i].kcal_sum for i in xrange(0,len(self.laps))])
 
