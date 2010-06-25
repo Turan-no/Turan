@@ -448,10 +448,11 @@ def parse_sensordata(event):
     event.max_hr = parser.max_hr
     event.max_speed = parser.max_speed
     event.max_cadence = parser.max_cadence
-
-    event.avg_hr = parser.avg_hr
+    if hasattr(parser, 'avg_hr'):
+        event.avg_hr = parser.avg_hr
     event.avg_speed = parser.avg_speed
-    event.avg_cadence = parser.avg_cadence
+    if hasattr(parser, 'avg_cadence'):
+        event.avg_cadence = parser.avg_cadence
     
     event.duration = parser.duration
 
