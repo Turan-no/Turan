@@ -256,7 +256,7 @@ INTERNAL_IPS = (
 ugettext = lambda s: s
 LANGUAGES = (
     ('nn', 'Nynorsk'),
-    ('no', 'Bokmål'),
+    ('no', u'Bokmål'),
     ('en', 'English'),
 
 )
