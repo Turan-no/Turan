@@ -63,6 +63,21 @@
         {% trans "Welcome to Turan" %}!
     </h1>
 
+<ul class="buttons">
+    <li style="float: left">
+    <a href="{% url route_create %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add route" %}" />
+        {% trans "Add route" %}
+    </a>
+    </li>
+    <li>
+    <a href="{% url exercise_create %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "add an exercise" %}" />
+        {% trans "Add exercise" %}
+    </a>
+    </li>
+</ul>
+<br />
 <div id="tabs">
     <ul>
         <li class="tab selected" id="tabs-select-1">{% trans "Turan?" %}</li>
@@ -116,7 +131,6 @@ $('#tabs ul li.tab').each(function () {
         $(this).bind("click", selectTab);
         });
 </script>
-
 
 </div>
 {% endblock content %}
