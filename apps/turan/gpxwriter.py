@@ -31,8 +31,8 @@ xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/
                 # Some devices (Garmin!) likes to save 0-points. Skip those.
                 return 
             xmlp = '<trkpt lat="%s" lon="%s">\n' %(lat, lon)
-            xmlp+= ' <time>%s</time>\n' %time.strftime('%Y-%m-%dT%H:%M:%SZ')
             xmlp+= ' <ele>%.1f</ele>\n' %alt
+            xmlp+= ' <time>%s</time>\n' %time.strftime('%Y-%m-%dT%H:%M:%SZ')
             xmlp+= '</trkpt>\n'
             return xmlp
 
