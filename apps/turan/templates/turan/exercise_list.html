@@ -32,6 +32,9 @@
             {% anchor route__distance "Distance" %}
         </th>
         <th>
+            {% anchor route__ascent "Ascent" %}
+        </th>
+        <th>
             {% anchor duration %}
         </th>
         <th>
@@ -60,6 +63,9 @@
     </td>
     <td>
         {{ object.route.distance|floatformat }} {% trans "km" %}
+    </td>
+    <td>
+        {{ object.route.ascent|floatformat }} {% trans "m" %}
     </td>
     <td>
         {{ object.duration }} 
