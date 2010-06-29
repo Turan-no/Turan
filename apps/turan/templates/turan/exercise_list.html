@@ -65,7 +65,9 @@
         {{ object.route.distance|floatformat }} {% trans "km" %}
     </td>
     <td>
-        {{ object.route.ascent|floatformat }} {% trans "m" %}
+        {% if object.route.ascent %}
+            {{ object.route.ascent|floatformat }} {% trans "m" %}
+        {% endif %}
     </td>
     <td>
         {{ object.duration }} 
