@@ -70,13 +70,19 @@
         {% endif %}
     </td>
     <td>
-        {{ object.duration }} 
+        {% if object.duration %}
+            {{ object.duration }} 
+        {% endif %}
     </td>
     <td>
-        {{ object.avg_speed|floatformat }}  {% trans "km/h" %}
+        {% if object.avg_speed %}
+            {{ object.avg_speed|floatformat }}  {% trans "km/h" %}
+        {% endif %}
     </td>
     <td>
-        {{ object.avg_hr}}  {% trans "BPM" %}
+        {% if object.avg_hr %}
+            {{ object.avg_hr}}  {% trans "BPM" %}
+        {% endif %}
     </td>
 </tr>
 {%endfor %}
