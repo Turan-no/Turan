@@ -5,7 +5,7 @@
 {% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
-{% trans "Cycle Trip" %}
+{% trans "Route" %} : {{object}} {% if object.distance %} {{ object.distance|floatformat }} km {% endif %}{% if object.ascent %} {{ object.ascent|floatformat }} asc m {% endif %}
 {% endblock %}
 {% block extra_head %}
 {{ block.super }}
@@ -74,7 +74,7 @@
     <h2 style="clear: both">{% trans "Altitude profile" %}</h2>
     <div id="altdiv" style="width:1000px;height:200px"></div>
 <script id="source" language="javascript" type="text/javascript">
-    var alt = { data: [{{ alt }}], color: 2, lines: { fill: 0.7 } };
+    var alt = { data: [{{ alt }}], color: 3, lines: { fill: 0.7 } };
     var options = { y2axis:{ min: 0, max: {{ alt_max }}, }, };
 $.plot($("#altdiv"), [alt], options);
 </script>
