@@ -169,11 +169,14 @@ def route_detail(request, object_id):
                 usertimes[trip.user] +=  mark_safe('[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed))
             except AttributeError:
                 pass # stupid decimal value in trip duration!
+        alt = tripdetail_js(None, trip.id, 'altitude')
+        alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
     except TypeError:
         # bug for trips without date
         pass
-    alt = tripdetail_js(None, trip.id, 'altitude')
-    alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
+    except UnboundLocalError:
+        # no trips found
+        pass
     return render_to_response('turan/route_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):
