@@ -812,10 +812,13 @@ def gethrhzones(values):
         zones[hr_percent] += time.seconds
 
     filtered_zones = SortedDict()
-    # Skip values less than 1%
+    for i in range(40,100):
+        filtered_zones[i] = 0
+
     total_seconds = d.exercise.duration.seconds
     for hr in sorted(zones):
-        if 100*float(zones[hr])/total_seconds > 5:
+        #if 100*float(zones[hr])/total_seconds > 0:
+        if hr > 40 and hr < 101:
             filtered_zones[hr] = zones[hr]
 
     return filtered_zones

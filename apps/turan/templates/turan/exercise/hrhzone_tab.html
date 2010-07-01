@@ -1,44 +1,11 @@
 {% load i18n %}
 {% load turan_extras %}
-<div id="hrhzonediv" style="width:400px;height:400px; float: right;"></div>
-<div id="hrhzonetable" style="width:500px; height: 400px;">
-        <table>
-            <tr>
-                <th>
-                    {% trans "HR %" %}
-                </th>
-                <th>
-                    {% trans "Length" %}
-                </th>
-                <th>
-                    {% trans "%" %}
-                </th>
-            </tr>
-            {% for hrhzone, length in hrhzones.items %}
-            <tr>
-                <td>
-                    {{hrhzone }}
-                </td>
-                <td>
-                    {{ length|durationformat }}
-                </td>
-                <td>
-                    {{ length|percent:object.duration.seconds }}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% trans "Note: only displaying values > 5 %" %}
-    </div>
+<div id="hrhzonediv" style="width:900px;height:400px; float: right;"></div>
+<div id="hrhzonetable" style="width:1px; height: 400px;"></div>
 <script language="javascript" type="text/javascript">
     var hrhzonedata = [
-            {% for zone, length in hrhzones.items %}
                 {
-                    data: [[{{ zone }},{{ length }}]],
-                    bars: { show: true},
-                    color: {{ forloop.counter }}
-                },
-            {% endfor %}
+data: [{% for hr, length in hrhzones.items %}{% if length %}[{{ hr }},{{ length }}],{% endif %}{% endfor %}], }, 
     ];
-    $.plot($("#hrhzonediv"),hrhzonedata, { grid: { show: false } });
+$.plot($("#hrhzonediv"),hrhzonedata, {}); <!--# { grid: { show: false } });-->
 </script>
