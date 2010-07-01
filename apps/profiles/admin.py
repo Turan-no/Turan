@@ -15,7 +15,6 @@ class UserProfileDetailAdmin(admin.ModelAdmin):
     list_display = ('userprofile', 'time', 'weight', 'resting_hr')
     search_fields = ('userprofile',)
     list_filter = ('userprofile',)
-    exclude = ('user',)
 
     def queryset(self, request):
         qs = super(UserProfileDetailAdmin,self).queryset(request)
