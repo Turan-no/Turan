@@ -108,12 +108,7 @@ class Route(models.Model):
         ordering = ('-created','name')
 
     def get_trips(self):
-        trip_list = self.exercise_set.all()
-        try:
-            trip_list = sorted(trip_list, key=lambda x: x.duration)
-        except TypeError, e:
-            pass # value error because of invalid duration TODO FIXME write proper for loop ?
-        return trip_list
+        return self.exercise_set.all().order_by('-avg_speed')
 
     @property
     def tripcount(self):

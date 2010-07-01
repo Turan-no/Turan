@@ -8,6 +8,7 @@
 {% trans "Routes" %}
 {% endblock %}
 {% block content %}
+{% autosort object_list %}
 {% autopaginate object_list %}
 
 {% include "turan/search_head.html" %}

@@ -2,6 +2,8 @@
 {% load humanize %}
 {% load i18n %}
 
+{% load pagination_tags %}
+{% load sorting_tags %}
 {% block title %}
 {% trans "Cycle Trip" %}
 {% endblock %}
@@ -39,8 +41,10 @@
 {% include "turan/tags.html" %}
 
 
-{% with object.get_trips as trip_list %}
-{% if trip_list %}
+{% with object.get_trips as object_list %}
+{% autosort object_list %}
+{% autopaginate object_list %}
+{% if object_list %}
     <h3>{% trans "Average speed"%}</h3>
     <div id="avgspeeddiv" style="width:420px;height:200px"></div>
     <script id="source" language="javascript" type="text/javascript">
@@ -73,22 +77,22 @@
     <table>
         <tr>
             <th>{% trans "Select" %}</th>
-            <th>{% trans "Exerciser" %}</th>
-            <th>{% trans "Duration" %}</th>
-            <th>{% trans "Avg HR" %}</th>
-            <th>{% trans "Avg Speed" %}</th>
-            <th>{% trans "Date" %}</th>
+            <th>{% anchor user Exerciser %}</th>
+            <th>{% anchor duration %}</th>
+            <th>{% anchor avg_hr "Avg HR" %}</th>
+            <th>{% anchor avg_speed "Avg Speed" %}</th>
+            <th>{% anchor date %}</th>
             <th>{% trans "Comment" %}</th>
         </tr>
-        {% for trip in trip_list %}
+        {% for object in object_list %}
         <tr>
-	    <td><input type="checkbox" name="selected_routes" value="{{ trip.id }}"></td>
-            <td>{{ trip.user }}</td>
-            <td>{{ trip.duration }}</td>
-            <td>{{ trip.avg_hr }}</td>
-            <td>{{ trip.avg_speed|floatformat }}</td>
-            <td><a href="{{ trip.get_absolute_url }}">{{trip.date|naturalday}}</a></td>
-            <td>{{ trip.comment|slice:"50" }}</td>
+	    <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
+            <td>{{ object.user }}</td>
+            <td>{{ object.duration }}</td>
+            <td>{{ object.avg_hr }}</td>
+            <td>{{ object.avg_speed|floatformat }}</td>
+            <td><a href="{{ object.get_absolute_url }}">{{object.date|naturalday}}</a></td>
+            <td>{{ object.comment|slice:"70" }}</td>
         </tr>
         {% endfor %}
     </table>
@@ -106,6 +110,7 @@
         document.location = "/turan/exercise/compare/" + selectedIds.join("/");
     });
     </script>
+{% paginate %}
 {% endif %}
 {% endwith %}
 <hr>
