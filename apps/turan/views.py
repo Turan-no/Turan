@@ -786,6 +786,40 @@ def getzones(values):
 
     return zones_with_legend
 
+def gethrhzones(values):
+    ''' Calculate time in different sport zones given trip details '''
+
+    max_hr = values[0].exercise.user.get_profile().max_hr
+    #resting_hr = values[0].exercise.user.get_profile().resting_hr
+    if not max_hr: #or not resting_hr:
+        return []
+
+    zones = SortedDict()
+    previous_time = False
+    for i, d in enumerate(values):
+        if not previous_time:
+            previous_time = d.time
+            continue
+        time = d.time - previous_time
+        previous_time = d.time
+        if time.seconds > 60:
+            continue
+
+        hr_percent = int(round(float(d.hr)*100/max_hr))
+        #hr_percent = (float(d.hr)-resting_hr)*100/(max_hr-resting_hr)
+        if not hr_percent in zones:
+            zones[hr_percent] = 0
+        zones[hr_percent] += time.seconds
+
+    filtered_zones = SortedDict()
+    # Skip values less than 1%
+    total_seconds = d.exercise.duration.seconds
+    for hr in sorted(zones):
+        if 100*float(zones[hr])/total_seconds > 5:
+            filtered_zones[hr] = zones[hr]
+
+    return filtered_zones
+
 def getslopes(values):
     slopes = []
     min_slope = 40
@@ -933,6 +967,7 @@ def exercise(request, object_id):
                 slope.avg_power_kg = 0
 
         zones = getzones(details)
+        hrhzones = gethrhzones(details)
         inclinesummary = getinclinesummary(details)
     if object.avg_power:
         poweravg30s = power_30s_average(details)
