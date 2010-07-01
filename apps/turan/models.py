@@ -108,7 +108,7 @@ class Route(models.Model):
         ordering = ('-created','name')
 
     def get_trips(self):
-        return self.exercise_set.all().order_by('-avg_speed')
+        return self.exercise_set.all().order_by('duration')
 
     @property
     def tripcount(self):
