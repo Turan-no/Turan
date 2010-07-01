@@ -172,6 +172,8 @@ def route_detail(request, object_id):
     except TypeError:
         # bug for trips without date
         pass
+    alt = tripdetail_js(None, trip.id, 'altitude')
+    alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
     return render_to_response('turan/route_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):

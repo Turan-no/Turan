@@ -71,6 +71,13 @@
         $.plot($("#avgspeeddiv"), times, options);
     });
     </script>
+    <h2 style="clear: both">{% trans "Altitude profile" %}</h2>
+    <div id="altdiv" style="width:1000px;height:200px"></div>
+<script id="source" language="javascript" type="text/javascript">
+    var alt = { data: [{{ alt }}], color: 2, lines: { fill: 0.7 } };
+    var options = { y2axis:{ min: 0, max: {{ alt_max }}, }, };
+$.plot($("#altdiv"), [alt], options);
+</script>
     <form id="route_form">
     <h2>{% trans "Trips on this route" %}</h2>
     <input type="submit" value="{% trans "Compare"%}">
