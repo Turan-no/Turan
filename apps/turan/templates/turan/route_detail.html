@@ -41,13 +41,30 @@
 
 {% with object.get_trips as trip_list %}
 {% if trip_list %}
-    <h3>{% trans "Average duration"%}</h3>
+    <h3>{% trans "Average speed"%}</h3>
     <div id="avgspeeddiv" style="width:420px;height:200px"></div>
     <script id="source" language="javascript" type="text/javascript">
     $(function () {
-            var d1 = { color: 5, data: [{{speeddataseries}}], }
-            var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0, }, }
-        $.plot($("#avgspeeddiv"), [d1], options);
+            var times = [
+            {% for user, series in usertimes.items %}
+            {% if series %}
+                {
+                    label: "{{user}}",
+                    data: [{{series}}],
+                    color: {{ forloop.counter }}
+                },
+            {% endif %}
+            {% endfor %}
+    ];
+    var options = { 
+        xaxis: { mode: "time", timeformat: "%y/%m/%d" }, 
+        yaxis: { min: 0, },
+        legend: {
+            position: "sw",
+            noColumns: 0,
+            },
+        }
+        $.plot($("#avgspeeddiv"), times, options);
     });
     </script>
     <form id="route_form">
@@ -59,6 +76,7 @@
             <th>{% trans "Exerciser" %}</th>
             <th>{% trans "Duration" %}</th>
             <th>{% trans "Avg HR" %}</th>
+            <th>{% trans "Avg Speed" %}</th>
             <th>{% trans "Date" %}</th>
             <th>{% trans "Comment" %}</th>
         </tr>
@@ -68,8 +86,9 @@
             <td>{{ trip.user }}</td>
             <td>{{ trip.duration }}</td>
             <td>{{ trip.avg_hr }}</td>
+            <td>{{ trip.avg_speed|floatformat }}</td>
             <td><a href="{{ trip.get_absolute_url }}">{{trip.date|naturalday}}</a></td>
-            <td>{{ trip.comment|slice:"90" }}</td>
+            <td>{{ trip.comment|slice:"50" }}</td>
         </tr>
         {% endfor %}
     </table>

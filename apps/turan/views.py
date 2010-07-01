@@ -159,17 +159,19 @@ def events(request, group_slug=None, bridge=None, username=None):
 
 def route_detail(request, object_id):
     object = get_object_or_404(Route, pk=object_id)
-    speeddataseries = ''
+    usertimes = {}
     try:
         for trip in sorted(object.get_trips(), key=lambda x:x.date):
+            if not trip.user in usertimes:
+                usertimes[trip.user] = ''
             try:
                 time = trip.duration.seconds/60
-                speeddataseries +=  '[%s, %s],' % (datetime2jstimestamp(trip.date), time)
+                usertimes[trip.user] +=  mark_safe('[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed))
             except AttributeError:
                 pass # stupid decimal value in trip duration!
     except TypeError:
-        pass
         # bug for trips without date
+        pass
     return render_to_response('turan/route_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):
@@ -182,7 +184,7 @@ def week(request, week, user_id='all'):
         object_list.append(e)
     for e in hikeqs:
         object_list.append(e)
-    
+
     return render_to_response('turan/event_list.html', locals(), context_instance=RequestContext(request))
 
 def statistics(request, year=None, month=None, day=None, week=None):
