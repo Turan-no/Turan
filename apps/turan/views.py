@@ -164,6 +164,7 @@ def route_detail(request, object_id):
     object = get_object_or_404(Route, pk=object_id)
     usertimes = {}
     try:
+        done_altitude_profile = False
         for trip in sorted(object.get_trips(), key=lambda x:x.date):
             if not trip.user in usertimes:
                 usertimes[trip.user] = ''
@@ -172,8 +173,12 @@ def route_detail(request, object_id):
                 usertimes[trip.user] +=  mark_safe('[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed))
             except AttributeError:
                 pass # stupid decimal value in trip duration!
-        alt = tripdetail_js(None, trip.id, 'altitude')
-        alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
+            if trip.avg_speed and not done_altitude_profile:
+                # Find trip with speed
+                alt = tripdetail_js(None, trip.id, 'altitude')
+                alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
+                done_altitude_profile = True
+
     except TypeError:
         # bug for trips without date
         pass
