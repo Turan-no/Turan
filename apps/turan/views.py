@@ -76,6 +76,8 @@ def index(request):
 
     tag_list = Tag.objects.all()
 
+    user_list = sorted(User.objects.filter(exercise__duration__gt=0).annotate(e = Sum('exercise__duration')), key= lambda x: -x.e)
+
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))
 
 def exercise_compare(request, exercise1, exercise2):

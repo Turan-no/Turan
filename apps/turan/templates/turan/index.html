@@ -60,7 +60,7 @@
 
 <div class="half leftcol">
     <h1>
-        {% trans "Welcome to Turan" %}!
+        {% trans "Welcome to Turan" %}.no!
     </h1>
 
 <ul class="buttons">
@@ -77,6 +77,16 @@
     </a>
     </li>
 </ul>
+<br />
+<h3>{% trans "Top exercisers" %}</h3>
+<div id="exercisers">
+    {% for exerciser in user_list %}
+    {% if exerciser.exercise_set.count %}
+    <a href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 40 %}</a>
+    {% endif %}
+    {% endfor %}
+</div>
+<br />
 <br />
 <div id="tabs">
     <ul>
