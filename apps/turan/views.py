@@ -170,11 +170,12 @@ def route_detail(request, object_id):
                 usertimes[trip.user] = ''
             try:
                 time = trip.duration.seconds/60
-                usertimes[trip.user] +=  mark_safe('[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed))
+                if trip.avg_speed: # Or else graph bugs with None-values
+                    usertimes[trip.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed))
             except AttributeError:
                 pass # stupid decimal value in trip duration!
-            if trip.avg_speed and not done_altitude_profile:
-                # Find trip with speed
+
+            if trip.avg_speed and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
                 alt = tripdetail_js(None, trip.id, 'altitude')
                 alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
                 done_altitude_profile = True
