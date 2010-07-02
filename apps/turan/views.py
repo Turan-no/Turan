@@ -1,4 +1,5 @@
 from models import *
+from itertools import groupby
 from forms import ExerciseForm
 from profiles.models import Profile
 from django.shortcuts import render_to_response, get_object_or_404
@@ -488,12 +489,18 @@ def calendar_month(request, year, month):
     # stupid calendar needs int
     year, month = int(year), int(month)
     cal = WorkoutCalendar(exercices, locale.getdefaultlocale()).formatmonth(year, month)
+
+
+
+    e_by_week = [(week, list(items)) for week, items in groupby(exercices, lambda workout: int(workout.date.strftime('%W'))+1)]
+
     return render_to_response('turan/calendar.html',
             {'calendar': mark_safe(cal),
              'months': months,
              'username': username,
              'previous_month': previous_month,
              'next_month': next_month,
+             'e_by_week': e_by_week,
              },
             context_instance=RequestContext(request))
 

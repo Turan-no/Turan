@@ -25,5 +25,24 @@
 <div class="right">
 </div>
 {{ calendar }}
+ {% comment %}
+ WIP
+<h3>{% trans "Weekstats graph"%}</h3>
+<div id="weeks" style="width:900px;height:700px"></div>
+<script id="source" language="javascript" type="text/javascript">
+$(function () {
+        var weekbars = { color: 1, 
+                bars: { show: true},
+        data: [
+        {% for week, exercises in e_by_week %}
+            [ {{ week }}, 2],
+        {% endfor %}
+        ], };
+    var weekoptions = { yaxis: { max: 600 }, hoverable: true, clickable: true };
+    $.plot($("#weeks"), weekbars, weekoptions);
+});
+
+</script>
+{% endcomment %}
 {% endblock content %}
 
