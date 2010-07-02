@@ -8,11 +8,21 @@
     color: 2,
    lines: { fill: 0.6, },
 data: [{% for hr, length in hrhzones.items %}{% if length %}[{{ hr }},{{ length }}],{% endif %}{% endfor %}], }, 
+{
+}
     ];
 
 $.plot($("#hrhzonediv"), hrhzonedata, { 
 grid: {
-    markings: null // [ { xaxis: { from: 60, to: 72 }, color: "#ff0000" },  ]
+markings:  [ 
+    { xaxis: { from: 50, to: 50 }, color: "#000000" },  
+    { xaxis: { from: 60, to: 60 }, color: "#000000" },  
+    { xaxis: { from: 72, to: 72 }, color: "#000000" },  
+    { xaxis: { from: 82, to: 82 }, color: "#000000" },  
+    { xaxis: { from: 87, to: 87 }, color: "#000000" },  
+    { xaxis: { from: 92, to: 92 }, color: "#000000" },  
+    { xaxis: { from: 97, to: 97 }, color: "#000000" },  
+    ]
 
       }});
 </script>
