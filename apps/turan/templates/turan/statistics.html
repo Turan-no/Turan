@@ -141,10 +141,22 @@
 {% endcomment %}
 <div class="toplist half">
     <h2> {% trans "Exercise Statistics" %} </h2>
+    <h3> {% trans "Total distance" %} </h3>
+    <ol>
+        {% for u in distsums %}
+        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.sum_distance|floatformat }} {% trans "km" %}</li>
+        {% endfor %}
+    </ol>
     <h3> {% trans "Highest average speed for trip" %} </h3>
     <ol>
         {% for u in maxavgspeeds %}
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.max_avg_speed|floatformat }} {% trans "km/h" %}</li>
+        {% endfor %}
+    </ol>
+    <h3> {% trans "Average speed for all trips" %} </h3>
+    <ol>
+        {% for u in avgspeeds %}
+        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avg_avg_speed|floatformat }} {% trans "km/h" %}</li>
         {% endfor %}
     </ol>
 
@@ -152,12 +164,6 @@
     <ol>
         {% for u in maxspeeds %}
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.max_speed|floatformat }} {% trans "km/h" %}</li>
-        {% endfor %}
-    </ol>
-    <h3> {% trans "Average speed for all trips" %} </h3>
-    <ol>
-        {% for u in avgspeeds %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avg_avg_speed|floatformat }} {% trans "km/h" %}</li>
         {% endfor %}
     </ol>
 
@@ -168,13 +174,6 @@
         {% endfor %}
     </ol>
 
-    <h3> {% trans "Longest total distance" %} </h3>
-    <ol>
-        {% for u in distsums %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.sum_distance|floatformat }} {% trans "km" %}</li>
-        {% endfor %}
-    </ol>
-
     <h3> {% trans "Average trip length" %} </h3>
     <ol>
         {% for u in lengthstats %}
@@ -182,7 +181,7 @@
         {% endfor %}
     </ol>
 
-    <h3> {% trans "Most time on bicycle" %} </h3>
+    <h3> {% trans "Total duration" %} </h3>
     <ol>
         {% for u in dursums %}
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.sum_duration|retarddurationformat}}</li>
