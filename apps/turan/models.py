@@ -35,7 +35,7 @@ class RouteManager(models.Manager):
     def get_query_set(self):
         # TODO, this needs to be a fixture, with a fixed ID
         return super(RouteManager, self).get_query_set().exclude(pk=24)#.filter(single_serving=0)
-    
+
 
 class Route(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_('for example Opsangervatnet'))
@@ -50,7 +50,7 @@ class Route(models.Model):
     start_lon = models.FloatField(blank=True, default=0.0)
     end_lat = models.FloatField(blank=True, default=0.0)
     end_lon = models.FloatField(blank=True, default=0.0)
-    
+
     created = models.DateTimeField(editable=False,auto_now_add=True,null=True)
     single_serving = models.BooleanField(blank=True, default=0)
 
@@ -83,7 +83,7 @@ class Route(models.Model):
                 except:
                     # TODO better exception handling ?
                     pass
-        
+
 
     def __unicode__(self):
         if self.name:
@@ -118,7 +118,7 @@ class Route(models.Model):
 
 class ExerciseManager(models.Manager):
     ''' Some permission related purposes '''
-   
+
     def get_query_set(self):
         return super(ExerciseManager, self).get_query_set().exclude(exercise_permission='N')
 
@@ -210,7 +210,7 @@ class Exercise(models.Model):
 
     avg_hr = models.IntegerField(blank=True, null=True) # bpm 
     max_hr = models.IntegerField(blank=True, null=True) # bpm 
-    
+
     kcal = models.IntegerField(blank=True, default=0, help_text=_('Only needed for Polar products'))
 
     temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
@@ -278,7 +278,7 @@ class ExercisePermission(models.Model):
     power = models.CharField(max_length=1, choices=permission_choices, default='A')
     cadence = models.CharField(max_length=1, choices=permission_choices, default='A')
     hr = models.CharField(max_length=1, choices=permission_choices, default='A')
-    
+
 class ExerciseDetail(models.Model):
 
     exercise = models.ForeignKey(Exercise)
@@ -317,7 +317,7 @@ def create_gpx_from_details(trip):
             # tie the created file to the route object
             # also call Save on route to generate start/stop-pos, etc
             trip.route.gpx_file.save(filename, ContentFile(g.xml), save=True)
-            
+
             # Save the Route (because of triggers for pos setting and such)
             trip.route.save()
 
@@ -448,7 +448,7 @@ def parse_sensordata(event):
     event.avg_speed = parser.avg_speed
     if hasattr(parser, 'avg_cadence'):
         event.avg_cadence = parser.avg_cadence
-    
+
     event.duration = parser.duration
 
     if parser.kcal_sum: # only some parsers provide kcal
