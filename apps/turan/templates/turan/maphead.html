@@ -40,11 +40,11 @@
             } );
  
  
-            var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
             var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+            var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
             var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 
-            map.addLayers([layerCycleMap, layerMapnik, layerTilesAtHome, lgpx ]);
+            map.addLayers([layerMapnik, layerCycleMap, layerTilesAtHome, lgpx ]);
 
             {% if object.route.start_lat %} 
                 var size = new OpenLayers.Size(20,25);
