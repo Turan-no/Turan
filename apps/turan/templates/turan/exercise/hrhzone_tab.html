@@ -5,7 +5,14 @@
 <script language="javascript" type="text/javascript">
     var hrhzonedata = [
                 {
+    color: 2,
+   lines: { fill: 0.6, },
 data: [{% for hr, length in hrhzones.items %}{% if length %}[{{ hr }},{{ length }}],{% endif %}{% endfor %}], }, 
     ];
-$.plot($("#hrhzonediv"),hrhzonedata, {}); <!--# { grid: { show: false } });-->
+
+$.plot($("#hrhzonediv"), hrhzonedata, { 
+grid: {
+    markings: null // [ { xaxis: { from: 60, to: 72 }, color: "#ff0000" },  ]
+
+      }});
 </script>

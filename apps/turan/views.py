@@ -835,7 +835,9 @@ def gethrhzones(values):
     for hr in sorted(zones):
         #if 100*float(zones[hr])/total_seconds > 0:
         if hr > 40 and hr < 101:
-            filtered_zones[hr] = zones[hr]
+            percentage = float(zones[hr])*100/total_seconds
+            if percentage > 0.5:
+                filtered_zones[hr] = percentage
 
     return filtered_zones
 
