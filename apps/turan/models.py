@@ -240,13 +240,18 @@ class Exercise(models.Model):
             parse_sensordata(self)
             create_gpx_from_details(self)
 
+
+        # set avg_speed if distance and duration is given
+        if self.route and self.route.distance and self.duration:# and not self.avg_speed:
+            self.avg_speed = float(self.route.distance)/(float(self.duration.seconds)/60/60)
+
         super(Exercise, self).save(force_update=True)
 
     def get_absolute_url(self):
         route_name = ''
         if self.route:
             route_name = slugify(self.route.name)
-        return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + route_name 
+        return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + route_name
 
     def get_geojson_url(self):
         return reverse('geojson', kwargs={'object_id': self.id})
