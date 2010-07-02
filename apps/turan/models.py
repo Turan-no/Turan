@@ -242,7 +242,7 @@ class Exercise(models.Model):
 
 
         # set avg_speed if distance and duration is given
-        if self.route and self.route.distance and self.duration:# and not self.avg_speed:
+        if self.route and self.route.distance and self.duration and not self.avg_speed:
             self.avg_speed = float(self.route.distance)/(float(self.duration.seconds)/60/60)
 
         super(Exercise, self).save(force_update=True)
