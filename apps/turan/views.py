@@ -967,7 +967,10 @@ def exercise(request, object_id):
     # Provide template string for maximum yaxis value for HR, for easier comparison
     maxhr_js = ''
     if object.user.get_profile().max_hr:
-        maxhr_js = ', max: %s' %object.user.get_profile().max_hr
+        max_hr = int(object.user.get_profile().max_hr)
+        maxhr_js = ', max: %s' %max_hr
+    else:
+        max_hr = 200 # FIXME, maybe demand from user ?
 
     details = object.exercisedetail_set.all()
     # Default is false, many exercises don't have distance, we try to detect later
@@ -1036,7 +1039,7 @@ def create_exercise_with_route(request):
             # notify friends of new object
             if notification and user_required: # only notify for user owned objects
                 notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
-            
+
 
             if request.user.is_authenticated():
                 request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": Exercise._meta.verbose_name})
@@ -1075,7 +1078,7 @@ def create_object(request, model=None, template_name=None,
             # notify friends of new object
             if notification and user_required: # only notify for user owned objects
                 notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
-            
+
 
             if request.user.is_authenticated():
                 request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": model._meta.verbose_name})

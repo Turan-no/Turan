@@ -11,10 +11,9 @@
         "hr": {
             data: [{{ hr}} ],
             label: "{% trans "HR" %}",
-            lines: { show: true, fill: 0.2 },
+            lines: { show: true, fill: 0.0 },
             yaxis: 2,
-            color: 2,
-            //TODOconstraints: [constraint0, constraint1],
+            constraints: [constraint0, constraint1, constraint2, constraint3, constraint4, constraint5],
         },
         {% endif %}
         {% if cadence%}
