@@ -2,6 +2,7 @@
 {% load turan_extras %}
 <div id="besteffortdiv" style="width:400px;height:400px; float: right;"></div>
 <div id="bestefforttable" style="width:500px; height: 400px;">
+    {% if object.avg_power %}
     <table>
         <tr>
             <th>
@@ -11,10 +12,10 @@
                 {% trans "Power" %}
             </th>
             <th>
-                {% trans "Power / kg" %}
+                {% trans "Avg power/kg" %}
             </th>
             <th>
-                {% trans "At km" %}
+                {% trans "Start" %}
             </th>
             <th>
                 {% trans "Length" %}
@@ -29,7 +30,7 @@
                 {{ effort.power }} {% trans "W" %}
             </td>
             <td>
-                {{ effort.wkg|floatformat }} {% trans "W / kg" %}
+                {{ effort.wkg|floatformat }} {% trans "W/kg" %}
             </td>
             <td>
                 {{ effort.pos|floatformat }} {% trans "km" %}
@@ -40,6 +41,7 @@
         </tr>
         {% endfor %}
     </table>
+    {% endif %}
     <table>
         <tr>
             <th>
@@ -49,7 +51,7 @@
                 {% trans "Speed" %}
             </th>
             <th>
-                {% trans "At km" %}
+                {% trans "Start" %}
             </th>
             <th>
                 {% trans "Length" %}
@@ -74,6 +76,7 @@
     </table>
 </div>
 
+{% if object.avg_power %}
 <script language="javascript" type="text/javascript">
     var best_effort_data = [
             {% for key, effort in object.best_power.items %}
@@ -88,3 +91,20 @@
     ];
     $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: false } });
 </script>
+{% else %}
+<script language="javascript" type="text/javascript">
+    var best_effort_data = [
+            {% for key, effort in object.best_speed.items %}
+            {% if effort %}
+                {
+                    data: [[{{ key }}, {{ effort.speed }}]],
+                    bars: { show: true},
+                    color: {{ forloop.counter }}
+                },
+            {% endif %}
+            {% endfor %}
+    ];
+    $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: false } });
+</script>
+{% endif %}
+

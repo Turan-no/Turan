@@ -25,9 +25,7 @@
     {% ifequal object.exercise_type.altitude 1 %}
         <li id="tabs-select-5">{% trans "Inclinesums" %}</li>
     {% endifequal %}
-    {% if object.avg_power %}
-        <li id="tabs-select-6">{% trans "Best Efforts" %}</li>
-    {% endif %}
+    <li id="tabs-select-6">{% trans "Best Efforts" %}</li>
     </ul>
     <div id="tabs-1" class="graph visible">
         {% include "turan/exercise/graph.html" %}
@@ -102,11 +100,9 @@
         {% include "turan/exercise/incline_tab.html" %}
     </div>
     {% endifequal %}
-    {% if object.avg_power %}
     <div id="tabs-6">
         {% include "turan/exercise/best_effort_tab.html" %}
     </div>
-    {% endif %}
 </div>
 <script type="text/javascript">
     function selectTab(evt) {
