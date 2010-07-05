@@ -7,6 +7,16 @@
 
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
+    var constraint0 = {
+        threshold: 140,
+        color: "rgb(200,0,0)",
+        evaluate : function(y,threshold){ return y < threshold; }
+    }
+    var constraint1 = {
+        threshold: 180,
+        color: "rgb(255,0,0)",
+        evaluate : function(y,threshold){ return y < threshold; }
+    }
     var datasets = {{ datasets }};
     var plot;
     var choiceContainer = $("#choices");
@@ -21,14 +31,20 @@ $(function () {
     $("#tripdiv{{object.id}}").bind("plotselected", function (event, ranges) {
         plotAccordingToChoices(ranges);
     });
+//    function suffixFormatter(val, axis) {
+//        return val.toFixed(axis.tickDecimals) + "km";
+//    }
 
     function plotAccordingToChoices(ranges) {
         var data = [];
-        var xaxisattrs = { tickDecimals: 0 };
-        if (ranges.xaxis != undefined) {
-            xaxisattrs.min = ranges.xaxis.from;
-            xaxisattrs.max = ranges.xaxis.to;
-        }
+        var xaxisattrs = { 
+                tickDecimals: 0,
+//                tickFormatter: suffixFormatter,
+        };
+        //if (ranges.xaxis != undefined) {
+        //    xaxisattrs.min = ranges.xaxis.from;
+        //    xaxisattrs.max = ranges.xaxis.to;
+        //}
         choiceContainer.find("input:checked").each(function () {
             var key = $(this).attr("name");
             if (key && datasets[key])
@@ -37,8 +53,8 @@ $(function () {
 
         if (data.length > 0) {
             plot = $.plot($("#tripdiv{{object.id}}"), data, {
-                yaxis: [{ min: 0 }, { min: 80 {{maxhr_js}} }],
-                xaxis: xaxisattrs,
+                yaxes: [{ min: 0 }, { min: 80 {{maxhr_js}} }],
+                xaxes: [xaxisattrs],
                 legend: { container: $("#tripdiv_legend{{object.id}}") },
                 grid: { 
                     hoverable: true, 

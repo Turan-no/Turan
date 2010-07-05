@@ -950,7 +950,7 @@ def exercise(request, object_id):
     ''' View for exercise detail '''
 
     object = get_object_or_404(Exercise, pk=object_id)
-    
+
     # Permission checks
     if not object.user == request.user:  # Allow self
         if object.exercise_permission == 'N':
