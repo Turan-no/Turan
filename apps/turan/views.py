@@ -175,7 +175,8 @@ def route_detail(request, object_id):
             except AttributeError:
                 pass # stupid decimal value in trip duration!
 
-            if trip.avg_speed and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
+            if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
+                                                             # and trip with details
                 alt = tripdetail_js(None, trip.id, 'altitude')
                 alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
                 done_altitude_profile = True
