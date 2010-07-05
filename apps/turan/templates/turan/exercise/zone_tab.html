@@ -32,15 +32,15 @@
         </table>
     </div>
 <script language="javascript" type="text/javascript">
+    var colors = ["rgb(204,204,204)", "rgb(51,102,255)", "rgb(102,204,0)", "rgb(255,0,255)", 
+        "rgb(255,0,255)", "rgb(255,153,0)", "rgb(255,153,255)"];
     var zonedata = [
             {% for zone, length in zones.items %}
-            {% if length %}
                 {
                     data: [[{{ zone|slice:":1" }}, {{ length }}]],
                     bars: { show: true},
-                    color: {{ forloop.counter }}
+                    color: colors[{{ forloop.counter0 }}]
                 },
-            {% endif %}
             {% endfor %}
     ];
     $.plot($("#zonediv"),zonedata, { grid: { show: false } });
