@@ -1644,118 +1644,18 @@
             if (series.points.show)
                 drawSeriesPoints(series);
         }
-
-        // Finds the point with the x coordinate closest to the given x.
-        function closest(x, serie) {
-            function binSearchPoint(array, x, f_, fail_) {
-                var begin = 0,
-                    end = (array.length / 2) - 1,
-                    middle,
-                    point,
-                    f = f_ || function(value) { return value; },
-                    fail = fail_ || function(middle) { return -1; };
-
-                while (begin <= end) {
-                    middle = Math.floor((end - begin) / 2 + begin);
-                    point = array[middle * 2];
-
-                    // Damn, we've hit a null point. Move middle around
-                    // until we found a valid point.
-                    if (point === null) {
-                        while (middle > begin && point === null) {
-                            middle -= 1;
-                            point = array[middle * 2];
-                        };
-
-                        // If we can't find a point after begin that is not null,
-                        // move forward. Otherwise, there won't be progress.
-                        if (point === null) {
-                            middle = Math.floor((end - begin) / 2 + begin);
-
-                            while (middle < end && point === null) {
-                                middle += 1;
-                                point = array[middle * 2];
-                            }
-                        }
-
-                        if (point === null) {
-                            break;
-                        }
-                    }
-
-                    if (x < f(point)) {
-                        end = middle - 1;
-                    } else if (x > f(point)) {
-                        begin = middle + 1;
-                    } else {
-                        return middle * 2;
-                    }
-                }
-
-                return fail(middle * 2);
-            }
-
-
-            function minBy(array, f) {
-                var min = array[0];
-                for (var i = 1; i < array.length; i++) {
-                    if (f(array[i]) < f(min)) {
-                        min = array[i];
-                    }
-                }
-
-                return min;
-            }
-
-
-            function closestNeighbour(neighbours) {
-                var distance = function(fst, snd) {
-                    return Math.abs(fst - snd);
-                };
-
-                return minBy(neighbours, function (elt) {
-                    return elt >= 0 && elt < serie.length
-                        ? distance(x, serie[elt]) : Number.POSITIVE_INFINITY;
-                });
-            }
-            
-            var idx = binSearchPoint(serie, x,
-                                     null,
-                                     function(middle) {
-                                         return closestNeighbour([middle - 2, middle, middle + 2]);
-                                     });
-            return idx;
-        }
-
         
         function drawSeriesLines(series) {
             function plotLine(datapoints, xoffset, yoffset, axisx, axisy) {
                 var points = datapoints.points,
                     ps = datapoints.pointsize,
-                    start = Math.max(closest(axisx.min, points), 2),
-                    end = Math.min(closest(axisx.max, points) + ps, points.length - ps),
-                    step = Math.max(1, (end - start) / ps / plot.width()),
                     prevx = null, prevy = null;
                 
                 ctx.beginPath();
-                for (var i = start, ri = start, prevK = start - ps; ri <= end; i += step * ps, ri = Math.round(i)) {
-                    var k = ri - (ri % ps),
-                        x1 = points[prevK], y1 = points[prevK + 1],
-                        x2 = points[k], y2 = points[k + 1];
-
-                    if (x1 != null && y1 != null) {
-                        var dx = axisx.p2c(x2) - axisx.p2c(x1),
-                            dy = axisy.p2c(y2) - axisy.p2c(y1),
-                            maxDist = 5;
-
-                        if (dx * dx + dy * dy > maxDist * maxDist && k > prevK + ps) {
-                            i = (prevK + k) / 2 - step * ps;
-                            continue;
-                        }
-                    }
-
-                    prevK = k;
-
+                for (var i = ps; i < points.length; i += ps) {
+                    var x1 = points[i - ps], y1 = points[i - ps + 1],
+                        x2 = points[i], y2 = points[i + 1];
+                    
                     if (x1 == null || x2 == null)
                         continue;
 
