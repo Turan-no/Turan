@@ -27,6 +27,8 @@ from csvparser import CSVParser
 
 from gpxwriter import GPXWriter
 
+import numpy
+
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 
 class RouteManager(models.Manager):
@@ -494,8 +496,48 @@ def parse_sensordata(event):
     if event.route:
         if event.route.ascent == 0 or event.route.descent == 0 \
                 or not event.route.ascent or not event.route.descent:
-            event.route.ascent, event.route.descent = calculate_ascent_descent(event)
+            event.route.ascent, event.route.descent = calculate_ascent_descent_gaussian(event)
             event.route.save()
+
+def smoothListGaussian(list,degree=5):
+     window=degree*2-1
+     weight=numpy.array([1.0]*window)
+     weightGauss=[]
+     for i in range(window):
+         i=i-degree+1
+         frac=i/float(window)
+         gauss=1/(numpy.exp((4*(frac))**2))
+         weightGauss.append(gauss)
+     weight=numpy.array(weightGauss)*weight
+     smoothed=[0.0]*(len(list)-window)
+     for i in range(len(smoothed)):
+         smoothed[i]=sum(numpy.array(list[i:i+window])*weight)/sum(weight)
+     return smoothed
+
+def calculate_ascent_descent_gaussian(event):
+    ''' Calculate ascent and descent for an exercise. Use guassian filter to smooth '''
+
+    altvals = []
+    for a in event.get_details().all():
+        altvals.append(a.altitude)
+
+    altvals = smoothListGaussian(altvals)
+
+    ascent = 0
+    descent = 0
+    previous = -1
+
+    for a in altvals:
+        if previous == -1:
+            previous = a
+
+        if a > previous:
+            ascent += (a - previous)
+        if a < previous:
+            descent += (previous - a)
+
+        previous = a
+    return round(ascent), round(descent)
 
 def calculate_ascent_descent(event):
     ''' Calculate ascent and descent for an exercise and put on the route.
