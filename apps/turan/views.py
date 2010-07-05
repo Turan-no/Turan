@@ -624,7 +624,7 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
         # time_xaxis = x += float(time.seconds)/60
         dval = d[val]
         if dval > 0: # skip zero values (makes prettier graph)
-            js += '[%s, %s],' % (distance, dval)
+            js += '[%.1f,%s],' % (distance, dval)
     return js
 
 def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True):
