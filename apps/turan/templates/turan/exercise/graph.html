@@ -37,8 +37,7 @@ $(function () {
 
         if (data.length > 0) {
             plot = $.plot($("#tripdiv{{object.id}}"), data, {
-                yaxis: { min: 0 },
-                y2axis: { min: 80 {{maxhr_js}} },
+                yaxis: [{ min: 0 }, { min: 80 {{maxhr_js}} }],
                 xaxis: xaxisattrs,
                 legend: { container: $("#tripdiv_legend{{object.id}}") },
                 grid: { 
