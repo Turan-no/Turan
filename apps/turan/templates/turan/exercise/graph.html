@@ -41,10 +41,10 @@ $(function () {
                 tickDecimals: 0,
 //                tickFormatter: suffixFormatter,
         };
-        //if (ranges.xaxis != undefined) {
-        //    xaxisattrs.min = ranges.xaxis.from;
-        //    xaxisattrs.max = ranges.xaxis.to;
-        //}
+        if (ranges.xaxis != undefined) {
+            xaxisattrs.min = ranges.xaxis.from;
+            xaxisattrs.max = ranges.xaxis.to;
+        }
         choiceContainer.find("input:checked").each(function () {
             var key = $(this).attr("name");
             if (key && datasets[key])
@@ -54,7 +54,7 @@ $(function () {
         if (data.length > 0) {
             plot = $.plot($("#tripdiv{{object.id}}"), data, {
                 yaxes: [{ min: 0 }, { min: 80 {{maxhr_js}} }],
-                xaxes: [xaxisattrs],
+                xaxis: xaxisattrs,
                 legend: { container: $("#tripdiv_legend{{object.id}}") },
                 grid: { 
                     hoverable: true, 
