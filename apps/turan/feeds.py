@@ -6,6 +6,7 @@ from datetime import datetime
 from models import Route, Exercise
 
 from ical import ICalendarFeed
+from django.contrib.syndication.feeds import Feed
 
 class ExerciseCalendar(ICalendarFeed):
     ''' Return ical for one user '''
@@ -50,3 +51,25 @@ class ExerciseCalendar(ICalendarFeed):
 
     def item_location(self, item):
         return unicode(item.route)
+
+class UserTripsFeed(Feed):
+    def get_object(self, bits):
+        result = User.objects.get(username=bits[0])
+        return result
+
+    def title(self, obj):
+        return _("Events for %(username)s") % obj.username
+
+    def link(self, obj):
+        if not obj:
+            raise FeedDoesNotExist
+        return obj.get_absolute_url()
+
+    def description(self, obj):
+        return "Exercise for %(username)s" % obj.user
+
+    def items(self, obj):
+       return Exercise.objects.filter(user=obj.user)
+
+    def item_author_name(self, obj):
+        return obj.user

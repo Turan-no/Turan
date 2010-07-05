@@ -963,6 +963,8 @@ def exercise(request, object_id):
             if not is_friend:
                 return redirect_to_login(request.path)
 
+
+    # Provide template string for maximum yaxis value for HR, for easier comparison
     maxhr_js = ''
     if object.user.get_profile().max_hr:
         maxhr_js = ', max: %s' %object.user.get_profile().max_hr
@@ -997,11 +999,12 @@ def exercise(request, object_id):
         zones = getzones(details)
         hrhzones = gethrhzones(details)
         inclinesummary = getinclinesummary(details)
-    if object.avg_power:
-        poweravg30s = power_30s_average(details)
-        for i in range(0, len(poweravg30s)):
-            details[i].poweravg30s = poweravg30s[i]
-        object.normalized = normalized_power(poweravg30s)
+        if object.avg_power:
+            poweravg30s = power_30s_average(details)
+            for i in range(0, len(poweravg30s)):
+                details[i].poweravg30s = poweravg30s[i]
+            object.normalized = normalized_power(poweravg30s)
+
     datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
 
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
@@ -1152,36 +1155,6 @@ def autocomplete_route(request, app_label, model):
 
     return HttpResponse(route_list)
 
-class UserTripsFeed(Feed):
-    def get_object(self, bits):
-        # In case of "/rss/beats/0613/foo/bar/baz/", or other such clutter,
-        # check that bits has only one member.
-        #if len(bits) != 1:
-        #    raise ObjectDoesNotExist
-        result = User.objects.get(username=bits[0])
-        return result
-
-    def title(self, obj):
-        return _("Events for %(username)s") % obj.username
-
-    def link(self, obj):
-        if not obj:
-            raise FeedDoesNotExist
-        return obj.get_absolute_url()
-
-    def description(self, obj):
-        return "Events for %(username)s" % obj.username
-
-    def items(self, obj):
-       return Episodes.objects.filter(series__id__exact=obj.id).filter(downloadurl__isnull=False).order_by('-releasedate')[:30]
-
-    def item_author_name(self, obj):
-        "Item author"
-        return obj.series.name
-
-    def item_link(self, obj):
-        "Download link"
-        return obj.downloadurl
 
 def ical(request, username):
 
@@ -1268,7 +1241,7 @@ def power_30s_average(details):
             poweravg30s.append(foo/foo_element)
 
     return poweravg30s
-        
+
 def normalized_power(dataset):
 
     normalized = 0.0
