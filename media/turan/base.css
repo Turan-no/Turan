@@ -643,6 +643,15 @@ ul.iconlist li {
     list-style-type: none;
 }
 
+/* Graph */
+div.averages,
+div.averages h4,
+div.averages ul,
+div.averages li,
+{
+    float: left;
+}
+
 /* Calendar */
 table.month td,
 table.month th {
