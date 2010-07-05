@@ -12,13 +12,33 @@
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     var constraint0 = {
-        threshold: 140,
-        color: "rgb(200,0,0)",
+        threshold: {{ max_hr }}*0.6,
+        color: "rgb(204,204,204)",
         evaluate : function(y,threshold){ return y < threshold; }
     }
     var constraint1 = {
-        threshold: 180,
-        color: "rgb(255,0,0)",
+        threshold: {{ max_hr }}*0.72,
+        color: "rgb(51,102,255)",
+        evaluate : function(y,threshold){ return y < threshold; }
+    }
+    var constraint2 = {
+        threshold: {{ max_hr }}*0.82,
+        color: "rgb(102,204,0)",
+        evaluate : function(y,threshold){ return y < threshold; }
+    }
+    var constraint3 = {
+        threshold: {{ max_hr }}*0.87,
+        color: "rgb(255,0,255)",
+        evaluate : function(y,threshold){ return y < threshold; }
+    }
+    var constraint4 = {
+        threshold: {{ max_hr }}*0.92,
+        color: "rgb(255,153,0)",
+        evaluate : function(y,threshold){ return y < threshold; }
+    }
+    var constraint5 = {
+        threshold: {{ max_hr }}*0.97,
+        color: "rgb(255,153,255)",
         evaluate : function(y,threshold){ return y < threshold; }
     }
     var datasets = {{ datasets }};

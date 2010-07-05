@@ -1,0 +1,90 @@
+{% load i18n %}
+{% load turan_extras %}
+<div id="besteffortdiv" style="width:400px;height:400px; float: right;"></div>
+<div id="bestefforttable" style="width:500px; height: 400px;">
+    <table>
+        <tr>
+            <th>
+                {% trans "Duration" %}
+            </th>
+            <th>
+                {% trans "Power" %}
+            </th>
+            <th>
+                {% trans "Power / kg" %}
+            </th>
+            <th>
+                {% trans "At km" %}
+            </th>
+            <th>
+                {% trans "Length" %}
+            </th>
+        </tr>
+        {% for key, effort in object.best_power.items %}
+        <tr>
+            <td> 
+                {{ effort.dur|durationformat }} 
+            </td>
+            <td>
+                {{ effort.power }} {% trans "W" %}
+            </td>
+            <td>
+                {{ effort.wkg|floatformat }} {% trans "W / kg" %}
+            </td>
+            <td>
+                {{ effort.pos|floatformat }} {% trans "km" %}
+            </td>
+            <td>
+                {{ effort.length|floatformat }} {% trans "km" %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <table>
+        <tr>
+            <th>
+                {% trans "Duration" %}
+            </th>
+            <th>
+                {% trans "Speed" %}
+            </th>
+            <th>
+                {% trans "At km" %}
+            </th>
+            <th>
+                {% trans "Length" %}
+            </th>
+        </tr>
+        {% for key, effort in object.best_speed.items %}
+        <tr>
+            <td> 
+                {{ effort.dur|durationformat }} 
+            </td>
+            <td>
+                {{ effort.speed|floatformat }} {% trans "km/h" %}
+            </td>
+            <td>
+                {{ effort.pos|floatformat }} {% trans "km" %}
+            </td>
+            <td>
+                {{ effort.length|floatformat }} {% trans "km" %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<script language="javascript" type="text/javascript">
+    var best_effort_data = [
+            {% for key, effort in object.best_power.items %}
+            {% if effort %}
+                {
+                    data: [[{{ key }}, {{ effort.power }}]],
+                    bars: { show: true},
+                    color: {{ forloop.counter }}
+                },
+            {% endif %}
+            {% endfor %}
+    ];
+    $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: false } });
+</script>
