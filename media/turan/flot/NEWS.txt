@@ -1,6 +1,37 @@
 Flot x.x
 --------
 
+API changes:
+
+Multiple axes support. Code using dual axes should be changed from
+using x2axis/y2axis in the options to using an array (although
+backwards-compatibility hooks are in place). For instance,
+
+  {
+    xaxis: { ... }, x2axis: { ... },
+    yaxis: { ... }, y2axis: { ... }
+  }
+
+becomes
+
+  {
+    xaxes: [ { ... }, { ... } ],
+    yaxes: [ { ... }, { ... } ]
+  }
+
+Note that if you're just using one axis, continue to use the
+xaxis/yaxis directly (it now sets the default settings for the
+arrays). Plugins touching the axes must be ported to take the extra
+axes into account, a couple of helper functions have been added for
+that purpose, check the source.
+
+"tickColor" on the grid options is now deprecated in favour of a
+corresponding option on the axes, so { grid: { tickColor: "#000" }}
+becomes { xaxis: { tickColor: "#000"}, yaxis: { tickColor: "#000"} },
+but if you just configure a base color Flot will now autogenerate a
+tick color by adding transparency. Backwards-compatibility hooks are
+in place.
+
 Changes:
 
 - Support for specifying a bottom for each point for line charts when
@@ -12,7 +43,29 @@ Changes:
   example percentiles.html for a use case).
 - More predictable handling of gaps for the stacking plugin, now all
   undefined ranges are skipped.
+- Stacking plugin can stack horizontal bar charts.
+- Navigate plugin now redraws the plot while panning instead of only
+  after the fact (can be disabled by setting the pan.frameRate option
+  to null), raised by lastthemy (issue 235).
+- Date formatter now accepts %0m and %0d to get a zero-padded month or
+  day (issue raised by Maximillian Dornseif).
+- Revamped internals to support an unlimited number of axes, not just
+  dual (sponsored by Flight Data Services,
+  www.flightdataservices.com).
+- New setting on axes, "tickLength", to control the size of ticks or
+  turn them off without turning off the labels.
+- Axis labels are now put in container divs with classes, for instance
+  labels in the x axes can be reached via ".xAxis .tickLabel".
+- Support for setting the color of an axis (sponsored by Flight Data
+  Services, www.flightdataservices.com).
+- Tick color is now auto-generated as the base color with some
+  transparency (unless you override it).
+- Support for aligning ticks in the axes with "alignTicksWithAxis" to
+  ensure that they appear next to each other rather than in between,
+  at the expense of possibly awkward tick steps (sponsored by Flight
+  Data Services, www.flightdataservices.com).
 
+- New hooks: drawSeries
 
 Bug fixes:
 
@@ -23,6 +76,21 @@ Bug fixes:
 - Fixed problem with plugins adding options to the series objects.
 - Fixed a problem introduced in 0.6 with specifying a gradient with {
   brightness: x, opacity: y }.
+- Don't use $.browser.msie, check for getContext on the created canvas
+  element instead and try to use excanvas if it's not found.
+- highlight(s, index) was looking up the point in the original s.data
+  instead of in the computed datapoints array, which breaks with
+  plugins that modify the datapoints (such as the stacking plugin).
+  Issue 316 reported by curlypaul924.
+- More robust handling of axis from data passed in from getData()
+  (problem reported by Morgan).
+- Fixed problem with turning off bar outline (issue 253, fix by Jordi
+  Castells).
+- Check the selection passed into setSelection in the selection
+  plugin, to guard against errors when synchronizing plots (fix by Lau
+  Bech Lauritzen).
+- Fix bug in crosshair code with mouseout resetting the crosshair even
+  if it is locked (fix by Lau Bech Lauritzen). 
 
 Flot 0.6
 --------
