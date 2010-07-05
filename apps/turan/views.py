@@ -39,6 +39,8 @@ from turan.models import Route
 from urllib2 import urlopen
 from tempfile import NamedTemporaryFile
 
+from collections import deque
+
 
 from tagging.models import Tag
 from tribes.models import Tribe
@@ -999,12 +1001,44 @@ def exercise(request, object_id):
         zones = getzones(details)
         hrhzones = gethrhzones(details)
         inclinesummary = getinclinesummary(details)
+        effort_range = [5,30,60,600,1800,3600]
+
+        best_speed = {}
+        j = 0
+        for i in effort_range:
+            try:
+                best_speed[j] = {}
+                best_speed[j]['speed'], best_speed[j]['pos'], best_speed[j]['length'] = best_x_sec_speed(details, i)
+                best_speed[j]['dur'] = i
+            except:
+                #raise
+                del best_speed[j]
+                pass
+            j += 1
+        object.best_speed = best_speed
+
+
         if object.avg_power:
             poweravg30s = power_30s_average(details)
             for i in range(0, len(poweravg30s)):
                 details[i].poweravg30s = poweravg30s[i]
             object.normalized = normalized_power(poweravg30s)
 
+            best_power = {}
+            j = 0
+            for i in effort_range:
+                try:
+                    best_power[j] = {}
+                    best_power[j]['power'], best_power[j]['pos'], best_power[j]['length'] = best_x_sec_power(details, i)
+                    best_power[j]['dur'] = i
+                    best_power[j]['wkg'] = best_power[j]['power'] / userweight 
+                except:
+                    #raise
+                    del best_power[j]
+                    pass
+                j += 1
+
+            object.best_power = best_power
     datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
 
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
@@ -1241,6 +1275,53 @@ def power_30s_average(details):
             poweravg30s.append(foo/foo_element)
 
     return poweravg30s
+
+def best_x_sec_power(details, length):
+
+    best = 0.0
+    best_start_km = 0.0
+    q = deque()
+
+    for i in xrange(0, length):
+        q.appendleft(details[i].power)
+
+    for i in xrange(length, len(details)):
+
+        sum_q = sum(q)
+        if sum_q > best:
+            best = sum_q
+            best_start_km = details[i-length].distance / 1000
+            best_length = (details[i].distance / 1000) - best_start_km
+
+        q.appendleft(details[i].power)
+        q.pop()
+
+    best = best / length
+
+    return best, best_start_km, best_length
+
+def best_x_sec_speed(details, length):
+
+    best = 0.0
+    best_start_km = 0.0
+    q = deque()
+
+    for i in xrange(0, length):
+        q.appendleft(details[i].speed)
+    for i in xrange(length, len(details)):
+
+        sum_q = sum(q)
+        if sum_q > best:
+            best = sum_q
+            best_start_km = details[i-length].distance / 1000
+            best_length = (details[i].distance/1000) - best_start_km
+
+        q.appendleft(details[i].speed)
+        q.pop()
+
+    best = best / length
+
+    return best, best_start_km, best_length
 
 def normalized_power(dataset):
 
