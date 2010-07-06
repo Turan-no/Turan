@@ -907,7 +907,7 @@ msgstr "Bakkar"
 
 #: templates/turan/exercise_detail.html:25
 msgid "Inclinesums"
-msgstr "Stigningssummering"
+msgstr "Stigningsum"
 
 #: templates/turan/exercise_detail.html:39
 msgid "Start"
