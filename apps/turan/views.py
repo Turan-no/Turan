@@ -870,7 +870,8 @@ def getgradients(values):
 
             h_delta = altitudes[i] -  previous_altitude
             d_delta = d - previous_distance
-            gradients.append((int(round(d)), h_delta*100/d_delta))
+            if h_delta and d_delta: # Skip mongo values
+                gradients.append((int(round(d)), round(h_delta*100/d_delta),1))
 
         previous_altitude = altitudes[i]
         previous_distance = d
