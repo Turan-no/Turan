@@ -1353,11 +1353,11 @@ msgstr "år"
 
 #: templatetags/turan_extras.py:38
 msgid " years"
-msgstr "år"
+msgstr " år"
 
 #: templatetags/turan_extras.py:40
 msgid " year"
-msgstr "år"
+msgstr " år"
 
 #: templatetags/turan_extras.py:49
 msgid "mth"
@@ -1365,11 +1365,11 @@ msgstr "mnd"
 
 #: templatetags/turan_extras.py:51
 msgid " months"
-msgstr "månadar"
+msgstr " månadar"
 
 #: templatetags/turan_extras.py:53
 msgid " month"
-msgstr "månad"
+msgstr " månad"
 
 #: templatetags/turan_extras.py:63
 msgid "d"
@@ -1377,11 +1377,11 @@ msgstr "d"
 
 #: templatetags/turan_extras.py:65
 msgid " days"
-msgstr "dagar"
+msgstr " dagar"
 
 #: templatetags/turan_extras.py:67
 msgid " day"
-msgstr "dag"
+msgstr " dag"
 
 #: templatetags/turan_extras.py:77
 msgid "h"
@@ -1389,19 +1389,19 @@ msgstr "t"
 
 #: templatetags/turan_extras.py:79
 msgid " hours"
-msgstr "timar"
+msgstr " timar"
 
 #: templatetags/turan_extras.py:81
 msgid " hour"
-msgstr "time"
+msgstr " time"
 
 #: templatetags/turan_extras.py:93
 msgid " minutes"
-msgstr "minutt"
+msgstr " minutt"
 
 #: templatetags/turan_extras.py:95
 msgid " minute"
-msgstr "minutt"
+msgstr " minutt"
 
 #: templatetags/turan_extras.py:104
 msgid "s"
@@ -1409,11 +1409,11 @@ msgstr "s"
 
 #: templatetags/turan_extras.py:106
 msgid " seconds"
-msgstr "sekund"
+msgstr " sekund"
 
 #: templatetags/turan_extras.py:108
 msgid " second"
-msgstr "sekund"
+msgstr " sekund"
 
 #: templatetags/turan_extras.py:115
 msgid "Zero time"
