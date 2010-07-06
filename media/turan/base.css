@@ -660,24 +660,36 @@ li.tag {
     float: left;
     margin-right: 0.5em;
 }
+
+.sludd,
+.regnskur,
 .regn {
     list-style-image: url('/site_media/pinax/images/silk/icons/weather_rain.png');
 }
+.overskyet,
 .overskya {
     list-style-image: url('/site_media/pinax/images/silk/icons/weather_clouds.png');
 }
+.bris,
+.vind {
+    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_right.png');
+}
+.delskya,
+.delskyet,
 .lettskya {
     list-style-image: url('/site_media/pinax/images/silk/icons/weather_cloudy.png');
 }
 .snjo {
     list-style-image: url('/site_media/pinax/images/silk/icons/weather_snow.png');
 }
+.kveldssol,
 .sol {
     list-style-image: url('/site_media/pinax/images/silk/icons/weather_sun.png');
 }
 .duo {
     list-style-image: url('/site_media/pinax/images/silk/icons/group_link.png');
 }
+.bakkedrag,
 .bakke {
     list-style-image: url('/site_media/pinax/images/silk/icons/arrow_up.png');
 }
