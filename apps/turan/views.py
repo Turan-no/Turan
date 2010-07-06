@@ -858,7 +858,7 @@ def getgradients(values):
 
     for d in values:
         altitudes.append(d.altitude)
-        distances.append(d.distance)
+        distances.append(d.distance/1000)
 
     altitudes = smoothListGaussian(altitudes)
 
@@ -869,14 +869,18 @@ def getgradients(values):
         if previous_distance:
 
             h_delta = altitudes[i] -  previous_altitude
-            d_delta = d - previous_distance
+            d_delta = d*1000 - previous_distance
             if h_delta and d_delta: # Skip mongo values
-                gradients.append((int(round(d)), round(h_delta*100/d_delta),1))
+                gradient = h_delta*100/d_delta
+                if gradient < 50 and gradient > -50:
+                    gradients.append(gradient)
 
         previous_altitude = altitudes[i]
-        previous_distance = d
+        previous_distance = d*1000
 
-    return gradients
+    gradients = smoothListGaussian(gradients)
+
+    return zip(distances, gradients)
 
 def getslopes(values):
     slopes = []
