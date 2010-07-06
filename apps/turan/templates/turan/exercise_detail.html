@@ -41,6 +41,9 @@
         <table>
             <tr>
                 <th>
+                    {% trans "Zoom" %}
+                </th>
+                <th>
                     {% trans "Start" %}
                 </th>
                 <th>
@@ -75,6 +78,7 @@
             </tr>
         {% for slope in slopes %}
             <tr>
+                <td><a class="zoom-select-1" href="">Zoom</a></td>
                 <td>{{ slope.start_km|floatformat }} {% trans "km" %} </td>
                 <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
                 <td>{{slope.hdelta}} {% trans "m" %}</td>
@@ -114,6 +118,9 @@
         $(this).addClass('selected');
     }
     $('#tabs ul li').each(function () {
+        $(this).bind("click", selectTab);
+    });
+    $('.zoom-select-1').each(function () {
         $(this).bind("click", selectTab);
     });
 </script>
