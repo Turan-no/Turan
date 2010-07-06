@@ -122,10 +122,20 @@ img {
 }
 
 /* Clearing ruler */
+hr.clearleft,
+hr.clearright,
 hr.clear {
-	clear: both;
 	margin: 0;
 	visibility: hidden;
+}
+hr.clear {
+	clear: both;
+}
+hr.clearleft {
+        clear: left;
+}
+hr.clearright {
+        clear: right;
 }
 
 /* Header area */
