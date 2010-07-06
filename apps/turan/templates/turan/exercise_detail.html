@@ -78,7 +78,18 @@
             </tr>
         {% for slope in slopes %}
             <tr>
-                <td><a class="zoom-select-1" href="">Zoom</a></td>
+                <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select">
+                    <script type="text/javascript">
+                        $('#zoom{{forloop.counter0}}-link-1').bind("click", 
+                                function (evt) { 
+                                plot.setSelection({ 
+                                    xaxis: { 
+                                        from: {{slope.start_km}}, to: {{slope.start_km}}+{{slope.length}}/1000
+                                    }
+                                })
+                                });
+                    </script>
+                </td>
                 <td>{{ slope.start_km|floatformat }} {% trans "km" %} </td>
                 <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
                 <td>{{slope.hdelta}} {% trans "m" %}</td>
@@ -120,7 +131,7 @@
     $('#tabs ul li').each(function () {
         $(this).bind("click", selectTab);
     });
-    $('.zoom-select-1').each(function () {
+    $('.zoom-select').each(function () {
         $(this).bind("click", selectTab);
     });
 </script>

@@ -10,6 +10,7 @@
 </div>
 
 <script id="source" language="javascript" type="text/javascript">
+var plot;
 $(function () {
     var constraint0 = {
         threshold: {{ max_hr }}*0.6,
@@ -23,12 +24,12 @@ $(function () {
     }
     var constraint2 = {
         threshold: {{ max_hr }}*0.82,
-        color: "rgb(102,204,0)",
+        color: "rgb(255,153,255)",
         evaluate : function(y,threshold){ return y < threshold; }
     }
     var constraint3 = {
         threshold: {{ max_hr }}*0.87,
-        color: "rgb(255,0,255)",
+        color: "rgb(102,204,0)",
         evaluate : function(y,threshold){ return y < threshold; }
     }
     var constraint4 = {
@@ -38,11 +39,10 @@ $(function () {
     }
     var constraint5 = {
         threshold: {{ max_hr }}*0.97,
-        color: "rgb(255,153,255)",
+        color: "rgb(255,0,0)",
         evaluate : function(y,threshold){ return y < threshold; }
     }
     var datasets = {{ datasets }};
-    var plot;
     var choiceContainer = $("#choices");
     $.each(datasets, function(key, val) {
         choiceContainer.append('<br/><input type="checkbox" name="' + key +
