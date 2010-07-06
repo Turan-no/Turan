@@ -850,6 +850,33 @@ def gethrhzones(values):
 
     return filtered_zones
 
+def getgradients(values):
+    ''' Iterate over details, return list with tuples with distances and gradients '''
+
+    altitudes = []
+    distances = []
+
+    for d in values:
+        altitudes.append(d.altitude)
+        distances.append(d.distance)
+
+    altitudes = smoothListGaussian(altitudes)
+
+    gradients = []
+    previous_altitude = 0
+    previous_distance = 0
+    for i, d in enumerate(distances):
+        if previous_distance:
+
+            h_delta = altitudes[i] -  previous_altitude
+            d_delta = d - previous_distance
+            gradients.append((int(round(d)), h_delta*100/d_delta))
+
+        previous_altitude = altitudes[i]
+        previous_distance = d
+
+    return gradients
+
 def getslopes(values):
     slopes = []
     min_slope = 40
@@ -1001,6 +1028,8 @@ def exercise(request, object_id):
             except ZeroDivisionError:
                 slope.avg_power_kg = 0
 
+
+        gradients = getgradients(details)
         zones = getzones(details)
         hrhzones = gethrhzones(details)
         inclinesummary = getinclinesummary(details)
