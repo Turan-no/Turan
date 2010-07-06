@@ -475,6 +475,7 @@ ul.trip_attributes {
 li.duration {
     list-style-image: url('/site_media/pinax/images/silk/icons/clock.png');
 }
+li.hr, 
 li.heart {
     list-style-image: url('/site_media/pinax/images/silk/icons/heart.png');
 }
@@ -516,6 +517,7 @@ li.distance {
 li.description {
     list-style-image: url('/site_media/pinax/images/silk/icons/textfield.png');
 }
+li.altitude,
 li.ascent {
     list-style-image: url('/site_media/pinax/images/silk/icons/arrow_up.png');
 }
@@ -643,15 +645,6 @@ ul.iconlist li {
     list-style-type: none;
 }
 
-/* Graph */
-div.averages,
-div.averages h4,
-div.averages ul,
-div.averages li,
-{
-    float: left;
-}
-
 /* Calendar */
 table.month td,
 table.month th {
@@ -701,4 +694,17 @@ table.month th {
     list-style-image: url('/site_media/pinax/images/silk/icons/bug.png');
 }
 
+div.averages {
+    padding: 5px;
+    width: 700px;
+}
+
+div.averages ul,
+div.averages h4,
+div.averages li {
+    float: left;
+}
+div.averages h4 {
+    margin: 0;
+}
 
