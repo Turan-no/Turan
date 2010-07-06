@@ -128,7 +128,7 @@ class HRMParser(object):
                 hours = line[7:9]
                 minutes = line[10:12]
                 seconds = line[13:15]
-                self.duration = '%sh %smin %ss' % (hours, minutes, seconds)
+                self.duration = '%sh %sm %ss' % (hours, minutes, seconds)
 
         self.avg_hr = self.hr_sum/len(self.entries)
         self.avg_speed = self.speed_sum/len(self.entries)
