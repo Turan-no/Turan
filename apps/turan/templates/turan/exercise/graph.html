@@ -14,17 +14,17 @@ var plot;
 $(function () {
     var constraint0 = {
         threshold: {{ max_hr }}*0.6,
-        color: "rgb(204,204,204)",
+        color: "rgb(240,240,240)",
         evaluate : function(y,threshold){ return y < threshold; }
     }
     var constraint1 = {
         threshold: {{ max_hr }}*0.72,
-        color: "rgb(51,102,255)",
+        color: "rgb(204,204,204)",
         evaluate : function(y,threshold){ return y < threshold; }
     }
     var constraint2 = {
         threshold: {{ max_hr }}*0.82,
-        color: "rgb(255,153,255)",
+        color: "rgb(51,102,255)",
         evaluate : function(y,threshold){ return y < threshold; }
     }
     var constraint3 = {
