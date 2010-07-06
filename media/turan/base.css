@@ -655,7 +655,7 @@ table.month th {
 	background-color: yellow;
 }
 
-#tag li {
+li.tag {
 	list-style-type: none;
     float: left;
     margin-right: 0.5em;
