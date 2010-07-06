@@ -195,7 +195,7 @@ class Exercise(models.Model):
     user = models.ForeignKey(User)
     exercise_type = models.ForeignKey(ExerciseType, default=13) # FIXME hardcoded to cycling
     route = models.ForeignKey(Route, blank=True, null=True, help_text=_("Search existing routes"))
-    duration = DurationField(blank=True, default=0, help_text='18h 30min 23s 10ms 150mis')
+    duration = DurationField(blank=True, default=0, help_text='18h 30m 23s 10ms 150mis')
     date = models.DateField(blank=True, null=True, help_text=_("year-mo-dy"))
     time = models.TimeField(blank=True, null=True, help_text="00:00:00")
 
