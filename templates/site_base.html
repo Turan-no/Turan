@@ -61,8 +61,6 @@
 {% endblock %}
 
 {% block footer %}
-	<div id="ft" class="clearboth">
-		<div id="footer">
         {% block cloud %}
         {% endblock %}
 <div class="legal">
@@ -70,7 +68,7 @@
     - <a href="{% url turan_about %}">{% trans "About" %}</a>
     - <a href="{% url todo %}">{% trans "Todo" %}</a>
 </div>
-
+<hr class="clear" />
 {% endblock %}
 
 {% block extra_body_base %}

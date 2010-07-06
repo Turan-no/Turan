@@ -472,29 +472,21 @@ pre#footerLyrics {
 	padding: 0;
 	width: 100%;
 	background: #609A43;
-	height: 20px;
 	color: white;
 }
-#ft, #ft .content {
+#footer .cloud {
 	background: #508A33;
-	height: 100px;
+    padding: 5px;
 }
-#ft .content {
-	padding: 1em;
-}
-#ft a {
-	background: transparent;
-	color: white;
+#footer .cloud a {
+	color: #eee;
 	text-decoration: none;
 }
-#ft a:hover {
-	text-decoration: underline;
-}
-#ft ul {
+div.cloud ul {
 	font-size: 100%;
 	margin: 0;
 }
-#ft ul li {
+div.cloud ul li {
 	display: inline;
 	list-style-type: none;
 	margin: 0;
