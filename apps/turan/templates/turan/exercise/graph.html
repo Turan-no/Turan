@@ -2,11 +2,10 @@
 <p style="float: right;" id="choices">{% trans "Show" %}:</p>
 <div id="tripdiv_legend{{object.id}}" style="width:100px;height:400px; float: right;"></div>
 <div id="tripdiv{{object.id}}" style="width:750px;height:400px; background: white;"></div>
-<p id="hoverdata">Mouse hovers at
-    (<span id="x">0</span>, <span id="y">0</span>). <span id="clickdata"></span></p>
-<div style="float:left;width:700px;height:100px;" id="averages{{object.id}}">
-    <h4 style="float:left">Gj.snitt:</h4>
-    <ul style="float:left"></ul>
+<div class="averages" id="averages{{object.id}}">
+    <h4>{% trans "Selected min/max/avg" %}</h4>
+    <ul></ul>
+    <hr class="clear" />
 </div>
 
 <script id="source" language="javascript" type="text/javascript">
@@ -42,7 +41,7 @@ $(function () {
         color: "rgb(255,0,0)",
         evaluate : function(y,threshold){ return y < threshold; }
     }
-    var datasets = {{ datasets }};
+    datasets = {{ datasets }};
     var choiceContainer = $("#choices");
     $.each(datasets, function(key, val) {
         choiceContainer.append('<br/><input type="checkbox" name="' + key +
@@ -59,23 +58,34 @@ $(function () {
 //        return val.toFixed(axis.tickDecimals) + "km";
 //    }
 
-    function findAverages(data, from, to) {
+    function findMinMaxAvg(datasets, from, to) {
         avgs = {};
-        for (k in data) {
-            var avg = { sum: 0, num: 0, value: null };
-            var label = data[k].label;
-            for (l in data[k].data) {
-                var pos = data[k].data[l][0];
-                if (from == null || (pos >= from && pos <= to)) {
-                    var value = data[k].data[l][1];
+        for (key in datasets) {
+            var avg = { sum: 0, num: 0, avg: null, min: null, max: null };
+            var label = datasets[key].label;
+            for (l in datasets[key].data) {
+                var pos = datasets[key].data[l][0];
+                if (from != null && (pos >= from && pos <= to)) {
+                    var value = datasets[key].data[l][1];
+                    if (avg.min == null)
+                        avg.min = value;
+                    else
+                        avg.min = Math.min(avg.min, value);
+
+                    if (avg.max == null)
+                        avg.max = value;
+                    else
+                        avg.max = Math.max(avg.max, value);
+
                     avg.sum += value;
                     avg.num++;
                 }
             }
             if (avg.num > 0) {
-                avg.value = avg.sum / avg.num;
+                avg.avg = avg.sum / avg.num;
+                avg.label = datasets[key].label;
+                avgs[key] = avg;
             }
-            avgs[label] = avg;
         }
         return avgs;
     }
@@ -116,10 +126,15 @@ $(function () {
             });
         }
 
-        avgs = findAverages(data, min, max);
+        avgs = findMinMaxAvg(datasets, min, max);
         var avglist = $("#averages{{object.id}} ul").empty();
         for (k in avgs) {
-            avglist.append("<li style=\"margin-left: 30px; float:left\" class=\"" + k.toLowerCase() + "\"><span class=\"label\">" + k + ": </span>" + Math.round(avgs[k].value*10)/10 + "</li>");
+            avglist.append("<li style=\"margin-left: 30px; float:left\" class=\"" + k + "\"><span class=\"label\">" + 
+                    avgs[k].label + ": </span>" + 
+                    Math.round(avgs[k].min*10)/10 + 
+                    "/" + Math.round(avgs[k].max*10)/10 + 
+                    (k != "altitude" ? "/" + Math.round(avgs[k].avg*10)/10 : "") 
+                    + "</li>");
         }
     }
     plotAccordingToChoices({});
@@ -145,25 +160,22 @@ $(function () {
         else
             y = pos.y2;
 
-        $("#x").text(pos.x.toFixed(2));
-        $("#y").text(y.toFixed(2));
-
-            if (item) {
-                if (previousPoint != item.datapoint) {
-                    previousPoint = item.datapoint;
-                    
-                    $("#tooltip").remove();
-                    var x = item.datapoint[0].toFixed(2),
-                        y = item.datapoint[1].toFixed(2);
-                    
-                    showTooltip(item.pageX, item.pageY,
-                    item.series.label + " {% trans "at" %} " + x + " {% trans "is" %} " + y);
-                }
-            }
-            else {
+        if (item) {
+            if (previousPoint != item.datapoint) {
+                previousPoint = item.datapoint;
+                
                 $("#tooltip").remove();
-                previousPoint = null;            
+                var x = item.datapoint[0].toFixed(2),
+                    y = item.datapoint[1].toFixed(2);
+                
+                showTooltip(item.pageX, item.pageY,
+                item.series.label + " {% trans "at" %} " + x + " {% trans "is" %} " + y);
             }
+        }
+        else {
+            $("#tooltip").remove();
+            previousPoint = null;            
+        }
     });
 
     $("#tripdiv{{object.id}}").bind("plotclick", function (event, pos, item) {
