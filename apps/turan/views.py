@@ -878,7 +878,8 @@ def getgradients(values):
         previous_altitude = altitudes[i]
         previous_distance = d*1000
 
-    gradients = smoothListGaussian(gradients)
+    if gradients: # Don't try to smooth empty list
+        gradients = smoothListGaussian(gradients)
 
     return zip(distances, gradients)
 
@@ -942,6 +943,7 @@ def filldistance(values):
         delta_t = (values[i].time - values[i-1].time).seconds
         d += values[i].speed/3.6 * delta_t
         values[i].distance = d
+    return d
 
 def getavghr(values, start, end):
     hr = 0
@@ -1010,31 +1012,32 @@ def exercise(request, object_id):
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
     if details:
-        try:
-            userweight = object.user.get_profile().userprofiledetail_set.filter(weight__isnull=False).filter(time__lt=object.date).order_by("-time")[0].weight
-        except IndexError:
-            userweight = object.user.get_profile().weight
-        filldistance(details)
-        slopes = getslopes(details)
-        if slopes:
-            # If we have slopes, we have distance use that for graph
-            time_xaxis = False
-        for slope in slopes:
-            slope.duration = details[slope.end].time - details[slope.start].time
-            slope.speed = slope.length/slope.duration.seconds * 3.6
-            slope.avg_hr = getavghr(details, slope.start, slope.end)
-            slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
-            slope.actual_power = getavgpwr(details, slope.start, slope.end)
+        if filldistance(details): # Only do this if we actually have distance
             try:
-                if slope.actual_power:
-                    slope.avg_power_kg = slope.actual_power / userweight
-                else:
-                    slope.avg_power_kg = slope.avg_power / userweight
-            except ZeroDivisionError:
-                slope.avg_power_kg = 0
+                userweight = object.user.get_profile().userprofiledetail_set.filter(weight__isnull=False).filter(time__lt=object.date).order_by("-time")[0].weight
+            except IndexError:
+                userweight = object.user.get_profile().weight
+            slopes = getslopes(details)
+            if slopes:
+                # If we have slopes, we have distance use that for graph
+                time_xaxis = False
+            for slope in slopes:
+                slope.duration = details[slope.end].time - details[slope.start].time
+                slope.speed = slope.length/slope.duration.seconds * 3.6
+                slope.avg_hr = getavghr(details, slope.start, slope.end)
+                slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
+                slope.actual_power = getavgpwr(details, slope.start, slope.end)
+                try:
+                    if slope.actual_power:
+                        slope.avg_power_kg = slope.actual_power / userweight
+                    else:
+                        slope.avg_power_kg = slope.avg_power / userweight
+                except ZeroDivisionError:
+                    slope.avg_power_kg = 0
 
 
-        gradients = getgradients(details)
+            gradients = getgradients(details)
+
         zones = getzones(details)
         hrhzones = gethrhzones(details)
         inclinesummary = getinclinesummary(details)
@@ -1076,6 +1079,7 @@ def exercise(request, object_id):
                 j += 1
 
             object.best_power = best_power
+
     datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
 
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
