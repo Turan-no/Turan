@@ -390,6 +390,27 @@ def statistics(request, year=None, month=None, day=None, week=None):
 
     return render_to_response('turan/statistics.html', locals(), context_instance=RequestContext(request))
 
+
+def hr2zone(hr_percent):
+    ''' Given a HR percentage return sport zone based on Olympiatoppen zones'''
+
+    zone = 0
+
+    if hr_percent > 97:
+        zone = 6
+    elif hr_percent > 92:
+        zone = 5
+    elif hr_percent > 87:
+        zone = 4
+    elif hr_percent > 82:
+        zone = 3
+    elif hr_percent > 72:
+        zone = 2
+    elif hr_percent > 60:
+        zone = 1
+
+    return zone
+
 def generate_tshirt(request):
     import Image
     import ImageFont
@@ -541,7 +562,7 @@ def geojson(request, object_id):
                     "type": "LineString", "coordinates": [ ''' %zone
             self.jsonfoot = '''] }
             },'''
-            
+
         def addLine(self, a, b, c, d):
             self.linestrings += '[%s, %s], [%s, %s],\n' %(a,b,c,d)
 
@@ -559,19 +580,8 @@ def geojson(request, object_id):
     for d in qs:
         if previous_lon and previous_lat:
             hr_percent = float(d.hr)*100/max_hr
-            zone = 1
-# TODO? Support zone 0 ?
-            if hr_percent > 97:
-                zone = 6
-            elif hr_percent > 92:
-                zone = 5
-            elif hr_percent > 87:
-                zone = 4
-            elif hr_percent > 82:
-                zone = 3
-            elif hr_percent > 72:
-                zone = 2
-            elif hr_percent > 60:
+            zone = hr2zone(hr_percent)
+            if zone == 0: # TODO WTF? Bug in this shit
                 zone = 1
 
             if previous_zone == zone:
@@ -626,7 +636,7 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
         # time_xaxis = x += float(time.seconds)/60
         dval = d[val]
         if dval > 0: # skip zero values (makes prettier graph)
-            js += '[%.1f,%s],' % (distance, dval)
+            js += '[%.4f,%s],' % (distance, dval)
     return js
 
 def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True):
@@ -699,7 +709,7 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True):
                 dval = getattr(d, val)
                 if dval > 0: # skip zero values (makes prettier graph)
                     # TODO needs to select between distance and time and possibly sample
-                    js_strings[val] += '[%.2f,%s],' % (x, dval)
+                    js_strings[val] += '[%.4f,%s],' % (x, dval)
             except AttributeError: # not all formats support all values
                 pass
 
@@ -773,23 +783,8 @@ def getzones(values):
             continue
 
         hr_percent = float(d.hr)*100/max_hr
-
-        zone = 0
-        if hr_percent > 97:
-            zone = 6
-        elif hr_percent > 92:
-            zone = 5
-        elif hr_percent > 87:
-            zone = 4
-        elif hr_percent > 82:
-            zone = 3
-        elif hr_percent > 72:
-            zone = 2
-        elif hr_percent > 60:
-            zone = 1
-
+        zone = hr2zone(hr_percent)
         zones[zone] += time.seconds
-
 
     zones_with_legend = SortedDict()
 
@@ -836,9 +831,9 @@ def gethrhzones(values):
             zones[hr_percent] = 0
         zones[hr_percent] += time.seconds
 
-    filtered_zones = SortedDict()
-    for i in range(40,100):
-        filtered_zones[i] = 0
+    filtered_zones = [SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict()]
+    #for i in range(40,100):
+    #    filtered_zones[i] = 0
 
     total_seconds = d.exercise.duration.seconds
     for hr in sorted(zones):
@@ -846,7 +841,9 @@ def gethrhzones(values):
         if hr > 40 and hr < 101:
             percentage = float(zones[hr])*100/total_seconds
             if percentage > 0.5:
-                filtered_zones[hr] = percentage
+
+                zone = hr2zone(hr)
+                filtered_zones[zone][hr] = percentage
 
     return filtered_zones
 
@@ -878,7 +875,8 @@ def getgradients(values):
         previous_altitude = altitudes[i]
         previous_distance = d*1000
 
-    gradients = smoothListGaussian(gradients)
+    if gradients: # Don't try to smooth empty list
+        gradients = smoothListGaussian(gradients)
 
     return zip(distances, gradients)
 
@@ -942,6 +940,7 @@ def filldistance(values):
         delta_t = (values[i].time - values[i-1].time).seconds
         d += values[i].speed/3.6 * delta_t
         values[i].distance = d
+    return d
 
 def getavghr(values, start, end):
     hr = 0
@@ -1010,31 +1009,35 @@ def exercise(request, object_id):
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
     if details:
-        try:
-            userweight = object.user.get_profile().userprofiledetail_set.filter(weight__isnull=False).filter(time__lt=object.date).order_by("-time")[0].weight
-        except IndexError:
-            userweight = object.user.get_profile().weight
-        filldistance(details)
-        slopes = getslopes(details)
-        if slopes:
-            # If we have slopes, we have distance use that for graph
-            time_xaxis = False
-        for slope in slopes:
-            slope.duration = details[slope.end].time - details[slope.start].time
-            slope.speed = slope.length/slope.duration.seconds * 3.6
-            slope.avg_hr = getavghr(details, slope.start, slope.end)
-            slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
-            slope.actual_power = getavgpwr(details, slope.start, slope.end)
+        if filldistance(details): # Only do this if we actually have distance
             try:
-                if slope.actual_power:
-                    slope.avg_power_kg = slope.actual_power / userweight
-                else:
-                    slope.avg_power_kg = slope.avg_power / userweight
-            except ZeroDivisionError:
-                slope.avg_power_kg = 0
+                userweight = object.user.get_profile().userprofiledetail_set.filter(weight__isnull=False).filter(time__lt=object.date).order_by("-time")[0].weight
+            except IndexError:
+                userweight = object.user.get_profile().weight
+            slopes = getslopes(details)
+            if slopes:
+                # If we have slopes, we have distance use that for graph
+                # unless user wanted time !
+                req_t = request.GET.get('xaxis', '')
+                if not req_t == 'time':
+                    time_xaxis = False
+            for slope in slopes:
+                slope.duration = details[slope.end].time - details[slope.start].time
+                slope.speed = slope.length/slope.duration.seconds * 3.6
+                slope.avg_hr = getavghr(details, slope.start, slope.end)
+                slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
+                slope.actual_power = getavgpwr(details, slope.start, slope.end)
+                try:
+                    if slope.actual_power:
+                        slope.avg_power_kg = slope.actual_power / userweight
+                    else:
+                        slope.avg_power_kg = slope.avg_power / userweight
+                except ZeroDivisionError:
+                    slope.avg_power_kg = 0
 
 
-        gradients = getgradients(details)
+            gradients = getgradients(details)
+
         zones = getzones(details)
         hrhzones = gethrhzones(details)
         inclinesummary = getinclinesummary(details)
@@ -1076,6 +1079,7 @@ def exercise(request, object_id):
                 j += 1
 
             object.best_power = best_power
+
     datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
 
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
