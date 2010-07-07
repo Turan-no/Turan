@@ -390,6 +390,27 @@ def statistics(request, year=None, month=None, day=None, week=None):
 
     return render_to_response('turan/statistics.html', locals(), context_instance=RequestContext(request))
 
+
+def hr2zone(hr_percent):
+    ''' Given a HR percentage return sport zone based on Olympiatoppen zones'''
+
+    zone = 0
+
+    if hr_percent > 97:
+        zone = 6
+    elif hr_percent > 92:
+        zone = 5
+    elif hr_percent > 87:
+        zone = 4
+    elif hr_percent > 82:
+        zone = 3
+    elif hr_percent > 72:
+        zone = 2
+    elif hr_percent > 60:
+        zone = 1
+
+    return zone
+
 def generate_tshirt(request):
     import Image
     import ImageFont
@@ -541,7 +562,7 @@ def geojson(request, object_id):
                     "type": "LineString", "coordinates": [ ''' %zone
             self.jsonfoot = '''] }
             },'''
-            
+
         def addLine(self, a, b, c, d):
             self.linestrings += '[%s, %s], [%s, %s],\n' %(a,b,c,d)
 
@@ -559,19 +580,8 @@ def geojson(request, object_id):
     for d in qs:
         if previous_lon and previous_lat:
             hr_percent = float(d.hr)*100/max_hr
-            zone = 1
-# TODO? Support zone 0 ?
-            if hr_percent > 97:
-                zone = 6
-            elif hr_percent > 92:
-                zone = 5
-            elif hr_percent > 87:
-                zone = 4
-            elif hr_percent > 82:
-                zone = 3
-            elif hr_percent > 72:
-                zone = 2
-            elif hr_percent > 60:
+            zone = hr2zone(hr_percent)
+            if zone == 0: # TODO WTF? Bug in this shit
                 zone = 1
 
             if previous_zone == zone:
@@ -626,7 +636,7 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
         # time_xaxis = x += float(time.seconds)/60
         dval = d[val]
         if dval > 0: # skip zero values (makes prettier graph)
-            js += '[%.1f,%s],' % (distance, dval)
+            js += '[%.4f,%s],' % (distance, dval)
     return js
 
 def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True):
@@ -773,23 +783,8 @@ def getzones(values):
             continue
 
         hr_percent = float(d.hr)*100/max_hr
-
-        zone = 0
-        if hr_percent > 97:
-            zone = 6
-        elif hr_percent > 92:
-            zone = 5
-        elif hr_percent > 87:
-            zone = 4
-        elif hr_percent > 82:
-            zone = 3
-        elif hr_percent > 72:
-            zone = 2
-        elif hr_percent > 60:
-            zone = 1
-
+        zone = hr2zone(hr_percent)
         zones[zone] += time.seconds
-
 
     zones_with_legend = SortedDict()
 
@@ -836,9 +831,9 @@ def gethrhzones(values):
             zones[hr_percent] = 0
         zones[hr_percent] += time.seconds
 
-    filtered_zones = SortedDict()
-    for i in range(40,100):
-        filtered_zones[i] = 0
+    filtered_zones = [SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict()]
+    #for i in range(40,100):
+    #    filtered_zones[i] = 0
 
     total_seconds = d.exercise.duration.seconds
     for hr in sorted(zones):
@@ -846,7 +841,9 @@ def gethrhzones(values):
         if hr > 40 and hr < 101:
             percentage = float(zones[hr])*100/total_seconds
             if percentage > 0.5:
-                filtered_zones[hr] = percentage
+
+                zone = hr2zone(hr)
+                filtered_zones[zone][hr] = percentage
 
     return filtered_zones
 

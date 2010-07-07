@@ -3,6 +3,7 @@
 <div id="hrhzonediv" style="width:900px;height:400px; float: right;"></div>
 <div id="hrhzonetable" style="width:1px; height: 400px;"></div>
 <script language="javascript" type="text/javascript">
+    {% comment %}
     var hrhzonedata = [
                 {
     color: 2,
@@ -11,10 +12,21 @@ data: [{% for hr, length in hrhzones.items %}{% if length %}[{{ hr }},{{ length 
 {
 }
     ];
+{% endcomment %}
+    var hrhzonedata = [
+            {% for zone in hrhzones%}
+                {
+                    data: [{% for hr, percent in zone.items %}[{{ hr }},{{ percent }}],{% endfor %} ],
+                    bars: { show: true},
+                    color: colors[{{ forloop.counter0 }}]
+                },
+            {% endfor %}
+    ];
 
 $.plot($("#hrhzonediv"), hrhzonedata, { 
 grid: {
-markings:  [ 
+markings:  [] 
+/*
     { xaxis: { from: 50, to: 50 }, color: "#000000" },  
     { xaxis: { from: 60, to: 60 }, color: "#000000" },  
     { xaxis: { from: 72, to: 72 }, color: "#000000" },  
@@ -23,6 +35,6 @@ markings:  [
     { xaxis: { from: 92, to: 92 }, color: "#000000" },  
     { xaxis: { from: 97, to: 97 }, color: "#000000" },  
     ]
-
+*/
       }});
 </script>
