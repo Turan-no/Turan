@@ -1020,7 +1020,10 @@ def exercise(request, object_id):
             slopes = getslopes(details)
             if slopes:
                 # If we have slopes, we have distance use that for graph
-                time_xaxis = False
+                # unless user wanted time !
+                req_t = request.GET.get('xaxis', '')
+                if not req_t == 'time':
+                    time_xaxis = False
             for slope in slopes:
                 slope.duration = details[slope.end].time - details[slope.start].time
                 slope.speed = slope.length/slope.duration.seconds * 3.6
