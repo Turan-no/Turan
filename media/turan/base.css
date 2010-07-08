@@ -641,6 +641,14 @@ div.mapcontainer {
     border-right: 1px solid black;
 }
 
+#tabs h4 {
+    margin: 8px 5px;
+}
+#tabs p {
+    padding: 5px;
+    margin: 0;
+}
+
 li {
 	list-style-type: none;
 }
