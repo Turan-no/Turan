@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load turan_extras %}
 <div class="trip_attributes">
-    <div style="float: right">{{object.icon|safe}}</div>
+    <div style="float: right"><img alt="Exerciselogo"src="{{object.icon}}" /></div>
 <h1>
     {% ifequal object.route.id 24 %}
     <a href="{{object.get_absolute_url}}">{{ object.exercise_type }}</a>
