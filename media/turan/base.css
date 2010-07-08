@@ -41,7 +41,8 @@ table.fullsize tr.even {
 table.fullsize tr.even {
     background: #f8f8f8;
 }
-table.fullsize th, table td {
+table.fullsize th, 
+table.fullsize td {
 	border: 0;
 	padding: 0.5em;
 }
@@ -562,10 +563,12 @@ li.power {
     background: #eee;
 }
 .monfilled, .tuefilled, .wedfilled, .frifilled, .thufilled, .satfilled, .sunfilled {
-    background: #ccc;
+    background: #ddd;
 }
-.montoday, .tuetoday, .wedtoday, .thutoday, .fritoday, .sattoday, .suntoday {
-    background: green;
+.montoday, .tuetoday, .wedtoday, .thutoday, .fritoday, .sattoday, .suntoday,
+.montodayfilled, .tuetodayfilled, .wedtodayfilled, .thutodayfilled, .fritodayfilled, .sattodayfilled, .suntodayfilled
+{
+    background: #afa;
 }
 
 div.graph {
@@ -661,7 +664,20 @@ table.month td,
 table.month th {
 	vertical-align: top;
 	border: 1px solid #999;
+    padding: 2px;
 }
+table.month th {
+    padding: 4px;
+}
+
+table.month ul li {
+    list-style-type: none;
+    padding: 5px 2px 9px 2px;
+    margin: 2px 3px 2px 3px;
+    font-size: 11px;
+    background-color: #eee;
+}
+
 .toplist ol span.selected {
 	background-color: yellow;
 }

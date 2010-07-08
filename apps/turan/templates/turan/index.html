@@ -102,7 +102,7 @@
 <div id="exercisers">
     {% for exerciser in user_list %}
     {% if exerciser.exercise_set.count %}
-    <a href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 60 %}</a>
+    <a title="{{exerciser.username}}" href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 60 %}</a>
     {% endif %}
     {% endfor %}
 </div>
