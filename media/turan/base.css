@@ -493,7 +493,8 @@ li.heart {
 li.comment {
     list-style-image: url('/site_media/pinax/images/silk/icons/comment.png');
 }
-p {
+li.description p,
+li.comment p {
     padding: 3px 12px;
     margin: 0;
 }
@@ -562,13 +563,11 @@ li.power {
 .mon,.tue,.wed,.thu,.fri,.sat,.sun {
     background: #eee;
 }
-.monfilled, .tuefilled, .wedfilled, .frifilled, .thufilled, .satfilled, .sunfilled {
+.filled {
     background: #ddd;
 }
-.montoday, .tuetoday, .wedtoday, .thutoday, .fritoday, .sattoday, .suntoday,
-.montodayfilled, .tuetodayfilled, .wedtodayfilled, .thutodayfilled, .fritodayfilled, .sattodayfilled, .suntodayfilled
-{
-    background: #afa;
+table.month .today div.day {
+    background-color: #7e7;
 }
 
 div.graph {
@@ -674,8 +673,23 @@ table.month ul li {
     list-style-type: none;
     padding: 5px 2px 9px 2px;
     margin: 2px 3px 2px 3px;
-    font-size: 11px;
     background-color: #eee;
+}
+table.month a {
+    font-size: 11px;
+}
+table.month p {
+    margin: 0;
+    font-size: 10px;
+}
+table.month div.day {
+    text-align: center;
+    margin: -2px 0 5px -2px;
+    background-color: #eee;
+    width: 20px;
+    height: 20px;
+    border-right: 1px solid silver;
+    border-bottom: 1px solid silver;
 }
 
 .toplist ol span.selected {

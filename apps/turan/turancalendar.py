@@ -22,9 +22,9 @@ class WorkoutCalendar(LocaleHTMLCalendar):
         if day != 0:
             cssclass = self.cssclasses[weekday]
             if date.today() == date(self.year, self.month, day):
-                cssclass += 'today'
+                cssclass += ' today'
             if day in self.workouts:
-                cssclass += 'filled'
+                cssclass += ' filled'
                 body = ['<ul>']
                 for workout in self.workouts[day]:
                     body.append('<li>')
@@ -32,16 +32,18 @@ class WorkoutCalendar(LocaleHTMLCalendar):
                     body.append(esc(workout.exercise_type) + ": ")
                     body.append(esc(workout))
                     body.append('</a>')
+                    body.append('<p class="fade">')
                     if workout.route and workout.route.distance:
-                        body.append('<br>%s km' %workout.route.distance)
-                    body.append('<br>')
+                        body.append('%s km' %workout.route.distance)
+                        body.append('<br>')
                     body.append(esc(workout.kcal) + ' kcal')
                     body.append('<br>')
                     body.append(esc(workout.duration))
+                    body.append('</p>')
                     body.append('</li>')
                 body.append('</ul>')
-                return self.day_cell(cssclass, '%d %s' % (day, ''.join(body)))
-            return self.day_cell(cssclass, day)
+                return self.day_cell(cssclass, '<div class="day">%d</div> %s' % (day, ''.join(body)))
+            return self.day_cell(cssclass, '<div class="day">%d</div>' % (day))
         return self.day_cell('noday', '&nbsp;')
 
     def get_week_sums(self):
@@ -78,12 +80,11 @@ class WorkoutCalendar(LocaleHTMLCalendar):
             week.update(self.sums)
         self.current_week += 1
         return '<tr>%(days)s<td> \
-                <br>\
-                Distance: %(distance_sum)s\
-                <br>\
-                Kcal: %(kcal_sum)s\
-                <br>\
-                Duration: %(duration_sum)s\
+                <p>\
+                <span class="label">Distance:</span> %(distance_sum)s<br>\
+                <span class="label">Kcal:</span> %(kcal_sum)s<br>\
+                <span class="label">Duration:</span> %(duration_sum)s\
+                </p>\
                 </td></tr>' % week
 
     def formatmonth(self, year, month):
