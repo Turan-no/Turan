@@ -664,6 +664,7 @@ table.month th {
 	vertical-align: top;
 	border: 1px solid #999;
     padding: 2px;
+    width: 120px;
 }
 table.month th {
     padding: 4px;
