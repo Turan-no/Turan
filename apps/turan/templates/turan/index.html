@@ -61,6 +61,17 @@
                 <hr class="clearleft" />
             </div>
             <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
+            <p class="smaller fade">
+                {% if object.distance %}
+                    {{ object.distance|floatformat }} {% trans "km" %},
+                {% endif %}
+                {% if object.ascent %}
+                {{ object.ascent }} {% trans "ascent" %},
+                {% endif %}
+                {% if object.description %}
+                    {{ object.description }}
+                {% endif %}
+            </p>
             <hr class="clearleft" />
         </li>
     {%endfor %}
