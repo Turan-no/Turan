@@ -15,6 +15,8 @@
 {% block extramenu %}
 <div class="modify">
 <a name="fb_share" type="button" href="http://www.facebook.com/sharer.php">Share</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+{% url exercise object.id as exercise_url %}
+<a title="Post exercise on Twitter" href="http://twitter.com/home?status={{ object.exercise_type }}{% if object.route %} at {{ object.route }}{% endif %} - http://turan.no{{ exercise_url|urlencode }}"><img src="http://twitter-badges.s3.amazonaws.com/t_mini-a.png" alt="Twitter icon"/></a>
 </div>
 {% endblock %}
 {% block content %}
