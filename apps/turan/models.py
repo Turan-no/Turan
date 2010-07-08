@@ -175,7 +175,7 @@ class ExerciseType(models.Model):
     def icon(self):
         # FIXME use media url
         if self.logo:
-            return '<img alt="%s" src="/site_media/turan/%s">' %(self.name, self.logo)
+            return settings.MEDIA_URL + 'turan/%s' %(self.logo)
         return ''
 
 
