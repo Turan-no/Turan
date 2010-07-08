@@ -3,7 +3,7 @@
 <div id="besteffortdiv" style="width:400px;height:400px; float: right;"></div>
 <div id="bestefforttable" style="width:500px; height: 400px;">
     {% if object.avg_power %}
-    <table>
+    <table class="fullsize">
         <tr>
             <th>
                 {% trans "Duration" %}
@@ -42,7 +42,7 @@
         {% endfor %}
     </table>
     {% endif %}
-    <table>
+    <table class="fullsize">
         <tr>
             <th>
                 {% trans "Duration" %}

@@ -27,33 +27,33 @@ h3 {
 }
 
 /* Tables */
-table {
+table.fullsize {
 	margin: 0.5em 0;
 	width: 100%;
 }
-table tr th {
+table.fullsize tr th {
     background: #ddd;
 }
-table tr.even {
+table.fullsize tr.even {
 	border-top: 1px solid #fcfcfc;
 	border-bottom: 1px solid #eee;
 }
-table tr.even {
+table.fullsize tr.even {
     background: #f8f8f8;
 }
-table th, table td {
+table.fullsize th, table td {
 	border: 0;
 	padding: 0.5em;
 }
-table th {
+table.fullsize th {
 	font-weight: bold;
 	text-align: left;
 }
-table td img {
+table.fullsize td img {
 	vertical-align: bottom;
 }
 
-table .number {
+table.fullsize .number {
 	text-align: right;
 }
 
