@@ -20,40 +20,49 @@
     <ul class="trips iconlist">
     {% for object in exercise_list %}
     <li class="{% cycle "even" "odd" %}">
-    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 40 %}</a>
-    {{ object.icon|safe }}
-    <a href="{{ object.get_absolute_url }}">
-        {{ object|slice:":35" }}</a>
-    <span class="smaller">
-        {% if object.route.distance %}
-            {{ object.route.distance|floatformat }} {% trans "km" %}
-        {% endif %}
-        {% if object.duration %}
-            {{ object.duration}}
-        {% endif %}
-        {{ object.date|naturalday}}
-    </span>
+        <img class="floatleft" src="{{ object.icon|safe }}" width="32" height="32" />
+        <a class="floatright" href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
+        <a href="{{ object.get_absolute_url }}">
+            {{ object|slice:":35" }}
+        </a>
+        <p class="smaller fade">
+            {% if object.route.distance %}
+                {{ object.route.distance|floatformat }} {% trans "km" %}
+            {% endif %}
+            {% if object.duration %}
+                {{ object.duration}}
+            {% endif %}
+            {{ object.date|naturalday}}
+        </p>
+        <hr class="clearright" />
     </li>
     {%endfor %}
     </ul>
 
 
-    <img alt="{% trans "Compass" %}" style="float:right" src="{{MEDIA_URL}}turan/compass.png">
     <h1>
         <a href="{% url routes %}">{% trans "Most popular routes" %}</a>
     </h1>
     <ul class="routes">
     {% for object in route_list %}
-    <li class="{% cycle "even" "odd" %}">
-    {% comment %}
-    Silly SVG
-        {% if object.gpx_file %}
-            <object width="50" height="50" type="image/svg+xml" data="{{ object.get_svg_url }}"></object>
-        {% endif %}
-    {% endcomment %}
+        <li class="{% cycle "even" "odd" %}">
+            {% comment %}
+            Silly SVG
+                {% if object.gpx_file %}
+                    <object width="50" height="50" type="image/svg+xml" data="{{ object.get_svg_url }}"></object>
+                {% endif %}
+            {% endcomment %}
 
-        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> <span class="trip_count">{{ object.get_trips|length }} {% trans "trips" %}</span>
-    </li>
+            <div style="height: 32px; width: 32px; margin-right: 13px; color: #999; background-color: #eee; float: left">
+                <p style="font-size: 14px; color: #888; width: 32px; text-align: center; float: left; padding: 2px 0 0 0">
+                {{ object.get_trips|length }}
+                </p>
+                <p style="width: 32px; text-align: center; float: left; font-size: 10px; padding: 0">turer</p>
+                <hr class="clearleft" />
+            </div>
+            <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
+            <hr class="clearleft" />
+        </li>
     {%endfor %}
     </ul>
 </div>

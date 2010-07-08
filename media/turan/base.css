@@ -653,6 +653,7 @@ li.odd {
 ul.iconlist li {
     margin-left: 0;
     list-style-type: none;
+    padding: 5px;
 }
 
 /* Calendar */
@@ -669,6 +670,10 @@ li.tag {
 	list-style-type: none;
     float: left;
     margin-right: 0.5em;
+}
+
+.fade {
+    color: #999;
 }
 
 .sludd,
@@ -728,5 +733,10 @@ div.averages li {
 }
 div.averages h4 {
     margin: 0;
+}
+ul.routes li {
+    list-style-type: none;
+    margin-left: 0;
+    padding: 5px;
 }
 
