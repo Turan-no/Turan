@@ -69,7 +69,7 @@
                 {{ object.ascent }} {% trans "ascent" %},
                 {% endif %}
                 {% if object.description %}
-                    {{ object.description }}
+                    {{ object.description|truncatewords:10 }}
                 {% endif %}
             </p>
             <hr class="clearleft" />
