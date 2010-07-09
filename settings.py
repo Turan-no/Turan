@@ -130,9 +130,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
 
-"pinax.core.context_processors.contact_email",
-"pinax.core.context_processors.site_name",
-#    "pinax.core.context_processors.pinax_settings",
+#"pinax.core.context_processors.contact_email",
+#"pinax.core.context_processors.site_name",
+    "pinax.core.context_processors.pinax_settings",
 
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
@@ -198,7 +198,7 @@ INSTALLED_APPS = (
 # TUUURAN
     'turan',
     'rosetta',
-#    'south',
+    'south',
 #    'debug_toolbar',
     
     # internal (for now)
@@ -243,7 +243,7 @@ ACCOUNT_REQUIRED_EMAIL = False
 ACCOUNT_EMAIL_VERIFICATION = False
 
 AVATAR_DEFAULT_URL = MEDIA_URL + "turan/unknown.png"
-AVATAR_GRAVATAR_BACKUP = False
+AVATAR_GRAVATAR_BACKUP = True
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
@@ -259,7 +259,7 @@ INTERNAL_IPS = (
 ugettext = lambda s: s
 LANGUAGES = (
     ('nn', 'Nynorsk'),
-    ('no', u'Bokmål'),
+    ('no', 'Bokmål'),
     ('en', 'English'),
 
 )
