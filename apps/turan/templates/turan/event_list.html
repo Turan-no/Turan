@@ -71,7 +71,7 @@
         {% endif %}
     </td>
     <td>
-        {{ object.icon|safe }}
+        <img width="64" height="64" alt="{{ object.exercise_type }}" src="{{ object.icon }}" />
     </td>
 </tr>
 {%endfor %}
