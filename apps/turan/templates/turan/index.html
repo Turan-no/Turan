@@ -18,33 +18,32 @@
         <a href="{% url exercises %}">{% trans "Latest exercises" %}</a>
     </h1>
     <ul class="trips iconlist">
-    {% for object in exercise_list %}
-    <li class="{% cycle "even" "odd" %}">
-        <img class="floatleft" src="{{ object.icon|safe }}" width="32" height="32" />
-        <a class="floatright" href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
-        <a href="{{ object.get_absolute_url }}">
-            {{ object|slice:":35" }}
-        </a>
-        <p class="smaller fade">
-            {% if object.route.distance %}
-                {{ object.route.distance|floatformat }} {% trans "km" %}
-            {% endif %}
-            {% if object.duration %}
-                {{ object.duration}}
-            {% endif %}
-            {{ object.date|naturalday}}
-        </p>
-        <hr class="clearright" />
-    </li>
-    {%endfor %}
+        {% for object in exercise_list %}
+        <li class="{% cycle "even" "odd" %}">
+            <img alt="User image" class="floatleft" src="{{ object.icon|safe }}" width="32" height="32" />
+            <a class="floatright" href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
+            <a href="{{ object.get_absolute_url }}">
+                {{ object|slice:":35" }}
+            </a>
+            <p class="smaller fade">
+                {% if object.route.distance %}
+                    {{ object.route.distance|floatformat }} {% trans "km" %}
+                {% endif %}
+                {% if object.duration %}
+                    {{ object.duration}}
+                {% endif %}
+                {{ object.date|naturalday}}
+            </p>
+            <hr class="clearright" />
+        </li>
+        {%endfor %}
     </ul>
-
 
     <h1>
         <a href="{% url routes %}">{% trans "Most popular routes" %}</a>
     </h1>
     <ul class="routes">
-    {% for object in route_list %}
+        {% for object in route_list %}
         <li class="{% cycle "even" "odd" %}">
             {% comment %}
             Silly SVG
@@ -55,9 +54,11 @@
 
             <div style="height: 32px; width: 32px; margin-right: 13px; color: #999; background-color: #eee; float: left">
                 <p style="font-size: 14px; color: #888; width: 32px; text-align: center; float: left; padding: 0; margin: 2px 0 0 0">
-                {{ object.get_trips|length }}
+                    {{ object.get_trips|length }}
                 </p>
-                <p style="width: 32px; text-align: center; float: left; font-size: 10px; padding: 0; margin: 0">turer</p>
+                <p style="width: 32px; text-align: center; float: left; font-size: 10px; padding: 0; margin: 0">
+                    turer
+                </p>
                 <hr class="clearleft" />
             </div>
             <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
@@ -83,93 +84,97 @@
         {% trans "Welcome to Turan" %}.no!
     </h1>
 
-<ul class="buttons">
-    <li style="float: left">
-    <a href="{% url route_create %}">
-        <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add route" %}" />
-        {% trans "Add route" %}
-    </a>
-    </li>
-    <li>
-    <a href="{% url exercise_create %}"
-        <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
-        {% trans "Add an exercise" %}
-    </a>
-    </li>
-</ul>
-<br />
-<h3>{% trans "Top exercisers" %}</h3>
-<div id="exercisers">
-    {% for exerciser in user_list %}
-    {% if exerciser.exercise_set.count %}
-    <a title="{{exerciser.username}}" href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 60 %}</a>
-    {% endif %}
-    {% endfor %}
-</div>
-<br />
-<br />
-<div id="tabs">
-    <ul>
-        <li class="tab selected" id="tabs-select-1">{% trans "Turan?" %}</li>
-        <li class="tab" id="tabs-select-2">{% trans "Analyze" %}</li>
-        <li class="tab" id="tabs-select-3">{% trans "Map" %}</li>
-        <li class="tab" id="tabs-select-4">{% trans "Log" %}</li>
+    <ul class="buttons">
+        <li style="float: left">
+            <a href="{% url route_create %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add route" %}" />
+                {% trans "Add route" %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url exercise_create %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
+                {% trans "Add an exercise" %}
+            </a>
+        </li>
     </ul>
-    <div id="tabs-1" class="visible">
-        <p>
-        {% blocktrans %}
-        Turan is a hobby project driven mostly by coffee and frozen pizzas, but also by xt, N`Grath and si-m1. It supports a variety of training computers, preferrably with a gps-module. If you want to, you can use several devices and combine it here, as long as you're able to retrieve the .tcx, .gpx, and/or .hrm from the device.
-        {% endblocktrans %}
-        </p>
-        <h4>{% trans "The supported devices are" %}:</h4>
-	<ul class="floatleft">
-		<li class="floatleft" style="list-style-type: none"><img src="http://img.gfx.no/351/351865/garmin-edge-705-2.50x80!.jpg" height="40" width="22"><a href="http://www.hardware.no/sok/?query=garmin+edge">Garmin Edge</a></li>
-		<li class="floatleft" style="list-style-type: none"><img src="http://r.kelkoo.com/r/no/5574323/165101/50/50/http%3A%2F%2Fwww.oslosportslager.no%2Fuploads%2Fbilder%2Fnettbutikk%2Fprodukter2%2F32458-128.jpg/P_UiuPcb9o040l_NSRGfCpoQZQBuKA0yY3xys01D50E-" width="50" height="50"><a href="http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=polar+rs">Polar RS</a></li>
-	</ul>
-    <hr class="clearleft" />
-    <p>
-    {% blocktrans %}
-    Turan is currently categorized into cycletrips, hikes and other exercises. Spinning and other indoor activity ends up in the latter category. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.</p>
-    {% endblocktrans %}
-    </p>
+    <br />
+    <h3>{% trans "Top exercisers" %}</h3>
+    <div id="exercisers">
+        {% for exerciser in user_list %}
+        {% if exerciser.exercise_set.count %}
+        <a title="{{exerciser.username}}" href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 60 %}</a>
+        {% endif %}
+        {% endfor %}
     </div>
-    <div id="tabs-2" class="">
-        <img class="floatright" src="{{MEDIA_URL}}turan/graf-utsnitt.png" alt="Graph">
-	{% blocktrans %}
-    <p>
-    Provided you have one of the supported devices you can analyze your training, kilometre by kilometre, or minute by minute if distance isn't relevant. You can, again provided your device supports it, graph everything the device records. Speed, altitude, cadence, heart rate, power, the whole <a href="http://www.urbandictionary.com/define.php?term=shebang">shebang</a>. Obviously, analyzing means breaking down a complex issue into smaller parts, so zooming in on any part of any lenght is supported. Just click and mark an interesting part of the graph and drool on the immense depth of the data <u>you</u> have produced.
-    </p>
-    {% endblocktrans %}
-    <hr class="clearright" />
+    <br />
+    <br />
+    <div id="tabs">
+        <ul>
+            <li class="tab selected" id="tabs-select-1">{% trans "Turan?" %}</li>
+            <li class="tab" id="tabs-select-2">{% trans "Analyze" %}</li>
+            <li class="tab" id="tabs-select-3">{% trans "Map" %}</li>
+            <li class="tab" id="tabs-select-4">{% trans "Log" %}</li>
+        </ul>
+        <div id="tabs-1" class="visible">
+            <p>
+            {% blocktrans %}
+            Turan is a hobby project driven mostly by coffee and frozen pizzas, but also by xt, N`Grath and si-m1. It supports a variety of training computers, preferrably with a gps-module. If you want to, you can use several devices and combine it here, as long as you're able to retrieve the .tcx, .gpx, and/or .hrm from the device.
+            {% endblocktrans %}
+            </p>
+            <h4>{% trans "The supported devices are" %}:</h4>
+            <ul class="floatleft">
+                <li class="floatleft" style="list-style-type: none"><img alt="Garmin Edge" src="http://img.gfx.no/351/351865/garmin-edge-705-2.50x80!.jpg" height="40" width="22" /><a href="http://www.hardware.no/sok/?query=garmin+edge">Garmin Edge</a></li>
+                <li class="floatleft" style="list-style-type: none"><img alt="Polar RS" src="http://r.kelkoo.com/r/no/5574323/165101/50/50/http%3A%2F%2Fwww.oslosportslager.no%2Fuploads%2Fbilder%2Fnettbutikk%2Fprodukter2%2F32458-128.jpg/P_UiuPcb9o040l_NSRGfCpoQZQBuKA0yY3xys01D50E-" width="50" height="50" /><a href="http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=polar+rs">Polar RS</a></li>
+            </ul>
+            <hr class="clearleft" />
+            <p>
+            {% blocktrans %}
+            Turan is currently categorized into cycletrips, hikes and other exercises. Spinning and other indoor activity ends up in the latter category. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.
+            {% endblocktrans %}
+            </p>
+        </div>
+        <div id="tabs-2" class="">
+            <img class="floatright" src="{{MEDIA_URL}}turan/graf-utsnitt.png" alt="Graph" />
+            <p>
+            {% blocktrans %}
+            Provided you have one of the supported devices you can analyze your training, kilometre by kilometre, or minute by minute if distance isn't relevant. You can, again provided your device supports it, graph everything the device records. Speed, altitude, cadence, heart rate, power, the whole <a href="http://www.urbandictionary.com/define.php?term=shebang">shebang</a>. Obviously, analyzing means breaking down a complex issue into smaller parts, so zooming in on any part of any lenght is supported. Just click and mark an interesting part of the graph and drool on the immense depth of the data <strong>you</strong> have produced.
+            {% endblocktrans %}
+            </p>
+            <hr class="clearright" />
+        </div>
+        <div id="tabs-3" class="">
+            <img class="floatleft" src="{{MEDIA_URL}}turan/mapexample.png" alt="Graph" />
+            <p>
+            {% blocktrans %}
+            The map serves two purposes for trips and hikes. First and foremost the function of showing where you've been. That one's easy. The second is the killer: intensities during the exercises are embedded in the trace of the trip. The intensity of your exercise is indicated by the color, showing where which parts of your trip was relatively speaking the hardest. The levels are also relative to the user's own max-pulse, so make sure yours is correct.
+            {% endblocktrans %}
+            </p>
+            <hr class="clearleft" />
+        </div>
+        <div id="tabs-4" class="">
+            <p>
+            {% blocktrans %}
+            What good is training without progress? After a while you might want to look at the trends of your training. Turan(tm) provides several. Apart from the silly BMI-tracking-feature, you can view (and compare) different runs of the same route, comparing everything, speed, cadence and heart rate. Turan(tm) will also graph the time-usage of a spesific route as a function of time. In your profile you can view your own progress in terms of average speed, BMI and resting pulse.
+            {% endblocktrans %}
+            </p>
+        </div>
     </div>
-    <div id="tabs-3" class="">
-        <img class="floatleft" src="{{MEDIA_URL}}turan/mapexample.png" alt="Graph">
-        {% blocktrans %}
-	<p>The map serves two purposes for trips and hikes. First and foremost the function of showing where you've been. That one's easy. The second is the killer: intensities during the exercises are embedded in the trace of the trip. The intensity of your exercise is indicated by the color, showing where which parts of your trip was relatively speaking the hardest. The levels are also relative to the user's own max-pulse, so make sure yours is correct.</p>
-        {% endblocktrans %}
-        <hr class="clearleft" />
-    </div>
-    <div id="tabs-4" class="">
-        {% blocktrans %}
-	<p>What good is training without progress? After a while you might want to look at the trends of your training. Turan(tm) provides several. Apart from the silly BMI-tracking-feature, you can view (and compare) different runs of the same route, comparing everything, speed, cadence and heart rate. Turan(tm) will also graph the time-usage of a spesific route as a function of time. In your profile you can view your own progress in terms of average speed, BMI and resting pulse.</p>
-        {% endblocktrans %}
-    </div>
-</div>
-<script type="text/javascript">
-    function selectTab(evt) {
-        var id = evt.target.id;
-        id = "tabs-" + id.split('-')[2];
-        $('#tabs div.visible').removeClass('visible');
-        $('#tabs div#' + id).addClass('visible');
-        $('#tabs ul li').removeClass('selected');
-        $(this).addClass('selected');
-    }
-$('#tabs ul li.tab').each(function () {
-        $(this).bind("click", selectTab);
-        });
-</script>
+    <script type="text/javascript">
+        function selectTab(evt) {
+            var id = evt.target.id;
+            id = "tabs-" + id.split('-')[2];
+            $('#tabs div.visible').removeClass('visible');
+            $('#tabs div#' + id).addClass('visible');
+            $('#tabs ul li').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    $('#tabs ul li.tab').each(function () {
+            $(this).bind("click", selectTab);
+            });
+    </script>
 
-<hr class="clear" />
+    <hr class="clear" />
 </div>
 {% endblock content %}
 
