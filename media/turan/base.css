@@ -783,3 +783,15 @@ ul.routes li {
     padding: 5px;
 }
 
+.detailsShareBoxButton.gpxFile  {
+    background-position:-5px -706px;
+}
+.detailsShareBoxButton {
+    background:url("/site_media/turan/details-icons.png") no-repeat scroll -3px -5px transparent;
+    color:#494949;
+    display:inline-block;
+    font:bold 12px/23px "Helvetica Neue",Arial,Helvetica,Geneva,sans-serif;
+    margin-right:9px;
+    padding-left:28px;
+    padding-right:7px;
+}
