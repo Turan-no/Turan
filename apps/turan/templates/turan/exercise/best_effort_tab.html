@@ -77,7 +77,7 @@
 </div>
 
 {% if object.avg_power %}
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     var best_effort_data = [
             {% for key, effort in object.best_power.items %}
             {% if effort %}
@@ -92,7 +92,7 @@
     $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: false } });
 </script>
 {% else %}
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     var best_effort_data = [
             {% for key, effort in object.best_speed.items %}
             {% if effort %}

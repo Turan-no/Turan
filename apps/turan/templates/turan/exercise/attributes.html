@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load turan_extras %}
 <div class="trip_attributes">
-    <div style="float: right"><img alt="Exerciselogo"src="{{object.icon}}" /></div>
+    <div style="float: right"><img alt="Exerciselogo" src="{{object.icon}}" /></div>
 <h1>
     {% ifequal object.route.id 24 %}
     <a href="{{object.get_absolute_url}}">{{ object.exercise_type }}</a>
@@ -13,7 +13,7 @@
 <ul class="trip_attributes">
     <li class="person">
         {% if object.user.get_profile.image %}
-        <img width="70" src="{{MEDIA_URL}}{{ object.user.get_profile.image }}" alt="{% trans "Photo" %}">
+        <img width="70" src="{{MEDIA_URL}}{{ object.user.get_profile.image }}" alt="{% trans "Photo" %}" />
         {% endif %}
         <span class="label">{% trans "Exerciser" %}:</span> 
         <a href="{{ object.user.get_profile.get_absolute_url }}">{{ object.user }}</a> 
@@ -71,11 +71,9 @@
     <li class="temperature" ><span class="label">{% trans "Temperature" %}:</span> {{ object.temperature|floatformat }} {% trans "℃" %}</li>
     {% endif %}
     {% if object.comment %}
-    <ol>
     <li class="comment">{{ object.user }} {% trans "writes" %}:
-    <p>{{ object.comment }}</p>
+        <p>{{ object.comment }}</p>
     </li>
-    </ol>
     {% endif %}
 </ul>
 </div>

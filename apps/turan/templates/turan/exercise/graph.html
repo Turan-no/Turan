@@ -4,11 +4,12 @@
 <div id="tripdiv{{object.id}}" style="width:750px;height:400px; background: white;"></div>
 <div class="averages" id="averages{{object.id}}">
     <h4 style="display: none">{% trans "Selected min/max/avg" %}</h4>
-    <ul></ul>
+    <ul><li></li></ul>
     <hr class="clear" />
 </div>
 
-<script id="source" language="javascript" type="text/javascript">
+<script id="source" type="text/javascript">
+// <![CDATA[
 var plot;
 $(function () {
     var constraint0 = {
@@ -197,4 +198,5 @@ $(function () {
 
 
 });
+// ]]>
 </script>
