@@ -16,5 +16,5 @@ vobject==0.8.1c
 BeautifulSoup>=3.0.7a
 ybrowserauth==1.2
 BeautifulSoup>=3.0.7a
-Django>=1.1
+Django>=1.1.1
 wadofstuff-django-serializers==1.0.0
