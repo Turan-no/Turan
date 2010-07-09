@@ -119,7 +119,7 @@ $(function () {
                     <div class="form-toggle">
                     <p><span id="edit-profile-toggle">{% trans "Edit profile" %}</span></p>
                     
-                    <form class="uniForm" id="edit-profile" method="POST" action="" style="display: none;">
+                    <form class="uniForm" id="edit-profile" method="post" action="" style="display: none;">
                         <fieldset class="inlineLabels">
                             {{ profile_form|as_uni_form }}
                             <div class="form_block">
@@ -191,7 +191,7 @@ $(function () {
                     {% if is_friend %}
                         <p>{% blocktrans %}You are friends with {{ other_user }}.{% endblocktrans %} <a href="{% url messages_compose %}{{ other_user }}/">{% trans "Send a message" %}</a>.</p>
                         <div>
-                            <form method="POST" action="">
+                            <form method="post" action="">
                                 <input type="hidden" name="action" value="remove" /><input type="submit" value="{% trans "remove from friends" %}"/>
                             </form>
                         </div>
@@ -219,7 +219,7 @@ $(function () {
                                 <p>{% trans "Friendship request sent." %}</p>
                             {% else %}
                                 <h2>{% trans "Add As Friend" %}</h2>
-                                <form class="uniForm" method="POST" action="">
+                                <form class="uniForm" method="post" action="">
                                     <fieldset class="inlineLabels">  
                                         {{ invite_form|as_uni_form }}
                                         <div class="form_block">

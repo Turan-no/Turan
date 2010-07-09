@@ -1,11 +1,12 @@
 {% load i18n %}
 
-<div style="float: right">
-<form action="" method="GET">
-	<input id="listSearch" type="text" name="q" value="{% trans "Search" %}">
-    <input type="submit" value="{% trans "Search" %}">
+<form action="" method="get">
+    <div style="float: right">
+        <input id="listSearch" type="text" name="q" value="{% trans "Search" %}" />
+        <input type="submit" value="{% trans "Search" %}" />
+    </div>
 </form>
-<script type="text/javascript" language="javascript">
+<script type="text/javascript">
 	$('#listSearch').bind("focus", function (evt) {
 		if ($(this).val() == $(this).data("text")) {
 			$(this).data("text", $(this).val());
@@ -19,5 +20,4 @@
 	$('#listSearch').data("text", $('#listSearch').val());
 
 </script>
-</div>
 
