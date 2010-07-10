@@ -1,8 +1,14 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
+{% load tagging_tags %}
 {% block title %}
 {{block.super}}
+{% endblock %}
+{% block searchenginemeta %}
+{% tags_for_object object as tag_list %}
+<meta name="keywords" content="{% if tag_list %}{{ tag_list|join:"," }},{% endif %}sykkel,tur,trening,exercise" />
+<meta name="description" content="{{ object.comment }}" />
 {% endblock %}
 {% block extra_head %}
 {{ block.super }}

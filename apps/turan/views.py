@@ -110,7 +110,7 @@ def exercise_compare(request, exercise1, exercise2):
 
 class TripsFeed(Feed):
     title = "lart.no turan trips"
-    link = "http://turan.lart.no/turan/"
+    link = "http://turan.no/turan/"
     description = "Trips from lart.no/turan"
 
     def items(self):
