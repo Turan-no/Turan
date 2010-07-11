@@ -16,7 +16,17 @@
 {% if request.user.username %}
 <div class="searchfilters">
     <ul class="buttons">
-        <li>
+        <li class="floatleft">
+            <a id="getLocation">{% trans "In my area" %}</a>
+            <script type="text/javascript">
+                $("#getLocation").bind("click", function (evt) {
+                    navigator.geolocation.getCurrentPosition(function(position) {  
+                        location.href = "/turan/events/nearby/"+position.coords.latitude+"/"+position.coords.longitude+"/";
+                    })
+                });  
+            </script>
+        </li>
+        <li class="floatleft">
             {% if not username %}
             <a href="{% url events username=request.user.username %}">{% trans "My events" %}</a>
             {% else %}

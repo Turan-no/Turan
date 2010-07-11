@@ -130,7 +130,7 @@ class TripsFeed(Feed):
             pass # Some trips just doesn't have time set
         return
 
-def events(request, group_slug=None, bridge=None, username=None):
+def events(request, group_slug=None, bridge=None, username=None, latitude=None, longitude=None):
     object_list = []
 
     if bridge is not None:
@@ -148,6 +148,13 @@ def events(request, group_slug=None, bridge=None, username=None):
         if username:
             user = get_object_or_404(User, username=username)
             exerciseqs = exerciseqs.filter(user=user)
+
+    if latitude and longitude:
+        # A litle aprox box around your area
+        exerciseqs = exerciseqs.filter(route__start_lat__gt=float(latitude) - 0.5)
+        exerciseqs = exerciseqs.filter(route__start_lat__lt=float(latitude) + 0.5)
+        exerciseqs = exerciseqs.filter(route__start_lon__gt=float(longitude) - 1.0)
+        exerciseqs = exerciseqs.filter(route__start_lon__lt=float(longitude) + 1.0)
 
     search_query = request.GET.get('q', '')
     if search_query:
@@ -1196,6 +1203,16 @@ def turan_object_list(request, queryset):
             Q(tags__contains=search_query)
         )
         queryset = queryset.filter(qset).distinct()
+
+    latitude = request.GET.get('lat', '')
+    longitude = request.GET.get('lon', '')
+
+    if latitude and longitude:
+        # A litle aprox box around your area
+        queryset = queryset.filter(start_lat__gt=float(latitude) - 0.5)
+        queryset = queryset.filter(start_lat__lt=float(latitude) + 0.5)
+        queryset = queryset.filter(start_lon__gt=float(longitude) - 1.0)
+        queryset = queryset.filter(start_lon__lt=float(longitude) + 1.0)
 
     username = request.GET.get('username', '')
     if username:

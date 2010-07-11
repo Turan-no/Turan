@@ -17,6 +17,25 @@
 <h4>{% trans "Search results for " %}{{search_query}} <a class="remove" title="{% trans "Clear search query" %}" href="{% url routes %}">[X]</a></h4>
 {% endif %}
 
+<div class="searchfilters">
+    <ul class="buttons">
+        <li class="floatleft">
+            {% if request.GET.lat %}
+            <a href="{% url routes %}">{% trans "All routes" %}</a>
+            {% else %}
+            <a id="getLocation">{% trans "In my area" %}</a>
+            {% endif %}
+            <script type="text/javascript">
+                $("#getLocation").bind("click", function (evt) {
+                    navigator.geolocation.getCurrentPosition(function(position) {  
+                        location.href = "/turan/route?lat="+position.coords.latitude+"&lon="+position.coords.longitude;
+                    })
+                });  
+            </script>
+        </li>
+    </ul>
+</div>
+
 <h1>
     {% trans "Routes" %}
 </h1>
