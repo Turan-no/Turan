@@ -13,6 +13,19 @@
 {% if search_query %}
 <h4>{% trans "Search results for " %}{{search_query}} <a class="remove" title="{% trans "Clear search query" %}" href="{% url events %}">[X]</a></h4>
 {% endif %}
+{% if request.user %}
+<div class="searchfilters">
+    <ul class="buttons">
+        <li>
+            {% if not username %}
+            <a href="{% url events username=request.user.username %}">{% trans "My events" %}</a>
+            {% else %}
+            <a href="{% url events %}">{% trans "All events" %}</a>
+            {% endif %}
+        </li>
+    </ul>
+</div>
+{% endif %}
 
 <h1>
     {% trans "Events" %}

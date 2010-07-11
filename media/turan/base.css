@@ -795,3 +795,9 @@ ul.routes li {
     padding-left:28px;
     padding-right:7px;
 }
+
+div.searchfilters {
+    margin-top: 8px;
+    float: right;
+}
+
