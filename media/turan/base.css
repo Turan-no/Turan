@@ -16,23 +16,23 @@ p {
 h1 {
 	font-size: 175%;
 	font-weight: bolder;
-	margin: 0 0 7px;
+	margin: 5px 0 7px;
 }
 h2 {
 	font-size: 150%;
 	font-weight: normal;
-	margin: 0 0 4px;
+	margin: 5px 0 4px;
 }
 h3 {
 	font-size: 135%;
 	font-weight: normal;
-	margin: 0 0 4px;
+	margin: 5px 0 4px;
 }
 
 h4 {
 	font-size: 120%;
 	font-weight: normal;
-	margin: 0 0 2px;
+	margin: 5px 0 2px;
 }
 
 /* Tables */
@@ -445,7 +445,7 @@ ul.comments li {
     font-weight: bold;
 }
 
-ul.trip_attributes li {
+ul.attributes li {
     padding: 1px 0;
 }
 
@@ -462,17 +462,16 @@ ul.trip_attributes li {
     margin: 0;
 }
 
-ul.trip_attributes li {
+div.attributes ul li {
 }
-div.trip_attributes {
+div.attributes {
 	background: #DEF;
 	border: 1px solid #99BBCC;
+    padding: 5px;
     padding-left: 1em;
     width: 458px;
-    margin: 0;
-    margin-top: -1px;
 }
-ul.trip_attributes {
+ul.attributes {
 }
 li.duration {
     list-style-image: url('/site_media/pinax/images/silk/icons/clock.png');
@@ -489,6 +488,7 @@ li.comment p {
     padding: 3px 12px;
     margin: 0;
 }
+li.gear,
 li.cadence {
     list-style-image: url('/site_media/pinax/images/silk/icons/cog.png');
 }
@@ -514,6 +514,9 @@ li.person img {
 li.route {
     list-style-image: url('/site_media/pinax/images/silk/icons/map.png');
 }
+li.count {
+    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_rotate_clockwise.png');
+}
 li.distance {
     list-style-image: url('/site_media/pinax/images/silk/icons/sum.png');
 }
@@ -521,12 +524,14 @@ li.description {
     list-style-image: url('/site_media/pinax/images/silk/icons/textfield.png');
 }
 li.altitude,
+li.height,
 li.ascent {
     list-style-image: url('/site_media/pinax/images/silk/icons/arrow_up.png');
 }
 li.descent {
     list-style-image: url('/site_media/pinax/images/silk/icons/arrow_down.png')
 }
+li.weight,
 li.kcal {
     list-style-image: url('/site_media/pinax/images/silk/icons/cake.png')
 }
@@ -632,8 +637,8 @@ div.mapcontainer {
     border-right: 1px solid black;
 }
 
-#tabs h4 {
-    margin: 8px 5px;
+#tabs h3 {
+    margin: 0 8px 5px 0;
 }
 #tabs p {
     padding: 5px;
@@ -652,9 +657,8 @@ li.odd {
     background: #ffffff;
 }
 ul.iconlist li {
-    margin-left: 0;
     list-style-type: none;
-    padding: 5px;
+    margin-left: 27px;
 }
 
 /* Calendar */
@@ -763,6 +767,23 @@ div.averages li {
 }
 div.averages h4 {
     margin: 0;
+}
+.spacer {
+    margin-bottom: 10px;
+}
+div.box .tools {
+    float: right;
+    padding: 5px;
+}
+div.box {
+    border: 1px solid #9bc;
+    background-color: #def;
+    padding: 5px;
+}
+div.box h2 {
+    margin: 0 0 4px 0;
+    padding: 3px;
+    background-color: #cde;
 }
 ul.routes,
 ul.trips {
