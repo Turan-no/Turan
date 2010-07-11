@@ -21,7 +21,7 @@
                 {% trans "Length" %}
             </th>
         </tr>
-        {% for key, effort in object.best_power.items %}
+        {% for key, effort in object.best.items %}
         <tr>
             <td> 
                 {{ effort.dur|durationformat }} 
@@ -33,10 +33,10 @@
                 {{ effort.wkg|floatformat }} {% trans "W/kg" %}
             </td>
             <td>
-                {{ effort.pos|floatformat }} {% trans "km" %}
+                {{ effort.power_pos|floatformat }} {% trans "km" %}
             </td>
             <td>
-                {{ effort.length|floatformat }} {% trans "km" %}
+                {{ effort.power_length|floatformat }} {% trans "km" %}
             </td>
         </tr>
         {% endfor %}
@@ -57,7 +57,7 @@
                 {% trans "Length" %}
             </th>
         </tr>
-        {% for key, effort in object.best_speed.items %}
+        {% for key, effort in object.best.items %}
         <tr>
             <td> 
                 {{ effort.dur|durationformat }} 
@@ -66,10 +66,10 @@
                 {{ effort.speed|floatformat }} {% trans "km/h" %}
             </td>
             <td>
-                {{ effort.pos|floatformat }} {% trans "km" %}
+                {{ effort.speed_pos|floatformat }} {% trans "km" %}
             </td>
             <td>
-                {{ effort.length|floatformat }} {% trans "km" %}
+                {{ effort.speed_length|floatformat }} {% trans "km" %}
             </td>
         </tr>
         {% endfor %}
@@ -79,7 +79,7 @@
 {% if object.avg_power %}
 <script type="text/javascript">
     var best_effort_data = [
-            {% for key, effort in object.best_power.items %}
+            {% for key, effort in object.best.items %}
             {% if effort %}
                 {
                     data: [[{{ key }}, {{ effort.power }}]],
@@ -94,7 +94,7 @@
 {% else %}
 <script type="text/javascript">
     var best_effort_data = [
-            {% for key, effort in object.best_speed.items %}
+            {% for key, effort in object.best.items %}
             {% if effort %}
                 {
                     data: [[{{ key }}, {{ effort.speed }}]],

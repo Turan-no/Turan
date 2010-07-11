@@ -1048,21 +1048,29 @@ def exercise(request, object_id):
         zones = getzones(details)
         hrhzones = gethrhzones(details)
         inclinesummary = getinclinesummary(details)
-        effort_range = [5,30,60,600,1800,3600]
+        effort_range = [5,30,60,300,600,1800,3600]
 
-        best_speed = {}
+        best = {}
         j = 0
         for i in effort_range:
             try:
-                best_speed[j] = {}
-                best_speed[j]['speed'], best_speed[j]['pos'], best_speed[j]['length'] = best_x_sec_speed(details, i)
-                best_speed[j]['dur'] = i
+                best[j] = {}
+                if object.avg_power:
+                    best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
+                    best[j]['wkg'] = best[j]['power'] / userweight 
+                else:
+                    best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'] = best_x_sec(details, i, False)
+
+                best[j]['dur'] = i
             except:
-                #raise
-                del best_speed[j]
+                raise
+                del best[j]
                 pass
+            else:
+                if best[j]['speed'] == 0.0:
+                    del best[j]
             j += 1
-        object.best_speed = best_speed
+        object.best = best
 
 
         if object.avg_power:
@@ -1071,22 +1079,21 @@ def exercise(request, object_id):
                 details[i].poweravg30s = poweravg30s[i]
             object.normalized = normalized_power(poweravg30s)
 
-            best_power = {}
-            j = 0
-            for i in effort_range:
-                try:
-                    best_power[j] = {}
-                    best_power[j]['power'], best_power[j]['pos'], best_power[j]['length'] = best_x_sec_power(details, i)
-                    best_power[j]['dur'] = i
-                    best_power[j]['wkg'] = best_power[j]['power'] / userweight 
-                except:
-                    #raise
-                    del best_power[j]
-                    pass
-                j += 1
+            #best_power = {}
+            #j = 0
+            #for i in effort_range:
+            #    try:
+            #        best_power[j] = {}
+            #        best_power[j]['power'], best_power[j]['pos'], best_power[j]['length'] = best_x_sec_power(details, i)
+            #        best_power[j]['dur'] = i
+            #        best_power[j]['wkg'] = best_power[j]['power'] / userweight 
+            #    except:
+            #        #raise
+            #        del best_power[j]
+            #        pass
+            #    j += 1
 
-            object.best_power = best_power
-
+            #object.best_power = best_power
     datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
 
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
@@ -1334,52 +1341,107 @@ def power_30s_average(details):
 
     return poweravg30s
 
-def best_x_sec_power(details, length):
+# def best_x_sec_power(details, length):
+# 
+#    best = 0.0
+#    best_start_km = 0.0
+#    q = deque()
+# 
+#    for i in xrange(0, length):
+#        q.appendleft(details[i].power)
+# 
+#    for i in xrange(length, len(details)):
+# 
+#        sum_q = sum(q)
+#        if sum_q > best:
+#            best = sum_q
+#            best_start_km = details[i-length].distance / 1000
+#            best_length = (details[i].distance / 1000) - best_start_km
+# 
+#        q.appendleft(details[i].power)
+#        q.pop()
+# 
+#    best = best / length
+# 
+#    return best, best_start_km, best_length
 
-    best = 0.0
-    best_start_km = 0.0
-    q = deque()
+def best_x_sec(details, length, power):
 
-    for i in xrange(0, length):
-        q.appendleft(details[i].power)
+    best_speed = 0.0
+    best_power = 0.0
+    best_power = 0.0
+    sum_q_power = 0.0
+    best_start_km_speed = 0.0
+    best_start_km_power = 0.0
+    q_speed = deque()
+    q_power = deque()
+    best_length_speed = 0.0
+    best_length_power = 0.0
 
-    for i in xrange(length, len(details)):
+    q_speed.appendleft(details[0].speed)
+    if power:
+        q_power.appendleft(details[0].power)
+    j = 2
+    for i in xrange(1, 10000):
+        try:
+            delta_t = (details[i].time - details[i-1].time).seconds
+            q_speed.appendleft(details[i].speed * delta_t)
+            if power:
+                q_power.appendleft(details[i].power * delta_t)
+            j += 1
+            delta_t_total = (details[i].time - details[0].time).seconds
+            if delta_t_total >= length:
+                break
+        except:
+            continue
 
-        sum_q = sum(q)
-        if sum_q > best:
-            best = sum_q
-            best_start_km = details[i-length].distance / 1000
-            best_length = (details[i].distance / 1000) - best_start_km
+    for i in xrange(j, len(details)):
 
-        q.appendleft(details[i].power)
-        q.pop()
+        try:
+            if len(q_speed) != 0:
+                sum_q_speed_tmp = sum(q_speed)
+                delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
 
-    best = best / length
+                if delta_t_total != 0:
+                    sum_q_speed = sum_q_speed_tmp / (details[i].time - details[i-len(q_speed)].time).seconds
+                else:
+                    # What can one do?
+                    sum_q_speed = sum_q_speed_tmp / len(q_speed)
+            if len(q_power) != 0:
+                if power:
+                    sum_q_power_tmp = sum(q_power)
+                    delta_t_total_power = (details[i].time - details[i-len(q_power)].time).seconds
+                    if delta_t_total_power != 0:
+                        sum_q_power = sum_q_power_tmp / delta_t_total_power
+                    else:
+                        sum_q_speed = sum_q_speed_tmp / len(q_power)
+            if sum_q_speed > best_speed:
+                best_speed = sum_q_speed
+                best_start_km_speed = details[i-len(q_speed)].distance / 1000
+                best_length_speed = (details[i].distance/1000) - best_start_km_speed
+            if sum_q_power > best_power:
+                best_power = sum_q_power
+                best_start_km_power = details[i-len(q_power)].distance / 1000
+                best_length_power = (details[i].distance/1000) - best_start_km_power
 
-    return best, best_start_km, best_length
+            delta_t = (details[i].time - details[i-1].time).seconds
+            q_speed.appendleft(details[i].speed*delta_t)
+            if power:
+                q_power.appendleft(details[i].power*delta_t)
+            while ((details[i].time - details[i-len(q_speed)].time).seconds) > length:
+                q_speed.pop()
+            while (power and (details[i].time - details[i-len(q_power)].time).seconds > length):
+                q_power.pop()
+        except Exception as e:
+            print "something wrong %s" % e
+            #raise
+            continue
 
-def best_x_sec_speed(details, length):
 
-    best = 0.0
-    best_start_km = 0.0
-    q = deque()
-
-    for i in xrange(0, length):
-        q.appendleft(details[i].speed)
-    for i in xrange(length, len(details)):
-
-        sum_q = sum(q)
-        if sum_q > best:
-            best = sum_q
-            best_start_km = details[i-length].distance / 1000
-            best_length = (details[i].distance/1000) - best_start_km
-
-        q.appendleft(details[i].speed)
-        q.pop()
-
-    best = best / length
-
-    return best, best_start_km, best_length
+    if power:
+        return best_speed, best_start_km_speed, best_length_speed, best_power, best_start_km_power, best_length_power
+    else:
+        return best_speed, best_start_km_speed, best_length_speed
 
 def normalized_power(dataset):
 
