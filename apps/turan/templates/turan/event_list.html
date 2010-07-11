@@ -13,7 +13,7 @@
 {% if search_query %}
 <h4>{% trans "Search results for " %}{{search_query}} <a class="remove" title="{% trans "Clear search query" %}" href="{% url events %}">[X]</a></h4>
 {% endif %}
-{% if request.user %}
+{% if request.user.username %}
 <div class="searchfilters">
     <ul class="buttons">
         <li>
