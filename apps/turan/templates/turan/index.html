@@ -17,7 +17,7 @@
     <h2>
         <a href="{% url exercises %}">{% trans "Latest exercises" %}</a>
     </h2>
-    <ul class="trips iconlist">
+    <ul class="trips">
         {% for object in exercise_list %}
         <li class="{% cycle "even" "odd" %}">
             <img alt="User image" class="floatleft" src="{{ object.icon|safe }}" width="32" height="32" />
