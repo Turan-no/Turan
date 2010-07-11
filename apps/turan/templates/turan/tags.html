@@ -3,7 +3,7 @@
 {% tags_for_object object as tag_list %}
 {% if tag_list %}
 <div class="tags">
-    <h2><img src="{{ MEDIA_URL }}pinax/images/silk/icons/tag_blue.png" border="0" class="noborder" align="absmiddle" />{% trans "Tags"%}</h2>
+    <h2><img alt="Tag" src="{{ MEDIA_URL }}pinax/images/silk/icons/tag_blue.png" class="noborder" />{% trans "Tags"%}</h2>
     <ul>
         {% for tag in tag_list %}
         <li class="tag {{ tag }}"><a href="/tags/{{ tag }}">{{ tag }}</a></li>

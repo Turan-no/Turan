@@ -10,7 +10,6 @@
 {% block head_title %}{% blocktrans %}Profile for {{ other_user }}{% endblocktrans %}{% endblock %}
 
 {% block body %}
-    
     <div class="right_panel">
         {% include "profiles/profile_right_panel.html" %}
 
@@ -84,7 +83,8 @@ $(function () {
                 <h1>{% blocktrans %}Profile for <span class="fn nickname">{{ other_user }}</span>{% endblocktrans %}</h1>
             {% endif %}
             
-            <div class="profile_info">
+            <a href="{% url calendar-index %}?username={{ other_user }}">{% trans "Show " %}{{ other_user }}{% trans "'s calendar" %}</a>
+            <div class="attributes spacer">
                 {% if other_user.get_profile.name %}<p><b>{% trans "Name" %}</b>: <span class="fn">{{ other_user.get_profile.name }}</span></p>{% endif %}
                 {% if other_user.get_profile.about %}<p><b>{% trans "About" %}</b>: {{ other_user.get_profile.about }}</p>{% endif %}
                 {% if other_user.get_profile.location%}<p><b>{% trans "Location" %}</b>: {{ other_user.get_profile.location }}</p>{% endif %}
@@ -92,24 +92,23 @@ $(function () {
                 {% with other_user.get_profile as object %}
                 <ul class="user_details">
                     {% if object.weight %}
-                        <li><span class="label">{% trans "Weight" %}:</span> {{ object.weight }} kg</li>
+                        <li class="weight"><span class="label">{% trans "Weight" %}:</span> {{ object.weight }} kg</li>
                     {% endif %}
                     {% if object.height %}
-                        <li><span class="label">{% trans "Height" %}:</span> {{ object.height }} cm</li>
+                        <li class="height"><span class="label">{% trans "Height" %}:</span> {{ object.height }} cm</li>
                     {% endif %}
                     {% if object.cycle %}
-                    <li><span class="label">{% trans "Cycle" %}:</span> {{ object.cycle }}</li>
+                    <li class="gear"><span class="label">{% trans "Cycle" %}:</span> {{ object.cycle }}</li>
                     {% endif %}
                     {% if object.resting_hr %}
-                    <li><span class="label">{% trans "Resting pulse" %}:</span> {{ object.resting_hr }} {% trans "BPM" %}</li>
+                    <li class="heart"><span class="label">{% trans "Resting pulse" %}:</span> {{ object.resting_hr }} {% trans "BPM" %}</li>
                     {% endif %}
                     {% if object.max_hr %}
-                    <li><span class="label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}</li>
+                    <li class="heart"><span class="label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}</li>
                     {% endif %}
                     {% if object.info %}
                     <li><span class="label">{% trans "About" %}:</span> {{ object.info }}</li>
                     {% endif %}
-                    <li><a href="{% url calendar-index %}?username={{ other_user }}">{% trans "Show " %}{{ other_user.get_profile.name }}{% trans "'s calendar" %}</a></li>
                 </ul>
                 {% endwith %}
             </div>
@@ -119,7 +118,7 @@ $(function () {
                     <div class="form-toggle">
                     <p><span id="edit-profile-toggle">{% trans "Edit profile" %}</span></p>
                     
-                    <form class="uniForm" id="edit-profile" method="POST" action="" style="display: none;">
+                    <form class="uniForm" id="edit-profile" method="post" action="" style="display: none;">
                         <fieldset class="inlineLabels">
                             {{ profile_form|as_uni_form }}
                             <div class="form_block">
@@ -133,36 +132,39 @@ $(function () {
             {% endif %}
 
             {% if total_duration %}
-            <h1>{% trans "Statistics" %}</h1>
-            <ul>
-                <li><a href="{% url profile_statistics other_user %}">{% trans "Show all" %}</a></li>
-                <li><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
-                <li><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
-                <li><span class="label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>
-                <li><span class="label">{% trans "Total exercise count"%}:</span> {{ exerciseqs.count}} {% trans "trips" %}</li>
-                <li><span class="label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
-                <li><span class="label">{% trans "Total energy expenditure"%}:</span> {{ total_kcals }} {% trans "kcal" %} (= {{total_kcals|bodyfat|floatformat}} {% trans "kg" %} {% trans "fat" %} ) </li>
-            {% for item, val in avg_speed_dict.items %}
-            <li>{{item}}: {{val|floatformat}}</li>
-            {% endfor %}
-            {% for item, val in hr_dict.items %}
-            <li>{{item}}: {{val|floatformat}}</li>
-            {% endfor %}
-            {% for item, val in cadence_dict.items %}
-            <li>{{item}}: {{val|floatformat}}</li>
-            {% endfor %}
-            {% for item, val in duration_dict.items %}
-            <li>{{item}}: {{val|floatformat}}</li>
-            {% endfor %}
-            {% for item, val in distance_dict.items %}
-            <li>{{item}}: {{val|floatformat}}</li>
-            {% endfor %}
-            </ul>
+            <div class="box spacer">
+                <a class="tools" href="{% url profile_statistics other_user %}">{% trans "Show all" %}</a>
+                <h2>{% trans "Statistics" %}</h2>
+                <ul class="iconlist">
+                    <li class="time"><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
+                    <li class="distance"><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
+                    <li class="speed"><span class="label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>
+                    <li class="count"><span class="label">{% trans "Total exercise count"%}:</span> {{ exerciseqs.count}} {% trans "trips" %}</li>
+                    <li class="distance"><span class="label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
+                    <li class="kcal"><span class="label">{% trans "Total energy expenditure"%}:</span> {{ total_kcals }} {% trans "kcal" %} (= {{total_kcals|bodyfat|floatformat}} {% trans "kg" %} {% trans "fat" %} ) </li>
+                {% for item, val in avg_speed_dict.items %}
+                <li>{{item}}: {{val|floatformat}}</li>
+                {% endfor %}
+                {% for item, val in hr_dict.items %}
+                <li>{{item}}: {{val|floatformat}}</li>
+                {% endfor %}
+                {% for item, val in cadence_dict.items %}
+                <li>{{item}}: {{val|floatformat}}</li>
+                {% endfor %}
+                {% for item, val in duration_dict.items %}
+                <li>{{item}}: {{val|floatformat}}</li>
+                {% endfor %}
+                {% for item, val in distance_dict.items %}
+                <li>{{item}}: {{val|floatformat}}</li>
+                {% endfor %}
+                </ul>
+            </div>
             {% endif %}
 
             {% if exerciseqs.count %}
+            <div class="box spacer">
+            <a class="tools" href="{% url exercises %}?username={{other_user.username}}">{% trans "Show all" %}</a>
             <h2>{% trans "Latest exercises" %}</h2>
-            <a href="{% url exercises %}?username={{other_user.username}}">{% trans "Show all" %}</a>
                 <div class="gg">
                     <ul>
                 {% for trip in latest_exercises %}
@@ -177,6 +179,7 @@ $(function () {
                 {% endfor %}
                     </ul>
                 </div>
+            </div>
             {% else %}
             {% comment %}
                {% trans "No exercises added yet." %}
@@ -191,7 +194,7 @@ $(function () {
                     {% if is_friend %}
                         <p>{% blocktrans %}You are friends with {{ other_user }}.{% endblocktrans %} <a href="{% url messages_compose %}{{ other_user }}/">{% trans "Send a message" %}</a>.</p>
                         <div>
-                            <form method="POST" action="">
+                            <form method="post" action="">
                                 <input type="hidden" name="action" value="remove" /><input type="submit" value="{% trans "remove from friends" %}"/>
                             </form>
                         </div>
@@ -219,7 +222,7 @@ $(function () {
                                 <p>{% trans "Friendship request sent." %}</p>
                             {% else %}
                                 <h2>{% trans "Add As Friend" %}</h2>
-                                <form class="uniForm" method="POST" action="">
+                                <form class="uniForm" method="post" action="">
                                     <fieldset class="inlineLabels">  
                                         {{ invite_form|as_uni_form }}
                                         <div class="form_block">

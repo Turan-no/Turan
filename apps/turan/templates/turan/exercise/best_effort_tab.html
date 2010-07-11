@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load turan_extras %}
 <div id="besteffortdiv" style="width:400px;height:400px; float: right;"></div>
-<div id="bestefforttable" style="width:500px; height: 400px;">
+<div id="bestefforttable" style="width:500px;">
     {% if object.avg_power %}
     <table class="fullsize">
         <tr>
@@ -21,7 +21,7 @@
                 {% trans "Length" %}
             </th>
         </tr>
-        {% for key, effort in object.best_power.items %}
+        {% for key, effort in object.best.items %}
         <tr>
             <td> 
                 {{ effort.dur|durationformat }} 
@@ -33,10 +33,10 @@
                 {{ effort.wkg|floatformat }} {% trans "W/kg" %}
             </td>
             <td>
-                {{ effort.pos|floatformat }} {% trans "km" %}
+                {{ effort.power_pos|floatformat }} {% trans "km" %}
             </td>
             <td>
-                {{ effort.length|floatformat }} {% trans "km" %}
+                {{ effort.power_length|floatformat }} {% trans "km" %}
             </td>
         </tr>
         {% endfor %}
@@ -57,7 +57,7 @@
                 {% trans "Length" %}
             </th>
         </tr>
-        {% for key, effort in object.best_speed.items %}
+        {% for key, effort in object.best.items %}
         <tr>
             <td> 
                 {{ effort.dur|durationformat }} 
@@ -66,10 +66,10 @@
                 {{ effort.speed|floatformat }} {% trans "km/h" %}
             </td>
             <td>
-                {{ effort.pos|floatformat }} {% trans "km" %}
+                {{ effort.speed_pos|floatformat }} {% trans "km" %}
             </td>
             <td>
-                {{ effort.length|floatformat }} {% trans "km" %}
+                {{ effort.speed_length|floatformat }} {% trans "km" %}
             </td>
         </tr>
         {% endfor %}
@@ -77,9 +77,9 @@
 </div>
 
 {% if object.avg_power %}
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     var best_effort_data = [
-            {% for key, effort in object.best_power.items %}
+            {% for key, effort in object.best.items %}
             {% if effort %}
                 {
                     data: [[{{ key }}, {{ effort.power }}]],
@@ -92,9 +92,9 @@
     $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: false } });
 </script>
 {% else %}
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     var best_effort_data = [
-            {% for key, effort in object.best_speed.items %}
+            {% for key, effort in object.best.items %}
             {% if effort %}
                 {
                     data: [[{{ key }}, {{ effort.speed }}]],

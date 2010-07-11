@@ -26,7 +26,7 @@
     <h2>Import from Google Contacts</h2>
     
     {% if authsub_token %}
-        <form method="POST" action="">
+        <form method="post" action="">
             <input type="hidden" name="action" value="import_google" />
             <input type="submit" value="{% trans 'Import Google Contacts' %}" />
         </form>
@@ -42,7 +42,7 @@
     <h2>Import from Yahoo Address Book</h2>
     
     {% if bbauth_token %}
-        <form method="POST" action="">
+        <form method="post" action="">
             <input type="hidden" name="action" value="import_yahoo" />
             <input type="submit" value="{% trans 'Import Yahoo Address Book' %}" />
         </form>

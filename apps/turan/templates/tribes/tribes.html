@@ -23,7 +23,7 @@
         <p>{% blocktrans %}<a href="{{ signup_url }}">Sign up</a> and <a href="{{ login_url }}">log in </a> to create your own tribe or join an existing one.{% endblocktrans %}</p>
     {% endif %}
     
-    <form method="GET" action="">
+    <form method="get" action="">
         <input type="text" name="search" value="{{ search_terms }}" />
         <input type="submit" value="Search" />
         {% if search_terms %}

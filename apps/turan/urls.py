@@ -5,12 +5,22 @@ from views import *
 from forms import *
 from feeds import *
 from threadedcomments.models import ThreadedComment as Comment
+from django.contrib.sitemaps import GenericSitemap
+
+sitemaps = {
+        'trips': GenericSitemap({'queryset': Exercise.objects.all(), 'date_field': 'date'}, priority=0.5),
+    'routes': GenericSitemap({'queryset': Route.objects.all(), 'date_field': 'created'}, priority=0.5),
+}
 
 feeds = {
     'trips': TripsFeed,
 }
 urlpatterns = patterns('',
+    url(r'^robots\.txt$', 'django.views.generic.simple.direct_to_template', {'template': 'turan/robots.txt'}),
+    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemaps}),
+    url(r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
     url(r'^events/?$', events, name='events'),
+    url(r'^events/nearby/(?P<latitude>[\d.]+)/(?P<longitude>[\d.]+)/?$', events, name='events'),
     url(r'^events/user/(?P<username>\w+)', events, name='events'),
     url(r'^statistics/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)', statistics, name='statistics-day'),
     url(r'^statistics/(?P<year>\d+)/(?P<month>\d+)', statistics, name='statistics-month'),

@@ -40,7 +40,7 @@
                 <div class="gallery-photo-thumb">
                     <a href="/photos/details/{{ photo.id }}/"><img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/></a><br />
                     from <a href="{% url profile_detail photo.member.username %}">{{ photo.member.username }}</a><br />
-                    <img src="{{ MEDIA_URL }}pinax/images/silk/icons/comment.png" border="0" class="noborder" align="absmiddle" /><a href="/photos/details/{{ photo.id }}/">{% get_comment_count for photo as commentcount %} {{ commentcount }} Comments</a>
+                    <img alt="Comment" src="{{ MEDIA_URL }}pinax/images/silk/icons/comment.png" class="noborder" align="absmiddle" /><a href="/photos/details/{{ photo.id }}/">{% get_comment_count for photo as commentcount %} {{ commentcount }} Comments</a>
                     <br />
                     Viewed {{ photo.view_count }} Times
                 </div>
@@ -66,7 +66,7 @@
                     
                     <td>
                         <h2><a href="{{ bookmark.bookmark.url }}">{{ bookmark.bookmark.description }}</a></h2>
-                        <div class="url">{% if bookmark.bookmark.get_favicon_url %}<img src="{{ bookmark.bookmark.get_favicon_url }}" width="16" height="16" /> {% endif %}{{ bookmark.bookmark.url }}</div>
+                        <div class="url">{% if bookmark.bookmark.get_favicon_url %}<img alt="Bookmark" src="{{ bookmark.bookmark.get_favicon_url }}" width="16" height="16" /> {% endif %}{{ bookmark.bookmark.url }}</div>
                         <div class="body">{{ bookmark.bookmark.note|linebreaks }}</div>
                         <div class="tags">{% show_tag_counts bookmark.bookmark.all_tags_with_counts %}</div>
                     </td>
@@ -127,16 +127,16 @@
                 $('#bookmark_' + bookmark_id + '_score').text(new_score + ' point' + (new_score == 1 ? '': 's'));
             });
             if (direction == 'up') {
-                $('#up_' + bookmark_id).replaceWith('<a id="up_' + bookmark_id + '" href="#" onclick="return false;"><img src="{{ MEDIA_URL }}up_mod.png"/>');
-                $('#down_' + bookmark_id).replaceWith('<a id="down_' + bookmark_id + '" href="#" onclick="vote(' + bookmark_id + ', \'clear\'); return false;"><img src="{{ MEDIA_URL }}down_grey.png"/>');
+                $('#up_' + bookmark_id).replaceWith('<a id="up_' + bookmark_id + '" href="#" onclick="return false;"><img alt="Up mod" src="{{ MEDIA_URL }}up_mod.png"/>');
+                $('#down_' + bookmark_id).replaceWith('<a id="down_' + bookmark_id + '" href="#" onclick="vote(' + bookmark_id + ', \'clear\'); return false;"><img alt="Down grey" src="{{ MEDIA_URL }}down_grey.png"/>');
             }
             else if (direction == 'down') {
-                $('#up_' + bookmark_id).replaceWith('<a id="up_' + bookmark_id + '" href="#" onclick="vote(' + bookmark_id + ', \'clear\'); return false;"><img src="{{ MEDIA_URL }}up_grey.png"/>');
-                $('#down_' + bookmark_id).replaceWith('<a id="down_' + bookmark_id + '" href="#" onclick="return false;"><img src="{{ MEDIA_URL }}down_mod.png"/>');
+                $('#up_' + bookmark_id).replaceWith('<a id="up_' + bookmark_id + '" href="#" onclick="vote(' + bookmark_id + ', \'clear\'); return false;"><img alt="Up gray" src="{{ MEDIA_URL }}up_grey.png"/>');
+                $('#down_' + bookmark_id).replaceWith('<a id="down_' + bookmark_id + '" href="#" onclick="return false;"><img alt="Down mod" src="{{ MEDIA_URL }}down_mod.png"/>');
             }
             else { // clear
-                $('#up_' + bookmark_id).replaceWith('<a id="up_' + bookmark_id + '" href="#" onclick="vote(' + bookmark_id + ', \'up\'); return false;"><img src="{{ MEDIA_URL }}up_grey.png"/>');
-                $('#down_' + bookmark_id).replaceWith('<a id="down_' + bookmark_id + '" href="#" onclick="vote(' + bookmark_id + ', \'down\'); return false;"><img src="{{ MEDIA_URL }}down_grey.png"/>');
+                $('#up_' + bookmark_id).replaceWith('<a id="up_' + bookmark_id + '" href="#" onclick="vote(' + bookmark_id + ', \'up\'); return false;"><img alt="Up grey" src="{{ MEDIA_URL }}up_grey.png"/>');
+                $('#down_' + bookmark_id).replaceWith('<a id="down_' + bookmark_id + '" href="#" onclick="vote(' + bookmark_id + ', \'down\'); return false;"><img alt="Down grey" src="{{ MEDIA_URL }}down_grey.png"/>');
             }
         }
     </script>

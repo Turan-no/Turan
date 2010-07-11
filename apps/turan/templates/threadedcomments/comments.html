@@ -16,7 +16,7 @@
 		<span class="date">&nobr;{{ response.date_submitted|naturalday }}</span>
 		<span class="controls">
             {% ifequal user response.user %}
-			<form method="POST" action="{% url tc_comment_delete response.id %}">
+			<form method="post" action="{% url tc_comment_delete response.id %}">
 			    <input type="submit" value="{% trans "Delete Post" %}" />
 			    <input type="hidden" name="next" value="{{ request.path }}" />
 			</form>
@@ -28,7 +28,7 @@
             </div>
             <div class="bulk">
                 <div class="body">{{ response.comment|urlize|linebreaks }}</div>
-                <form class="hidden" method="POST" action="{% get_comment_url object response %}" id="comment_form_{{ response.id }}">
+                <form class="hidden" method="post" action="{% get_comment_url object response %}" id="comment_form_{{ response.id }}">
                     <table><tr><td><textarea id="id_comment" rows="2" cols="40" name="comment"></textarea></td></tr>
                     <tr><td><input type="submit" value="{% trans "Post Response" %}" /></td></tr></table>
                     <input type="hidden" name="next" value="{{ request.path }}" />
@@ -41,7 +41,7 @@
 {% paginate %}
 
 {% if user.is_authenticated %}
-    <form class="uniForm" method="POST" action="{% get_comment_url object %}">
+    <form class="uniForm" method="post" action="{% get_comment_url object %}">
         <fieldset class="inlineLabels">
             <div class="ctrlHolder">
                 <textarea id="id_comment" rows="2" cols="40" name="comment"></textarea>
