@@ -188,9 +188,11 @@
 <div class="cloud">
     <ul>
 {% for tag in tag_list %}
+    {% ifnotequal tag.count 1 %}
         <li>
-            <a href="/tags/{{ tag }}">{{ tag }}</a>
+        <a class="tag-size-{{ tag.font_size }}" href="/tags/{{ tag.name }}">{{ tag.name }}</a>
         </li>
+    {% endifnotequal %}
 {% endfor %}
     </ul>
 </div>

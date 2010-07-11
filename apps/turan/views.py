@@ -76,7 +76,7 @@ def index(request):
     route_list = Route.objects.all()
     route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
 
-    tag_list = Tag.objects.all()
+    tag_list = Tag.objects.cloud_for_model(Exercise)
 
     user_list = sorted(User.objects.filter(exercise__duration__gt=0).annotate(e = Sum('exercise__duration')), key= lambda x: -x.e)
 
