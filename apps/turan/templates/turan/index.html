@@ -14,9 +14,9 @@
 {% block content %}
 
 <div class="half floatright">
-    <h1>
+    <h2>
         <a href="{% url exercises %}">{% trans "Latest exercises" %}</a>
-    </h1>
+    </h2>
     <ul class="trips iconlist">
         {% for object in exercise_list %}
         <li class="{% cycle "even" "odd" %}">
@@ -39,9 +39,9 @@
         {%endfor %}
     </ul>
 
-    <h1>
+    <h2>
         <a href="{% url routes %}">{% trans "Most popular routes" %}</a>
-    </h1>
+    </h2>
     <ul class="routes">
         {% for object in route_list %}
         <li class="{% cycle "even" "odd" %}">
@@ -99,7 +99,7 @@
         </li>
     </ul>
     <br />
-    <h3>{% trans "Top exercisers" %}</h3>
+    <h2>{% trans "Top exercisers" %}</h2>
     <div id="exercisers">
         {% for exerciser in user_list %}
         {% if exerciser.exercise_set.count %}
@@ -111,10 +111,10 @@
     <br />
     <div id="tabs">
         <ul>
-            <li class="tab selected" id="tabs-select-1">{% trans "Turan?" %}</li>
-            <li class="tab" id="tabs-select-2">{% trans "Analyze" %}</li>
-            <li class="tab" id="tabs-select-3">{% trans "Map" %}</li>
-            <li class="tab" id="tabs-select-4">{% trans "Log" %}</li>
+            <li class="tab selected" id="tabs-select-1"><h3>{% trans "Turan?" %}</h3></li>
+            <li class="tab" id="tabs-select-2"><h3>{% trans "Analyze" %}</h3></li>
+            <li class="tab" id="tabs-select-3"><h3>{% trans "Map" %}</h3></li>
+            <li class="tab" id="tabs-select-4"><h3>{% trans "Log" %}</h3></li>
         </ul>
         <div id="tabs-1" class="visible">
             <p>
@@ -168,16 +168,16 @@
     </div>
     <script type="text/javascript">
         function selectTab(evt) {
-            var id = evt.target.id;
+            var id = evt.target.id ? evt.target.id : evt.target.parentNode.id;
             id = "tabs-" + id.split('-')[2];
             $('#tabs div.visible').removeClass('visible');
             $('#tabs div#' + id).addClass('visible');
             $('#tabs ul li').removeClass('selected');
             $(this).addClass('selected');
         }
-    $('#tabs ul li.tab').each(function () {
+        $('#tabs ul li.tab').each(function () {
             $(this).bind("click", selectTab);
-            });
+        });
     </script>
 
     <hr class="clear" />

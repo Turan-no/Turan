@@ -16,18 +16,23 @@ p {
 h1 {
 	font-size: 175%;
 	font-weight: bolder;
-    margin: 0;
-	margin: 1em 0 0.5em;
+	margin: 0 0 7px;
 }
 h2 {
-	font-size: 152%;
-	font-weight: bolder;
-	margin: 1em 0 0.5em;
+	font-size: 150%;
+	font-weight: normal;
+	margin: 0 0 4px;
 }
 h3 {
-	font-size: 130%;
+	font-size: 135%;
 	font-weight: normal;
-	margin: 1em 0 0.5em;
+	margin: 0 0 4px;
+}
+
+h4 {
+	font-size: 120%;
+	font-weight: normal;
+	margin: 0 0 2px;
 }
 
 /* Tables */
@@ -619,7 +624,7 @@ div.mapcontainer {
     height: 20px;
     list-style-type: none;
     margin: 2px 2px 0px 2px;
-    padding: 3px;
+    padding: 0 3px 3px 3px;
     background-color: #DEF;
     cursor: pointer;
     color: #444; /* unselected tab text colour */
@@ -776,6 +781,10 @@ div.averages li {
 }
 div.averages h4 {
     margin: 0;
+}
+ul.routes,
+ul.trips {
+    margin-bottom: 7px;
 }
 ul.routes li {
     list-style-type: none;
