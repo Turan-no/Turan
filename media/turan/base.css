@@ -796,6 +796,9 @@ ul.trips li {
 .detailsShareBoxButton.gpxFile  {
     background-position:-5px -706px;
 }
+.detailsShareBoxButton.kmlFile  {
+    background-position:-5px -856px;
+}
 .detailsShareBoxButton {
     background:url("/site_media/turan/details-icons.png") no-repeat scroll -3px -5px transparent;
     color:#494949;
