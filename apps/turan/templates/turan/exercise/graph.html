@@ -62,7 +62,8 @@ $(function () {
     function findMinMaxAvg(datasets, from, to) {
         var avgs = {};
         for (key in datasets) {
-            var avg = { sum: 0, num: 0, avg: null, min: null, max: null };
+            var avg = { sum: 0, num: 0, avg: null, min: null, max: null, incline: null, decline: null };
+            var lastAltitude = null;
             var label = datasets[key].label;
             for (l in datasets[key].data) {
                 var pos = datasets[key].data[l][0];
@@ -80,6 +81,23 @@ $(function () {
 
                     avg.sum += value;
                     avg.num++;
+
+                    if (key == "altitude") {
+                        if (avg.incline == null) 
+                            avg.incline = 0;
+                        if (avg.decline == null) 
+                            avg.decline = 0;
+
+                        var altitude = datasets[key].data[l][1];
+                        if (lastAltitude != null) {
+                            if (altitude > lastAltitude) {
+                                avg.incline += altitude - lastAltitude;
+                            } else if (altitude < lastAltitude) {
+                                avg.decline += lastAltitude - altitude;
+                            }
+                        }
+                        lastAltitude = altitude;
+                    }
                 }
             }
             if (avg.num > 0) {
@@ -127,17 +145,20 @@ $(function () {
             });
         }
 
-        var avgs = findMinMaxAvg(datasets, min, max);
+        avgs = findMinMaxAvg(datasets, min, max);
         var avglist = $("#averages{{object.id}} ul").empty();
         var hasItems = false;
         for (k in avgs) {
             hasItems = true;
-            avglist.append("<li style=\"margin-left: 30px; float:left\" class=\"" + k + "\"><span class=\"label\">" + 
-                    avgs[k].label + ": </span>" + 
-                    Math.round(avgs[k].min*10)/10 + 
-                    "/" + Math.round(avgs[k].max*10)/10 + 
-                    (k != "altitude" ? "/" + Math.round(avgs[k].avg*10)/10 : "") 
-                    + "</li>");
+            var text = "<li style=\"margin-left: 30px; float:left\" class=\"" + k + "\"><span class=\"label\">" + (k != "altitude" ? avgs[k].label : "{% trans "Ascent" %}/{% trans "Descent" %}") + ": </span>"
+            if (k != "altitude") {
+                text += Math.round(avgs[k].min*10)/10 + "/" + Math.round(avgs[k].max*10)/10 + "/" + Math.round(avgs[k].avg*10)/10;
+            }
+            else {
+                text += Math.round(avgs[k].incline*10)/10 + "/" + Math.round(avgs[k].decline*10)/10;
+            }
+            text += "</li>";
+            avglist.append(text);
         }
         if (hasItems) {
             $("#averages{{object.id}} h4").show();
