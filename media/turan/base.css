@@ -566,10 +566,6 @@ table.month .today div.day {
     background-color: #7e7;
 }
 
-div.graph {
-	background: #eee;
-	border: 1px solid #99BBCC;
-}
 div.map {
     width: 500px;
     height: 500px;
@@ -599,6 +595,7 @@ div.mapcontainer {
     display: block;
 	border: 1px solid #99BBCC;
     position: relative;
+    padding: 5px;
     left: 0px;
 }
 #tabs>ul {
