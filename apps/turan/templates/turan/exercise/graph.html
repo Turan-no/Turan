@@ -62,7 +62,7 @@ $(function () {
     function findMinMaxAvg(datasets, from, to) {
         var avgs = {};
         for (key in datasets) {
-            var avg = { sum: 0, num: 0, avg: null, min: null, max: null, incline: null, decline: null };
+            var avg = { sum: 0, num: 0, avg: null, min: null, max: null, incline: null, decline: null, length: null };
             var lastAltitude = null;
             var label = datasets[key].label;
             for (l in datasets[key].data) {
@@ -147,20 +147,23 @@ $(function () {
 
         avgs = findMinMaxAvg(datasets, min, max);
         var avglist = $("#averages{{object.id}} ul").empty();
-        var hasItems = false;
-        for (k in avgs) {
-            hasItems = true;
-            var text = "<li style=\"margin-left: 30px; float:left\" class=\"" + k + "\"><span class=\"label\">" + (k != "altitude" ? avgs[k].label : "{% trans "Ascent" %}/{% trans "Descent" %}") + ": </span>"
-            if (k != "altitude") {
-                text += Math.round(avgs[k].min*10)/10 + "/" + Math.round(avgs[k].max*10)/10 + "/" + Math.round(avgs[k].avg*10)/10;
+
+        // Only show if we've selected an area
+        if (min != null) {
+            var text = "";
+            for (k in avgs) {
+                text += "<li style=\"margin-left: 30px; float:left\" class=\"" + k + "\"><span class=\"label\">" + (k != "altitude" ? avgs[k].label : "{% trans "Ascent" %}/{% trans "Descent" %}") + ": </span>";
+                if (k != "altitude") {
+                    text += Math.round(avgs[k].min*10)/10 + "/" + Math.round(avgs[k].max*10)/10 + "/" + Math.round(avgs[k].avg*10)/10;
+                }
+                else {
+                    text += Math.round(avgs[k].incline*10)/10 + "/" + Math.round(avgs[k].decline*10)/10;
+                }
+                text += "</li>";
             }
-            else {
-                text += Math.round(avgs[k].incline*10)/10 + "/" + Math.round(avgs[k].decline*10)/10;
-            }
-            text += "</li>";
+            text += "<li style=\"margin-left: 30px; float:left\" class=\"distance\"><span class=\"label\">{% trans "Distance" %}: </span>" + Math.round(datasets['speed'].data[datasets['speed'].data.length-1][0] - datasets['speed'].data[0][0] * 10)/10 + "</span></li>";
             avglist.append(text);
-        }
-        if (hasItems) {
+
             $("#averages{{object.id}} h4").show();
         }
         else {
