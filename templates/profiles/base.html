@@ -2,6 +2,10 @@
 
 {% load i18n %}
 
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}turan/base.css" />
+{% endblock %}
+
 {% block subnav %}
     {% if user.is_authenticated %}
         <ul>
