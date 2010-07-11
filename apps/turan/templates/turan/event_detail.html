@@ -8,7 +8,7 @@
 {% block searchenginemeta %}
 {% tags_for_object object as tag_list %}
 <meta name="keywords" content="{% if tag_list %}{{ tag_list|join:","|escape }},{% endif %}sykkel,tur,trening,exercise" />
-<meta name="description" content="{{ object.comment|escape }}" />
+<meta name="description" content="{{ object.comment|truncatewords:10|escape }}" />
 {% endblock %}
 {% block extra_head %}
 {{ block.super }}
