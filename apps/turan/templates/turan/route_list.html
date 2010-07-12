@@ -99,7 +99,7 @@
             {% anchor created %}
         </th>
         <th class="number">
-            {% trans "Trip count" %}
+            {% anchor tcount "Trip count" %}
         </th>
     </tr>
 {% for object in object_list %}
@@ -123,7 +123,7 @@
         {{ object.created|naturalday}}
         {% endif %}
     </td>
-    <td class="number">{{ object.tripcount }}</td>
+    <td class="number">{{ object.tcount }}</td>
 </tr>
 
 {%endfor %}

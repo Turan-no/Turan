@@ -53,7 +53,7 @@ urlpatterns = patterns('',
 
 # Lists and details
 urlpatterns += patterns('django.views.generic.list_detail',
-    url(r'^route/?$', turan_object_list, { 'queryset': Route.objects.select_related().filter(distance__gt=0), }, name='routes'),
+    url(r'^route/?$', turan_object_list, { 'queryset': Route.objects.select_related().filter(distance__gt=0).extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }) }, name='routes'),
 
     url(r'^exercise/?$', turan_object_list, { 'queryset': Exercise.objects.select_related().order_by('-date') }, name='exercises'),
     url(r'^exercise/(?P<object_id>\d+)', exercise, name='exercise'),
