@@ -1,230 +1,49 @@
 {% load i18n %}
 <p style="float: right;" id="choices">{% trans "Show" %}:</p>
-<div id="tripdiv_legend{{object.id}}" style="width:100px;height:400px; float: right;"></div>
-<div id="tripdiv{{object.id}}" style="width:750px;height:400px; background: white;"></div>
-<div class="averages" id="averages{{object.id}}">
+<div id="tripdiv_legend" style="width:100px;height:400px; float: right;"></div>
+<div id="tripdiv" style="width:750px;height:400px; background: white;"></div>
+<div class="averages" id="averages">
     <h4 style="display: none">{% trans "Selected min/max/avg" %}</h4>
     <ul><li></li></ul>
     <hr class="clear" />
 </div>
 
-<script id="source" type="text/javascript">
-// <![CDATA[
-var plot;
-$(function () {
+<script id="source" type="text/javascript" src="{{ MEDIA_URL }}turan/graphplotter.js"></script>
+<script type="text/javascript">
+    function evaluate(y,threshold) { 
+        return y < threshold;
+    }
     var constraint0 = {
         threshold: {{ max_hr }}*0.6,
         color: "rgb(240,240,240)",
-        evaluate : function(y,threshold){ return y < threshold; }
+        evaluate : evaluate
     }
     var constraint1 = {
         threshold: {{ max_hr }}*0.72,
         color: "rgb(204,204,204)",
-        evaluate : function(y,threshold){ return y < threshold; }
+        evaluate : evaluate
     }
     var constraint2 = {
         threshold: {{ max_hr }}*0.82,
         color: "rgb(51,102,255)",
-        evaluate : function(y,threshold){ return y < threshold; }
+        evaluate : evaluate
     }
     var constraint3 = {
         threshold: {{ max_hr }}*0.87,
         color: "rgb(102,204,0)",
-        evaluate : function(y,threshold){ return y < threshold; }
+        evaluate : evaluate
     }
     var constraint4 = {
         threshold: {{ max_hr }}*0.92,
         color: "rgb(255,153,0)",
-        evaluate : function(y,threshold){ return y < threshold; }
+        evaluate : evaluate
     }
     var constraint5 = {
         threshold: {{ max_hr }}*0.97,
         color: "rgb(255,0,0)",
-        evaluate : function(y,threshold){ return y < threshold; }
+        evaluate : evaluate
     }
     datasets = {{ datasets }};
-    var choiceContainer = $("#choices");
-    $.each(datasets, function(key, val) {
-        choiceContainer.append('<br/><input type="checkbox" name="' + key +
-            '" checked="checked" id="chk_' + key + '"><label for="chk_' + key + 
-            '">' + val.label + '</label></input>');
-    });
-    choiceContainer.append('<br /><input type="reset" value="{% trans "Reset zoom" %}" />');
-    choiceContainer.find("input").click(plotAccordingToChoices);
-
-    $("#tripdiv{{object.id}}").bind("plotselected", function (event, ranges) {
-        plotAccordingToChoices(ranges);
-    });
-//    function suffixFormatter(val, axis) {
-//        return val.toFixed(axis.tickDecimals) + "km";
-//    }
-
-    function findMinMaxAvg(datasets, from, to) {
-        var avgs = {};
-        for (key in datasets) {
-            var avg = { start: null, end: null, sum: 0, num: 0, avg: null, min: null, max: null, incline: null, decline: null, length: null };
-            var lastAltitude = null;
-            var label = datasets[key].label;
-            for (l in datasets[key].data) {
-                var pos = datasets[key].data[l][0];
-                if (from != null && (pos >= from && pos <= to)) {
-                    if (avg.start == null)
-                        avg.start = pos;
-                    avg.end = pos;
-
-                    var value = datasets[key].data[l][1];
-                    if (avg.min == null)
-                        avg.min = value;
-                    else
-                        avg.min = Math.min(avg.min, value);
-
-                    if (avg.max == null)
-                        avg.max = value;
-                    else
-                        avg.max = Math.max(avg.max, value);
-
-                    avg.sum += value;
-                    avg.num++;
-
-                    if (key == "altitude") {
-                        if (avg.incline == null) 
-                            avg.incline = 0;
-                        if (avg.decline == null) 
-                            avg.decline = 0;
-
-                        var altitude = datasets[key].data[l][1];
-                        if (lastAltitude != null) {
-                            if (altitude > lastAltitude) {
-                                avg.incline += altitude - lastAltitude;
-                            } else if (altitude < lastAltitude) {
-                                avg.decline += lastAltitude - altitude;
-                            }
-                        }
-                        lastAltitude = altitude;
-                    }
-                }
-            }
-            if (avg.num > 0) {
-                avg.avg = avg.sum / avg.num;
-                avg.label = datasets[key].label;
-                avgs[key] = avg;
-            }
-        }
-        return avgs;
-    }
-
-    function plotAccordingToChoices(ranges) {
-        data = [];
-        var min = null;
-        var max = null;
-        var xaxisattrs = { 
-                tickDecimals: 0,
-//                tickFormatter: suffixFormatter,
-        };
-        if (ranges.xaxis != undefined) {
-            min = ranges.xaxis.from;
-            max = ranges.xaxis.to;
-            xaxisattrs.min = min;
-            xaxisattrs.max = max;
-        }
-        choiceContainer.find("input:checked").each(function () {
-            var key = $(this).attr("name");
-            if (key && datasets[key])
-                data.push(datasets[key]);
-        });
-
-        if (data.length > 0) {
-            plot = $.plot($("#tripdiv{{object.id}}"), data, {
-                yaxes: [{ min: 0 }, { min: 80 {{maxhr_js}} }],
-                xaxis: xaxisattrs,
-                legend: { container: $("#tripdiv_legend{{object.id}}") },
-                grid: { 
-                    hoverable: true, 
-                    clickable: true,
-//                    markings: [ { xaxis: { from: 0, to: 50 }, 
-//                                  y2axis: { from: 160, to: 180 }, 
-//                                  color: rgba(20%, 40%, 90%, 0.2) }, ],
-                },
-                selection: { mode: "x" }
-            });
-        }
-
-        avgs = findMinMaxAvg(datasets, min, max);
-        var avglist = $("#averages{{object.id}} ul").empty();
-
-        // Only show if we've selected an area
-        if (min != null) {
-            var text = "";
-            for (k in avgs) {
-                text += "<li style=\"margin-left: 30px; float:left\" class=\"" + k + "\"><span class=\"label\">" + (k != "altitude" ? avgs[k].label : "{% trans "Ascent" %}/{% trans "Descent" %}") + ": </span>";
-                if (k != "altitude") {
-                    text += Math.round(avgs[k].min*10)/10 + "/" + Math.round(avgs[k].max*10)/10 + "/" + Math.round(avgs[k].avg*10)/10;
-                }
-                else {
-                    text += Math.round(avgs[k].incline*10)/10 + "/" + Math.round(avgs[k].decline*10)/10;
-                }
-                text += "</li>";
-            }
-            text += "<li style=\"margin-left: 30px; float:left\" class=\"distance\"><span class=\"label\">{% trans "Distance" %}: </span>" + Math.round((avgs['speed'].end - avgs['speed'].start) * 10)/10 + "</span></li>";
-            avglist.append(text);
-
-            $("#averages{{object.id}} h4").show();
-        }
-        else {
-            $("#averages{{object.id}} h4").hide();
-        }
-
-    }
-    plotAccordingToChoices({});
-
-    function showTooltip(x, y, contents) {
-        $('<div id="tooltip">' + contents + '</div>').css( {
-            position: 'absolute',
-            display: 'none',
-            top: y + 5,
-            left: x + 5,
-            border: '1px solid #fdd',
-            padding: '2px',
-            'background-color': '#fee',
-            opacity: 0.80
-        }).appendTo("body").fadeIn(200);
-    }
-
-    var previousPoint = null;
-    $("#tripdiv{{object.id}}").bind("plothover", function (event, pos, item) {
-        var y = 0;
-        if (pos.y)
-            y = pos.y;
-        else
-            y = pos.y2;
-
-        if (item) {
-            if (previousPoint != item.datapoint) {
-                previousPoint = item.datapoint;
-                
-                $("#tooltip").remove();
-                var x = item.datapoint[0].toFixed(2),
-                    y = item.datapoint[1].toFixed(2);
-                
-                showTooltip(item.pageX, item.pageY,
-                item.series.label + " {% trans "at" %} " + x + " {% trans "is" %} " + y);
-            }
-        }
-        else {
-            $("#tooltip").remove();
-            previousPoint = null;            
-        }
-    });
-
-    $("#tripdiv{{object.id}}").bind("plotclick", function (event, pos, item) {
-        if (item) {
-            $("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
-            plot.highlight(item.series, item.datapoint);
-        }
-    });
-
-
-
-});
-// ]]>
+    GraphPlotter.init(datasets);
 </script>
+
