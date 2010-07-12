@@ -2,104 +2,17 @@
 {% if gpx_file %}
     <script type="text/javascript" src="http://openlayers.org/api/2.8/OpenLayers.js"></script>
     <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
- 
+    <script type="text/javascript" src="{{ MEDIA_URL }}turan/mapper.js"></script>
+
     <script type="text/javascript">
         var map;
- 
-        function resizeMapToLayerExtents(evt) {
-            //map.render("map");
-            map.zoomToExtent(evt.object.getDataExtent());
-        }
-
-        var projection = new OpenLayers.Projection("EPSG:4326");
- 
-        function init() {
-            var lgpx = new OpenLayers.Layer.GML("{% trans "Route" %}", "{{MEDIA_URL}}turan/{{ gpx_file }}", {
-                format: OpenLayers.Format.GPX,
-                style: {strokeColor: "purple", strokeWidth: 5, strokeOpacity: 0.5, label: "Start"},
-                projection: projection,
-                
-            });
-            lgpx.events.register("loadend", this, resizeMapToLayerExtents);
-
-            map = new OpenLayers.Map ({
-                controls:[
-                    new OpenLayers.Control.Navigation(),
-                    new OpenLayers.Control.PanZoomBar(),
-                    new OpenLayers.Control.MousePosition(),
-                    //new OpenLayers.Control.Permalink('permalink'),
-                    new OpenLayers.Control.OverviewMap(),
-                    new OpenLayers.Control.LayerSwitcher(),
-                    new OpenLayers.Control.Attribution()],
-                //maxExtent: lgpx.getDataExtent(),
-                maxResolution: 59.0399,
-                numZoomLevels: 19,
-                units: 'm',
-                projection: projection,
-                displayProjection: projection
-            } );
- 
- 
-            var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
-            var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
-            var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
-
-            map.addLayers([layerMapnik, layerCycleMap, layerTilesAtHome, lgpx ]);
-
-            {% if object.route.start_lat %} 
-                var size = new OpenLayers.Size(20,25);
-                var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-                var startlonlat = new OpenLayers.LonLat({{object.route.start_lon}},{{object.route.start_lat}}).transform(projection, map.getProjectionObject());
-                var endlonlat = new OpenLayers.LonLat({{object.route.end_lon}},{{object.route.end_lat}}).transform(projection, map.getProjectionObject());
-
-                var icon = new OpenLayers.Icon('http://www.openstreetmap.org/openlayers/img/marker.png',size,offset);
-                layerMarkers = new OpenLayers.Layer.Markers("Markers");
-                map.addLayer(layerMarkers);
-
-                layerMarkers.addMarker(new OpenLayers.Marker(startlonlat, icon));
-                layerMarkers.addMarker(new OpenLayers.Marker(endlonlat, icon.clone()));
-            {% endif %}
-
-            {% if object.get_geojson_url %}
-
-            var styles = new OpenLayers.StyleMap({
-                    "default": {
-                        strokeWidth: 2
-                    },
-                    "select": {
-                        strokeColor: "#0099cc",
-                        strokeWidth: 4
-                    }
-                });
-            
-                // add rules from the above lookup table
-            styles.addUniqueValueRules("default", "ZONE", {
-                    0: {strokeColor: "#CCCCCC", strokeWidth: 4},
-                    1: {strokeColor: "#3366FF", strokeWidth: 4},
-                    2: {strokeColor: "#66CC00", strokeWidth: 4},
-                    3: {strokeColor: "#FF00FF", strokeWidth: 4},
-                    4: {strokeColor: "#FF9900", strokeWidth: 4},
-                    5: {strokeColor: "#FF99FF", strokeWidth: 4},
-                    6: {strokeColor: "#FF99FF", strokeWidth: 4},
-                });
-
-            var vectors = new OpenLayers.Layer.Vector("HR Line", {
-                    strategies: [new OpenLayers.Strategy.Fixed()],                
-                    protocol: new OpenLayers.Protocol.HTTP({
-                        url: "{{ object.get_geojson_url }}",
-                        format: new OpenLayers.Format.GeoJSON()
-                    }),
-                    styleMap: styles
-                });
-            
-            map.addLayer(vectors);
-            {% endif %}
- 
-            map.render("map");
- 
-
-        }
-     $(document).ready(init);
-
+        $(document).ready(function(evt) {
+            map = Mapper.init(
+                "{{ MEDIA_URL }}turan/{{ gpx_file }}", 
+                "{{ object.get_geojson_url }}",
+                [{{object.route.start_lon}}, {{object.route.start_lat}}], 
+                [{{object.route.end_lon}}, {{object.route.end_lat}}]
+            );
+        });
     </script>
-{% endif %}
+{% endif %} 
