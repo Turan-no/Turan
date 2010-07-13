@@ -16,7 +16,6 @@ feeds = {
     'trips': TripsFeed,
 }
 urlpatterns = patterns('',
-    url(r'^robots\.txt$', 'django.views.generic.simple.direct_to_template', {'template': 'turan/robots.txt'}),
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemaps}),
     url(r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
     url(r'^events/?$', events, name='events'),

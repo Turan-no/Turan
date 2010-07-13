@@ -285,11 +285,9 @@ h1 a
 /* Alignment */
 .floatleft {
 	float: left;
-	margin-right: 1em;
 }
 .floatright {
 	float: right;
-	margin-left: 1em;
 }
 .alignleft {
 	text-align: left;
@@ -812,5 +810,30 @@ ul.trips li {
 div.searchfilters {
     margin-top: 8px;
     float: right;
+}
+
+div.profile ul {
+    float: left;
+}
+div.profile ul li a {
+    font-size: 115%;
+}
+div.profile ul li {
+    padding: 0;
+    margin: 0 0 0 5px;
+    list-style-type: none;
+}
+ul.horizlist,
+ul.horizlist li {
+    margin-left: 8px;
+    float: left;
+}
+div.profile div {
+    margin-right: 5px;
+}
+div.profile {
+    clear: left;
+    overflow: auto;
+    margin: 7px 0;
 }
 
