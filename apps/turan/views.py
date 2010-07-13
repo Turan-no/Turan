@@ -73,12 +73,18 @@ def index(request):
     exercise_list = Exercise.objects.all()[:10]
     comment_list = Comment.objects.order_by('-submit_date', '-time')[:5]
 
-    route_list = Route.objects.all()
+    route_list = Route.objects.all()# .extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['tcount'])
     route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
 
     tag_list = Tag.objects.cloud_for_model(Exercise)
 
-    user_list = sorted(User.objects.filter(exercise__duration__gt=0).annotate(e = Sum('exercise__duration')), key= lambda x: -x.e)
+
+
+    # Top exercisers last 90
+    today = datetimedate.today()
+    days = timedelta(days=90)
+    begin = today - days
+    user_list = sorted(User.objects.filter(exercise__duration__gt=0).filter(exercise__date__range=(begin, today)).annotate(e = Sum('exercise__duration')), key= lambda x: -x.e)
 
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))
 
@@ -1079,21 +1085,6 @@ def exercise(request, object_id):
                 details[i].poweravg30s = poweravg30s[i]
             object.normalized = normalized_power(poweravg30s)
 
-            #best_power = {}
-            #j = 0
-            #for i in effort_range:
-            #    try:
-            #        best_power[j] = {}
-            #        best_power[j]['power'], best_power[j]['pos'], best_power[j]['length'] = best_x_sec_power(details, i)
-            #        best_power[j]['dur'] = i
-            #        best_power[j]['wkg'] = best_power[j]['power'] / userweight 
-            #    except:
-            #        #raise
-            #        del best_power[j]
-            #        pass
-            #    j += 1
-
-            #object.best_power = best_power
     datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
 
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
@@ -1340,30 +1331,6 @@ def power_30s_average(details):
             poweravg30s.append(foo/foo_element)
 
     return poweravg30s
-
-# def best_x_sec_power(details, length):
-# 
-#    best = 0.0
-#    best_start_km = 0.0
-#    q = deque()
-# 
-#    for i in xrange(0, length):
-#        q.appendleft(details[i].power)
-# 
-#    for i in xrange(length, len(details)):
-# 
-#        sum_q = sum(q)
-#        if sum_q > best:
-#            best = sum_q
-#            best_start_km = details[i-length].distance / 1000
-#            best_length = (details[i].distance / 1000) - best_start_km
-# 
-#        q.appendleft(details[i].power)
-#        q.pop()
-# 
-#    best = best / length
-# 
-#    return best, best_start_km, best_length
 
 def best_x_sec(details, length, power):
 
