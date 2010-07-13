@@ -14,6 +14,8 @@ from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 from django.core.files.base import ContentFile
 from tagging.fields import TagField
 
+from photos.models import Pool, Image
+
 from datetime import datetime
 
 from svg import GPX2SVG
@@ -111,6 +113,14 @@ class Route(models.Model):
 
     def get_trips(self):
         return self.exercise_set.all().order_by('duration')
+
+    def get_photos(self):
+        ct = ContentType.objects.get_for_model(self)
+        return [pool.photo for pool in Pool.objects.filter(content_type=ct, object_id=self.id)]
+
+    def add_photo(self, photo):
+        p = Pool(content_object=self, image=photo)
+        p.save()
 
     @property
     def tripcount(self):
