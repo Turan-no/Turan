@@ -352,7 +352,7 @@ def profile_statistics(request, username, template_name="profiles/statistics.htm
     exerciseqs = other_user.exercise_set.filter(**tfilter).order_by('date')
 
     for trip in exerciseqs:
-        if trip.avg_speed and trip.exercise_type.name=="Cycling":
+        if trip.avg_speed and trip.exercise_type.name=="Cycling" and trip.route.distance >= 10.0:
             # only increase counter if trip has speed
             avgspeeddataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed)
             total_avg_speed += trip.avg_speed
