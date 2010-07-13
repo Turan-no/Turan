@@ -73,12 +73,18 @@ def index(request):
     exercise_list = Exercise.objects.all()[:10]
     comment_list = Comment.objects.order_by('-submit_date', '-time')[:5]
 
-    route_list = Route.objects.all()
+    route_list = Route.objects.all()# .extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['tcount'])
     route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
 
     tag_list = Tag.objects.cloud_for_model(Exercise)
 
-    user_list = sorted(User.objects.filter(exercise__duration__gt=0).annotate(e = Sum('exercise__duration')), key= lambda x: -x.e)
+
+
+    # Top exercisers last 90
+    today = datetimedate.today()
+    days = timedelta(days=90)
+    begin = today - days
+    user_list = sorted(User.objects.filter(exercise__duration__gt=0).filter(exercise__date__range=(begin, today)).annotate(e = Sum('exercise__duration')), key= lambda x: -x.e)
 
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))
 
