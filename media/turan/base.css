@@ -836,4 +836,17 @@ div.profile {
     overflow: auto;
     margin: 7px 0;
 }
+ul.photos li:hover {
+    background-color: #cde;
+}
+ul.photos li {
+    padding: 3px;
+    margin: 0 0 6px 6px;
+    background-color: #ccc;
+    line-height: 0;
+}
+ul.photos {
+    width: 458px;
+    padding: 0;
+}
 
