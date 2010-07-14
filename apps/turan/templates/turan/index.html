@@ -20,7 +20,9 @@
     <ul class="trips">
         {% for object in exercise_list %}
         <li class="{% cycle "even" "odd" %}">
-            <img alt="User image" class="floatleft" src="{{ object.icon|safe }}" width="32" height="32" />
+            <a href="{{ object.get_absolute_url }}">
+                <img alt="User image" class="floatleft" src="{{ object.icon|safe }}" width="32" height="32" />
+            </a>
             <a class="floatright" href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
             <a href="{{ object.get_absolute_url }}">
                 {{ object|slice:":35" }}
