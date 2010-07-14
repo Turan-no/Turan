@@ -84,7 +84,7 @@ def index(request):
     today = datetimedate.today()
     days = timedelta(days=14)
     begin = today - days
-    user_list = sorted(User.objects.filter(exercise__duration__gt=0).filter(exercise__date__range=(begin, today)).annotate(e = Sum('exercise__duration')), key= lambda x: -x.e)
+    user_list = User.objects.filter(exercise__duration__gt=0).filter(exercise__date__range=(begin, today)).annotate(Sum('exercise__duration')).order_by('-exercise__duration__sum')
 
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))
 
