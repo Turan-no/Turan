@@ -31,6 +31,11 @@ from gpxwriter import GPXWriter
 
 import numpy
 
+if "notification" in settings.INSTALLED_APPS:
+    from notification import models as notification
+else:
+    notification = None
+
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 
 class RouteManager(models.Manager):
@@ -598,3 +603,13 @@ def normalize_altitude(event):
         for d in event.get_details().all():
             d.altitude += altitude_min
             d.save()
+
+# handle notification of new comments
+from threadedcomments.models import ThreadedComment
+def new_comment(sender, instance, **kwargs):
+    if isinstance(instance.content_object, Exercise):
+        exercise = instance.content_object
+        if notification:
+            notification.send([exercise.user], "exercise_comment",
+                {"user": instance.user, "exercise": exercise, "comment": instance})
+models.signals.post_save.connect(new_comment, sender=ThreadedComment)
