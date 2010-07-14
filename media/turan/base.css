@@ -784,6 +784,9 @@ ul.routes,
 ul.trips {
     margin-bottom: 7px;
 }
+ul.trips li img {
+    margin-right: 13px;
+}
 ul.routes li,
 ul.trips li {
     list-style-type: none;
