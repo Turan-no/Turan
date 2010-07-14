@@ -28,7 +28,13 @@
 <div class="attributes">
 {% include "turan/route/attributes.html" %}
 </div>
-
+<ul class="photos">
+    {% for photo in object.get_photos %}
+    <li>
+        <img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}" />
+    </li>
+    {% endfor %}
+</ul>
 
 {% comment %}
 <ul class="buttons">
