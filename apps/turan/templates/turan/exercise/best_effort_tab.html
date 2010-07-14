@@ -51,7 +51,7 @@
                 {{ effort.power_pos|floatformat }} {% trans "km" %}
             </td>
             <td>
-                {{ effort.power_length|floatformat }} {% trans "m" %}
+                {{ effort.power_length|distanceformat }}
             </td>
         </tr>
         {% endfor %}
@@ -99,7 +99,7 @@
                 {{ effort.speed_pos|floatformat }} {% trans "km" %}
             </td>
             <td>
-                {{ effort.speed_length|floatformat }} {% trans "m" %}
+                {{ effort.speed_length|distanceformat }}
             </td>
         </tr>
         {% endfor %}

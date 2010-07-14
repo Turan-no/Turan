@@ -142,3 +142,9 @@ def model_verbose_name_plural(obj):
     ''' Return a model's verbose plural name '''
     return obj._meta.verbose_name_plural
 
+@register.filter
+def distanceformat(value):
+    if value > 9999.9:
+        return str(round(value / 1000.0, 1)) + " km"
+    else:
+        return str(int(round(value, 0))) + " m"
