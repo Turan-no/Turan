@@ -1069,7 +1069,6 @@ def exercise(request, object_id):
 
                 best[j]['dur'] = i
             except:
-                raise
                 del best[j]
                 pass
             else:
@@ -1385,11 +1384,11 @@ def best_x_sec(details, length, power):
             if sum_q_speed > best_speed:
                 best_speed = sum_q_speed
                 best_start_km_speed = details[i-len(q_speed)].distance / 1000
-                best_length_speed = (details[i].distance/1000) - best_start_km_speed
+                best_length_speed = (details[i].distance) - best_start_km_speed * 1000
             if sum_q_power > best_power:
                 best_power = sum_q_power
                 best_start_km_power = details[i-len(q_power)].distance / 1000
-                best_length_power = (details[i].distance/1000) - best_start_km_power
+                best_length_power = (details[i].distance) - best_start_km_power * 1000
 
             delta_t = (details[i].time - details[i-1].time).seconds
             q_speed.appendleft(details[i].speed*delta_t)
