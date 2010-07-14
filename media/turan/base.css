@@ -670,9 +670,15 @@ table.month th {
 
 table.month ul li {
     list-style-type: none;
-    padding: 5px 2px 9px 2px;
-    margin: 2px 3px 2px 3px;
+    padding: 2px 1px 8px 1px;
+    margin: 2px 2px 2px 1px;
     background-color: #eee;
+}
+table.month img {
+    float: left;
+    padding: 0 2px 2px 0;
+    height: 24px;
+    width: 24px;
 }
 table.month a {
     font-size: 11px;
