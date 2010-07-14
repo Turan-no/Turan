@@ -7,6 +7,7 @@ if "notification" in settings.INSTALLED_APPS:
 
     def create_notice_types(app, created_models, verbosity, **kwargs):
         notification.create_notice_type("exercise_create", _("New exercise logged"), _("a friend logged an exercise"), default=1)
+        notification.create_notice_type("exercise_comment", _("New Comment on Exercise"), _("a comment was made on one of your exercises"), default=2)
 
     signals.post_syncdb.connect(create_notice_types, sender=notification)
 else:
