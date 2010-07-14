@@ -82,7 +82,7 @@ def index(request):
 
     # Top exercisers last 90
     today = datetimedate.today()
-    days = timedelta(days=90)
+    days = timedelta(days=14)
     begin = today - days
     user_list = sorted(User.objects.filter(exercise__duration__gt=0).filter(exercise__date__range=(begin, today)).annotate(e = Sum('exercise__duration')), key= lambda x: -x.e)
 
