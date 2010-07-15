@@ -1059,12 +1059,12 @@ def exercise(request, object_id):
         power_show = True
         #poweravg30_show = True
 
-        if not object.user == request.user:
+        if not object.user == request.user and object.avg_power:
 
             is_friend = False
 
             if request.user.is_authenticated():
-                is_friend = Friendship.objects.are_friends(request.user, exercise.user)
+                is_friend = Friendship.objects.are_friends(request.user, object.user)
             # Check for permission to display attributes
             try:
                 # Try to find permission object for this exercise
