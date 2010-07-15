@@ -82,7 +82,7 @@ var GraphPlotter = {
 
         if (data.length > 0) {
             plot = $.plot($("#tripdiv"), data, {
-                yaxes: [{ min: 0 }, { min: 80 }],
+                yaxes: [{ min: 0 }, { position: "right", min: 80 }, { position: "right"}],
                 xaxis: xaxisattrs,
                 legend: { container: $("#tripdiv_legend") },
                 grid: { 

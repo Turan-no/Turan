@@ -37,6 +37,7 @@
             label: "{% trans "Power" %}",
             points: { show: false } ,
             color: 5,
+            yaxis: 3,
             },
         {% endif %}
         {% if poweravg30s%}
@@ -45,6 +46,7 @@
             label: "{% trans "Power Avg30" %}",
             points: { show: false } ,
             color: 4,
+            yaxis: 3,
             },
         {% endif %}
 }

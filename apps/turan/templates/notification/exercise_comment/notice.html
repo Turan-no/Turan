@@ -1,0 +1,2 @@
+{% load i18n %}{% url profile_detail username=user.username as user_url %}
+{% blocktrans with exercise.get_absolute_url as exercise_url %}<a href="{{ user_url }}">{{ user }}</a> has commented on your exercise '<a href="{{ exercise_url }}">{{ exercise }}</a>'.{% endblocktrans %}

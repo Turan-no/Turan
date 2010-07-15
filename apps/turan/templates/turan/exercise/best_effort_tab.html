@@ -2,7 +2,7 @@
 {% load turan_extras %}
 <div id="besteffortdiv" style="width:400px;height:400px; float: right;"></div>
 <div id="bestefforttable" style="width:500px;">
-    {% if object.avg_power %}
+    {% if object.avg_power and power_show %}
     <table class="fullsize">
         <tr>
             <th>
@@ -24,37 +24,37 @@
                 {% trans "Length" %}
             </th>
         </tr>
-        {% for key, effort in object.best.items %}
-        <tr>
-                <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
-                    <script type="text/javascript">
-                        $('#pzoom{{forloop.counter0}}-link-1').bind("click", 
-                                function (evt) { 
-                                plot.setSelection({ 
-                                    xaxis: { 
-                                        from: {{effort.power_pos}}, to: {{effort.power_pos}}+{{effort.power_length}}/1000
-                                    }
-                                })
-                                });
-                    </script>
+            {% for key, effort in object.best.items %}
+            <tr>
+                    <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
+                        <script type="text/javascript">
+                            $('#pzoom{{forloop.counter0}}-link-1').bind("click", 
+                                    function (evt) { 
+                                    plot.setSelection({ 
+                                        xaxis: { 
+                                            from: {{effort.power_pos}}, to: {{effort.power_pos}}+{{effort.power_length}}/1000
+                                        }
+                                    })
+                                    });
+                        </script>
+                    </td>
+                <td> 
+                    {{ effort.dur|durationformat }} 
                 </td>
-            <td> 
-                {{ effort.dur|durationformat }} 
-            </td>
-            <td>
-                {{ effort.power }} {% trans "W" %}
-            </td>
-            <td>
-                {{ effort.wkg|floatformat }} {% trans "W/kg" %}
-            </td>
-            <td>
-                {{ effort.power_pos|floatformat }} {% trans "km" %}
-            </td>
-            <td>
-                {{ effort.power_length|distanceformat }}
-            </td>
-        </tr>
-        {% endfor %}
+                <td>
+                    {{ effort.power }} {% trans "W" %}
+                </td>
+                <td>
+                    {{ effort.wkg|floatformat }} {% trans "W/kg" %}
+                </td>
+                <td>
+                    {{ effort.power_pos|floatformat }} {% trans "km" %}
+                </td>
+                <td>
+                    {{ effort.power_length|distanceformat }}
+                </td>
+            </tr>
+            {% endfor %}
     </table>
     {% endif %}
     <table class="fullsize">
