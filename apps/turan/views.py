@@ -1056,12 +1056,49 @@ def exercise(request, object_id):
         inclinesummary = getinclinesummary(details)
         effort_range = [5,30,60,300,600,1800,3600]
 
+        power_show = True
+        #poweravg30_show = True
+
+        if not object.user == request.user:
+
+            is_friend = False
+
+            if request.user.is_authenticated():
+                is_friend = Friendship.objects.are_friends(request.user, exercise.user)
+            # Check for permission to display attributes
+            try:
+                # Try to find permission object for this exercise
+                permission = object.exercisepermission
+
+                if hasattr(permission, "power"):
+                    permission_val = getattr(permission, "power")
+                    if permission_val == 'A':
+                        power_show = True
+                    elif permission_val == 'F' and is_friend:
+                        power_show = True
+                    else: #'N' or not friends
+                        power_show = False
+                #if hasattr(permission, "poweravg30s"):
+                #    permission_val = getattr(permission, "poweravg30s")
+                #    if permission_val == 'A':
+                #        poweravg30_show = True
+                #    elif permission_val == 'F' and is_friend:
+                #        poweravg30_show = True
+                #    else: #'N' or not friends
+                #        poweravg30_show = False
+            except ExercisePermission.DoesNotExist:
+                # No permissionojbect found
+                pass
+        else:
+            power_show = True
+            #avg30_show = True
+
         best = {}
         j = 0
         for i in effort_range:
             try:
                 best[j] = {}
-                if object.avg_power:
+                if object.avg_power and power_show:
                     best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
                     best[j]['wkg'] = best[j]['power'] / userweight 
                 else:
@@ -1078,7 +1115,7 @@ def exercise(request, object_id):
         object.best = best
 
 
-        if object.avg_power:
+        if object.avg_power and power_show:
             poweravg30s = power_30s_average(details)
             for i in range(0, len(poweravg30s)):
                 details[i].poweravg30s = poweravg30s[i]
