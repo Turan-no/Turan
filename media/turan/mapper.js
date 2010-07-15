@@ -29,19 +29,30 @@ var Mapper = {
                 new OpenLayers.Control.LayerSwitcher(),
                 new OpenLayers.Control.Attribution()],
             //maxExtent: lgpx.getDataExtent(),
-            maxResolution: 59.0399,
-            numZoomLevels: 19,
+            //maxResolution: 59.0399,
+            maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+            maxResolution: 156543.0399,
+            numZoomLevels: 20,
             units: 'm',
-            projection: this.projection,
+            projection: "EPSG:900913",
+            //projection: this.projection,
             displayProjection: this.projection
         });
 
-
+         var FKB = new OpenLayers.Layer.WMS(
+            'Topo Norge (N50,FKB)',
+            'http://opencache.statkart.no/gatekeeper/gk/gk.open',
+            {layers: 'topo2', format: 'image/png'},
+            {minZoomLevel: 5, maxZoomLevel: 19,
+             attribution: 'Kartgrunnlag: ' +
+              '<a href="http://www.statkart.no/">Statens kartverk</a>, ' +
+              '<a href="http://www.statkart.no/nor/Land/Fagomrader/Geovekst/">Geovekst</a> og ' +
+              '<a href="http://www.statkart.no/?module=Articles;action=Article.publicShow;ID=14194">kommuner</a>'});
         var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
         var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
         var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 
-        this.map.addLayers([layerMapnik, layerCycleMap, layerTilesAtHome, lgpx ]);
+        this.map.addLayers([FKB, layerMapnik, layerCycleMap, layerTilesAtHome, lgpx]);
 
         if (start) {
             var size = new OpenLayers.Size(20,25);
