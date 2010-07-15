@@ -670,9 +670,15 @@ table.month th {
 
 table.month ul li {
     list-style-type: none;
-    padding: 5px 2px 9px 2px;
-    margin: 2px 3px 2px 3px;
+    padding: 2px 1px 8px 1px;
+    margin: 2px 2px 2px 1px;
     background-color: #eee;
+}
+table.month img {
+    float: left;
+    padding: 0 2px 2px 0;
+    height: 24px;
+    width: 24px;
 }
 table.month a {
     font-size: 11px;
@@ -784,6 +790,9 @@ ul.routes,
 ul.trips {
     margin-bottom: 7px;
 }
+ul.trips li img {
+    margin-right: 13px;
+}
 ul.routes li,
 ul.trips li {
     list-style-type: none;
@@ -835,5 +844,18 @@ div.profile {
     clear: left;
     overflow: auto;
     margin: 7px 0;
+}
+ul.photos li:hover {
+    background-color: #cde;
+}
+ul.photos li {
+    padding: 3px;
+    margin: 0 0 6px 6px;
+    background-color: #ccc;
+    line-height: 0;
+}
+ul.photos {
+    width: 458px;
+    padding: 0;
 }
 

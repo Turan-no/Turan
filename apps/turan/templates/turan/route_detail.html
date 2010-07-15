@@ -25,16 +25,19 @@
 <h1>
     <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
 </h1>
-<div class="attributes">
+<div class="attributes spacer">
 {% include "turan/route/attributes.html" %}
 </div>
-<ul class="photos">
+<ul class="photos hlist">
     {% for photo in object.get_photos %}
     <li>
-        <img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}" />
+        <a title="{{ photo.title }}" href="{{ photo.get_absolute_url }}">
+            <img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}" />
+        </a>
     </li>
     {% endfor %}
 </ul>
+<hr class="clearleft" />
 
 {% comment %}
 <ul class="buttons">
