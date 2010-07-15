@@ -1,6 +1,5 @@
-{% load i18n %}{% blocktrans with exercise.get_absolute_url as item_url %}  
-{{ sender }} has been busy! 
-<a href="http://{{ current_site }}{{ item_url }}">
-A new exercise was logged.
+{% load i18n %}
+<a href="http://{{ current_site }}{{ exercise.get_absolute_url }}">
+{% trans "New exercise" %}: {{ exercise }}, {% if exercise.route.distance %} {{ exercise.object.route.distance }} km, {% endif %}{% if object.duration %} {{ object.duration }}, {% endif %}
+http://{{ current_site }}{{ exercise.get_absolute_url }}
 </a>
-{% endblocktrans %}  
