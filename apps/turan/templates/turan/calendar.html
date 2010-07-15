@@ -5,6 +5,9 @@
 {{ block.super }}
 {% trans "Calendar" %}
 {% endblock %}
+{% block searchenginemeta %}
+<meta name="description" content="{% trans "Exercise calendar" %}" />
+{% endblock %}
 {% block content %}
 
 <h1>

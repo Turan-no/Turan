@@ -5,6 +5,9 @@
 {% block title %}
 {% trans "Events" %}
 {% endblock %}
+{% block searchenginemeta %}
+<meta name="description" content="{% trans "All events" %}" />
+{% endblock %}
 {% block content %}
 {% autopaginate object_list %}
 

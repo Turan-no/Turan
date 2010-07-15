@@ -6,6 +6,9 @@
 {{ block.super }}
 {% trans "Statistics" %}
 {% endblock %}
+{% block searchenginemeta %}
+<meta name="description" content="{% trans "Lists of the fastest, most hard working and strongest exercisers" %}" />
+{% endblock %}
 {% block content %}
 <div class="half floatright">
 <h3>{% trans "Filter by team" %}</h3>

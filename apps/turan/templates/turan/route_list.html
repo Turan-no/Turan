@@ -7,6 +7,9 @@
 {{ block.super }}
 {% trans "Routes" %}
 {% endblock %}
+{% block searchenginemeta %}
+<meta name="description" content="{% trans "All routes" %}" />
+{% endblock %}
 {% block content %}
 {% autosort object_list %}
 {% autopaginate object_list %}
