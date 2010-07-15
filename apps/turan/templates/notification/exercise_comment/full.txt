@@ -1,5 +1,5 @@
 {% load i18n %}{% blocktrans with comment.comment as exercise_comment and exercise.get_absolute_url as exercise_url %}{{ user }} has commented on your exercise '{{ exercise }}':
 
-{{ post_comment }}
+{{ exercise_comment }}
 
 http://{{ current_site }}{{ exercise_url }}{% endblocktrans %}
