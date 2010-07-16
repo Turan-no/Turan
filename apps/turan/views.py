@@ -73,8 +73,8 @@ def index(request):
     exercise_list = Exercise.objects.all()[:10]
     comment_list = Comment.objects.order_by('-submit_date', '-time')[:5]
 
-    route_list = Route.objects.all()# .extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['tcount'])
-    route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
+    route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])[:12]
+    #route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
 
     tag_list = Tag.objects.cloud_for_model(Exercise)
 
