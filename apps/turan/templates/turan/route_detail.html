@@ -110,7 +110,7 @@ $.plot($("#altdiv"), [alt], options);
 	    <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
             <td>{{ object.user }}</td>
             <td>{{ object.duration }}</td>
-            <td>{{ object.avg_hr }} {% if object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}) {% endif %}</td>
+            <td>{{ object.avg_hr }} {% if object.avg_hr and object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}) {% endif %}</td>
             <td>{{ object.avg_speed|floatformat }}</td>
             <td><a href="{{ object.get_absolute_url }}">{{object.date|naturalday}}</a></td>
             <td>{{ object.comment|slice:"70" }}</td>
