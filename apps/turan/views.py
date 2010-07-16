@@ -848,15 +848,16 @@ def gethrhzones(values):
     #for i in range(40,100):
     #    filtered_zones[i] = 0
 
-    total_seconds = d.exercise.duration.seconds
-    for hr in sorted(zones):
-        #if 100*float(zones[hr])/total_seconds > 0:
-        if hr > 40 and hr < 101:
-            percentage = float(zones[hr])*100/total_seconds
-            if percentage > 0.5:
+    if d.exercise.duration:
+        total_seconds = d.exercise.duration.seconds
+        for hr in sorted(zones):
+            #if 100*float(zones[hr])/total_seconds > 0:
+            if hr > 40 and hr < 101:
+                percentage = float(zones[hr])*100/total_seconds
+                if percentage > 0.5:
 
-                zone = hr2zone(hr)
-                filtered_zones[zone][hr] = percentage
+                    zone = hr2zone(hr)
+                    filtered_zones[zone][hr] = percentage
 
     return filtered_zones
 
