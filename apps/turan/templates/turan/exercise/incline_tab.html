@@ -32,7 +32,9 @@
                     {{ length|durationformat }}
                 </td>
                 <td>
-                    {{ length|percent:object.duration.seconds }}
+                    {% if object.duration %}
+                        {{ length|percent:object.duration.seconds }}
+                    {% endif %}
                 </td>
             </tr>
             {% endif %}
