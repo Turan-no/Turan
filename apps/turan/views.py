@@ -1353,8 +1353,17 @@ def import_data(request):
 
                 gpx_url = tripsoup.find(id="actionGpx")['href']
                 tcx_url = tripsoup.find(id="actionTcx")['href']
-                route_name = tripsoup.find(id="activityName").string.strip()
-                exercise_description = tripsoup.find(id="discriptionValue").string.strip()
+
+                route_name = tripsoup.find(id="activityName")
+                if route_name.string:
+                    route_name = route_name.string.strip()
+                else:
+                    route_name = "Unnamed"
+
+                exercise_description = tripsoup.find(id="discriptionValue")
+                if exercise_description.string:
+                    exercise_description = exercise_description.string.strip()
+
                 route = None
 
                 if gpx_url:
