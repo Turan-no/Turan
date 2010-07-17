@@ -30,7 +30,7 @@ urlpatterns = patterns('',
     url(r'^route/(?P<object_id>\d+)', route_detail, name='route'),
     url(r'^week/(?P<week>\d+)', week, name='week-all'),
     url(r'^week/(?P<week>\d+)/(?P<user_id>)', week, name='week'),
-    url(r'^route/import/$', 'turan.views.route_import', name='route_import'),
+    url(r'^import/$', 'turan.views.import_data', name='import_data'),
 
     url(r'^calendar/(?P<year>\d+)/(?P<month>\d+)', calendar_month, name='calendar'),
     url(r'^calendar/$', calendar, name='calendar-index'),

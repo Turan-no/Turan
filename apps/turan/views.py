@@ -41,6 +41,7 @@ from tempfile import NamedTemporaryFile
 
 from collections import deque
 
+from BeautifulSoup import BeautifulSoup
 
 from tagging.models import Tag
 from tribes.models import Tribe
@@ -1315,38 +1316,68 @@ def turan_delete_detailset_value(request, model, object_id, value=False):
 
     return HttpResponseRedirect(obj.get_absolute_url())
 
-class ImportForm(forms.ModelForm):
-    import_url = forms.CharField(label='Url external route', required=True)
+class ImportForm(forms.Form):
+    import_url = forms.CharField(label='Url to external exercise', required=True)
 
-    class Meta:
-        model = Route
-        exclude = ('gpx_file',)
-
-def route_import(request):
+def import_data(request):
     if request.method == 'POST':
-        route = Route()
-        form = ImportForm(request.POST, instance=route)
+        form = ImportForm(request.POST)
         url = form.data['import_url']
         if form.is_valid():
             # Sportypal
             id = 0
+            # Support only route import for now
             if url.find("http://sportypal.com/Workouts/Details/") == 0:
                 id = url.split("/")[-1].rstrip("/")
                 url = "http://sportypal.com/Workouts/ExportGPX?workout_id=" + id
 
-            if id > 0:
-                content = ContentFile(urlopen(url).read())
+                if id > 0:
+                    route = Route()
+                    content = ContentFile(urlopen(url).read())
 
-                route.gpx_file.save("gpx/sporty_" + id + ".gpx", content, save=True)
-                form.save()
+                    route.gpx_file.save("gpx/sporty_" + id + ".gpx", content)
+                    form.save()
 
-                return HttpResponseRedirect(route.get_absolute_url())
-            else:
-                raise Http404
+                    return HttpResponseRedirect(route.get_absolute_url())
+                else:
+                    raise Http404
+
+            # Supports both route and exercise import
+            elif url.find("http://connect.garmin.com/activity/") == 0:
+                base_url = "http://connect.garmin.com"
+                id = url.split("/")[-1].rstrip("/")
+
+                tripdata = urlopen(url).read()
+                tripsoup = BeautifulSoup(tripdata)
+
+                gpx_url = tripsoup.find(id="actionGpx")['href']
+                tcx_url = tripsoup.find(id="actionTcx")['href']
+                route_name = tripsoup.find(id="activityName").string.strip()
+                route = None
+
+                if gpx_url:
+                    route = Route()
+                    content = ContentFile(urlopen(base_url + gpx_url).read())
+                    route.gpx_file.save("gpx/garmin_connect_" + id + ".gpx", content)
+                    route.name = route_name
+                    route.save()
+
+                if tcx_url:
+                    content = ContentFile(urlopen(base_url + tcx_url).read())
+                    exercise_filename = 'sensor/garmin_connect_' + id + '.tcx'
+
+                    exercise = Exercise()
+                    exercise.user = request.user
+                    exercise.sensor_file.save(exercise_filename, content)
+                    if route:
+                        exercise.route = route
+                    exercise.save()
+
+                return render_to_response("turan/import_stage2.html", {'route': route, 'exercise': exercise}, context_instance=RequestContext(request))
     else:
         form = ImportForm()
 
-    return render_to_response("turan/route_import.html", {'form': form}, context_instance=RequestContext(request))
+    return render_to_response("turan/import.html", {'form': form}, context_instance=RequestContext(request))
 
 def power_30s_average(details):
 

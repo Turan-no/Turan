@@ -434,6 +434,7 @@ def parse_sensordata(event):
     if event.get_details().count: # If the event already has details, delete them and reparse
         event.get_details().all().delete()
 
+    event.sensor_file.file.seek(0)
     parser.parse_uploaded_file(event.sensor_file.file)
     values = parser.entries
     if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
