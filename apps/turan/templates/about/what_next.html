@@ -18,26 +18,29 @@
             <dt><a href="{% url exercise_create %}">{% trans "add an exercise"%}</a></dt>
             <dd>{% trans "Better have that training computer output ready!" %}</dd>
 
-            <dt><a href="{% url userprofiledetail_create %}">{% trans "Lost weight?"%}</a></dt>
+            <dt><a href="{% url import_data %}">{% trans "import data from another site"%}</a></dt>
+            <dd>{% trans "Got your data stored public on another site? No worries, just import it!" %}</dd>
+
+            <dt><a href="{% url userprofiledetail_create %}">{% trans "lost weight?"%}</a></dt>
             <dd>{% trans "Fill out this form to update pretty graph on your profile!" %}</dd>
 
             <dt><a href="{% url acct_email %}">{% trans "verify an email address"%}</a></dt>
-            <dd>{% blocktrans %}so you can receive notifications, reset your password and so people can find you more easily.{% endblocktrans%}</dd>
+            <dd>{% blocktrans %}So you can receive notifications, reset your password and so people can find you more easily.{% endblocktrans%}</dd>
             
             <dt><a href="{% url profile_detail user %}">{% trans "fill out your profile"%}</a></dt>
-            <dd>{% trans "to tell the world a little about yourself."%}</dd>
+            <dd>{% trans "To tell the world a little about yourself."%}</dd>
             
             <dt><a href="{% url avatar_change %}">{% trans "add an avatar"%}</a></dt>
-            <dd>{% trans "so people can see what you look like."%}</dd>
+            <dd>{% trans "So people can see what you look like."%}</dd>
             
             <dt><a href="{% url tribe_list %}">{% trans "join some tribes"%}</a></dt>
-            <dd>{% trans "to find people with similar interests to share and discuss with."%}</dd>
+            <dd>{% trans "To find people with similar interests to share and discuss with."%}</dd>
             
             <dt><a href="{% url profile_list %}">{% trans "connect with friends"%}</a></dt>
-            <dd>{% trans "so you can follow what they're up to."%}</dd>
+            <dd>{% trans "So you can follow what they're up to."%}</dd>
             
             <dt><a href="{% url invitations %}">{% trans "invite more people to the site"%}</a></dt>
-            <dd>{% trans "so more people can share in the fun."%}</dd>
+            <dd>{% trans "So more people can share in the fun."%}</dd>
         </dl>
         {% else %}
             {% url acct_login as login_url %}
