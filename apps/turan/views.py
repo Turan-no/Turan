@@ -1354,6 +1354,7 @@ def import_data(request):
                 gpx_url = tripsoup.find(id="actionGpx")['href']
                 tcx_url = tripsoup.find(id="actionTcx")['href']
                 route_name = tripsoup.find(id="activityName").string.strip()
+                exercise_description = tripsoup.find(id="discriptionValue").string.strip()
                 route = None
 
                 if gpx_url:
@@ -1370,6 +1371,8 @@ def import_data(request):
                     exercise = Exercise()
                     exercise.user = request.user
                     exercise.sensor_file.save(exercise_filename, content)
+                    if exercise_description:
+                        exercise.comment = exercise_description
                     if route:
                         exercise.route = route
                     exercise.save()
