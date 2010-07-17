@@ -1349,7 +1349,7 @@ def import_data(request):
                 id = url.split("/")[-1].rstrip("/")
 
                 tripdata = urlopen(url).read()
-                tripsoup = BeautifulSoup(tripdata)
+                tripsoup = BeautifulSoup(tripdata, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
                 gpx_url = tripsoup.find(id="actionGpx")['href']
                 tcx_url = tripsoup.find(id="actionTcx")['href']
@@ -1363,6 +1363,8 @@ def import_data(request):
                 exercise_description = tripsoup.find(id="discriptionValue")
                 if exercise_description.string:
                     exercise_description = exercise_description.string.strip()
+                else:
+                    exercise_description = None
 
                 route = None
 
