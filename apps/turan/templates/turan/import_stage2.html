@@ -1,0 +1,18 @@
+{% extends "turan/base.html" %}
+{% load i18n %}
+{{ block.super }}
+{% block content %}
+{% if form.errors %}
+<h4>Feil</h4>
+{{ form.errors }}
+{% endif %}
+<h2>{% trans "Imported the following data" %}</h2>
+{% if route %}
+<h3>{% trans "Route" %}</h3>
+<a href="{{ route.get_absolute_url }}">{{ route }}</a>
+{% endif %}
+{% if exercise %}
+<h3>{% trans "Exercise" %}</h3>
+<a href="{{ exercise.get_absolute_url }}">{{ exercise }}</a>
+{% endif %}
+{% endblock %}

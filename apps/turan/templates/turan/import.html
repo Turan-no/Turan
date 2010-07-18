@@ -1,21 +1,26 @@
 {% extends "turan/base.html" %}
+{% load i18n %}
 {{ block.super }}
 {% block content %}
 {% if form.errors %}
 <h4>Feil</h4>
 {{ form.errors }}
 {% endif %}
-<h2>Import trip from external site</h2>
-<p>Currently supported sites (formats):</p>
+<h2>{% trans "Import exercise from external site" %}</h2>
+<p>{% trans "Currently supported sites" %}:</p>
 <ul>
     <li>
         <strong>Sportypal:</strong> http://sportypal.com/Workouts/Details/&lt;id&gt;
     </li>
+    <li>
+        <strong>Garmin Connect:</strong> http://connect.garmin.com/activity/&lt;id&gt;
+    </li>
 </ul>
+<h3>Step 1</h3>
 <form action="" method="post">
     <table class="fullsize">
     {{ form.as_table }}
     </table>
-    <input type="submit" value="Importer og lag rute" />
+    <input type="submit" value="{% trans "Import exercise" %}" />
 </form>
 {% endblock %}
