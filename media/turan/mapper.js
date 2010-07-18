@@ -94,7 +94,11 @@ var Mapper = {
                 strategies: [new OpenLayers.Strategy.Fixed()],                
                 protocol: new OpenLayers.Protocol.HTTP({
                     url: geojson_url,
-                    format: new OpenLayers.Format.GeoJSON()
+                    format: new OpenLayers.Format.GeoJSON({
+                                  'internalProjection': new OpenLayers.Projection("EPSG:4326"),
+//                                  'externalProjection': new OpenLayers.Projection("EPSG:900913")
+                                  }
+                        )
                 }),
                 styleMap: styles
             });
