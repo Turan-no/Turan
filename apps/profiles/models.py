@@ -36,6 +36,17 @@ class Profile(models.Model):
         verbose_name_plural = _('profiles')
         ordering = ('user__username',)
 
+    def get_weight(self, date=None):
+        ''' Returns weight of user, optionally given date, try to find weight close to date '''
+        userweight = self.weight
+        if date:
+            try:
+                userweight = self.userprofiledetail_set.filter(weight__isnull=False).filter(time__lt=date).order_by("-time")[0].weight
+            except IndexError:
+                # when no weight is found
+                pass
+        return userweight
+
 class UserProfileDetail(models.Model):
     userprofile = models.ForeignKey(Profile)
     time = models.DateTimeField(help_text=_('2009-08-27 08:00:00, time optional'))

@@ -582,10 +582,7 @@ def powerjson(request, object_id, start, stop):
         gradient = float(ascent/distance)
         duration = (all_details[stop].time - all_details[start].time).seconds
         speed = ret['speed__avg']
-        try:
-            userweight = object.user.get_profile().userprofiledetail_set.filter(weight__isnull=False).filter(time__lt=object.date).order_by("-time")[0].weight
-        except IndexError:
-            userweight = object.user.get_profile().weight
+        userweight = object.user.get_profile().get_weight(object.date)
         # EQweight hard coded to 10! 
         ret['power__avg_est'] = calcpower(userweight, 10, gradient, speed*3.6)
         ret['duration'] = duration
@@ -1068,10 +1065,7 @@ def exercise(request, object_id):
     time_xaxis = True
     if details:
         if filldistance(details): # Only do this if we actually have distance
-            try:
-                userweight = object.user.get_profile().userprofiledetail_set.filter(weight__isnull=False).filter(time__lt=object.date).order_by("-time")[0].weight
-            except IndexError:
-                userweight = object.user.get_profile().weight
+            userweight = object.user.get_profile().get_weight(object.date)
             slopes = getslopes(details)
             if slopes:
                 # If we have slopes, we have distance use that for graph
