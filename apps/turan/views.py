@@ -584,13 +584,13 @@ def powerjson(request, object_id):
     if filldistance(details):
         #Shit that only works for distance, like power
         distance = details[-1].distance - details[0].distance
-        gradient = float(ascent/distance)
+        gradient = ascent/distance
         duration = (details[-1].time - details[0].time).seconds
         speed = ret['speed__avg']
         userweight = object.user.get_profile().get_weight(object.date)
 
         # EQweight hard coded to 10! 
-        ret['power__avg_est'] = calcpower(userweight, 10, gradient, speed*3.6)
+        ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
         ret['duration'] = duration
         ret['distance'] = distance
         ret['gradient'] = gradient
