@@ -56,6 +56,8 @@ from svg import GPX2SVG
 from turancalendar import WorkoutCalendar
 from feeds import ExerciseCalendar
 
+import simplejson
+
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
 else:
@@ -549,6 +551,47 @@ def calendar_month(request, year, month):
              },
             context_instance=RequestContext(request))
 
+def powerjson(request, object_id, start, stop):
+
+    object = get_object_or_404(Exercise, pk=object_id)
+    start, stop = int(start), int(stop)
+    all_details = object.get_details().all()
+    details = all_details[start:stop]    #Shit that only works for distance, like power
+
+    ascent, descent = calculate_ascent_descent_gaussian(object, start, stop)
+
+    ret = details.aggregate(
+            Avg('speed'),
+            Avg('hr'),
+            Avg('cadence'),
+            Avg('power'),
+            Min('speed'),
+            Min('hr'),
+            Min('cadence'),
+            Min('power'),
+            Max('speed'),
+            Max('hr'),
+            Max('cadence'),
+            Max('power'))
+    ret['ascent'] = ascent
+    ret['descent'] = descent
+
+    if filldistance(all_details):
+        distance = all_details[stop].distance - all_details[start].distance
+        gradient = float(ascent/distance)
+        duration = (all_details[stop].time - all_details[start].time).seconds
+        speed = ret['speed__avg']
+        try:
+            userweight = object.user.get_profile().userprofiledetail_set.filter(weight__isnull=False).filter(time__lt=object.date).order_by("-time")[0].weight
+        except IndexError:
+            userweight = object.user.get_profile().weight
+        # EQweight hard coded to 10! 
+        ret['power__avg_est'] = calcpower(userweight, 10, gradient, speed*3.6)
+        ret['duration'] = duration
+        ret['distance'] = distance
+        ret['gradient'] = gradient
+    return HttpResponse(simplejson.dumps(ret), mimetype='text/javascript')
+
 #@cache_page(86400*7)
 #@decorator_from_middleware(GZipMiddleware)
 def geojson(request, object_id):
@@ -984,7 +1027,7 @@ class Slope(object):
         self.gradient = gradient
         self.start_km = start_km
 
-def calcpower(userweight, eqweight, gradient, speed, 
+def calcpower(userweight, eqweight, gradient, speed,
         rollingresistance = 0.006 ,
         airdensity = 1.22 ,
         frontarea = 0.7 ):

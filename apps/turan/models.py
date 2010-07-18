@@ -530,11 +530,14 @@ def smoothListGaussian(list,degree=5):
         smoothed[i]=sum(numpy.array(list[i:i+window])*weight)/sum(weight)
     return smoothed
 
-def calculate_ascent_descent_gaussian(event):
+def calculate_ascent_descent_gaussian(event, start=None, stop=None):
     ''' Calculate ascent and descent for an exercise. Use guassian filter to smooth '''
 
     altvals = []
-    for a in event.get_details().all():
+    details = event.get_details().all()
+    if start and stop:
+        details = details[start:stop]
+    for a in details:
         altvals.append(a.altitude)
 
     altvals = smoothListGaussian(altvals)
