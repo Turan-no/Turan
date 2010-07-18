@@ -512,7 +512,7 @@ def parse_sensordata(event):
     if event.route:
         if event.route.ascent == 0 or event.route.descent == 0 \
                 or not event.route.ascent or not event.route.descent:
-            event.route.ascent, event.route.descent = calculate_ascent_descent_gaussian(event)
+            event.route.ascent, event.route.descent = calculate_ascent_descent_gaussian(event.get_details().all())
             event.route.save()
 
 def smoothListGaussian(list,degree=5):
@@ -531,13 +531,10 @@ def smoothListGaussian(list,degree=5):
         smoothed[i]=sum(numpy.array(list[i:i+window])*weight)/sum(weight)
     return smoothed
 
-def calculate_ascent_descent_gaussian(event, start=None, stop=None):
+def calculate_ascent_descent_gaussian(details):
     ''' Calculate ascent and descent for an exercise. Use guassian filter to smooth '''
 
     altvals = []
-    details = event.get_details().all()
-    if start and stop:
-        details = details[start:stop]
     for a in details:
         altvals.append(a.altitude)
 

@@ -556,12 +556,12 @@ def powerjson(request, object_id, start, stop):
 
     object = get_object_or_404(Exercise, pk=object_id)
     start, stop = int(start), int(stop)
-    all_details = object.get_details().all()
-    details = all_details[start:stop]    #Shit that only works for distance, like power
+    all_details = object.get_details()
 
-    ascent, descent = calculate_ascent_descent_gaussian(object, start, stop)
+    details = list(all_details.all()[start:stop])
+    ascent, descent = calculate_ascent_descent_gaussian(details)
 
-    ret = details.aggregate(
+    ret = all_details.all()[start:stop].aggregate(
             Avg('speed'),
             Avg('hr'),
             Avg('cadence'),
@@ -577,18 +577,22 @@ def powerjson(request, object_id, start, stop):
     ret['ascent'] = ascent
     ret['descent'] = descent
 
-    if filldistance(all_details):
-        distance = all_details[stop].distance - all_details[start].distance
+    details = list(details)
+
+    if filldistance(details):
+        #Shit that only works for distance, like power
+        distance = details[-1].distance - details[0].distance
         gradient = float(ascent/distance)
-        duration = (all_details[stop].time - all_details[start].time).seconds
+        duration = (details[-1].time - details[0].time).seconds
         speed = ret['speed__avg']
         userweight = object.user.get_profile().get_weight(object.date)
+
         # EQweight hard coded to 10! 
         ret['power__avg_est'] = calcpower(userweight, 10, gradient, speed*3.6)
         ret['duration'] = duration
         ret['distance'] = distance
         ret['gradient'] = gradient
-    return HttpResponse(simplejson.dumps(ret), mimetype='text/javascript')
+    return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
 #@cache_page(86400*7)
 #@decorator_from_middleware(GZipMiddleware)
