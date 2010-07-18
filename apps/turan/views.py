@@ -552,9 +552,11 @@ def calendar_month(request, year, month):
              },
             context_instance=RequestContext(request))
 
-def powerjson(request, object_id, start, stop):
+def powerjson(request, object_id):
 
     object = get_object_or_404(Exercise, pk=object_id)
+
+    start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
     start, stop = int(start), int(stop)
     all_details = object.get_details()
 
