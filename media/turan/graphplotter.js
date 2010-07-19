@@ -59,11 +59,13 @@ var GraphPlotter = {
                 $("#averages h4").removeClass("hidden");
 
                 $.each(items, function (i, elem) {
-                    for (k in elem.classList) {
-                        if (elem.classList[k] in avgs) {
-                            var key = elem.classList[k];
+                    var classlist = elem.className.split(" ");
+                    for (k in classlist) {
+                        if (classlist[k] in avgs) {
+                            var key = classlist[k];
                             var e = $(elem);
-                            e.text(Math.round(avgs[key] * 10) / 10);
+                            var val = Math.round(avgs[key] * 10) / 10;
+                            e.text(val);
                             e.parents(".hidden").removeClass("hidden");
                         }
                     }

@@ -597,7 +597,7 @@ def powerjson(request, object_id):
     for a, b in ret.items():
         # Do not return empty values
         if not b:
-            del a
+            del ret[a]
     return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
 #@cache_page(86400*7)
@@ -776,7 +776,6 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True):
 
                 dval = getattr(d, val)
                 if dval > 0: # skip zero values (makes prettier graph)
-                    # TODO needs to select between distance and time and possibly sample
                     js_strings[val] += '[%.4f,%s],' % (x, dval)
 
             except AttributeError: # not all formats support all values
