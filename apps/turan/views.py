@@ -594,6 +594,10 @@ def powerjson(request, object_id):
         ret['duration'] = duration
         ret['distance'] = distance
         ret['gradient'] = gradient
+    for a, b in ret.items()
+        # Do not return empty values
+        if not b:
+            del a
     return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
 #@cache_page(86400*7)
