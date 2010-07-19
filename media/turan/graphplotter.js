@@ -97,9 +97,10 @@ var GraphPlotter = {
         this.choiceContainer = $("#choices");
 
         $.each(this.datasets, function(key, val) {
-            that.choiceContainer.append('<br/><input type="checkbox" name="' + key +
-                '" checked="checked" id="chk_' + key + '"><label for="chk_' + key + 
-                '">' + val.label + '</label></input>');
+            if (key != "index") 
+                that.choiceContainer.append('<br/><input type="checkbox" name="' + key +
+                    '" checked="checked" id="chk_' + key + '"><label for="chk_' + key + 
+                    '">' + val.label + '</label></input>');
         });
         this.choiceContainer.append('<br /><input type="reset" value="Reset zoom" />');
         this.choiceContainer.find("input").bind("click", function(evt) {
