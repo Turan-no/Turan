@@ -8,59 +8,6 @@ var GraphPlotter = {
     datasets: null,
     backendUrl: null,
 
-    findMinMaxAvg: function (from, to) {
-        var avgs = {};
-        for (key in this.datasets) {
-            var avg = { start: null, end: null, sum: 0, num: 0, avg: null, min: null, max: null, incline: null, decline: null, length: null };
-            var lastAltitude = null;
-            var label = this.datasets[key].label;
-            for (l in this.datasets[key].data) {
-                var pos = this.datasets[key].data[l][0];
-                if (from != null && (pos >= from && pos <= to)) {
-                    if (avg.start == null)
-                        avg.start = pos;
-                    avg.end = pos;
-
-                    var value = this.datasets[key].data[l][1];
-                    if (avg.min == null)
-                        avg.min = value;
-                    else
-                        avg.min = Math.min(avg.min, value);
-
-                    if (avg.max == null)
-                        avg.max = value;
-                    else
-                        avg.max = Math.max(avg.max, value);
-
-                    avg.sum += value;
-                    avg.num++;
-
-                    if (key == "altitude") {
-                        if (avg.incline == null) 
-                            avg.incline = 0;
-                        if (avg.decline == null) 
-                            avg.decline = 0;
-
-                        var altitude = this.datasets[key].data[l][1];
-                        if (lastAltitude != null) {
-                            if (altitude > lastAltitude) {
-                                avg.incline += altitude - lastAltitude;
-                            } else if (altitude < lastAltitude) {
-                                avg.decline += lastAltitude - altitude;
-                            }
-                        }
-                        lastAltitude = altitude;
-                    }
-                }
-            }
-            if (avg.num > 0) {
-                avg.avg = avg.sum / avg.num;
-                avg.label = this.datasets[key].label;
-                avgs[key] = avg;
-            }
-        }
-        return avgs;
-    },
     plotAccordingToChoices: function(ranges) {
         data = [];
         var that = this;
@@ -122,6 +69,10 @@ var GraphPlotter = {
                     }
                 });
             });
+        }
+        else {
+            $("#averages ul li").addClass("hidden");
+            $("#averages h4").addClass("hidden");
         }
 
     },
