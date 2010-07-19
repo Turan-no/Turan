@@ -49,4 +49,9 @@
             yaxis: 3,
             },
         {% endif %}
+        {% if index %}
+        {% autoescape off %}
+        "index": [ {{ index }} ]
+        {% endautoescape %}
+        {% endif %}
 }

@@ -3,8 +3,28 @@
 <div id="tripdiv_legend" style="width:100px;height:400px; float: right;"></div>
 <div id="tripdiv" style="width:750px;height:400px; background: white;"></div>
 <div class="averages" id="averages">
-    <h4 style="display: none">{% trans "Selected min/max/avg" %}</h4>
-    <ul><li></li></ul>
+    <h4 class="hidden">{% trans "Selection data" %}</h4>
+    <ul>
+        <!-- Restructure as needed data appears in spans automagic -->
+        <li class="hidden duration"><span class="data duration"></span> sek</li>
+        <li class="hidden distance"><span class="data distance"></span> m</li>
+        <li class="hidden ascent"><span class="data ascent"></span> m</li>
+        <li class="hidden decent"><span class="data descent"></span> m</li>
+        <li class="hidden hr"><span class="data hr__min"></span> bpm</li>
+        <li class="hidden hr"><span class="data hr__max"></span> bpm</li>
+        <li class="hidden hr"><span class="data hr__avg"></span> bpm</li>
+        <li class="hidden gradient"><span class="data gradient"></span> deg</li>
+        <li class="hidden speed"><span class="data speed__min"></span> km/h</li>
+        <li class="hidden speed"><span class="data speed__max"></span> km/h</li>
+        <li class="hidden speed"><span class="data speed__avg"></span> km/h</li>
+        <li class="hidden cadence"><span class="data cadence__min"></span></li>
+        <li class="hidden cadence"><span class="data cadence__max"></span></li>
+        <li class="hidden cadence"><span class="data cadence__avg"></span></li>
+        <li class="hidden power"><span class="data power__min"></span> W</li>
+        <li class="hidden power"><span class="data power__max"></span> W</li>
+        <li class="hidden power"><span class="data power__avg"></span> W</li>
+        <li class="hidden power"><span class="data power__avg_est"></span> W</li>
+    </ul>
     <hr class="clear" />
 </div>
 
@@ -44,6 +64,9 @@
         evaluate : evaluate
     }
     datasets = {{ datasets }};
-    GraphPlotter.init(datasets);
+    GraphPlotter.init({
+        datasets: datasets, 
+        backendUrl: "{% url powerjson object.id %}"
+    });
 </script>
 
