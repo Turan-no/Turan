@@ -766,6 +766,9 @@ div.averages h4,
 div.averages li {
     float: left;
 }
+div.averages li {
+    margin-left: 30px;
+}
 div.averages h4 {
     margin: 0;
 }

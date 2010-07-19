@@ -5,21 +5,23 @@
 var plot;
 var GraphPlotter = {
     choiceContainer: null,
+    datasets: null,
+    backendUrl: null,
 
-    findMinMaxAvg: function (datasets, from, to) {
+    findMinMaxAvg: function (from, to) {
         var avgs = {};
-        for (key in datasets) {
+        for (key in this.datasets) {
             var avg = { start: null, end: null, sum: 0, num: 0, avg: null, min: null, max: null, incline: null, decline: null, length: null };
             var lastAltitude = null;
-            var label = datasets[key].label;
-            for (l in datasets[key].data) {
-                var pos = datasets[key].data[l][0];
+            var label = this.datasets[key].label;
+            for (l in this.datasets[key].data) {
+                var pos = this.datasets[key].data[l][0];
                 if (from != null && (pos >= from && pos <= to)) {
                     if (avg.start == null)
                         avg.start = pos;
                     avg.end = pos;
 
-                    var value = datasets[key].data[l][1];
+                    var value = this.datasets[key].data[l][1];
                     if (avg.min == null)
                         avg.min = value;
                     else
@@ -39,7 +41,7 @@ var GraphPlotter = {
                         if (avg.decline == null) 
                             avg.decline = 0;
 
-                        var altitude = datasets[key].data[l][1];
+                        var altitude = this.datasets[key].data[l][1];
                         if (lastAltitude != null) {
                             if (altitude > lastAltitude) {
                                 avg.incline += altitude - lastAltitude;
@@ -53,31 +55,42 @@ var GraphPlotter = {
             }
             if (avg.num > 0) {
                 avg.avg = avg.sum / avg.num;
-                avg.label = datasets[key].label;
+                avg.label = this.datasets[key].label;
                 avgs[key] = avg;
             }
         }
         return avgs;
     },
-    plotAccordingToChoices: function(ranges, maxhr) {
+    plotAccordingToChoices: function(ranges) {
         data = [];
+        var that = this;
+        var minIndex = null;
+        var maxIndex = null;
         var min = null;
         var max = null;
-        if (maxhr == undefined)
-            maxhr = 0;
         var xaxisattrs = { 
-                tickDecimals: 0,
+            tickDecimals: 0,
         };
         if (ranges.xaxis != undefined) {
+            var xaxe = plot.getXAxes()[0];
             min = ranges.xaxis.from;
             max = ranges.xaxis.to;
             xaxisattrs.min = min;
             xaxisattrs.max = max;
+
+            for (k in this.datasets.index) {
+                if (min >= this.datasets.index[k])
+                    minIndex = k;
+                if (max <= this.datasets.index[k]) {
+                    maxIndex = k;
+                    break;
+                }
+            }
         }
         $("#choices").find("input:checked").each(function () {
             var key = $(this).attr("name");
-            if (key && datasets[key])
-                data.push(datasets[key]);
+            if (key && that.datasets[key])
+                data.push(that.datasets[key]);
         });
 
         if (data.length > 0) {
@@ -93,29 +106,22 @@ var GraphPlotter = {
             });
         }
 
-        avgs = this.findMinMaxAvg(datasets, min, max);
-        var avglist = $("#averages ul").empty();
+        if (minIndex != null && maxIndex != null) {
+            $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
+                var items = $("#averages ul .data");
+                $("#averages h4").removeClass("hidden");
 
-        // Only show if we've selected an area
-        if (min != null) {
-            var text = "";
-            for (k in avgs) {
-                text += "<li style=\"margin-left: 30px; float:left\" class=\"" + k + "\"><span class=\"label\">" + (k != "altitude" ? avgs[k].label : "Ascent/Descent") + ": </span>";
-                if (k != "altitude") {
-                    text += Math.round(avgs[k].min*10)/10 + "/" + Math.round(avgs[k].max*10)/10 + "/" + Math.round(avgs[k].avg*10)/10;
-                }
-                else {
-                    text += Math.round(avgs[k].incline*10)/10 + "/" + Math.round(avgs[k].decline*10)/10;
-                }
-                text += "</li>";
-            }
-            text += "<li style=\"margin-left: 30px; float:left\" class=\"distance\"><span class=\"label\">Distance: </span>" + Math.round((avgs['speed'].end - avgs['speed'].start) * 10)/10 + "</span></li>";
-            avglist.append(text);
-
-            $("#averages h4").show();
-        }
-        else {
-            $("#averages h4").hide();
+                $.each(items, function (i, elem) {
+                    for (k in elem.classList) {
+                        if (elem.classList[k] in avgs) {
+                            var key = elem.classList[k];
+                            var e = $(elem);
+                            e.text(Math.round(avgs[key] * 10) / 10);
+                            e.parents(".hidden").removeClass("hidden");
+                        }
+                    }
+                });
+            });
         }
 
     },
@@ -131,10 +137,15 @@ var GraphPlotter = {
             opacity: 0.80
         }).appendTo("body").fadeIn(200);
     },
-    init: function(datasets) {
-        this.choiceContainer = $("#choices");
+    init: function(args) {
+        this.datasets = args.datasets;
+        var backendUrl = args.backendUrl;
+
         var that = this;
-        $.each(datasets, function(key, val) {
+        this.backendUrl = backendUrl;
+        this.choiceContainer = $("#choices");
+
+        $.each(this.datasets, function(key, val) {
             that.choiceContainer.append('<br/><input type="checkbox" name="' + key +
                 '" checked="checked" id="chk_' + key + '"><label for="chk_' + key + 
                 '">' + val.label + '</label></input>');
