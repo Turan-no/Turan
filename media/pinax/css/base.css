@@ -204,8 +204,7 @@ div.profile_info p {
 #subnav {
     margin: 0;
     padding: 0;
-    padding-bottom: 10px;
-    background: #ddd; /* tab colour */
+    background: #ccc; /* tab colour */
     border-top: 1px solid #000;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ccc', endColorstr='#fff'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); /* for webkit browsers */
