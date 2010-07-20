@@ -18,12 +18,14 @@ ul.tabs a, ul.tabs a:visited {
 }
 ul.tabs a:hover {
     color: #666; /* unselected tab text hover colour */
+    background-color: #ddd;
 }
 ul.tabs li {
     list-style-type: none;
     display: inline;
-    background-color: #DEF; /* unselected tab colour */
-    padding: 5px 0 4px;
+    border-bottom: 1px solid black;
+    background-color: #bbb; /* unselected tab colour */
+    padding: 3px 0 3px;
     margin: 0 1px; /* to compensate for border */
 }
 ul.tabs li a {

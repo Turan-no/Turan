@@ -91,8 +91,8 @@ input[type="text"], input[type="password"], textarea {
 
 
 #tabhead {
-    background: #035 url('/site_media/pinax/images/heading.png') left top repeat-x;
-    border-bottom: 1px solid #000; /* tab border */
+    background: #005476 url('/site_media/pinax/images/heading.png') left top repeat-x;
+    padding-bottom: 6px;
     position: relative;
 }
 #tabhead .logo {
@@ -204,8 +204,12 @@ div.profile_info p {
 #subnav {
     margin: 0;
     padding: 0;
-    background: #DEF; /* tab colour */
-    border-bottom: 1px solid #9BC;
+    padding-bottom: 10px;
+    background: #ddd; /* tab colour */
+    border-top: 1px solid #000;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ccc', endColorstr='#fff'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #ccc,  #fff); /* for firefox 3.6+ */
 }
 
 #subnav ul {
@@ -229,7 +233,7 @@ div.profile_info p {
 
 #subnav ul a:hover {
     color: #FFF;
-    background: #9BC;
+    background: #bbb;
 }
 
 div.right_panel {
