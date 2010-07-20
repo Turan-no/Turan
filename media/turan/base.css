@@ -17,14 +17,16 @@ h1 {
 	font-size: 175%;
 	font-weight: bolder;
 	margin: 5px 0 7px;
+    text-shadow:1px 1px 4px #bbb;
 }
 h2 {
 	font-size: 150%;
 	font-weight: normal;
 	margin: 5px 0 4px;
+    text-shadow:1px 1px 4px #bbb;
 }
 h3 {
-	font-size: 135%;
+	font-size: 125%;
 	font-weight: normal;
 	margin: 5px 0 4px;
 }
