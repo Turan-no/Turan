@@ -602,7 +602,7 @@ div.mapcontainer {
 }
 #tabs>div.visible {
     display: block;
-	border: 1px solid #99BBCC;
+	border: 2px solid silver;
     position: relative;
     padding: 5px;
     left: 0px;
@@ -617,26 +617,25 @@ div.mapcontainer {
     height: 20px;
     list-style-type: none;
     margin: 2px 2px 0px 2px;
-    padding: 0 3px 3px 3px;
-    background-color: #DEF;
+    padding: 2px 3px 1px 4px;
+    background-color: #eee;
     cursor: pointer;
     color: #444; /* unselected tab text colour */
     font-weight: bold;
     text-decoration: none;
-	border-top: 1px solid #99BBCC;
-	border-left: 1px solid #99BBCC;
-	border-right: 1px solid #99BBCC;
+	border-top: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
     border-radius: 0.5em 0.5em 0 0;
     -webkit-border-radius: 0.5em 0.5em 0 0;
     -moz-border-radius: 0.5em 0.5em 0 0;
 }
 #tabs>ul>li:hover {
     color: #FFF;
-    background: #9BC;
+    background: #ccc;
 }
 #tabs>ul>li.selected:hover {
     color: #000;
-    background: #9BC;
 }
 #tabs>ul>li.selected {
     background-color: #FFF;
