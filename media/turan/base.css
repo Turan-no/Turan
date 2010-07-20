@@ -430,13 +430,11 @@ ul.comments div.header {
     margin: 1px 0 0 19px;
 }
 ul.comments li div.comment_text {
-    font-size: 1.2em;
     clear: left;
     padding: 5px;
     background: #eee;
 }
 ul.comments li {
-    font-size: 0.8em;
     margin-top: 6px;
     list-style-type: none;
     border-top: 2px solid silver;
