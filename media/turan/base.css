@@ -468,6 +468,12 @@ ul.attributes li {
 div.attributes ul li {
 }
 div.attributes {
+    -moz-border-radius: 1em 1em 1em 1em; 
+    -moz-box-shadow: 2px 2px 4px rgb(204, 204, 204);
+    -webkit-border-radius: 1em 1em 1em 1em; 
+    -webkit-box-shadow: 2px 2px 4px rgb(204, 204, 204);
+    border-radius: 1em 1em 1em 1em; 
+    box-shadow: 2px 2px 4px rgb(204, 204, 204);
 	background: #DEF;
 	border: 1px solid #99BBCC;
     padding: 5px;
@@ -620,6 +626,9 @@ div.mapcontainer {
 	border-top: 1px solid #99BBCC;
 	border-left: 1px solid #99BBCC;
 	border-right: 1px solid #99BBCC;
+    border-radius: 0.5em 0.5em 0 0;
+    -webkit-border-radius: 0.5em 0.5em 0 0;
+    -moz-border-radius: 0.5em 0.5em 0 0;
 }
 #tabs>ul>li:hover {
     color: #FFF;
@@ -785,11 +794,20 @@ div.box .tools {
     padding: 5px;
 }
 div.box {
+    -webkit-border-radius: 1em;
+    -webkit-box-shadow: 2px 2px 4px rgb(204, 204, 204);
+    border-radius: 1em;
+    box-shadow: 2px 2px 4px rgb(204, 204, 204);
+    -moz-border-radius: 1em;
+    -moz-box-shadow: 2px 2px 4px rgb(204, 204, 204);
     border: 1px solid #9bc;
     background-color: #def;
     padding: 5px;
 }
 div.box h2 {
+    -moz-border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    border-radius: 0.5em;
     margin: 0 0 4px 0;
     padding: 3px;
     background-color: #cde;
