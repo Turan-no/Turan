@@ -3,11 +3,7 @@
 <div class="attributes">
     <div style="float: right"><img alt="Exerciselogo" src="{{object.icon}}" /></div>
 <h1>
-    {% ifequal object.route.id 24 %}
-    <a href="{{object.get_absolute_url}}">{{ object.exercise_type }}</a>
-    {% else %}
-    <a href="{{object.get_absolute_url}}">{{ object.route.name }}</a>
-    {% endifequal %}
+    {{ object.route.name }}
 </h1>
 <div style="clear: left"></div>
 <ul class="attributes">
@@ -18,14 +14,12 @@
         <span class="label">{% trans "Exerciser" %}:</span> 
         <a href="{{ object.user.get_profile.get_absolute_url }}">{{ object.user }}</a> 
     </li>
-    {% ifequal object.route.id 24 %}
-    {% else %}
+    {% if object.route %}
     <li class="route"><span class="label">{% trans "Route" %}:</span> <a href="{{ object.route.get_absolute_url }}">{{ object.route }}</a>
-    {% endifequal %}
+    {% endif %}
     {% with object.route as object %}
         {% include "turan/route/attributes.html" %}
     {% endwith %}
-    
     </li>
     {% if object.duration %} 
     <li class="duration"><span class="label">{% trans "Duration" %}:</span> {{ object.duration }}</li>
