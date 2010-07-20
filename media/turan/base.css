@@ -117,9 +117,10 @@ ul li {
 }
 
 /* Links */
+a:visited,
 a {
 	background: transparent;
-	color: #204a87;
+	color: #321;
 	text-decoration: none;
 }
 a:hover {
@@ -863,8 +864,8 @@ ul.photos {
 }
 ul#last_comments img {
     float: left;
-    margin-right: 6px;
-    margin-top: 4px;
+    margin-right: 8px;
+    margin-top: 2px;
     border: 2px solid silver;
 }
 ul#last_comments li {
