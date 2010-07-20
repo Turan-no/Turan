@@ -119,7 +119,7 @@
         {% for comment in comment_list %}
         <li class="{% cycle "even" "odd" %}">
             <a title="{{comment.user}}" href="{{comment.get_content_object.get_absolute_url}}#comment_{{comment.id}}">
-            {% avatar comment.user 40 %}
+            {% avatar comment.user 32 %}
             </a>
             {% ifchanged %}<h4>{{comment.get_content_object}}</h4>{% endifchanged %}
             <a title="{{comment.user}}" href="{{comment.get_content_object.get_absolute_url}}#comment_{{comment.id}}">

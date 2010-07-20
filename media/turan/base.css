@@ -117,11 +117,13 @@ ul li {
 }
 
 /* Links */
-a:visited,
 a {
 	background: transparent;
-	color: #321;
+	color: #733;
 	text-decoration: none;
+}
+a:visited {
+	color: #333;
 }
 a:hover {
 	color: #933;
@@ -877,6 +879,7 @@ ul#last_comments li {
     vertical-align: middle;
 }
 ul#last_comments h4 {
+    margin-top: 2px;
     font-size: 14px;
 }
 ul#last_comments p {
