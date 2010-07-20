@@ -118,9 +118,9 @@
     <ul id="last_comments" class="spacer">
         {% for comment in comment_list %}
         <li class="{% cycle "even" "odd" %}">
-            <h4>{{comment.get_content_object}}</h4>
-            <a title="{{comment.get_content_object.name}}" href="{{comment.get_content_object.get_absolute_url}}#comment_{{comment.id}}">
-                <img width="24" height="24" src="{{comment.get_content_object.icon}}" />
+            {% avatar comment.user 32 %}
+            {% ifchanged %}<h4>{{comment.get_content_object}}</h4>{% endifchanged %}
+            <a title="{{comment.user}}" href="{{comment.get_content_object.get_absolute_url}}#comment_{{comment.id}}">
                 <p>{{comment.comment|truncatewords:20}}</p>
             </a>
         </li>

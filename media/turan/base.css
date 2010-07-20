@@ -863,11 +863,14 @@ ul.photos {
 }
 ul#last_comments img {
     float: left;
-    clear: left;
-    padding-right: 4px;
+    margin-right: 6px;
+    margin-top: 4px;
+    border: 2px solid silver;
 }
 ul#last_comments li {
+    overflow: auto;
     padding: 5px;
+    clear: left;
     list-style-type: none;
     margin-left: 0;
     vertical-align: middle;
