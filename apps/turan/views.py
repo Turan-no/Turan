@@ -14,7 +14,7 @@ from django.forms.models import inlineformset_factory
 from django.core.urlresolvers import reverse
 from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 from django.contrib.syndication.feeds import Feed
-from django.contrib.comments.models import Comment
+from threadedcomments.models import ThreadedComment
 from django.core.files.storage import FileSystemStorage
 from django.utils.safestring import mark_safe
 from django.core import serializers
@@ -74,14 +74,12 @@ def index(request):
     ''' Index view for Turan '''
 
     exercise_list = Exercise.objects.all()[:10]
-    comment_list = Comment.objects.order_by('-submit_date', '-time')[:5]
+    comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')[:5]
 
     route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])[:12]
     #route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
 
     tag_list = Tag.objects.cloud_for_model(Exercise)
-
-
 
     # Top exercisers last 90
     today = datetimedate.today()

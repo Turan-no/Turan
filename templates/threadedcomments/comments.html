@@ -1,0 +1,58 @@
+{% load threadedcommentstags %}
+{% load i18n %}
+{% load uni_form %}
+{% load pagination_tags %}
+{% load avatar_tags %}
+{% load humanize %}
+
+{% get_threaded_comment_tree for object as responses %}
+{% autopaginate responses %}
+<ul class="comments">
+    {% for response in responses %}
+        <li class="{% cycle even,odd %} thread-{{ response.depth }} clearfix">
+            <div class="meta">
+                <a name="comment_{{response.id}}"></a>
+                <div class="avatar">{% avatar response.user 40 %}</div>
+                <div class="details"><a href="{% url profile_detail response.user.username %}">{{ response.user }} </a></div>
+		<span class="date">&nbsp;{{ response.date_submitted|naturalday }}</span>
+		<span class="controls">
+            {% ifequal user response.user %}
+			<form method="post" action="{% url tc_comment_delete response.id %}">
+			    <input type="submit" value="{% trans "Delete Post" %}" />
+			    <input type="hidden" name="next" value="{{ request.path }}" />
+			</form>
+			{% endifequal %}
+			<form>
+				<input type="submit" onclick="javascript:toggle_comment_form({{ response.id }})" value="{% trans "Reply to This Post" %}" />
+			</form>
+		</span>
+            </div>
+            <div class="bulk">
+                <div class="body">{{ response.comment|urlize|linebreaks }}</div>
+                <form class="hidden" method="post" action="{% get_comment_url object response %}" id="comment_form_{{ response.id }}">
+                    <table><tr><td><textarea id="id_comment" rows="2" cols="40" name="comment"></textarea></td></tr>
+                    <tr><td><input type="submit" value="{% trans "Post Response" %}" /></td></tr></table>
+                    <input type="hidden" name="next" value="{{ request.path }}" />
+                </form>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+
+{% paginate %}
+
+{% if user.is_authenticated %}
+    <form class="uniForm" method="post" action="{% get_comment_url object %}">
+        <fieldset class="inlineLabels">
+            <div class="ctrlHolder">
+                <textarea id="id_comment" rows="2" cols="40" name="comment"></textarea>
+            </div>
+            <div class="form_block">
+                <input type="hidden" name="next" value="{{ request.path }}" />
+                <input type="submit" value="{% trans "Post Response" %}" />
+            </div>
+        </fieldset>
+    </form>
+{% else %}
+<h3><a href="{% url acct_login %}">{% trans "Login" %}</a> ({% trans "or" %} <a href="{% url acct_signup %}">{% trans "Sign Up" %}</a>) {% trans "to leave a comment" %}</h3>
+{% endif %}

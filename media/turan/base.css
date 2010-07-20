@@ -773,7 +773,7 @@ div.averages h4 {
     margin: 0;
 }
 .spacer {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 div.box .tools {
     float: right;
@@ -861,4 +861,20 @@ ul.photos {
     width: 458px;
     padding: 0;
 }
-
+ul#last_comments img {
+    float: left;
+    clear: left;
+    padding-right: 4px;
+}
+ul#last_comments li {
+    padding: 5px;
+    list-style-type: none;
+    margin-left: 0;
+    vertical-align: middle;
+}
+ul#last_comments h4 {
+    font-size: 14px;
+}
+ul#last_comments p {
+    font-size: 12px;
+}

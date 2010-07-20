@@ -86,7 +86,7 @@
         {% trans "Welcome to Turan" %}.no!
     </h1>
 
-    <ul class="buttons">
+    <ul class="buttons spacer">
         <li style="float: left">
             <a href="{% url route_create %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add route" %}" />
@@ -106,17 +106,26 @@
             </a>
         </li>
     </ul>
-    <br />
     <h2>{% trans "Top exercisers" %}</h2>
-    <div id="exercisers">
+    <div id="exercisers" class="spacer">
         {% for exerciser in user_list %}
         {% if exerciser.exercise_set.count %}
         <a title="{{exerciser.username}}" href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 60 %}</a>
         {% endif %}
         {% endfor %}
     </div>
-    <br />
-    <br />
+    <h2>{% trans "Latest comments" %}</h2>
+    <ul id="last_comments" class="spacer">
+        {% for comment in comment_list %}
+        <li class="{% cycle "even" "odd" %}">
+            <h4>{{comment.get_content_object}}</h4>
+            <a title="{{comment.get_content_object.name}}" href="{{comment.get_content_object.get_absolute_url}}#comment_{{comment.id}}">
+                <img width="24" height="24" src="{{comment.get_content_object.icon}}" />
+                <p>{{comment.comment|truncatewords:20}}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
     <div id="tabs">
         <ul>
             <li class="tab selected" id="tabs-select-1"><h3>{% trans "Turan?" %}</h3></li>
