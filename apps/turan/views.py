@@ -1463,6 +1463,7 @@ def power_30s_average(details):
 
     normalized = 0.0
     fourth = 0.0
+    power_avg_count = 0
 
     #EXPECTING 1 SEC SAMPLE INTERVAL!
     for i in range(0, datasetlen):
@@ -1474,11 +1475,13 @@ def power_30s_average(details):
                 foo += details[i+j-30].power*delta_t
                 foo_element += 1.0
         if foo_element:
-            details[i].poweravg30s = foo/foo_element
+            poweravg30s = foo/foo_element
+            details[i].poweravg30s = poweravg30s
+            fourth += pow(poweravg30s, 4)
+            power_avg_count += 1
 
-        fourth += pow(details[i].power, 4)
 
-    normalized = int(round(pow((fourth/datasetlen), (0.25))))
+    normalized = int(round(pow((fourth/power_avg_count), (0.25))))
     return normalized
 
 def best_x_sec(details, length, power):
