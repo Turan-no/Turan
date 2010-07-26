@@ -7,6 +7,7 @@ var GraphPlotter = {
     choiceContainer: null,
     datasets: null,
     backendUrl: null,
+    max_hr: 200,
 
     plotAccordingToChoices: function(ranges) {
         data = [];
@@ -42,7 +43,7 @@ var GraphPlotter = {
 
         if (data.length > 0) {
             plot = $.plot($("#tripdiv"), data, {
-                yaxes: [{ min: 0 }, { position: "right", min: 80 }, { position: "right"}],
+                yaxes: [{ min: 0 }, { position: "right", min: 80, max: this.max_hr }, { position: "right"}],
                 xaxis: xaxisattrs,
                 legend: { container: $("#tripdiv_legend") },
                 grid: { 
@@ -93,6 +94,7 @@ var GraphPlotter = {
     init: function(args) {
         this.datasets = args.datasets;
         var backendUrl = args.backendUrl;
+        this.max_hr = args.max_hr;
 
         var that = this;
         this.backendUrl = backendUrl;
