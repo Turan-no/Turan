@@ -561,7 +561,7 @@ def powerjson(request, object_id):
     details = list(all_details.all()[start:stop])
     ascent, descent = calculate_ascent_descent_gaussian(details)
 
-    ret = all_details.all()[start:stop].aggregate(
+    ret = object.get_details().all()[start:stop].aggregate(
             Avg('speed'),
             Avg('hr'),
             Avg('cadence'),
@@ -924,7 +924,8 @@ def getgradients(values):
         altitudes.append(d.altitude)
         distances.append(d.distance/1000)
 
-    altitudes = smoothListGaussian(altitudes)
+    # Smooth 10 Wide!
+    altitudes = smoothListGaussian(altitudes, 10)
 
     gradients = []
     previous_altitude = 0
