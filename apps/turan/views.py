@@ -1182,8 +1182,8 @@ def exercise(request, object_id):
 
         if object.avg_power and power_show:
             poweravg30s = power_30s_average(details)
-            for i in range(0, len(poweravg30s)):
-                details[i].poweravg30s = poweravg30s[i]
+            #for i in range(0, len(poweravg30s)):
+            #    details[i].poweravg30s = poweravg30s[i]
             object.normalized = normalized_power(poweravg30s)
 
     datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
@@ -1474,6 +1474,7 @@ def power_30s_average(details):
                 foo_element += 1.0
         if foo_element:
             poweravg30s.append(foo/foo_element)
+            details[i].poweravg30s = foo/foo_element
 
     return poweravg30s
 
