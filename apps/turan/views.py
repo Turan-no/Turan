@@ -561,19 +561,32 @@ def powerjson(request, object_id):
     details = list(all_details.all()[start:stop])
     ascent, descent = calculate_ascent_descent_gaussian(details)
 
-    ret = object.get_details().all()[start:stop].aggregate(
-            Avg('speed'),
-            Avg('hr'),
-            Avg('cadence'),
-            Avg('power'),
-            Min('speed'),
-            Min('hr'),
-            Min('cadence'),
-            Min('power'),
-            Max('speed'),
-            Max('hr'),
-            Max('cadence'),
-            Max('power'))
+    #ret = object.get_details().all()[start:stop].aggregate( Avg('speed'), Avg('hr'), Avg('cadence'), Avg('power'), Min('speed'), Min('hr'), Min('cadence'), Min('power'), Max('speed'), Max('hr'), Max('cadence'), Max('power'))
+
+    val_types = ('speed', 'hr', 'cadence', 'power')
+    ret = {
+            'speed__min': 9999,
+            'hr__min': 9999,
+            'cadence__min': 9999,
+            'power__min': 9999,
+            'speed__max': 0,
+            'hr__max': 0,
+            'cadence__max': 0,
+            'power__max': 0,
+            'speed__avg': 0,
+            'hr__avg': 0,
+            'cadence__avg': 0,
+            'power__avg': 0,
+    }
+    for d in details:
+        for val in val_types:
+            ret[val+'__min'] =  min(ret[val+'__min'], getattr(d, val))
+            ret[val+'__max'] = max(ret[val+'__max'], getattr(d, val))
+            if getattr(d, val):
+                ret[val+'__avg'] += getattr(d, val)
+    for val in val_types:
+        ret[val+'__avg'] = ret[val+'__avg']/len(details)
+
     ret['ascent'] = ascent
     ret['descent'] = descent
 
@@ -591,7 +604,7 @@ def powerjson(request, object_id):
         ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
         ret['duration'] = duration
         ret['distance'] = distance
-        ret['gradient'] = gradient
+        ret['gradient'] = gradient*100
     for a, b in ret.items():
         # Do not return empty values
         if not b:
