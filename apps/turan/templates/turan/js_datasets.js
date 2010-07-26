@@ -4,7 +4,6 @@
         "speed": {
             data: [{{ speed}}],
             label: "{% trans "Speed" %}",
-            yaxis: 4,
             color: 0,
         },
         {% endif %}
@@ -30,6 +29,7 @@
             label: "{% trans "Altitude" %}",
             lines: { show: true, fill: 0.3 },
             color: 3,
+            yaxis: 4,
         },
         {% endif %}
         {% if power%}
