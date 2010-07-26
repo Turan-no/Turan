@@ -1181,10 +1181,10 @@ def exercise(request, object_id):
 
 
         if object.avg_power and power_show:
-            poweravg30s = power_30s_average(details)
+            object.normalized = power_30s_average(details)
             #for i in range(0, len(poweravg30s)):
             #    details[i].poweravg30s = poweravg30s[i]
-            object.normalized = normalized_power(poweravg30s)
+            #object.normalized = normalized_power(poweravg30s)
 
     datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
 
@@ -1461,7 +1461,8 @@ def power_30s_average(details):
 
     datasetlen = len(details)
 
-    poweravg30s = []
+    normalized = 0.0
+    fourth = 0.0
 
     #EXPECTING 1 SEC SAMPLE INTERVAL!
     for i in range(0, datasetlen):
@@ -1473,10 +1474,12 @@ def power_30s_average(details):
                 foo += details[i+j-30].power*delta_t
                 foo_element += 1.0
         if foo_element:
-            poweravg30s.append(foo/foo_element)
             details[i].poweravg30s = foo/foo_element
 
-    return poweravg30s
+        fourth += pow(details[i].power, 4)
+
+    normalized = int(round(pow((fourth/datasetlen), (0.25))))
+    return normalized
 
 def best_x_sec(details, length, power):
 
@@ -1555,15 +1558,3 @@ def best_x_sec(details, length, power):
         return best_speed, best_start_km_speed, best_length_speed, best_power, best_start_km_power, best_length_power
     else:
         return best_speed, best_start_km_speed, best_length_speed
-
-def normalized_power(dataset):
-
-    normalized = 0.0
-    fourth = 0.0
-
-    for val in dataset:
-        fourth += pow(val, 4)
-
-    normalized = int(round(pow((fourth/len(dataset)), (0.25))))
-
-    return normalized
