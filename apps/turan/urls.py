@@ -39,7 +39,7 @@ urlpatterns = patterns('',
     url(r'^json/comment/random/?$', json_serializer, { 'queryset': Comment.objects.order_by('?')[:10], 'relations': ('content_type',) }, name='json_comments'),
     url(r'^json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/(?P<start>\d+)/(?P<stop>\d+)', json_tripdetail, name='json_tripdetail-startstop'),
     url(r'^json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/?$', json_tripdetail, name='json_tripdetail'),
-    url(r'^geojson/(?P<object_id>\d+)', geojson, name='geojson'),
+    url(r'^json/geo/(?P<object_id>\d+)', geojson, name='geojson'),
     url(r'^json/power/(?P<object_id>\d+)', powerjson, name='powerjson'),
 
       url(r'^autocomplete/(?P<app_label>\w+)/(?P<model>\w+)/$', autocomplete_route, name='autocomplete_route'),
