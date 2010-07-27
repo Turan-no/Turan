@@ -69,7 +69,7 @@ urlpatterns += patterns('django.views.generic.create_update',
     url(r'^exercise/r/create/$', create_exercise_with_route,  name='exercise_route_create'),
 
 
-    url(r'^route/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': RouteForm},name='route_update'),
+    url(r'^route/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': FullRouteForm},name='route_update'),
     url(r'^exercise/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': FullExerciseForm},name='exercise_update'),
 
     url(r'^exercise/delete/(?P<object_id>\d+)', turan_delete_object, {'model': Exercise, 'login_required': True,},name='exercise_delete'),
