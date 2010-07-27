@@ -947,7 +947,7 @@ msgstr "Fart"
 
 #: templates/turan/exercise_compare.html:13
 msgid "HR"
-msgstr "Hjerterytme"
+msgstr "Puls"
 
 #: templates/turan/exercise_compare.html:15
 msgid "Cadence"
@@ -972,7 +972,7 @@ msgstr "Soner"
 
 #: templates/turan/exercise_detail.html:21
 msgid "HR Freq"
-msgstr "Hjerterytme"
+msgstr "HR-frekvens"
 
 #: templates/turan/exercise_detail.html:23
 msgid "Slopes"
@@ -1034,7 +1034,7 @@ msgstr "Gj. effekt/kg"
 #: templates/turan/exercise_detail.html:77
 #: templates/turan/exercise/attributes.html:44
 msgid "Avg HR"
-msgstr "Gj. hjerterytme"
+msgstr "Gj. puls"
 
 #: templates/turan/exercise_detail.html:101
 #: templates/turan/exercise_detail.html:103
@@ -1285,11 +1285,11 @@ msgstr "Fotturstatistikk"
 
 #: templates/turan/statistics.html:60 templates/turan/statistics.html:153
 msgid "Highest average speed for trip"
-msgstr "Høyeste gjennomsnittlig fart for turen"
+msgstr "Maks gjennomsnittlig fart for tur"
 
 #: templates/turan/statistics.html:67 templates/turan/statistics.html:166
 msgid "Highest speeds"
-msgstr "Høyeste fart"
+msgstr "Maks fart"
 
 #: templates/turan/statistics.html:73 templates/turan/statistics.html:159
 msgid "Average speed for all trips"
@@ -1426,15 +1426,15 @@ msgstr "Normalisert effekt(tm)"
 
 #: templates/turan/exercise/attributes.html:56
 msgid "Max Speed"
-msgstr "Høyeste hastighet"
+msgstr "Maks fart"
 
 #: templates/turan/exercise/attributes.html:59
 msgid "Max HR"
-msgstr "Høyeste hjerterytme"
+msgstr "Maks puls"
 
 #: templates/turan/exercise/attributes.html:62
 msgid "Max Cadence"
-msgstr "Høyeste kadens"
+msgstr "Maks kadens"
 
 #: templates/turan/exercise/attributes.html:65
 msgid "Max Power"
