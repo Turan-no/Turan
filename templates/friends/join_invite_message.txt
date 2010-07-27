@@ -1,0 +1,12 @@
+{% load i18n %}{% blocktrans %}You have been invited by {{ user }} to join Turan.
+
+{{ user }} said:
+
+{{ message }}
+
+To accept this invitation, go to
+
+{{ accept_url }}
+
+If you have any questions about Turan, don't hesitate to contact contact@turan.no 
+{% endblocktrans %}
