@@ -25,6 +25,7 @@ from django.views.generic.list_detail import object_list
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from django.utils.decorators import decorator_from_middleware
 from django.utils.datastructures import SortedDict
 from django.middleware.gzip import GZipMiddleware
@@ -561,19 +562,32 @@ def powerjson(request, object_id):
     details = list(all_details.all()[start:stop])
     ascent, descent = calculate_ascent_descent_gaussian(details)
 
-    ret = all_details.all()[start:stop].aggregate(
-            Avg('speed'),
-            Avg('hr'),
-            Avg('cadence'),
-            Avg('power'),
-            Min('speed'),
-            Min('hr'),
-            Min('cadence'),
-            Min('power'),
-            Max('speed'),
-            Max('hr'),
-            Max('cadence'),
-            Max('power'))
+    #ret = object.get_details().all()[start:stop].aggregate( Avg('speed'), Avg('hr'), Avg('cadence'), Avg('power'), Min('speed'), Min('hr'), Min('cadence'), Min('power'), Max('speed'), Max('hr'), Max('cadence'), Max('power'))
+
+    val_types = ('speed', 'hr', 'cadence', 'power')
+    ret = {
+            'speed__min': 9999,
+            'hr__min': 9999,
+            'cadence__min': 9999,
+            'power__min': 9999,
+            'speed__max': 0,
+            'hr__max': 0,
+            'cadence__max': 0,
+            'power__max': 0,
+            'speed__avg': 0,
+            'hr__avg': 0,
+            'cadence__avg': 0,
+            'power__avg': 0,
+    }
+    for d in details:
+        for val in val_types:
+            ret[val+'__min'] =  min(ret[val+'__min'], getattr(d, val))
+            ret[val+'__max'] = max(ret[val+'__max'], getattr(d, val))
+            if getattr(d, val):
+                ret[val+'__avg'] += getattr(d, val)
+    for val in val_types:
+        ret[val+'__avg'] = ret[val+'__avg']/len(details)
+
     ret['ascent'] = ascent
     ret['descent'] = descent
 
@@ -591,7 +605,7 @@ def powerjson(request, object_id):
         ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
         ret['duration'] = duration
         ret['distance'] = distance
-        ret['gradient'] = gradient
+        ret['gradient'] = gradient*100
     for a, b in ret.items():
         # Do not return empty values
         if not b:
@@ -924,7 +938,8 @@ def getgradients(values):
         altitudes.append(d.altitude)
         distances.append(d.distance/1000)
 
-    altitudes = smoothListGaussian(altitudes)
+    # Smooth 10 Wide!
+    altitudes = smoothListGaussian(altitudes, 10)
 
     gradients = []
     previous_altitude = 0
@@ -1144,33 +1159,37 @@ def exercise(request, object_id):
             power_show = True
             #avg30_show = True
 
-        best = {}
-        j = 0
-        for i in effort_range:
-            try:
-                best[j] = {}
-                if object.avg_power and power_show:
-                    best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
-                    best[j]['wkg'] = best[j]['power'] / userweight 
-                else:
-                    best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'] = best_x_sec(details, i, False)
+        cache_key = '%s_%s' %(object.id, 'best')
+        best = cache.get(cache_key)
+        if not best:
+            best = {}
+            j = 0
+            for i in effort_range:
+                try:
+                    best[j] = {}
+                    if object.avg_power and power_show:
+                        best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
+                        best[j]['wkg'] = best[j]['power'] / userweight 
+                    else:
+                        best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'] = best_x_sec(details, i, False)
 
-                best[j]['dur'] = i
-            except:
-                del best[j]
-                pass
-            else:
-                if best[j]['speed'] == 0.0:
+                    best[j]['dur'] = i
+                except:
                     del best[j]
-            j += 1
+                    pass
+                else:
+                    if best[j]['speed'] == 0.0:
+                        del best[j]
+                j += 1
+            cache.set(cache_key, best, 86400*7)
         object.best = best
 
 
         if object.avg_power and power_show:
-            poweravg30s = power_30s_average(details)
-            for i in range(0, len(poweravg30s)):
-                details[i].poweravg30s = poweravg30s[i]
-            object.normalized = normalized_power(poweravg30s)
+            object.normalized = power_30s_average(details)
+            #for i in range(0, len(poweravg30s)):
+            #    details[i].poweravg30s = poweravg30s[i]
+            #object.normalized = normalized_power(poweravg30s)
 
     datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
 
@@ -1447,7 +1466,9 @@ def power_30s_average(details):
 
     datasetlen = len(details)
 
-    poweravg30s = []
+    normalized = 0.0
+    fourth = 0.0
+    power_avg_count = 0
 
     #EXPECTING 1 SEC SAMPLE INTERVAL!
     for i in range(0, datasetlen):
@@ -1459,9 +1480,14 @@ def power_30s_average(details):
                 foo += details[i+j-30].power*delta_t
                 foo_element += 1.0
         if foo_element:
-            poweravg30s.append(foo/foo_element)
+            poweravg30s = foo/foo_element
+            details[i].poweravg30s = poweravg30s
+            fourth += pow(poweravg30s, 4)
+            power_avg_count += 1
 
-    return poweravg30s
+
+    normalized = int(round(pow((fourth/power_avg_count), (0.25))))
+    return normalized
 
 def best_x_sec(details, length, power):
 
@@ -1540,15 +1566,3 @@ def best_x_sec(details, length, power):
         return best_speed, best_start_km_speed, best_length_speed, best_power, best_start_km_power, best_length_power
     else:
         return best_speed, best_start_km_speed, best_length_speed
-
-def normalized_power(dataset):
-
-    normalized = 0.0
-    fourth = 0.0
-
-    for val in dataset:
-        fourth += pow(val, 4)
-
-    normalized = int(round(pow((fourth/len(dataset)), (0.25))))
-
-    return normalized

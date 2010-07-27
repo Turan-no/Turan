@@ -4,7 +4,7 @@
         "speed": {
             data: [{{ speed}}],
             label: "{% trans "Speed" %}",
-            color: 0,
+            color: 0
         },
         {% endif %}
         {% if hr%}
@@ -13,14 +13,14 @@
             label: "{% trans "HR" %}",
             lines: { show: true, fill: 0.0 },
             yaxis: 2,
-            constraints: [constraint0, constraint1, constraint2, constraint3, constraint4, constraint5],
+            constraints: [constraint0, constraint1, constraint2, constraint3, constraint4, constraint5]
         },
         {% endif %}
         {% if cadence%}
         "cadence": {
             data: [ {{ cadence}}],
             label: "{% trans "Cadence" %}",
-            color: 1,
+            color: 1
             },
         {% endif %}
         {% if altitude%}
@@ -29,6 +29,7 @@
             label: "{% trans "Altitude" %}",
             lines: { show: true, fill: 0.3 },
             color: 3,
+            yaxis: 4
         },
         {% endif %}
         {% if power%}
@@ -37,7 +38,7 @@
             label: "{% trans "Power" %}",
             points: { show: false } ,
             color: 5,
-            yaxis: 3,
+            yaxis: 3
             },
         {% endif %}
         {% if poweravg30s%}
@@ -46,7 +47,7 @@
             label: "{% trans "Power Avg30" %}",
             points: { show: false } ,
             color: 4,
-            yaxis: 3,
+            yaxis: 3
             },
         {% endif %}
         {% if index %}

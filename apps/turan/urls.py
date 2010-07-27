@@ -39,7 +39,7 @@ urlpatterns = patterns('',
     url(r'^json/comment/random/?$', json_serializer, { 'queryset': Comment.objects.order_by('?')[:10], 'relations': ('content_type',) }, name='json_comments'),
     url(r'^json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/(?P<start>\d+)/(?P<stop>\d+)', json_tripdetail, name='json_tripdetail-startstop'),
     url(r'^json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/?$', json_tripdetail, name='json_tripdetail'),
-    url(r'^geojson/(?P<object_id>\d+)', geojson, name='geojson'),
+    url(r'^json/geo/(?P<object_id>\d+)', geojson, name='geojson'),
     url(r'^json/power/(?P<object_id>\d+)', powerjson, name='powerjson'),
 
       url(r'^autocomplete/(?P<app_label>\w+)/(?P<model>\w+)/$', autocomplete_route, name='autocomplete_route'),
@@ -69,7 +69,7 @@ urlpatterns += patterns('django.views.generic.create_update',
     url(r'^exercise/r/create/$', create_exercise_with_route,  name='exercise_route_create'),
 
 
-    url(r'^route/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': RouteForm},name='route_update'),
+    url(r'^route/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': FullRouteForm},name='route_update'),
     url(r'^exercise/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': FullExerciseForm},name='exercise_update'),
 
     url(r'^exercise/delete/(?P<object_id>\d+)', turan_delete_object, {'model': Exercise, 'login_required': True,},name='exercise_delete'),
