@@ -1,9 +1,37 @@
 from django import template
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import floatformat
+from django_sorting.templatetags.sorting_tags import SortAnchorNode
 from time import mktime
 
 register = template.Library()
+
+# Annoying anchor lib doesn't support translations so I copied it here
+@register.tag
+def anchortrans(parser, token):
+    """
+    Parses a tag that's supposed to be in this format:
+    {% anchor field title anchor_class anchor_rel %}
+    where the 'title', 'anchor_class' and 'anchor_rel' arguments are optional.
+    """
+    bits = [b.strip('"\'') for b in token.split_contents()]
+    if len(bits) < 2:
+        raise template.TemplateSyntaxError(
+            "anchor tag takes at least 1 argument")
+    try:
+        title = bits[2]
+    except IndexError:
+        title = bits[1].capitalize()
+
+    title = _(title.strip())
+
+    if len(bits) >= 4:
+        # User specified the anchor_class and anchor_rel arguments
+        anchor_class = bits[len(bits)-2]
+        anchor_rel = bits[len(bits)-1]
+        return SortAnchorNode(bits[1].strip(), title,
+                              anchor_class.strip(), anchor_rel.strip())
+    return SortAnchorNode(bits[1].strip(), title.strip())
 
 @register.filter
 def bodyfat(value):
