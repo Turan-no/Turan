@@ -48,11 +48,20 @@ var Mapper = {
               '<a href="http://www.statkart.no/">Statens kartverk</a>, ' +
               '<a href="http://www.statkart.no/nor/Land/Fagomrader/Geovekst/">Geovekst</a> og ' +
               '<a href="http://www.statkart.no/?module=Articles;action=Article.publicShow;ID=14194">kommuner</a>'});
+         var FKBraster = new OpenLayers.Layer.WMS(
+            'Topo Raster',
+            'http://opencache.statkart.no/gatekeeper/gk/gk.open',
+            {layers: 'toporaster2', format: 'image/png'},
+            {minZoomLevel: 5, maxZoomLevel: 19,
+             attribution: 'Kartgrunnlag: ' +
+              '<a href="http://www.statkart.no/">Statens kartverk</a>, ' +
+              '<a href="http://www.statkart.no/nor/Land/Fagomrader/Geovekst/">Geovekst</a> og ' +
+              '<a href="http://www.statkart.no/?module=Articles;action=Article.publicShow;ID=14194">kommuner</a>'});
         var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
         var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
         var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 
-        this.map.addLayers([FKB, layerMapnik, layerCycleMap, layerTilesAtHome, lgpx]);
+        this.map.addLayers([FKB, FKBraster, layerMapnik, layerCycleMap, layerTilesAtHome, lgpx]);
 
         if (start) {
             var size = new OpenLayers.Size(20,25);
