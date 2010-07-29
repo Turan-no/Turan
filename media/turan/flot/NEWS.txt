@@ -64,6 +64,9 @@ Changes:
   ensure that they appear next to each other rather than in between,
   at the expense of possibly awkward tick steps (sponsored by Flight
   Data Services, www.flightdataservices.com).
+- Support for customizing the point type through a callback when
+  plotting points and new symbol plugin with some predefined point
+  types (sponsored by Utility Data Corporation).
 
 - New hooks: drawSeries
 
@@ -90,7 +93,9 @@ Bug fixes:
   plugin, to guard against errors when synchronizing plots (fix by Lau
   Bech Lauritzen).
 - Fix bug in crosshair code with mouseout resetting the crosshair even
-  if it is locked (fix by Lau Bech Lauritzen). 
+  if it is locked (fix by Lau Bech Lauritzen).
+- Fix bug with points plotting using line width from lines rather than
+  points.
 
 Flot 0.6
 --------
