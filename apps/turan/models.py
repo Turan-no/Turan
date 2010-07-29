@@ -78,6 +78,10 @@ class Route(models.Model):
                     self.start_lat = g.start_lat
                     self.end_lon = g.end_lon
                     self.end_lat = g.end_lat
+                    self.distance = g.distance
+                    if g.ascent and g.descent:
+                        self.ascent = g.ascent
+                        self.descent = g.descent
                 except:
                     pass
         super(Route, self).save(force_insert, force_update)
