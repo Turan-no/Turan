@@ -130,9 +130,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
 
-"pinax.core.context_processors.contact_email",
-"pinax.core.context_processors.site_name",
-#    "pinax.core.context_processors.pinax_settings",
+#"pinax.core.context_processors.contact_email",
+#"pinax.core.context_processors.site_name",
+    "pinax.core.context_processors.pinax_settings",
 
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
@@ -160,7 +160,8 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'django.contrib.webdesign',
     'pinax.templatetags',
-    
+
+#    'devserver',
     # external
     'notification', # must be first
     'django_openid',
