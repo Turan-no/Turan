@@ -1,5 +1,6 @@
 from django import template
 from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
 from django.template.defaultfilters import floatformat
 from django_sorting.templatetags.sorting_tags import SortAnchorNode
 from time import mktime
@@ -32,6 +33,11 @@ def anchortrans(parser, token):
         return SortAnchorNode(bits[1].strip(), title,
                               anchor_class.strip(), anchor_rel.strip())
     return SortAnchorNode(bits[1].strip(), title.strip())
+
+@register.filter
+def nbsp(value):
+    """ Make sure string can't break """
+    return mark_safe(unicode(value).replace(" ", "&nbsp;"))
 
 @register.filter
 def bodyfat(value):
