@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load turan_extras %}
 
+{% load avatar_tags %}
 {% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
@@ -97,22 +98,32 @@ $.plot($("#altdiv"), [alt], options);
     <input type="submit" value="{% trans "Compare"%}">
     <table class="fullsize">
         <tr>
-            <th>{% trans "Select" %}</th>
+            <th>{% trans "Trip" %}</th>
+            <th>{% trans "CMP" %}</th>
             <th>{% anchortrans user Exerciser %}</th>
+            <th>{% anchortrans date %}</th>
             <th>{% anchortrans duration %}</th>
             <th>{% anchortrans avg_hr "Avg HR" %}</th>
             <th>{% anchortrans avg_speed "Avg Speed" %}</th>
-            <th>{% anchortrans date %}</th>
             <th>{% trans "Comment" %}</th>
         </tr>
         {% for object in object_list %}
-        <tr>
-	    <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
-            <td>{{ object.user }}</td>
-            <td>{{ object.duration|nbsp }}</td>
-            <td>{{ object.avg_hr }} {% if object.avg_hr and object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}) {% endif %}</td>
-            <td>{{ object.avg_speed|floatformat }}</td>
+        <tr class="{% cycle odd,even %}">
+            <td>
+                <a href="{{ object.get_absolute_url }}">
+                    <img src="/site_media/pinax/images/silk/icons/zoom.png" />
+                </a>
+            </td>
+            <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
+            <td>
+                <a href="{{ object.user.get_absolute_url }}" title="{{ object.user }}">
+                {% avatar object.user 32 %}
+                </a>
+            </td>
             <td><a href="{{ object.get_absolute_url }}">{{object.date|naturalday}}</a></td>
+            <td>{{ object.duration|nbsp }}</td>
+            <td>{{ object.avg_hr }}&nbsp;bpm {% if object.avg_hr and object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}) {% endif %}</td>
+            <td>{{ object.avg_speed|floatformat }}&nbsp;{% trans "km/h" %}</td>
             <td>{{ object.comment|slice:"70" }}</td>
         </tr>
         {% endfor %}
