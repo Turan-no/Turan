@@ -12,8 +12,9 @@
             data: [{{ hr}} ],
             label: "{% trans "HR" %}",
             lines: { show: true, fill: 0.0 },
-            yaxis: 2,
+            yaxis: 2{% if use_constraints %},
             constraints: [constraint0, constraint1, constraint2, constraint3, constraint4, constraint5]
+            {% endif %}
         },
         {% endif %}
         {% if cadence%}

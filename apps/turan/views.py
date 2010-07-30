@@ -98,18 +98,11 @@ def exercise_compare(request, exercise1, exercise2):
         return redirect_to_login(request.path)
         # TODO Friend check
 
-    #t1_speed = tripdetail_js(event_type, trip1.id, 'speed')
-    #t2_speed = tripdetail_js(event_type, trip2.id, 'speed')
-    #t1_hr = tripdetail_js(event_type, trip1.id, 'hr')
-    #t2_hr = tripdetail_js(event_type, trip2.id, 'hr')
-    #t1_cad = tripdetail_js(event_type, trip1.id, 'cadence')
-    #t2_cad = tripdetail_js(event_type, trip2.id, 'cadence')
-
     alt = tripdetail_js(None, trip1.id, 'altitude')
     alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
-    datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False)
-    datasets2 = js_trip_series(request, trip2.get_details().all(), time_xaxis=False)
+    datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False, use_constraints=False)
+    datasets2 = js_trip_series(request, trip2.get_details().all(), time_xaxis=False, use_constraints=False)
     if not datasets1 or not datasets2:
         return HttpResponse(_('Missing exercise details.'))
     datasets = mark_safe(datasets1 +',' +datasets2)
@@ -724,8 +717,9 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
             js += '[%.4f,%s],' % (distance, dval)
     return js
 
-def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True):
-    ''' Generate javascript to be used directly in flot code '''
+def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, use_constraints=True):
+    ''' Generate javascript to be used directly in flot code
+    Argument use_constraints can be used to disable flot constraints for HR, used for compare feature '''
 
     if not details:
         return
