@@ -515,7 +515,9 @@ def calendar_month(request, year, month):
     if last_day >= now.date() and not allow_future:
         lookup_kwargs['%s__lte' % date_field] = now
 
-    exercices = Exercise.objects.select_related().order_by('date').filter(**lookup_kwargs)
+
+    # Do explicit select_related on route since it can be null, and then select_related does not work by default
+    exercices = Exercise.objects.select_related('route', 'exercise_type', 'user').order_by('date').filter(**lookup_kwargs)
     # Filter by username
     username = request.GET.get('username', '')
     if username:
