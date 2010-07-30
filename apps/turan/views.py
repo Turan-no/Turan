@@ -494,21 +494,33 @@ def calendar_month(request, year, month):
 
     # Calculate first and last day of month, for use in a date-range lookup.
     first_day = date.replace(day=1)
+    start_delta = timedelta(days=first_day.weekday())
+    start_of_week = first_day - start_delta
+    week_start = [start_of_week + timedelta(days=i) for i in range(7)][0]
+
     if first_day.month == 12:
         last_day = first_day.replace(year=first_day.year + 1, month=1)
     else:
         last_day = first_day.replace(month=first_day.month + 1)
+
+    start_delta = timedelta(days=last_day.weekday())
+    start_of_week = last_day - start_delta
+    week_end = [start_of_week + timedelta(days=i) for i in range(7)][-1]
     lookup_kwargs = {
-        '%s__gte' % date_field: first_day,
-        '%s__lt' % date_field: last_day,
+        '%s__gte' % date_field: week_start,
+        '%s__lt' % date_field: week_end,
     }
 
     # Only bother to check current date if the month isn't in the past and future objects are requested.
     if last_day >= now.date() and not allow_future:
         lookup_kwargs['%s__lte' % date_field] = now
 
-
     exercices = Exercise.objects.select_related().order_by('date').filter(**lookup_kwargs)
+    # Filter by username
+    username = request.GET.get('username', '')
+    if username:
+        user = get_object_or_404(User, username=username)
+        exercices = exercices.filter(user=user)
 
     # Calculate the next month, if applicable.
     if allow_future:
@@ -526,10 +538,6 @@ def calendar_month(request, year, month):
 
     months = []
 
-    username = request.GET.get('username', '')
-    if username:
-        user = get_object_or_404(User, username=username)
-        exercices = exercices.filter(user=user)
 
 
    # FIXME django locale
@@ -537,9 +545,8 @@ def calendar_month(request, year, month):
     year, month = int(year), int(month)
     cal = WorkoutCalendar(exercices, locale.getdefaultlocale()).formatmonth(year, month)
 
+    e_by_week = [(week, list(items)) for week, items in groupby(exercices, lambda workout: int(workout.date.strftime('%W')))]
 
-
-    e_by_week = [(week, list(items)) for week, items in groupby(exercices, lambda workout: int(workout.date.strftime('%W'))+1)]
 
     return render_to_response('turan/calendar.html',
             {'calendar': mark_safe(cal),
