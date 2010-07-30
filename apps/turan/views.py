@@ -797,6 +797,7 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
                 pass
 
     t = loader.get_template('turan/js_datasets.js')
+    js_strings['use_constraints'] = use_constraints
     c = Context(js_strings)
     js = t.render(c)
 
