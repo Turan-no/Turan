@@ -52,11 +52,10 @@ class WorkoutCalendar(LocaleHTMLCalendar):
                     body.append('</p>')
                     body.append('</li>')
                 body.append('</ul>')
-            dayhtml = '<div class="day">%d</div>' %day
-            if day == 0:
-                dayhtml = ''
-            return self.day_cell(cssclass, '%s %s' % (dayhtml, ''.join(body)))
-            #return self.day_cell(cssclass, '<div class="day">%d</div>' % (day))
+                dayhtml = '<div class="day">%d</div>' %day
+                if day == 0:
+                    dayhtml = ''
+                return self.day_cell(cssclass, '%s %s' % (dayhtml, ''.join(body)))
         return self.day_cell('noday', '&nbsp;')
 
     def get_week_sums(self):
