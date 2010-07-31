@@ -39,53 +39,76 @@ class GPXParser(object):
         ''' Not used in this class '''
         pass
 
+    def val_or_none(self, item, val):
+        ''' Return value if found or none if not. makes it easier to deal with 
+        missing elements in xml'''
+        try:
+            e = item.find(self.ns + val)
+            return float(e.text)
+        except ValueError:
+            return None # missing element
+
     def __init__(self, filename):
         doc = ET.parse(filename)
         root = doc.getroot()
         ns = root.tag[:-3]
+        self.ns = ns
+
+        # http://en.wikipedia.org/wiki/Dilution_of_precision_(GPS)
+        vdop_cutoff = 30
+        hdop_cutoff = 90
 
         for trk in root.findall(ns + 'trk'):
-            trksegs = trk.find(ns + 'trkseg')
-            trkpts = trksegs.findall(ns + 'trkpt')
-            for trkpt in trkpts:
-                lat = float(trkpt.attrib['lat'])
-                lon = float(trkpt.attrib['lon'])
-                #try:
-                ele = float(trkpt.find(ns + 'ele').text)
-                #except:
-                #    ele = None
+            trksegs = trk.findall(ns + 'trkseg')
+            for trkseg in trksegs:
+                trkpts = trkseg.findall(ns + 'trkpt')
+                for trkpt in trkpts:
+                    lat = float(trkpt.attrib['lat'])
+                    lon = float(trkpt.attrib['lon'])
+                    ele = self.val_or_none(trkpt, 'ele')
+                    vdop = self.val_or_none(trkpt, 'vdop')
+                    hdop = self.val_or_none(trkpt, 'hdop')
+                    if vdop > vdop_cutoff:
+                        # If accurarcy is low, use previous sample
+                        if self.entries:
+                            ele = self.entries[-1]['altitude']
+                    if hdop > hdop_cutoff:
+                        # If accurarcy is low, use previous sample
+                        if self.entries:
+                            lat = self.entries[-1]['lat']
+                            lon = self.entries[-1]['lon']
 
-                speed = 0
-                tstring = trkpt.find(ns + 'time').text
-                time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").strip("Z").split("-")))
+                    speed = 0
+                    tstring = trkpt.find(ns + 'time').text
+                    time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").strip("Z").split("-")))
 
-                if self.entries:
-                    this_distance = proj_distance(self.entries[-1]['lat'],
-                            self.entries[-1]['lon'],
-                            lat,
-                            lon,
-                            self.entries[-1]['altitude'],
-                            ele)
-                    self.distance += this_distance
-                    if ele and self.entries[-1]['altitude']:
-                        delta_ele = ele - self.entries[-1]['altitude']
-                        if delta_ele > 0.0:
-                            self.ascent = self.ascent + delta_ele
-                        else:
-                            self.descent = self.descent + delta_ele
-                    speed = 3.6 * this_distance/(time - self.entries[-1]['time']).seconds
+                    if self.entries:
+                        this_distance = proj_distance(self.entries[-1]['lat'],
+                                self.entries[-1]['lon'],
+                                lat,
+                                lon,
+                                self.entries[-1]['altitude'],
+                                ele)
+                        self.distance += this_distance
+                        if ele and self.entries[-1]['altitude']:
+                            delta_ele = ele - self.entries[-1]['altitude']
+                            if delta_ele > 0.0:
+                                self.ascent = self.ascent + delta_ele
+                            else:
+                                self.descent = self.descent + delta_ele
+                        speed = 3.6 * this_distance/(time - self.entries[-1]['time']).seconds
 
-                e_dict = {
-                    'time':time,
-                    'lon': lon ,
-                    'lat': lat,
-                    'altitude': ele,
-                    }
-                e_dict['speed'] = speed
-                self.avg_speed += speed
-                self.max_speed = max(self.max_speed, speed)
+                    e_dict = {
+                        'time':time,
+                        'lon': lon ,
+                        'lat': lat,
+                        'altitude': ele,
+                        }
+                    e_dict['speed'] = speed
+                    self.avg_speed += speed
+                    self.max_speed = max(self.max_speed, speed)
 
-                self.entries.append(e_dict)
+                    self.entries.append(e_dict)
 
         if self.entries:
 
