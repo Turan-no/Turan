@@ -822,6 +822,12 @@ ul.trips li {
     padding: 5px;
 }
 
+.routeimage {
+    width: 55px;
+    height: 55px;
+    padding: 5px;
+}
+
 .detailsShareBoxButton.gpxFile  {
     background-position:-5px -706px;
 }

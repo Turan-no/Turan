@@ -1,4 +1,4 @@
-{% extends "site_base.html" %}
+{% extends "turan/base.html" %}
 
 {% load i18n %}
 {% load threadedcommentstags %}
@@ -16,103 +16,149 @@
 {% block head_title %}{% blocktrans %}Tags{% endblocktrans %}{% endblock %}
 
 {% block body %}
-    <h1>{% trans "All exercises matching" %} <i>"{{ tag }}"</i></h1>
-    
-    {% for tag in exercise_tags %}
-    <a href="{{ tag.get_absolute_url }}">{% if tag.route.gpx_file %}<object style="float: left" alt="{{tag}}" title="{{tag}}" type="image/svg+xml" data="{{ tag.route.get_svg_url }}"></object>{% endif %}{{ tag }}</a>
-    {% empty %}
-        {% trans "No cycle trips matching tag" %}.
-    {% endfor %}
-
-    <h1>{% trans "All routes matching" %} <i>"{{ tag }}"</i></h1>
-    
-    {% for tag in route_tags %}
-    <a href="{{ tag.get_absolute_url }}">{% if tag.gpx_file %}<object style="float: left" alt="{{tag}}" title="{{tag}}" type="image/svg+xml" data="{{ tag.get_svg_url }}"></object>{% endif %}{{ tag }}</a>
-    {% empty %}
-        {% trans "No routes matching tag" %}.
-    {% endfor %}
-
-    <h1>{% trans "All Photos Matching " %}<i>"{{ tag }}"</i></h1>
-
-    {% if phototags %}
-        <div class="thumb-row clearfix">
-        {% for photo in phototags %}
-                <div class="gallery-photo-thumb">
-                    <a href="/photos/details/{{ photo.id }}/"><img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/></a><br />
-                    from <a href="{% url profile_detail photo.member.username %}">{{ photo.member.username }}</a><br />
-                    <img alt="Comment" src="{{ MEDIA_URL }}pinax/images/silk/icons/comment.png" class="noborder" align="absmiddle" /><a href="/photos/details/{{ photo.id }}/">{% get_comment_count for photo as commentcount %} {{ commentcount }} Comments</a>
-                    <br />
-                    Viewed {{ photo.view_count }} Times
-                </div>
+    <div class="half floatleft" style="padding-right: 15px">
+        <h1>{% trans "All exercises matching" %} <i>"{{ tag }}"</i></h1>
+        
+        <ul class="trips">
+        {% for tag in exercise_tags %}
+        <li class="{% cycle odd,even %}">
+            {% if tag.route.gpx_file %}
+            <a href="{{ tag.get_absolute_url }}">
+                <object class="routeimage floatleft" alt="{{tag}}" title="{{tag}}" type="image/svg+xml" data="{{ tag.route.get_svg_url }}"></object>
+            </a>
+            {% else %}
+                <div class="routeimage floatleft"></div>
+            {% endif %}
+            <p>
+                <a href="{{ tag.get_absolute_url }}">
+                    {{ tag }}
+                </a>
+            </p>
+            <hr class="clear" />
+        </li>
+        {% empty %}
+            {% trans "No cycle trips matching tag" %}.
         {% endfor %}
-        </div>
-    {% else %}
-        No photos matching tag.
-    {% endif %}
+        </ul>
+    </div>
+
+    <div class="spacer">
+        <h1>{% trans "All routes matching" %} <i>"{{ tag }}"</i></h1>
+        
+        <ul class="routes">
+        {% for tag in route_tags %}
+        <li class="{% cycle odd,even %}">
+            {% if tag.gpx_file %}
+            <a href="{{ tag.get_absolute_url }}">
+                <object class="floatleft routeimage" alt="{{tag}}" title="{{tag}}" type="image/svg+xml" data="{{ tag.get_svg_url }}"></object>
+            </a>
+            {% else %}
+            <div class="routeimage floatleft"></div>
+            {% endif %}
+            <p>
+                <a href="{{ tag.get_absolute_url }}">
+                {{ tag }}
+                </a>
+            </p>
+            <hr class="clear" />
+        </li>
+        </ul>
+        {% empty %}
+            {% trans "No routes matching tag" %}.
+        {% endfor %}
+    </div>
+
+    <div class="spacer">
+        <h1>{% trans "All Photos Matching " %}<i>"{{ tag }}"</i></h1>
+
+        {% if phototags %}
+            <div class="thumb-row clearfix">
+            {% for photo in phototags %}
+                    <div class="gallery-photo-thumb">
+                        <a href="/photos/details/{{ photo.id }}/"><img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/></a><br />
+                        from <a href="{% url profile_detail photo.member.username %}">{{ photo.member.username }}</a><br />
+                        <img alt="Comment" src="{{ MEDIA_URL }}pinax/images/silk/icons/comment.png" class="noborder" align="absmiddle" /><a href="/photos/details/{{ photo.id }}/">{% get_comment_count for photo as commentcount %} {{ commentcount }} Comments</a>
+                        <br />
+                        Viewed {{ photo.view_count }} Times
+                    </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            No photos matching tag.
+        {% endif %}
+    </div>
 
 
-    {% if bookmarktags %}
-        {% scores_for_objects bookmarktags as score_dict %}
+    <div class="spacer">
+        <h1>All Bookmarks Matching <i>&quot;{{ tag }}&quot;</i></h1>
+        {% if bookmarktags %}
+            {% scores_for_objects bookmarktags as score_dict %}
 
-        <h1>All Bookmarks Matching <i>{{ tag }}</i></h1>
-        <table class="bookmarks" width="100%">
-            {% for bookmark in bookmarktags %}
-                <tr class="{% cycle odd,even %}">
-                    <td class="meta">
-                        <div class="avatar">{% avatar bookmark.bookmark.adder 40 %}</div>
-                        <div class="details"><a href="{% url profile_detail bookmark.bookmark.adder.username %}">{{ bookmark.bookmark.adder }}</a></div>
-                        {{ bookmark.bookmark.added|date }}
-                    </td>
-                    
-                    <td>
-                        <h2><a href="{{ bookmark.bookmark.url }}">{{ bookmark.bookmark.description }}</a></h2>
-                        <div class="url">{% if bookmark.bookmark.get_favicon_url %}<img alt="Bookmark" src="{{ bookmark.bookmark.get_favicon_url }}" width="16" height="16" /> {% endif %}{{ bookmark.bookmark.url }}</div>
-                        <div class="body">{{ bookmark.bookmark.note|linebreaks }}</div>
-                        <div class="tags">{% show_tag_counts bookmark.bookmark.all_tags_with_counts %}</div>
-                    </td>
-                </tr>
+            <table class="bookmarks" width="100%">
+                {% for bookmark in bookmarktags %}
+                    <tr class="{% cycle odd,even %}">
+                        <td class="meta">
+                            <div class="avatar">{% avatar bookmark.bookmark.adder 40 %}</div>
+                            <div class="details"><a href="{% url profile_detail bookmark.bookmark.adder.username %}">{{ bookmark.bookmark.adder }}</a></div>
+                            {{ bookmark.bookmark.added|date }}
+                        </td>
+                        
+                        <td>
+                            <h2><a href="{{ bookmark.bookmark.url }}">{{ bookmark.bookmark.description }}</a></h2>
+                            <div class="url">{% if bookmark.bookmark.get_favicon_url %}<img alt="Bookmark" src="{{ bookmark.bookmark.get_favicon_url }}" width="16" height="16" /> {% endif %}{{ bookmark.bookmark.url }}</div>
+                            <div class="body">{{ bookmark.bookmark.note|linebreaks }}</div>
+                            <div class="tags">{% show_tag_counts bookmark.bookmark.all_tags_with_counts %}</div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+        {% else %}
+            No bookmarks matching tag.
+        {% endif %}
+    </div>
+
+
+    <div class="spacer">
+        <h1>{% trans "All Blog Posts Matching " %}<i>&quot;{{ tag }}&quot;</i></h1>
+
+        {% if alltags %}
+            <p>{% trans "These are blog posts from everyone:" %}</p>
+            {% for blog_post in alltags %}
+                {% show_blog_post blog_post %}
+            {% endfor %}
+        {% else %}
+            No blog posts matching tag.
+        {% endif %}
+    </div>
+    
+    <div class="spacer">
+        <h1>{% blocktrans %}All Tribes Matching <i>&quot;{{ tag }}&quot;</i>{% endblocktrans %}</h1>
+
+        <dl>
+            {% for tribe in tribe_tags %}
+                {% show_tribe tribe %}
+            {% endfor %}
+        </dl>
+        
+        {% comment %}
+        <h1>{% blocktrans %}All Tribe Topics Matching <i>{{ tag }}</i>{% endblocktrans %}</h1>
+
+        {% for topic in tribe_topic_tags %}
+            {% show_tribe_topic topic %}
+        {% endfor %}
+        {% endcomment %}
+    </div>
+
+    <div class="spacer">
+        <h1>{% blocktrans %}All Wiki Articles Matching <i>&quot;{{ tag }}&quot;</i>{% endblocktrans %}</h1>
+
+        <table class="topics">
+            {% for article in wiki_article_tags %}
+                {% show_teaser article %}
             {% endfor %}
         </table>
-
-    {% else %}
-        No bookmarks matching tag.
-    {% endif %}
-
-
-    <h1>{% trans "All Blog Posts Matching " %}<i>"{{ tag }}"</i></h1>
-
-    {% if alltags %}
-        <p>{% trans "These are blog posts from everyone:" %}</p>
-        {% for blog_post in alltags %}
-            {% show_blog_post blog_post %}
-        {% endfor %}
-    {% else %}
-        No blog posts matching tag.
-    {% endif %}
-    
-    <h1>{% blocktrans %}All Tribes Matching <i>{{ tag }}</i>{% endblocktrans %}</h1>
-
-    <dl>
-        {% for tribe in tribe_tags %}
-            {% show_tribe tribe %}
-        {% endfor %}
-    </dl>
-    
-    {% comment %}
-    <h1>{% blocktrans %}All Tribe Topics Matching <i>{{ tag }}</i>{% endblocktrans %}</h1>
-
-    {% for topic in tribe_topic_tags %}
-        {% show_tribe_topic topic %}
-    {% endfor %}
-    {% endcomment %}
-
-    <h1>{% blocktrans %}All Wiki Articles Matching <i>{{ tag }}</i>{% endblocktrans %}</h1>
-
-    <table class="topics">
-        {% for article in wiki_article_tags %}
-            {% show_teaser article %}
-        {% endfor %}
-    </table>
+    </div>
 
 
 {% endblock %}
