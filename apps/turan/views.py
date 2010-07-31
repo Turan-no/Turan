@@ -865,8 +865,9 @@ def getzones(values):
         previous_time = d.time
         if time.seconds > 60:
             continue
-
-        hr_percent = float(d.hr)*100/max_hr
+        hr_percent = 0
+        if d.hr:
+            hr_percent = float(d.hr)*100/max_hr
         zone = hr2zone(hr_percent)
         zones[zone] += time.seconds
 
@@ -908,8 +909,9 @@ def gethrhzones(values):
         previous_time = d.time
         if time.seconds > 60:
             continue
-
-        hr_percent = int(round(float(d.hr)*100/max_hr))
+        hr_percent = 0
+        if d.hr:
+            hr_percent = int(round(float(d.hr)*100/max_hr))
         #hr_percent = (float(d.hr)-resting_hr)*100/(max_hr-resting_hr)
         if not hr_percent in zones:
             zones[hr_percent] = 0
@@ -1032,7 +1034,8 @@ def getavghr(values, start, end):
     hr = 0
     for i in xrange(start+1, end+1):
         delta_t = (values[i].time - values[i-1].time).seconds
-        hr += values[i].hr*delta_t
+        if values[i].hr:
+            hr += values[i].hr*delta_t
     delta_t = (values[end].time - values[start].time).seconds
     return float(hr)/delta_t
 
