@@ -1,6 +1,8 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
+{% load avatar_tags %}
 {% load pagination_tags %}
+{% load turan_extras %}
 {% load i18n %}
 {% block title %}
 {% trans "Events" %}
@@ -76,10 +78,7 @@
 <table class="fullsize">
     <tr>
         <th>
-            {% trans "User" %}
-        </th>
-        <th>
-            {% trans "Date" %}
+            {% trans "Type" %}
         </th>
         <th>
             {% trans "Name" %}
@@ -94,19 +93,22 @@
             {% trans "Route plot" %}
         </th>
         <th>
-            {% trans "Type" %}
+            {% trans "User" %}
         </th>
     </tr>
 {% for object in object_list %}
 <tr class="{% cycle "odd" "even" %}">
     <td>
-        {{ object.user }}
+        <img width="64" height="64" alt="{{ object.exercise_type }}" src="{{ object.icon }}" />
+        <p style="text-align: center"><small class="fade"> {{ object.date|naturalday }} </small></p>
     </td>
     <td>
-        {{ object.date }}
-    </td>
-    <td>
-        <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+        <h4>
+            <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+        </h4>
+        <p class="comment">
+            <small>{{ object.comment|truncatewords:20 }}</small>
+        </p>
     </td>
     <td>
         {% if object.route.distance %}
@@ -114,7 +116,7 @@
         {% endif %}
     </td>
     <td>
-        {{ object.duration}}
+        {{ object.duration|nbsp }}
     </td>
     <td>
         {% if object.route.gpx_file %}
@@ -122,7 +124,7 @@
         {% endif %}
     </td>
     <td>
-        <img width="64" height="64" alt="{{ object.exercise_type }}" src="{{ object.icon }}" />
+        {% avatar object.user 64 %}
     </td>
 </tr>
 {%endfor %}

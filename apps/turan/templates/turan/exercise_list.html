@@ -1,6 +1,8 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
+{% load turan_extras %}
+{% load avatar_tags %}
 {% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
@@ -20,40 +22,39 @@
 <table class="fullsize">
     <tr>
         <th>
-            {% anchor user %}
+            {% anchortrans user %}
         </th>
         <th>
-            {% anchor date %}
+            {% anchortrans route__name "Name" %}
         </th>
         <th>
-            {% anchor route__name "Name" %}
+            {% anchortrans date %}
         </th>
         <th>
-            {% anchor route__distance "Distance" %}
+            {% anchortrans route__distance "Distance" %}
         </th>
         <th>
-            {% anchor route__ascent "Ascent" %}
+            {% anchortrans route__ascent "Ascent" %}
         </th>
         <th>
-            {% anchor duration %}
+            {% anchortrans duration %}
         </th>
         <th>
-            {% anchor avg_speed "Avg Speed" %}
+            {% anchortrans avg_speed "Avg Speed" %}
         </th>
         <th>
-            {% anchor avg_hr "Avg HR" %}
+            {% anchortrans avg_hr "Avg HR" %}
         </th>
         <th>
-            {% anchor kcal "Expenditure" %}
+            {% anchortrans kcal "Expenditure" %}
         </th>
     </tr>
 {% for object in object_list %}
-<tr>
+<tr class="{% cycle even,odd %}">
     <td>
-        {{ object.user }}
-    </td>
-    <td>
-        {{ object.date }}
+        <a href="{{ object.user.get_absolute_url }}" title="{{object.user}}">
+            {% avatar object.user 32 %}
+        </a>
     </td>
     <td>
         <a href="{{ object.get_absolute_url }}">
@@ -63,6 +64,9 @@
             {{ object.exercise_type }}
             {% endif %}
         </a>
+    </td>
+    <td>
+        {{ object.date|naturalday }}
     </td>
     <td>
         {% if object.route.distance %}

@@ -1,6 +1,7 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
+{% load turan_extras %}
 {% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
@@ -81,22 +82,22 @@
 <table class="fullsize">
     <tr>
         <th>
-            {% anchor name %}
+            {% anchortrans name %}
         </th>
         <th class="number">
-            {% anchor distance %}
+            {% anchortrans distance %}
         </th>
         <th class="number">
-            {% anchor ascent %}
+            {% anchortrans ascent %}
         </th>
         <th class="number">
-            {% anchor descent %}
+            {% anchortrans descent %}
         </th>
         <th>
-            {% anchor created %}
+            {% anchortrans created %}
         </th>
         <th class="number">
-            {% anchor tcount "Trip count" %}
+            {% anchortrans tcount "Trip count" %}
         </th>
     </tr>
 {% for object in object_list %}

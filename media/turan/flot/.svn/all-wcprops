@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 23
-/svn/!svn/ver/259/trunk
+/svn/!svn/ver/263/trunk
 END
 jquery.flot.selection.js
 K 25
@@ -25,7 +25,7 @@ API.txt
 K 25
 svn:wc:ra_dav:version-url
 V 31
-/svn/!svn/ver/258/trunk/API.txt
+/svn/!svn/ver/263/trunk/API.txt
 END
 jquery.flot.threshold.js
 K 25
@@ -39,17 +39,11 @@ svn:wc:ra_dav:version-url
 V 48
 /svn/!svn/ver/255/trunk/jquery.flot.crosshair.js
 END
-jquery.colorhelpers.js
+jquery.flot.navigate.js
 K 25
 svn:wc:ra_dav:version-url
-V 46
-/svn/!svn/ver/219/trunk/jquery.colorhelpers.js
-END
-NEWS.txt
-K 25
-svn:wc:ra_dav:version-url
-V 32
-/svn/!svn/ver/258/trunk/NEWS.txt
+V 47
+/svn/!svn/ver/251/trunk/jquery.flot.navigate.js
 END
 jquery.js
 K 25
@@ -57,11 +51,17 @@ svn:wc:ra_dav:version-url
 V 33
 /svn/!svn/ver/180/trunk/jquery.js
 END
-jquery.flot.navigate.js
+NEWS.txt
 K 25
 svn:wc:ra_dav:version-url
-V 47
-/svn/!svn/ver/251/trunk/jquery.flot.navigate.js
+V 32
+/svn/!svn/ver/263/trunk/NEWS.txt
+END
+jquery.colorhelpers.js
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/219/trunk/jquery.colorhelpers.js
 END
 jquery.flot.fillbetween.js
 K 25
@@ -73,7 +73,7 @@ jquery.flot.js
 K 25
 svn:wc:ra_dav:version-url
 V 38
-/svn/!svn/ver/259/trunk/jquery.flot.js
+/svn/!svn/ver/263/trunk/jquery.flot.js
 END
 PLUGINS.txt
 K 25
@@ -92,6 +92,12 @@ K 25
 svn:wc:ra_dav:version-url
 V 44
 /svn/!svn/ver/231/trunk/jquery.flot.stack.js
+END
+jquery.flot.symbol.js
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/263/trunk/jquery.flot.symbol.js
 END
 excanvas.min.js
 K 25

@@ -769,7 +769,6 @@ li.tag {
 
 div.averages {
     padding: 5px;
-    width: 700px;
 }
 
 div.averages ul,
@@ -820,6 +819,12 @@ ul.routes li,
 ul.trips li {
     list-style-type: none;
     margin-left: 0;
+    padding: 5px;
+}
+
+.routeimage {
+    width: 55px;
+    height: 55px;
     padding: 5px;
 }
 

@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load turan_extras %}
 
+{% load avatar_tags %}
 {% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
@@ -54,12 +55,12 @@
 {% endcomment %}
 {% include "turan/tags.html" %}
 
-
+<hr class="clearleft" />
 {% with object.get_trips as object_list %}
 {% autosort object_list %}
 {% autopaginate object_list %}
 {% if object_list %}
-    <h3>{% trans "Average speed"%}</h3>
+    <h2>{% trans "Average speed" %}</h2>
     <div id="avgspeeddiv" style="width:420px;height:200px"></div>
     <script id="source" language="javascript" type="text/javascript">
     $(function () {
@@ -86,7 +87,7 @@
     });
     </script>
     <h2 style="clear: both">{% trans "Altitude profile" %}</h2>
-    <div id="altdiv" style="width:1000px;height:200px"></div>
+    <div id="altdiv" style="height: 200px"></div>
 <script id="source" language="javascript" type="text/javascript">
     var alt = { data: [{{ alt }}], color: 3, lines: { fill: 0.7 } };
     var options = { yaxes:[{}, { min: 0, max: {{ alt_max }}, }], };
@@ -97,22 +98,32 @@ $.plot($("#altdiv"), [alt], options);
     <input type="submit" value="{% trans "Compare"%}">
     <table class="fullsize">
         <tr>
-            <th>{% trans "Select" %}</th>
-            <th>{% anchor user Exerciser %}</th>
-            <th>{% anchor duration %}</th>
-            <th>{% anchor avg_hr "Avg HR" %}</th>
-            <th>{% anchor avg_speed "Avg Speed" %}</th>
-            <th>{% anchor date %}</th>
+            <th>{% trans "Trip" %}</th>
+            <th>{% trans "CMP" %}</th>
+            <th>{% anchortrans user Exerciser %}</th>
+            <th>{% anchortrans date %}</th>
+            <th>{% anchortrans duration %}</th>
+            <th>{% anchortrans avg_hr "Avg HR" %}</th>
+            <th>{% anchortrans avg_speed "Avg Speed" %}</th>
             <th>{% trans "Comment" %}</th>
         </tr>
         {% for object in object_list %}
-        <tr>
-	    <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
-            <td>{{ object.user }}</td>
-            <td>{{ object.duration }}</td>
-            <td>{{ object.avg_hr }} {% if object.avg_hr and object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}) {% endif %}</td>
-            <td>{{ object.avg_speed|floatformat }}</td>
+        <tr class="{% cycle odd,even %}">
+            <td>
+                <a href="{{ object.get_absolute_url }}">
+                    <img src="/site_media/pinax/images/silk/icons/zoom.png" />
+                </a>
+            </td>
+            <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
+            <td>
+                <a href="{{ object.user.get_absolute_url }}" title="{{ object.user }}">
+                {% avatar object.user 32 %}
+                </a>
+            </td>
             <td><a href="{{ object.get_absolute_url }}">{{object.date|naturalday}}</a></td>
+            <td>{{ object.duration|nbsp }}</td>
+            <td>{{ object.avg_hr }}&nbsp;bpm {% if object.avg_hr and object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}) {% endif %}</td>
+            <td>{{ object.avg_speed|floatformat }}&nbsp;{% trans "km/h" %}</td>
             <td>{{ object.comment|slice:"70" }}</td>
         </tr>
         {% endfor %}

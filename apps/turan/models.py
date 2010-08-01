@@ -13,6 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 from django.core.files.base import ContentFile
 from tagging.fields import TagField
+import types
 
 from photos.models import Pool, Image
 
@@ -20,8 +21,8 @@ from datetime import datetime
 
 from svg import GPX2SVG
 from durationfield import DurationField
-from gpxparser import GPXParser
 
+from gpxparser import GPXParser
 from hrmparser import HRMParser
 from gmdparser import GMDParser
 from tcxparser import TCXParser
@@ -238,7 +239,7 @@ class Exercise(models.Model):
     kcal = models.IntegerField(blank=True, default=0, help_text=_('Only needed for Polar products'))
 
     temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
-    sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.tcx, .hrm, .gmd)'))
+    sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv)'))
 
     exercise_permission = models.CharField(max_length=1, choices=permission_choices, default='A', help_text=_('Visibility choice'))
 
@@ -435,6 +436,8 @@ def parse_sensordata(event):
                                                #upload page 
     elif filename.endswith('.csv'): # PowerTap
         parser = CSVParser()
+    elif filename.endswith('.gpx'):
+        parser = GPXParser(event.sensor_file) # Different constructor than the others
     else:
         return # Maybe warn user somehow?
 
@@ -451,13 +454,12 @@ def parse_sensordata(event):
         d = ExerciseDetail()
 
         d.exercise_id = event.id
-        d.time = val.time
-        d.hr = val.hr
-        d.altitude = val.altitude
-        d.speed = val.speed
-        d.cadence = val.cadence
-        d.lat = val.lat
-        d.lon = val.lon
+
+        # Figure out which values the parser has
+        for v in ('time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power'):
+            if v in val:
+                if not types.NoneType == type(val[v]):
+                    setattr(d, v, val[v])
         if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
             if not d.lat and not d.lon: # try and get from .gpx FIXME yeah...you know why
                 try:
@@ -465,8 +467,6 @@ def parse_sensordata(event):
                     d.lat = gpxvalues[i]['lat']
                 except IndexError:
                     pass # well..it might not match
-        if hasattr(val, 'power'): # very few parsers has this
-            d.power = val.power # assume the object has it if parser has it (cycletrip)
         d.save()
 
 
@@ -611,11 +611,12 @@ def normalize_altitude(event):
     ''' Normalize altitude, that is, if it's below zero scale every value up '''
 
     altitude_min = event.get_details().aggregate(Min('altitude'))['altitude__min']
-    if altitude_min < 0:
+    if altitude_min and altitude_min < 0:
         altitude_min = 0 - altitude_min
         for d in event.get_details().all():
-            d.altitude += altitude_min
-            d.save()
+            if d.altitude:
+                d.altitude += altitude_min
+                d.save()
 
 # handle notification of new comments
 from threadedcomments.models import ThreadedComment

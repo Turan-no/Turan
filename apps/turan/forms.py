@@ -92,11 +92,15 @@ class ExerciseForm(forms.ModelForm):
             return None
         data = Route.objects.get(pk=data)
         return data
-    
+
 class RouteForm(forms.ModelForm):
     class Meta:
         model = Route
         exclude = ('single_serving', 'start_lat', 'start_lon', 'end_lat', 'end_lon')
+
+class FullRouteForm(forms.ModelForm):
+    class Meta:
+        model = Route
 
 class FullExerciseForm(forms.ModelForm):
     class Meta:

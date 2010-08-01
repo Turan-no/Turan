@@ -160,7 +160,8 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'django.contrib.webdesign',
     'pinax.templatetags',
-    
+
+#    'devserver',
     # external
     'notification', # must be first
     'django_openid',

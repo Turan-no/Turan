@@ -25,6 +25,7 @@ from django.views.generic.list_detail import object_list
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from django.utils.decorators import decorator_from_middleware
 from django.utils.datastructures import SortedDict
 from django.middleware.gzip import GZipMiddleware
@@ -97,18 +98,11 @@ def exercise_compare(request, exercise1, exercise2):
         return redirect_to_login(request.path)
         # TODO Friend check
 
-    #t1_speed = tripdetail_js(event_type, trip1.id, 'speed')
-    #t2_speed = tripdetail_js(event_type, trip2.id, 'speed')
-    #t1_hr = tripdetail_js(event_type, trip1.id, 'hr')
-    #t2_hr = tripdetail_js(event_type, trip2.id, 'hr')
-    #t1_cad = tripdetail_js(event_type, trip1.id, 'cadence')
-    #t2_cad = tripdetail_js(event_type, trip2.id, 'cadence')
-
     alt = tripdetail_js(None, trip1.id, 'altitude')
     alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
-    datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False)
-    datasets2 = js_trip_series(request, trip2.get_details().all(), time_xaxis=False)
+    datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False, use_constraints=False)
+    datasets2 = js_trip_series(request, trip2.get_details().all(), time_xaxis=False, use_constraints=False)
     if not datasets1 or not datasets2:
         return HttpResponse(_('Missing exercise details.'))
     datasets = mark_safe(datasets1 +',' +datasets2)
@@ -493,13 +487,21 @@ def calendar_month(request, year, month):
 
     # Calculate first and last day of month, for use in a date-range lookup.
     first_day = date.replace(day=1)
+    start_delta = timedelta(days=first_day.weekday())
+    start_of_week = first_day - start_delta
+    week_start = [start_of_week + timedelta(days=i) for i in range(7)][0]
+
     if first_day.month == 12:
         last_day = first_day.replace(year=first_day.year + 1, month=1)
     else:
         last_day = first_day.replace(month=first_day.month + 1)
+
+    start_delta = timedelta(days=last_day.weekday())
+    start_of_week = last_day - start_delta
+    week_end = [start_of_week + timedelta(days=i) for i in range(7)][-1]
     lookup_kwargs = {
-        '%s__gte' % date_field: first_day,
-        '%s__lt' % date_field: last_day,
+        '%s__gte' % date_field: week_start,
+        '%s__lt' % date_field: week_end,
     }
 
     # Only bother to check current date if the month isn't in the past and future objects are requested.
@@ -507,7 +509,13 @@ def calendar_month(request, year, month):
         lookup_kwargs['%s__lte' % date_field] = now
 
 
-    exercices = Exercise.objects.select_related().order_by('date').filter(**lookup_kwargs)
+    # Do explicit select_related on route since it can be null, and then select_related does not work by default
+    exercices = Exercise.objects.select_related('route', 'exercise_type', 'user').order_by('date').filter(**lookup_kwargs)
+    # Filter by username
+    username = request.GET.get('username', '')
+    if username:
+        user = get_object_or_404(User, username=username)
+        exercices = exercices.filter(user=user)
 
     # Calculate the next month, if applicable.
     if allow_future:
@@ -525,10 +533,6 @@ def calendar_month(request, year, month):
 
     months = []
 
-    username = request.GET.get('username', '')
-    if username:
-        user = get_object_or_404(User, username=username)
-        exercices = exercices.filter(user=user)
 
 
    # FIXME django locale
@@ -536,9 +540,8 @@ def calendar_month(request, year, month):
     year, month = int(year), int(month)
     cal = WorkoutCalendar(exercices, locale.getdefaultlocale()).formatmonth(year, month)
 
+    e_by_week = [(week, list(items)) for week, items in groupby(exercices, lambda workout: int(workout.date.strftime('%W')))]
 
-
-    e_by_week = [(week, list(items)) for week, items in groupby(exercices, lambda workout: int(workout.date.strftime('%W'))+1)]
 
     return render_to_response('turan/calendar.html',
             {'calendar': mark_safe(cal),
@@ -561,19 +564,32 @@ def powerjson(request, object_id):
     details = list(all_details.all()[start:stop])
     ascent, descent = calculate_ascent_descent_gaussian(details)
 
-    ret = all_details.all()[start:stop].aggregate(
-            Avg('speed'),
-            Avg('hr'),
-            Avg('cadence'),
-            Avg('power'),
-            Min('speed'),
-            Min('hr'),
-            Min('cadence'),
-            Min('power'),
-            Max('speed'),
-            Max('hr'),
-            Max('cadence'),
-            Max('power'))
+    #ret = object.get_details().all()[start:stop].aggregate( Avg('speed'), Avg('hr'), Avg('cadence'), Avg('power'), Min('speed'), Min('hr'), Min('cadence'), Min('power'), Max('speed'), Max('hr'), Max('cadence'), Max('power'))
+
+    val_types = ('speed', 'hr', 'cadence', 'power')
+    ret = {
+            'speed__min': 9999,
+            'hr__min': 9999,
+            'cadence__min': 9999,
+            'power__min': 9999,
+            'speed__max': 0,
+            'hr__max': 0,
+            'cadence__max': 0,
+            'power__max': 0,
+            'speed__avg': 0,
+            'hr__avg': 0,
+            'cadence__avg': 0,
+            'power__avg': 0,
+    }
+    for d in details:
+        for val in val_types:
+            ret[val+'__min'] =  min(ret[val+'__min'], getattr(d, val))
+            ret[val+'__max'] = max(ret[val+'__max'], getattr(d, val))
+            if getattr(d, val):
+                ret[val+'__avg'] += getattr(d, val)
+    for val in val_types:
+        ret[val+'__avg'] = ret[val+'__avg']/len(details)
+
     ret['ascent'] = ascent
     ret['descent'] = descent
 
@@ -591,7 +607,7 @@ def powerjson(request, object_id):
         ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
         ret['duration'] = duration
         ret['distance'] = distance
-        ret['gradient'] = gradient
+        ret['gradient'] = gradient*100
     for a, b in ret.items():
         # Do not return empty values
         if not b:
@@ -701,8 +717,9 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
             js += '[%.4f,%s],' % (distance, dval)
     return js
 
-def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True):
-    ''' Generate javascript to be used directly in flot code '''
+def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, use_constraints=True):
+    ''' Generate javascript to be used directly in flot code
+    Argument use_constraints can be used to disable flot constraints for HR, used for compare feature '''
 
     if not details:
         return
@@ -780,6 +797,7 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True):
                 pass
 
     t = loader.get_template('turan/js_datasets.js')
+    js_strings['use_constraints'] = use_constraints
     c = Context(js_strings)
     js = t.render(c)
 
@@ -847,8 +865,9 @@ def getzones(values):
         previous_time = d.time
         if time.seconds > 60:
             continue
-
-        hr_percent = float(d.hr)*100/max_hr
+        hr_percent = 0
+        if d.hr:
+            hr_percent = float(d.hr)*100/max_hr
         zone = hr2zone(hr_percent)
         zones[zone] += time.seconds
 
@@ -890,8 +909,9 @@ def gethrhzones(values):
         previous_time = d.time
         if time.seconds > 60:
             continue
-
-        hr_percent = int(round(float(d.hr)*100/max_hr))
+        hr_percent = 0
+        if d.hr:
+            hr_percent = int(round(float(d.hr)*100/max_hr))
         #hr_percent = (float(d.hr)-resting_hr)*100/(max_hr-resting_hr)
         if not hr_percent in zones:
             zones[hr_percent] = 0
@@ -924,7 +944,8 @@ def getgradients(values):
         altitudes.append(d.altitude)
         distances.append(d.distance/1000)
 
-    altitudes = smoothListGaussian(altitudes)
+    # Smooth 10 Wide!
+    altitudes = smoothListGaussian(altitudes, 10)
 
     gradients = []
     previous_altitude = 0
@@ -1013,7 +1034,8 @@ def getavghr(values, start, end):
     hr = 0
     for i in xrange(start+1, end+1):
         delta_t = (values[i].time - values[i-1].time).seconds
-        hr += values[i].hr*delta_t
+        if values[i].hr:
+            hr += values[i].hr*delta_t
     delta_t = (values[end].time - values[start].time).seconds
     return float(hr)/delta_t
 
@@ -1144,33 +1166,37 @@ def exercise(request, object_id):
             power_show = True
             #avg30_show = True
 
-        best = {}
-        j = 0
-        for i in effort_range:
-            try:
-                best[j] = {}
-                if object.avg_power and power_show:
-                    best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
-                    best[j]['wkg'] = best[j]['power'] / userweight 
-                else:
-                    best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'] = best_x_sec(details, i, False)
+        cache_key = '%s_%s' %(object.id, 'best')
+        best = cache.get(cache_key)
+        if not best:
+            best = {}
+            j = 0
+            for i in effort_range:
+                try:
+                    best[j] = {}
+                    if object.avg_power and power_show:
+                        best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
+                        best[j]['wkg'] = best[j]['power'] / userweight 
+                    else:
+                        best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'] = best_x_sec(details, i, False)
 
-                best[j]['dur'] = i
-            except:
-                del best[j]
-                pass
-            else:
-                if best[j]['speed'] == 0.0:
+                    best[j]['dur'] = i
+                except:
                     del best[j]
-            j += 1
+                    pass
+                else:
+                    if best[j]['speed'] == 0.0:
+                        del best[j]
+                j += 1
+            cache.set(cache_key, best, 86400*7)
         object.best = best
 
 
         if object.avg_power and power_show:
-            poweravg30s = power_30s_average(details)
-            for i in range(0, len(poweravg30s)):
-                details[i].poweravg30s = poweravg30s[i]
-            object.normalized = normalized_power(poweravg30s)
+            object.normalized = power_30s_average(details)
+            #for i in range(0, len(poweravg30s)):
+            #    details[i].poweravg30s = poweravg30s[i]
+            #object.normalized = normalized_power(poweravg30s)
 
     datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
 
@@ -1447,7 +1473,9 @@ def power_30s_average(details):
 
     datasetlen = len(details)
 
-    poweravg30s = []
+    normalized = 0.0
+    fourth = 0.0
+    power_avg_count = 0
 
     #EXPECTING 1 SEC SAMPLE INTERVAL!
     for i in range(0, datasetlen):
@@ -1459,9 +1487,14 @@ def power_30s_average(details):
                 foo += details[i+j-30].power*delta_t
                 foo_element += 1.0
         if foo_element:
-            poweravg30s.append(foo/foo_element)
+            poweravg30s = foo/foo_element
+            details[i].poweravg30s = poweravg30s
+            fourth += pow(poweravg30s, 4)
+            power_avg_count += 1
 
-    return poweravg30s
+
+    normalized = int(round(pow((fourth/power_avg_count), (0.25))))
+    return normalized
 
 def best_x_sec(details, length, power):
 
@@ -1540,15 +1573,3 @@ def best_x_sec(details, length, power):
         return best_speed, best_start_km_speed, best_length_speed, best_power, best_start_km_power, best_length_power
     else:
         return best_speed, best_start_km_speed, best_length_speed
-
-def normalized_power(dataset):
-
-    normalized = 0.0
-    fourth = 0.0
-
-    for val in dataset:
-        fourth += pow(val, 4)
-
-    normalized = int(round(pow((fourth/len(dataset)), (0.25))))
-
-    return normalized
