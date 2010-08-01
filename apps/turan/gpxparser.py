@@ -23,8 +23,8 @@ class GPXEntry(object):
         self.speed = speed
         self.cadence = cadence
         self.altitude = altitude
-        self.lat = lon
-        self.lon = lat
+        self.lat = lat
+        self.lon = lon
 
 class GPXParser(object):
     start_lon = 0.0
