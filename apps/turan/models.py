@@ -457,9 +457,9 @@ def parse_sensordata(event):
 
         # Figure out which values the parser has
         for v in ('time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power'):
-            if v in val:
-                if not types.NoneType == type(val[v]):
-                    setattr(d, v, val[v])
+            if hasattr(val, v):
+                #if not types.NoneType == type(val[v]):
+                setattr(d, v, getattr(val, v))
         if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
             if not d.lat and not d.lon: # try and get from .gpx FIXME yeah...you know why
                 try:
