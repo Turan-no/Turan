@@ -70,16 +70,19 @@ class Route(models.Model):
     def save(self, force_insert=False, force_update=False):
         # If we have gpx file set but not start_lat set, parse gpx and set start and end positions
         if self.gpx_file:
-            # set coordinates for route if it doesn't exist
-            if not self.start_lat:
+            if not self.start_lat or self.distance or self.ascent:
                 try:
                     g = GPXParser(self.gpx_file.file)
-                    self.start_lon = g.start_lon
-                    self.start_lat = g.start_lat
-                    self.end_lon = g.end_lon
-                    self.end_lat = g.end_lat
-                    self.distance = g.distance
-                    if g.ascent and g.descent:
+                    # set coordinates for route if it doesn't exist
+                    if not self.start_lat:
+                        self.start_lon = g.start_lon
+                        self.start_lat = g.start_lat
+                        self.end_lon = g.end_lon
+                        self.end_lat = g.end_lat
+                    if not self.distance:
+                        # distance calculated in meters in parser
+                        self.distance = g.distance/1000.0
+                    if not self.ascent:
                         self.ascent = g.ascent
                         self.descent = g.descent
                 except:
@@ -503,20 +506,25 @@ def parse_sensordata(event):
         if parser.comment: # comment isn't always set
             event.comment = parser.comment
 
-
-    if event.route and not event.route.distance:
-        if parser.distance_sum:
-            # Sum is in meter, but routes like km.
-            event.route.distance = parser.distance_sum/1000
-
     # Normalize altitude, that is, if it's below zero scale every value up
     normalize_altitude(event)
 
     # Auto calculate total ascent and descent
     if event.route:
+        if event.route.distance:
+            # Sum is in meter, but routes like km.
+            # use the distance from sensor instead of gps
+            if parser.distance_sum and parser.distance_sum/1000 != event.route.distance:
+                event.route.distance = parser.distance_sum/1000
+                event.route.save()
+
+        ascent, descent = calculate_ascent_descent_gaussian(event.get_details().all())
+        # prefer ascent/descent calculated from sensor data over gps
         if event.route.ascent == 0 or event.route.descent == 0 \
-                or not event.route.ascent or not event.route.descent:
-            event.route.ascent, event.route.descent = calculate_ascent_descent_gaussian(event.get_details().all())
+                or not event.route.ascent or not event.route.descent \
+                or event.route.descent != descent or event.route.ascent != ascent:
+            event.route.ascent = ascent
+            event.route.descent = descent
             event.route.save()
 
 def smoothListGaussian(list,degree=5):
