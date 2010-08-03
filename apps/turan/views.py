@@ -59,6 +59,7 @@ from turancalendar import WorkoutCalendar
 from feeds import ExerciseCalendar
 
 import simplejson
+from profiler import profile
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -726,13 +727,13 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
 
     # The JS arrays
     js_strings = {
-            'speed': '',
-            'power': '',
-            'poweravg30s': '',
-            'altitude': '',
-            'cadence': '',
-            'hr': '',
-            'index': '',
+            'speed': [],
+            'power': [],
+            'poweravg30s': [],
+            'altitude': [],
+            'cadence': [],
+            'hr': [],
+            'index': [],
         }
 
     x = 0
@@ -795,6 +796,11 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
 
             except AttributeError: # not all formats support all values
                 pass
+
+
+    # Convert lists into strings
+    for val in js_strings.keys():
+        js_strings[val] = ''.join(js_strings[val])
 
     t = loader.get_template('turan/js_datasets.js')
     js_strings['use_constraints'] = use_constraints
@@ -1069,6 +1075,7 @@ def calcpower(userweight, eqweight, gradient, speed,
     windforce = 0.5**2 * speed**2  * airdensity * frontarea
     return (gforce + frictionforce + windforce)*speed
 
+#@profile("exercise_detail")
 def exercise(request, object_id):
     ''' View for exercise detail '''
 
