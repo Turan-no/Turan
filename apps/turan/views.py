@@ -1166,29 +1166,29 @@ def exercise(request, object_id):
             power_show = True
             #avg30_show = True
 
-        cache_key = '%s_%s' %(object.id, 'best')
-        best = cache.get(cache_key)
-        if not best:
-            best = {}
-            j = 0
-            for i in effort_range:
-                try:
-                    best[j] = {}
-                    if object.avg_power and power_show:
-                        best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
-                        best[j]['wkg'] = best[j]['power'] / userweight 
-                    else:
-                        best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'] = best_x_sec(details, i, False)
-
-                    best[j]['dur'] = i
-                except:
-                    del best[j]
-                    pass
+        #cache_key = '%s_%s' %(object.id, 'best')
+        #best = cache.get(cache_key)
+        #if not best:
+        best = {}
+        j = 0
+        for i in effort_range:
+            try:
+                best[j] = {}
+                if object.avg_power and power_show:
+                    best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
+                    best[j]['wkg'] = best[j]['power'] / userweight 
                 else:
-                    if best[j]['speed'] == 0.0:
-                        del best[j]
-                j += 1
-            cache.set(cache_key, best, 86400*7)
+                    best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'] = best_x_sec(details, i, False)
+
+                best[j]['dur'] = i
+            except:
+                del best[j]
+                pass
+            else:
+                if best[j]['speed'] == 0.0:
+                    del best[j]
+            j += 1
+        #    cache.set(cache_key, best, 86400*7)
         object.best = best
 
 
