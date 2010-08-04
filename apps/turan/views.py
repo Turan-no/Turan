@@ -1075,7 +1075,7 @@ def calcpower(userweight, eqweight, gradient, speed,
     windforce = 0.5**2 * speed**2  * airdensity * frontarea
     return (gforce + frictionforce + windforce)*speed
 
-@profile("exercise_detail")
+#@profile("exercise_detail")
 def exercise(request, object_id):
     ''' View for exercise detail '''
 
