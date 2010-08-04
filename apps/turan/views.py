@@ -1479,6 +1479,12 @@ def power_30s_average(details):
 
     datasetlen = len(details)
 
+
+    # FIXME implement for non 1 sec sample, for now return blank
+    sample_len = (details[1].time - details[0].time).seconds
+    if sample_len > 1:
+        return 0
+
     normalized = 0.0
     fourth = 0.0
     power_avg_count = 0
