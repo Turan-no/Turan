@@ -227,6 +227,7 @@ class Exercise(models.Model):
 
     avg_speed = models.FloatField(blank=True, null=True) #kmt
     avg_cadence = models.IntegerField(blank=True, null=True) # rpm
+    avg_pedaling_cad = models.IntegerField(blank=True, null=True) # rpm
     avg_power = models.IntegerField(blank=True, null=True) # W
 
     max_speed = models.FloatField(blank=True, null=True) #kmt
@@ -478,6 +479,7 @@ def parse_sensordata(event):
     event.avg_speed = parser.avg_speed
     if hasattr(parser, 'avg_cadence'):
         event.avg_cadence = parser.avg_cadence
+        event.avg_pedaling_cad = parser.avg_pedaling_cad
 
     event.duration = parser.duration
 

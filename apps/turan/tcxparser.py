@@ -113,6 +113,8 @@ class TCXParser(object):
 
         self.heartbeats = 0
         self.rotations = 0
+        self.pedaling_cad = 0
+        self.pedaling_cad_samples = 0
         self.powersum = 0
         for e in t.getiterator(tag="{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint"):
             try:
@@ -187,6 +189,10 @@ class TCXParser(object):
                 self.rotations += cadence*timedelta
                 if power:
                     self.powersum += power*timedelta
+                if cadence > 0:
+                    self.pedaling_cad += cadence*timedelta
+                    pedaling_cad_seconds += timedelta
+
 
             self.entries.append(TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power))
             self.cur_time = time
@@ -206,6 +212,7 @@ class TCXParser(object):
         self.max_cadence = max([self.entries[i].cadence for i in xrange(0,len(self.entries))])
         if self.rotations > 1.0:
             self.avg_cadence = self.rotations/seconds
+            self.avg_pedaling_cad = self.pedaling_cad/pedaling_cad_seconds
         if self.heartbeats > 1.0:
             self.avg_hr = self.heartbeats/seconds
         self.duration = '%is' % int(seconds)

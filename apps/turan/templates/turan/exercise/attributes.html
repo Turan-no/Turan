@@ -40,6 +40,9 @@
     {% if object.avg_cadence %}
     <li class="cadence"><span class="label">{% trans "Avg Cadence" %}:</span> {{ object.avg_cadence }} {% trans "RPM" %}</li>
     {% endif %}
+    {% if object.avg_pedaling_cad %}
+    <li class="cadence"><span class="label">{% trans "Avg Pedaling Cadence" %}:</span> {{ object.avg_pedaling_cad }} {% trans "RPM" %}</li>
+    {% endif %}
     {% if object.avg_power %}
     <li class="power"><span class="label">{% trans "Avg Power" %}:</span> {{ object.avg_power }} {% trans "W" %}</li>
     {% endif %}
