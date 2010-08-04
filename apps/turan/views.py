@@ -83,7 +83,7 @@ def index(request):
 
     tag_list = Tag.objects.cloud_for_model(Exercise)
 
-    # Top exercisers last 90
+    # Top exercisers last 14 days
     today = datetimedate.today()
     days = timedelta(days=14)
     begin = today - days
@@ -113,7 +113,7 @@ def exercise_compare(request, exercise1, exercise2):
 class TripsFeed(Feed):
     title = "lart.no turan trips"
     link = "http://turan.no/turan/"
-    description = "Trips from lart.no/turan"
+    description = "Trips from turan.no/turan"
 
     def items(self):
         return Exercise.objects.order_by('-date')[:20]
@@ -1075,7 +1075,7 @@ def calcpower(userweight, eqweight, gradient, speed,
     windforce = 0.5**2 * speed**2  * airdensity * frontarea
     return (gforce + frictionforce + windforce)*speed
 
-#@profile("exercise_detail")
+@profile("exercise_detail")
 def exercise(request, object_id):
     ''' View for exercise detail '''
 
@@ -1173,31 +1173,30 @@ def exercise(request, object_id):
             power_show = True
             #avg30_show = True
 
-        #cache_key = '%s_%s' %(object.id, 'best')
-        #best = cache.get(cache_key)
-        #if not best:
-        best = {}
-        j = 0
-        for i in effort_range:
-            try:
-                best[j] = {}
-                if object.avg_power and power_show:
-                    best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
-                    best[j]['wkg'] = best[j]['power'] / userweight 
-                else:
-                    best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'] = best_x_sec(details, i, False)
+        cache_key = '%s_%s' %(object.id, 'best')
+        best = cache.get(cache_key)
+        if not best:
+            best = {}
+            j = 0
+            for i in effort_range:
+                try:
+                    best[j] = {}
+                    if object.avg_power and power_show:
+                        best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
+                        best[j]['wkg'] = best[j]['power'] / userweight 
+                    else:
+                        best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'] = best_x_sec(details, i, False)
 
-                best[j]['dur'] = i
-            except:
-                del best[j]
-                pass
-            else:
-                if best[j]['speed'] == 0.0:
+                    best[j]['dur'] = i
+                except:
                     del best[j]
-            j += 1
-        #    cache.set(cache_key, best, 86400*7)
+                    pass
+                else:
+                    if best[j]['speed'] == 0.0:
+                        del best[j]
+                j += 1
+            cache.set(cache_key, best, 86400*7)
         object.best = best
-
 
         if object.avg_power and power_show:
             object.normalized = power_30s_average(details)
