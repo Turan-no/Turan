@@ -1106,14 +1106,12 @@ def exercise(request, object_id):
     time_xaxis = True
     if details:
         if filldistance(details): # Only do this if we actually have distance
+            # xaxis by distance if we have distance in details unless user requested time !
+            req_t = request.GET.get('xaxis', '')
+            if not req_t == 'time':
+                time_xaxis = False
             userweight = object.user.get_profile().get_weight(object.date)
             slopes = getslopes(details)
-            if slopes:
-                # If we have slopes, we have distance use that for graph
-                # unless user wanted time !
-                req_t = request.GET.get('xaxis', '')
-                if not req_t == 'time':
-                    time_xaxis = False
             for slope in slopes:
                 slope.duration = details[slope.end].time - details[slope.start].time
                 slope.speed = slope.length/slope.duration.seconds * 3.6
