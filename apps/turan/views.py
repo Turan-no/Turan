@@ -1171,7 +1171,7 @@ def exercise(request, object_id):
             power_show = True
             #avg30_show = True
 
-        cache_key = '%s_%s' %(object.id, 'best')
+        cache_key = '%s_%s_%d' %(object.id, 'best', power_show)
         best = cache.get(cache_key)
         if not best:
             best = {}
