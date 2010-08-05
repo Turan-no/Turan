@@ -178,7 +178,9 @@ def model_verbose_name_plural(obj):
 
 @register.filter
 def distanceformat(value):
-    if value > 9999.9:
-        return str(round(value / 1000.0, 1)) + " km"
-    else:
-        return str(int(round(value, 0))) + " m"
+    if value:
+        if value > 9999.9:
+            return str(round(value / 1000.0, 1)) + " km"
+        else:
+            return str(int(round(value, 0))) + " m"
+    return value
