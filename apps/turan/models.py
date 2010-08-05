@@ -73,18 +73,19 @@ class Route(models.Model):
         if self.gpx_file:
             if not self.start_lat or self.distance or self.ascent:
                     g = GPXParser(self.gpx_file.file)
-                    # set coordinates for route if it doesn't exist
-                    if not self.start_lat:
-                        self.start_lon = g.start_lon
-                        self.start_lat = g.start_lat
-                        self.end_lon = g.end_lon
-                        self.end_lat = g.end_lat
-                    if not self.distance:
-                        # distance calculated in meters in parser
-                        self.distance = g.distance/1000.0
-                    if not self.ascent:
-                        self.ascent = g.ascent
-                        self.descent = g.descent
+                    if g:
+                        # set coordinates for route if it doesn't exist
+                        if not self.start_lat:
+                            self.start_lon = g.start_lon
+                            self.start_lat = g.start_lat
+                            self.end_lon = g.end_lon
+                            self.end_lat = g.end_lat
+                        if not self.distance:
+                            # distance calculated in meters in parser
+                            self.distance = g.distance/1000.0
+                        if not self.ascent:
+                            self.ascent = g.ascent
+                            self.descent = g.descent
         super(Route, self).save(force_insert, force_update)
         if self.gpx_file:
             # generate svg if it doesn't exist (after save, it uses id for filename)

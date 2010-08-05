@@ -62,7 +62,11 @@ class GPXParser(object):
             return None # missing element
 
     def __init__(self, filename):
-        doc = ET.parse(filename)
+        try:
+            doc = ET.parse(filename)
+        except:
+            # mongofil
+            return
         root = doc.getroot()
         ns = root.tag[:-3]
         self.ns = ns
