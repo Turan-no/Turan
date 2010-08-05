@@ -58,6 +58,8 @@ class GPXParser(object):
             return float(e.text)
         except ValueError:
             return None # missing element
+        except AttributeError:
+            return None # missing element
 
     def __init__(self, filename):
         doc = ET.parse(filename)
