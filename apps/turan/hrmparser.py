@@ -32,6 +32,8 @@ class HRMParser(object):
     cadence_sum = 0
     distance_sum = 0
     kcal_sum = 0
+    pedaling_cad_seconds = 0
+    pedaling_cad = 0
 
     comment = ''
 
@@ -95,6 +97,11 @@ class HRMParser(object):
                     if cadence > self.max_cadence:
                         self.max_cadence = cadence
 
+                    if cadence > 0:
+                        self.pedaling_cad += cadence*self.interval
+                        self.pedaling_cad_seconds += self.interval
+
+
                     time = datetime.datetime(self.date.year, self.date.month, self.date.day, self.start_time.hour, self.start_time.minute, self.start_time.second)
                     time = time + datetime.timedelta(0, self.interval*i)
                     self.entries.append(HRMEntry(time, hr, speed, cadence, altitude))
@@ -133,6 +140,8 @@ class HRMParser(object):
         self.avg_hr = self.hr_sum/len(self.entries)
         self.avg_speed = self.speed_sum/len(self.entries)
         self.avg_cadence = self.cadence_sum/len(self.entries)
+        if self.pedaling_cad and self.pedaling_cad_seconds:
+            self.avg_pedaling_cad = self.pedaling_cad/self.pedaling_cad_seconds
 
 
 if __name__ == '__main__':
@@ -150,5 +159,5 @@ if __name__ == '__main__':
     print h.temperature
 
     h.parse_uploaded_file(file(sys.argv[1]))
-    print h.avg_hr, h.avg_speed, h.avg_cadence
+    print h.avg_hr, h.avg_speed, h.avg_cadence, h.avg_pedaling_cad
     print h.max_hr, h.max_speed, h.max_cadence
