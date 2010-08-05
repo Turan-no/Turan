@@ -114,7 +114,7 @@ class TCXParser(object):
         self.heartbeats = 0
         self.rotations = 0
         self.pedaling_cad = 0
-        self.pedaling_cad_samples = 0
+        pedaling_cad_seconds = 0
         self.powersum = 0
         for e in t.getiterator(tag="{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint"):
             try:
