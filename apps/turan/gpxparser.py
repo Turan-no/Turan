@@ -113,7 +113,8 @@ class GPXParser(object):
                                 self.ascent = self.ascent + delta_ele
                             else:
                                 self.descent = self.descent + delta_ele
-                        speed = 3.6 * this_distance/(time - self.entries[-1].time).seconds
+                        if this_distance:
+                            speed = 3.6 * this_distance/(time - self.entries[-1].time).seconds
 
                     e = GPXEntry(time, 0, speed, 0, ele, lon, lat)
                     self.avg_speed += speed
