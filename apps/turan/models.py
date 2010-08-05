@@ -476,6 +476,7 @@ def parse_sensordata(event):
     event.avg_speed = parser.avg_speed
     if hasattr(parser, 'avg_cadence'):
         event.avg_cadence = parser.avg_cadence
+    if hasattr(parser, 'avg_pedaling_cad'):
         event.avg_pedaling_cad = parser.avg_pedaling_cad
 
     event.duration = parser.duration
