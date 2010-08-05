@@ -97,7 +97,7 @@ class GPXParser(object):
 
                     speed = 0
                     tstring = trkpt.find(ns + 'time').text
-                    time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").strip("Z").split("-")))
+                    time = datetime.datetime(*map(float, tstring.replace("T","-").replace(":","-").strip("Z").split("-")))
 
                     if self.entries:
                         this_distance = proj_distance(self.entries[-1].lat,
