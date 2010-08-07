@@ -127,8 +127,8 @@ class GPXParser(object):
             self.start_lon = self.entries[0].lon
             self.start_lat = self.entries[0].lat
 
-            self.end_lon = lon
-            self.end_lat = lat
+            self.end_lon = self.entries[-1].lon
+            self.end_lat = self.entries[-1].lat
 
             # Turan likes distance in km
             #self.distance = self.distance/1000
