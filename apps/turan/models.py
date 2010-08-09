@@ -511,7 +511,7 @@ def parse_sensordata(event):
             event.comment = parser.comment
 
     # Normalize altitude, that is, if it's below zero scale every value up
-    #normalize_altitude(event)
+    normalize_altitude(event)
 
     # Auto calculate total ascent and descent
     if event.route:
