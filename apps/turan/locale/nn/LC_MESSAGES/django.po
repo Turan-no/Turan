@@ -1074,7 +1074,7 @@ msgstr "Støtta nettstadar"
 #: templates/turan/import.html:24 templates/turan/index.html:104
 #: templates/turan/index.html.py:105
 msgid "Import exercise"
-msgstr "Impotert trening"
+msgstr "Importer trening"
 
 #: templates/turan/import_stage2.html:9
 msgid "Imported the following data"
@@ -1099,7 +1099,7 @@ msgstr "stigning"
 #: templates/turan/index.html:92 templates/turan/index.html.py:93
 #: templates/turan/route_list.html:75 templates/turan/route_list.html.py:76
 msgid "Add route"
-msgstr "Legg til rute"
+msgstr "Ny rute"
 
 #: templates/turan/index.html:98 templates/turan/index.html.py:99
 msgid "Add an exercise"
