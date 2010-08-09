@@ -17,6 +17,9 @@
     <h2>
         <a href="{% url exercises %}">{% trans "Latest exercises" %}</a>
     </h2>
+        {% for object in exercise_list %}
+         {{ object|exercise_mouseover }}
+        {% endfor %}
     <ul class="trips">
         {% for object in exercise_list %}
         <li class="{% cycle "even" "odd" %}">

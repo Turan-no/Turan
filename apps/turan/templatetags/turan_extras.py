@@ -1,4 +1,5 @@
 from django import template
+from django.template import Context, loader
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import floatformat
@@ -184,3 +185,10 @@ def distanceformat(value):
         else:
             return str(int(round(value, 0))) + " m"
     return value
+
+@register.filter
+def exercise_mouseover(obj):
+    t = loader.get_template('turan/exercise/mouseover.html')
+    c = Context({'object': obj})
+    html = t.render(c)
+    return html
