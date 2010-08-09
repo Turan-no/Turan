@@ -511,7 +511,7 @@ def parse_sensordata(event):
             event.comment = parser.comment
 
     # Normalize altitude, that is, if it's below zero scale every value up
-    normalize_altitude(event)
+    #normalize_altitude(event)
 
     # Auto calculate total ascent and descent
     if event.route:
@@ -618,9 +618,8 @@ def normalize_altitude(event):
     if altitude_min and altitude_min < 0:
         altitude_min = 0 - altitude_min
         for d in event.get_details().all():
-            if d.altitude:
-                d.altitude += altitude_min
-                d.save()
+            d.altitude += altitude_min
+            d.save()
 
 # handle notification of new comments
 from threadedcomments.models import ThreadedComment
