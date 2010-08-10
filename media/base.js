@@ -6,7 +6,7 @@ $(function() {
         var itemId = this.getAttribute("id").split("_")[1];
         
         var popupBox = $("#mouseover_" + itemId).show();
-        popupBox.css({ position: "fixed", left: evt.clientX - 315 + "px", top: evt.clientY + "px", width: "300px", backgroundColor: "#fff", border: "1px solid black", zIndex: 10, padding: "5px" });
+        popupBox.css({ left: evt.clientX - 315 + "px", top: evt.clientY + "px", width: "300px" });
     }
 
     function popupfadeout(evt) {

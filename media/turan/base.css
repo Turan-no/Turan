@@ -907,3 +907,21 @@ ul#last_comments h4 {
 ul#last_comments p {
     font-size: 12px;
 }
+div.tooltip ul {
+    padding: 5px;
+}
+div.tooltip {
+    z-index: 10;
+    position: fixed;
+    background-color: #fff;
+    -webkit-box-shadow: 3px 3px 12px rgb(40, 40, 40);
+    box-shadow: 3px 3px 12px rgb(40, 40, 40);
+    -moz-box-shadow: 3px 3px 12px rgb(40, 40, 40);
+    -webkit-border-radius: 1em;
+    -moz-border-radius: 1em;
+    border-radius: 1em;
+    border: 2px solid silver;
+    opacity: 0.9;
+    padding: 5px;
+}
+
