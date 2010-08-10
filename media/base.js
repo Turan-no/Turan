@@ -2,6 +2,21 @@ jQuery.fn.autoscroll = function() {
     $('html,body').animate({scrollTop: this.offset().top}, 500);
 }
 $(function() {
+    function popupfadein(evt) {
+        var itemId = this.getAttribute("id").split("_")[1];
+        
+        var popupBox = $("#mouseover_" + itemId).show();
+        popupBox.css({ position: "fixed", left: evt.clientX - 515 + "px", top: evt.clientY + "px", width: "500px", backgroundColor: "#ccc", border: "2px solid silver", zIndex: 10, padding: "5px" });
+    }
+
+    function popupfadeout(evt) {
+        var itemId = this.getAttribute("id").split("_")[1];
+        
+        var popupBox = $("#mouseover_" + itemId).hide();
+    }
+
+    $("ul.trips li").hoverIntent({timeout: 500, over: popupfadein, out: popupfadeout});
+
     var profile_avatar = $('#profile_avatar');
     if(profile_avatar) {
         profile_avatar.bind('mouseenter', function() {
