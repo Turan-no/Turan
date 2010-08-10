@@ -6,7 +6,7 @@ $(function() {
         var itemId = this.getAttribute("id").split("_")[1];
         
         var popupBox = $("#mouseover_" + itemId).show();
-        popupBox.css({ position: "fixed", left: evt.clientX - 515 + "px", top: evt.clientY + "px", width: "500px", backgroundColor: "#ccc", border: "2px solid silver", zIndex: 10, padding: "5px" });
+        popupBox.css({ position: "fixed", left: evt.clientX - 315 + "px", top: evt.clientY + "px", width: "300px", backgroundColor: "#fff", border: "1px solid black", zIndex: 10, padding: "5px" });
     }
 
     function popupfadeout(evt) {
@@ -15,7 +15,7 @@ $(function() {
         var popupBox = $("#mouseover_" + itemId).hide();
     }
 
-    $("ul.trips li").hoverIntent({timeout: 500, over: popupfadein, out: popupfadeout});
+    $("ul.trips li").hoverIntent({timeout: 0, interval: 600, over: popupfadein, out: popupfadeout});
 
     var profile_avatar = $('#profile_avatar');
     if(profile_avatar) {

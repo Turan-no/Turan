@@ -2,43 +2,41 @@
 {% load avatar_tags %}
 {% load turan_extras %}
 <div class="tooltip hidden" id="mouseover_{{object.id}}">
-    <div style="float: right"><img alt="Exerciselogo" src="{{object.icon}}" /></div>
-<h1>
+<a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user %}</a>
+<div class="floatright"><img alt="Exerciselogo" src="{{object.icon}}" /></div>
+<h3 class="floatright">
     {{ object }}
-</h1>
-<div style="clear: left"></div>
+</h3>
+<div style="clear: both"></div>
 <ul class="tooltip">
-    <li class="person">
-        <a class="floatright" href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
-    </li>
+    {% if object.avg_speed %}
+    <li class="speed"><span class="label">{% trans "Avg Speed" %}:</span><div style="text-align: right; float: right"> {{ object.avg_speed|floatformat }} {% trans "km/h" %}</div></li>
+    {% endif %}
+    {% if object.avg_hr %}
+    <li class="heart"><span class="label">{% trans "Avg HR" %}:</span><div style="text-align: right; float: right"> {{ object.avg_hr }} {% trans "BPM" %} {% if object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}){% endif %}</div></li>
+    {% endif %}
     {% if object.route %}
-    <li class="route"><span class="label">{% trans "Route" %}:</span> <a href="{{ object.route.get_absolute_url }}">{{ object.route }}</a> {{ object.route.distance }} km
+    <li class="route"><span class="label">{% trans "Distance" %}:</span><div style="text-align: right; float: right">{{ object.route.distance|floatformat }} km</div>
     {% endif %}
     </li>
     {% if object.duration %} 
-    <li class="duration"><span class="label">{% trans "Duration" %}:</span> {{ object.duration }}</li>
+    <li class="duration"><span class="label">{% trans "Duration" %}:</span> <div style="text-align: right; float: right">{{ object.duration }}</div></li>
     {% endif %}
-    <li class="date"><span class="label">{% trans "Date" %}:</span> {{ object.date }}</li>
     {% if object.time %}
-    <li class="time"><span class="label">{% trans "Start time" %}:</span> {{ object.time }}</li>
+    <li class="time"><span class="label">{% trans "Start time" %}:</span><div style="text-align: right; float: right"> {{ object.time }}</div></li>
     {% endif %}
-    {% if object.avg_speed %}
-    <li class="speed"><span class="label">{% trans "Avg Speed" %}:</span> {{ object.avg_speed|floatformat }} {% trans "km/h" %}</li>
-    {% endif %}
-    {% if object.avg_hr %}
-    <li class="heart"><span class="label">{% trans "Avg HR" %}:</span> {{ object.avg_hr }} {% trans "BPM" %} {% if object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}){% endif %}</li>
-    {% endif %}
+    <li class="date"><span class="label">{% trans "Date" %}:</span><div style="text-align: right; float: right"> {{ object.date }}</div></li>
     {% if object.avg_pedaling_cad %}
-    <li class="cadence"><span class="label">{% trans "Avg Pedaling Cadence" %}:</span> {{ object.avg_pedaling_cad }} {% trans "RPM" %}</li>
+    <li class="cadence"><span class="label">{% trans "Avg Pedaling Cadence" %}:</span><div style="text-align: right; float: right"> {{ object.avg_pedaling_cad }} {% trans "RPM" %}</div></li>
     {% endif %}
     {% if object.avg_pedaling_power %}
-    <li class="power"><span class="label">{% trans "Avg Pedaling Power" %}:</span> {{ object.avg_pedaling_power }} {% trans "W" %}</li>
+    <li class="power"><span class="label">{% trans "Avg Pedaling Power" %}:</span><div style="text-align: right; float: right"> {{ object.avg_pedaling_power }} {% trans "W" %}</div></li>
     {% endif %}
     {% if object.normalized %}
-    <li class="power"><span class="label">{% trans "Normalized Power(tm)" %}:</span> {{ object.normalized }} {% trans "W" %}</li>
+    <li class="power"><span class="label">{% trans "Normalized Power(tm)" %}:</span><div style="text-align: right; float: right"> {{ object.normalized }} {% trans "W" %}</div></li>
     {% endif %}
     {% if object.kcal %}
-    <li class="kcal" ><span class="label">{% trans "Used kcal" %}:</span> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})</li>
+    <li class="kcal" ><span class="label">{% trans "Used kcal" %}:</span><div style="text-align: right; float: right"> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})</div></li>
     {% endif %}
     {% if object.comment %}
     <li class="comment">{{ object.user }} {% trans "writes" %}:
