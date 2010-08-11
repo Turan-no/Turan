@@ -1,5 +1,6 @@
 from django import template
-from django.template import Context, loader
+#from django.template import render_to_string #Context, loader
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import floatformat
@@ -188,7 +189,8 @@ def distanceformat(value):
 
 @register.filter
 def exercise_mouseover(obj):
-    t = loader.get_template('turan/exercise/mouseover.html')
-    c = Context({'object': obj})
-    html = t.render(c)
-    return html
+    #t = loader.get_template('turan/exercise/mouseover.html')
+    #c = Context({'object': obj})
+    #html = t.render(c)
+    #return html
+    return render_to_string('turan/exercise/mouseover.html', {'object': obj})

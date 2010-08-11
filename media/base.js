@@ -15,7 +15,7 @@ $(function() {
         var popupBox = $("#mouseover_" + itemId).hide();
     }
 
-    $("ul.trips li").hoverIntent({timeout: 0, interval: 600, over: popupfadein, out: popupfadeout});
+    $(".hoverpoint").hoverIntent({timeout: 0, interval: 600, over: popupfadein, out: popupfadeout});
 
     var profile_avatar = $('#profile_avatar');
     if(profile_avatar) {

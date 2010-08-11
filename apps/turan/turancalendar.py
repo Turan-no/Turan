@@ -3,6 +3,7 @@ from datetime import date, timedelta
 from itertools import groupby
 from django.utils.translation import ugettext_lazy as _
 from django.utils.html import conditional_escape as esc
+from turan.templatetags.turan_extras import exercise_mouseover
 
 class WorkoutCalendar(LocaleHTMLCalendar):
     sums = {
@@ -36,8 +37,9 @@ class WorkoutCalendar(LocaleHTMLCalendar):
             if weekday in workouts_by_weekday:
                 cssclass += ' filled'
                 body = ['<ul>']
+                mouseover_html = []
                 for workout in workouts_by_weekday[weekday]:
-                    body.append('<li>')
+                    body.append('<li class="hoverpoint" id="workout_%s">' %workout.id)
                     body.append('<a href="%s">' % workout.get_absolute_url())
                     body.append('<img src="' + workout.icon() + '" />')
                     body.append(esc(workout))
@@ -51,7 +53,10 @@ class WorkoutCalendar(LocaleHTMLCalendar):
                     body.append(esc(str(workout.duration).replace(" ", "&nbsp;")))
                     body.append('</p>')
                     body.append('</li>')
+                    mouseover_html.append(unicode(exercise_mouseover(workout)))
                 body.append('</ul>')
+
+                body.append(''.join(mouseover_html))
                 dayhtml = '<div class="day">%d</div>' %day
                 if day == 0:
                     dayhtml = ''
