@@ -6,8 +6,9 @@ $(function() {
         var itemId = this.getAttribute("id").split("_")[1];
         
         var popupBox = $("#mouseover_" + itemId).show();
-        var boxWidth = 300;
-        popupBox.css({ left: evt.clientX + (evt.clientX < boxWidth ? boxWidth : 0) + "px", top: evt.clientY + "px", width: boxWidth + "px" });
+        var boxWidth = 350;
+        var boxHeight = parseInt(popupBox.css("height").replace("px","")) + 50;
+        popupBox.css({ left: (evt.clientX > window.innerWidth - boxWidth ? window.innerWidth - boxWidth : evt.clientX) + "px", top: (evt.clientY > window.innerHeight - boxHeight ? window.innerHeight - boxHeight : evt.clientY) + "px", width: boxWidth-50 + "px" });
     }
 
     function popupfadeout(evt) {
