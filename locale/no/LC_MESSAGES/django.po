@@ -704,7 +704,7 @@ msgid ""
 "\n"
 "you received a private message from %(sender)s with\n"
 "the following contents:"
-msgstr "Hei %(mottaker)s, du har mottatt en privat melding fra %(sender)s med følgende innhold:"
+msgstr "Hei %(recipient)s, du har mottatt en privat melding fra %(sender)s med følgende innhold:"
 
 #: apps/turan/templates/messages/new_message.html:9
 #, python-format
