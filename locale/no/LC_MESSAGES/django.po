@@ -19,22 +19,22 @@ msgstr ""
 #: apps/friends_app/views.py:25
 #, python-format
 msgid "Accepted friendship request from %(from_user)s"
-msgstr "Akseptert vennskapsforespørsel fra %(from_user)s "
+msgstr "Aksepterte en vennskapsforespørsel fra %(from_user)s "
 
 #: apps/friends_app/views.py:39
 #, python-format
 msgid "Declined friendship request from %(from_user)s"
-msgstr "Avvis vennskapsforespørsel fra %(from_user)s "
+msgstr "Avviste en vennskapsforespørsel fra %(from_user)s "
 
 #: apps/friends_app/views.py:79
 #, python-format
 msgid "%(total)s vCards found, %(imported)s contacts imported."
-msgstr " %(Totalt)s  vCard ble funnet, %(importert)s kontakter ble importert."
+msgstr "%(total)s  vCard ble funnet, %(imported)s kontakter ble importert."
 
 #: apps/friends_app/views.py:88 apps/friends_app/views.py:94
 #, python-format
 msgid "%(total)s people with email found, %(imported)s contacts imported."
-msgstr " %(Totalt)s personer med epost ble funnet, %(importert)s kontakter ble importert."
+msgstr "%(total)s personer med epost ble funnet, %(imported)s kontakter ble importert."
 
 #: apps/profiles/models.py:11
 msgid "user"
