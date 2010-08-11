@@ -679,7 +679,7 @@ table.month th {
     padding: 4px;
 }
 
-table.month ul li {
+table.month td>ul li {
     list-style-type: none;
     padding: 2px 1px 8px 1px;
     margin: 2px 2px 2px 1px;
@@ -906,9 +906,6 @@ ul#last_comments h4 {
 }
 ul#last_comments p {
     font-size: 12px;
-}
-.month div.tooltip ul {
-    padding-left: 25px;
 }
 div.tooltip ul {
     padding: 5px;
