@@ -158,6 +158,10 @@ class TCXParser(object):
             except AttributeError:
                 power = 0
 
+            # Quickfix to skip empty trackpoints found at least in Garmin Edge 500 tcx-files
+            if lat == 0.0 and lon == 0.0 and distance == 0:
+                continue
+
             time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
 
             timedelta = (time - self.cur_time).seconds
