@@ -108,8 +108,9 @@ $.plot($("#altdiv"), [alt], options);
             <th>{% trans "Comment" %}</th>
         </tr>
         {% for object in object_list %}
-        <tr class="{% cycle odd,even %}">
+        <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
             <td>
+                {{ object|exercise_mouseover }}
                 <a href="{{ object.get_absolute_url }}">
                     <img src="/site_media/pinax/images/silk/icons/zoom.png" />
                 </a>
