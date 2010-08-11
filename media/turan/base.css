@@ -907,6 +907,9 @@ ul#last_comments h4 {
 ul#last_comments p {
     font-size: 12px;
 }
+.month div.tooltip ul {
+    padding-left: 25px;
+}
 div.tooltip ul {
     padding: 5px;
 }
