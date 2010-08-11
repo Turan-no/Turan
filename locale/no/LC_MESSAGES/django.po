@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-12 00:14+0200\n"
-"PO-Revision-Date: 2010-08-12 00:29\n"
+"POT-Creation-Date: 2010-08-12 00:37+0200\n"
+"PO-Revision-Date: 2010-08-12 00:40\n"
 "Last-Translator: Simen Graaten <simeng@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -634,6 +634,126 @@ msgstr "Medlemskapsøknader sendt"
 msgid "No join requests sent."
 msgstr "Ingen medlemskapsøknader"
 
+#: apps/turan/templates/messages/base.html:8
+#: apps/turan/templates/messages/inbox.html:4
+#: apps/turan/templates/messages/new_message.html:10
+#: templates/site_base.html:61
+msgid "Inbox"
+msgstr "Informasjon"
+
+#: apps/turan/templates/messages/base.html:9
+#: apps/turan/templates/messages/outbox.html:4
+msgid "Sent Messages"
+msgstr "Sendte meldinger"
+
+#: apps/turan/templates/messages/base.html:10
+msgid "New Message"
+msgstr "Ny melding"
+
+#: apps/turan/templates/messages/base.html:11
+msgid "Trash"
+msgstr "Søppel"
+
+#: apps/turan/templates/messages/compose.html:4
+msgid "Compose Message"
+msgstr "Skriv ny melding"
+
+#: apps/turan/templates/messages/compose.html:9
+msgid "Send"
+msgstr "Send"
+
+#: apps/turan/templates/messages/inbox.html:7
+#: apps/turan/templates/messages/trash.html:7
+#: apps/turan/templates/messages/view.html:8
+msgid "Sender"
+msgstr "Avsender"
+
+#: apps/turan/templates/messages/inbox.html:7
+#: apps/turan/templates/messages/outbox.html:7
+#: apps/turan/templates/messages/trash.html:7
+#: apps/turan/templates/messages/view.html:6
+msgid "Subject"
+msgstr "Tittel"
+
+#: apps/turan/templates/messages/inbox.html:7
+msgid "Received"
+msgstr "Mottatt"
+
+#: apps/turan/templates/messages/inbox.html:7
+#: apps/turan/templates/messages/outbox.html:7
+#: apps/turan/templates/messages/trash.html:7
+msgid "Action"
+msgstr "Valg"
+
+#: apps/turan/templates/messages/inbox.html:19
+#: apps/turan/templates/messages/outbox.html:16
+#: apps/turan/templates/messages/trash.html:16
+#: apps/turan/templates/messages/view.html:11
+msgid "DATETIME_FORMAT"
+msgstr "DATETIME_FORMAT"
+
+#: apps/turan/templates/messages/inbox.html:20
+#: apps/turan/templates/messages/outbox.html:17
+msgid "delete"
+msgstr "Slett"
+
+#: apps/turan/templates/messages/new_message.html:1
+#, python-format
+msgid ""
+"Hello %(recipient)s,\n"
+"\n"
+"you received a private message from %(sender)s with\n"
+"the following contents:"
+msgstr "Hei %(mottaker)s, du har mottatt en privat melding fra %(sender)s med følgende innhold:"
+
+#: apps/turan/templates/messages/new_message.html:9
+#, python-format
+msgid "Sent from %(site_url)s"
+msgstr "Sendt fra %(site_url)s "
+
+#: apps/turan/templates/messages/new_message.html:11
+#: apps/turan/templates/messages/view.html:18
+msgid "Reply"
+msgstr "Svar"
+
+#: apps/turan/templates/messages/outbox.html:7
+#: apps/turan/templates/messages/view.html:12
+msgid "Recipient"
+msgstr "Mottaker"
+
+#: apps/turan/templates/messages/outbox.html:7
+msgid "Sent"
+msgstr "Sendt"
+
+#: apps/turan/templates/messages/trash.html:4
+msgid "Deleted Messages"
+msgstr "Slettede Meldinger"
+
+#: apps/turan/templates/messages/trash.html:7
+#: apps/turan/templates/messages/view.html:10
+#: apps/turan/templates/turan/exercise/attributes.html:27
+#: apps/turan/templates/turan/exercise/mouseover.html:28
+#: templates/profiles/profiles.html:25
+msgid "Date"
+msgstr "Dato"
+
+#: apps/turan/templates/messages/trash.html:17
+msgid "undelete"
+msgstr "gjenopprett"
+
+#: apps/turan/templates/messages/trash.html:23
+msgid "Deleted Messages are removed from the trash at unregular intervals, don't rely on this feature for long-time storage."
+msgstr "Slettede meldinger blir fjernet fra papirkurven med gjevne mellomrom, ikke bruk denne funksjonen til langtidslagring."
+
+#: apps/turan/templates/messages/view.html:4
+msgid "View Message"
+msgstr "Se melding"
+
+#: apps/turan/templates/messages/view.html:20
+#: apps/turan/templates/turan/exercise_detail.html:12
+msgid "Delete"
+msgstr "Slett"
+
 #: apps/turan/templates/notification/single.html:7
 #: apps/turan/templates/notification/single.html:10
 msgid "Notice"
@@ -1243,10 +1363,6 @@ msgstr "Effekt"
 msgid "Modify"
 msgstr "Endre"
 
-#: apps/turan/templates/turan/exercise_detail.html:12
-msgid "Delete"
-msgstr "Slett"
-
 #: apps/turan/templates/turan/exercise_detail.html:19
 msgid "Graph"
 msgstr "Graf"
@@ -1723,12 +1839,6 @@ msgstr "Foto"
 msgid "Exerciser"
 msgstr "Hvem"
 
-#: apps/turan/templates/turan/exercise/attributes.html:27
-#: apps/turan/templates/turan/exercise/mouseover.html:28
-#: templates/profiles/profiles.html:25
-msgid "Date"
-msgstr "Dato"
-
 #: apps/turan/templates/turan/exercise/attributes.html:29
 #: apps/turan/templates/turan/exercise/mouseover.html:26
 msgid "Start time"
@@ -1972,10 +2082,6 @@ msgstr "Foto"
 #: templates/site_base.html:60
 msgid "Profile"
 msgstr "Brukerprofil"
-
-#: templates/site_base.html:61
-msgid "Inbox"
-msgstr "Informasjon"
 
 #: templates/site_base.html:70
 msgid "&copy; 2009 &lt;lart.no&gt;"
