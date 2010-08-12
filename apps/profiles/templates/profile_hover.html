@@ -1,0 +1,8 @@
+{% load i18n %}
+{% load avatar_tags %}
+{% load turan_extras %}
+<div class="tooltip hidden" id="profile_{{object.id}}">
+    {% with object as user %}
+    {% include "profile_item.html" %} 
+    {% endwith %}
+</div>
