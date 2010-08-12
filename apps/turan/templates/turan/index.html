@@ -113,7 +113,8 @@
     <div id="exercisers" class="spacer">
         {% for exerciser in user_list %}
         {% if exerciser.exercise_set.count %}
-        <a title="{{exerciser.username}}" href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 60 %}</a>
+        <a class="profilehoverpoint" id="user_{{exerciser.id}}" title="{{exerciser.username}}" href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 60 %}</a>
+        {{ exerciser|profile_hover }}
         {% endif %}
         {% endfor %}
     </div>

@@ -17,7 +17,22 @@ $(function() {
         var popupBox = $("#mouseover_" + itemId).hide();
     }
 
-    $(".hoverpoint").hoverIntent({timeout: 0, interval: 500, over: popupfadein, out: popupfadeout});
+    $(".hoverpoint").hoverIntent({timeout: 0, interval: 200, over: popupfadein, out: popupfadeout});
+
+    function profilepopupfadein(evt) {
+        var itemId = this.getAttribute("id").split("_")[1];
+        
+        var popupBox = $("#profile_" + itemId).show();
+        var boxWidth = 300;
+        popupBox.css({ left: evt.clientX + (evt.clientX < boxWidth ? boxWidth : 0) + "px", top: evt.clientY + "px", width: boxWidth + "px" });
+    }
+
+    function profilepopupfadeout(evt) {
+        var itemId = this.getAttribute("id").split("_")[1];
+        
+        var popupBox = $("#profile_" + itemId).hide();
+    }
+    $(".profilehoverpoint").hoverIntent({timeout: 0, interval: 100, over: profilepopupfadein, out: profilepopupfadeout});
 
     var profile_avatar = $('#profile_avatar');
     if(profile_avatar) {

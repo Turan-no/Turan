@@ -194,3 +194,7 @@ def exercise_mouseover(obj):
     #html = t.render(c)
     #return html
     return render_to_string('turan/exercise/mouseover.html', {'object': obj})
+
+@register.filter
+def profile_hover(obj):
+    return render_to_string('profile_hover.html', {'object': obj})
