@@ -521,6 +521,9 @@ def parse_sensordata(event):
             if parser.distance_sum and parser.distance_sum/1000 != event.route.distance:
                 event.route.distance = parser.distance_sum/1000
                 event.route.save()
+        elif parser.distance_sum:
+            event.route.distance = parser.distance_sum/1000
+            event.route.save()
 
         ascent, descent = calculate_ascent_descent_gaussian(event.get_details().all())
         # prefer ascent/descent calculated from sensor data over gps
