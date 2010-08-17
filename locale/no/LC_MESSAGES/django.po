@@ -2053,11 +2053,11 @@ msgstr "Logg ut"
 
 #: templates/site_base.html:29 templates/threadedcomments/comments.html:57
 msgid "Login"
-msgstr "Logo"
+msgstr "Logg inn"
 
 #: templates/site_base.html:29 templates/threadedcomments/comments.html:57
 msgid "or"
-msgstr " time"
+msgstr "eller"
 
 #: templates/site_base.html:29
 msgid "Sign up"
