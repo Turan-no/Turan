@@ -329,7 +329,19 @@ class ExerciseDetail(models.Model):
         ordering = ('time',)
 
 
+class BestPowerEffort(models.Model):
+    exercise = models.OneToOneField(Exercise, primary_key=True)
+    pos = models.FloatField()
+    length = models.FloatField()
+    duration = models.IntegerField()
+    power = models.IntegerField()
 
+class BestSpeedEffort(models.Model):
+    exercise = models.OneToOneField(Exercise, primary_key=True)
+    pos = models.FloatField()
+    length = models.FloatField()
+    duration = models.IntegerField()
+    speed = models.IntegerField()
 
 def create_gpx_from_details(trip):
     if not trip.route:
