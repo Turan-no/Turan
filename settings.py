@@ -217,6 +217,9 @@ INSTALLED_APPS = (
     
     'django.contrib.admin',
 
+# Alternative to fastcgi
+    'gunicorn',
+
 )
 
 GPX_STORAGE = '/home/turan.lart.no/pinax-env/turansite/site_media/turan'
