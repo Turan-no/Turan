@@ -17,7 +17,7 @@ $(function() {
         var popupBox = $("#mouseover_" + itemId).hide();
     }
 
-    $(".hoverpoint").hoverIntent({timeout: 0, interval: 500, over: popupfadein, out: popupfadeout});
+    $(".hoverpoint").hoverIntent({timeout: 0, interval: 900, over: popupfadein, out: popupfadeout});
 
     function profilepopupfadein(evt) {
         var itemId = this.getAttribute("id").split("_")[1];
@@ -32,7 +32,7 @@ $(function() {
         
         var popupBox = $("#profile_" + itemId).hide();
     }
-    $(".profilehoverpoint").hoverIntent({timeout: 0, interval: 300, over: profilepopupfadein, out: profilepopupfadeout});
+    $(".profilehoverpoint").hoverIntent({timeout: 0, interval: 500, over: profilepopupfadein, out: profilepopupfadeout});
 
     var profile_avatar = $('#profile_avatar');
     if(profile_avatar) {
