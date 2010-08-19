@@ -1,41 +1,57 @@
-# wget http://github.com/pinax/pinax/raw/master/scripts/pinax-boot.py
-#
-cd ~
-wget http://downloads.pinaxproject.com/Pinax-0.7.1-bundle.tar.gz
-tar xvfz Pinax-0.7.1-bundle.tar.gz
-cd Pinax-0.7.1-bundle
+Turan uses Pinax which is a Django extension that uses a contained virtual 
+environment that has/will have everything you need to run your app.
 
-#vim src/pinax/requirements/libs.txt
-vim requirements/libs.txt
+None of this should be run as root except apt-get.
 
+~$ sudo apt-get install python-sqlite
+~$ sudo apt-get install python-dev
 
-Modify django 1.03 to django 1.1
-BeautifulSoup>=3.0.7a
-Django==1.1
-wadofstuff-django-serializers==1.0.0
+~$ wget http://downloads.pinaxproject.com/Pinax-0.7.2-bundle.tar.gz
+~$ tar xvfz Pinax-0.7.2-bundle.tar.gz
+~$ cd Pinax-0.7.2-bundle
 
-cd pinax-env/
-#python pinax-boot.py ../pinax-env
-python scripts/pinax-boot.py ../pinax-env
-source ../pinax-env/bin/activate
-cd ../pinax-env
-vim ./lib/python2.6/site-packages/requirements/libs.txt
-fikse libs som sagt over
+~/Pinax-0.7.2-bundle$ python scripts/pinax-boot.py ~/pinax-env
+~/Pinax-0.7.2-bundle$ cd ~/pinax-env
 
-pip install --upgrade --requirement ./lib/python2.6/site-packages/requirements/libs.txt 
+~/pinax-env$ source bin/activate
 
-#pip install --upgrade --requirement src/pinax/requirements/external_apps.txt
-(pip install --upgrade django) ?
+(pinax-env) ~/pinax-env$ vim lib/python2.6/site-packages/requirements/libs.txt
 
-# Remove old django (pinax uses 1.0.3 but this project requires 1.1)
-rm -rf ./lib/python2.6/site-packages/Django-1.0.3-py2.6.egg/django
+  Modify the following: 
+   o Django==1.03 -> Django==1.2.1
+   o BeautifulSoup==3.0.7a -> BeautifulSoup>=3.0.7a
+   o creole==1.0.1 -> creole>=1.0.1
+   o geopy==0.93dev-r0 -> geopy>=0.93dev-r0
+
+  Remove this:
+   o diff-match-patch==20090804
+   o django-atomformat==0.1.0dev
+   o ybrowserauth==1.2
 
 
-Enable nynorsk: 
-cp -a lib/python2.6/site-packages/django/conf/locale/no lib/python2.6/site-packages/django/conf/locale/nn
+(pinax-env) ~/pinax-env$ pip install --upgrade --requirement ./lib/python2.6/site-packages/requirements/libs.txt 
+(pinax-env) ~/pinax-env$ git clone git://github.com/torhve/Turan.git turansite
+(pinax-env) ~/pinax-env$ cd turansite
 
- 
-git clone /home/git/turan.git/ turansite
+(pinax-env) ~/pinax-env/turansite$ pip install --upgrade --requirement requirements.txt 
+(pinax-env) ~/pinax-env/turansite$ vim local_settings.py
 
-kopier/symlink katalogar frå prod-site_media etter behov (avatars/photologue/turan/{gpx,svg,sensor}
-(ln -s /home/turan.lart.no/pinax-env/turansite/site_media/turan/gpx)
+  Add database settings ex:
+   o DATABASE_ENGINE = 'sqlite3'
+
+(pinax-env) ~/pinax-env/turansite$ ./manage.py syncdb
+(pinax-env) ~/pinax-env/turansite$ ./manage.py runserver <ip>:8082
+
+SUCCESS! Now go to http://<ip>:8082/
+
+Ok, might not be success if you are using Pinax 0.7.2 with Django 1.2.1 (it doesn't really support 1.2 yet)
+
+You will need to patch in a few changes:
+http://code.google.com/p/django-tagging/issues/detail?id=233
+
+And change the following in the files ~/pinax-env/lib/python2.6/site-packages/pinax/apps/blog/forms.py and ~/pinax-env/turansite/apps/tribes/forms.py:
+
+ o error_message = _("Foo") -> error_messages = {'error': _("Foo")}
+
+Not sure if 'error' is correct as a key, but it "works" until new Pinax is released.
+
