@@ -37,6 +37,8 @@ class HRMParser(object):
     power_sum = 0
     pedaling_cad_seconds = 0
     pedaling_cad = 0
+    pedaling_power = 0
+    pedaling_power_seconds = 0
 
     comment = ''
 
@@ -115,6 +117,10 @@ class HRMParser(object):
                         self.pedaling_cad += cadence*self.interval
                         self.pedaling_cad_seconds += self.interval
 
+                    if power > 0:
+                        self.pedaling_power += power*self.interval
+                        self.pedaling_power_seconds += self.interval
+
 
                     time = datetime.datetime(self.date.year, self.date.month, self.date.day, self.start_time.hour, self.start_time.minute, self.start_time.second)
                     time = time + datetime.timedelta(0, self.interval*i)
@@ -160,6 +166,8 @@ class HRMParser(object):
         self.avg_cadence = self.cadence_sum/len(self.entries)
         if self.pedaling_cad and self.pedaling_cad_seconds:
             self.avg_pedaling_cad = self.pedaling_cad/self.pedaling_cad_seconds
+        if self.pedaling_power and self.pedaling_power_seconds:
+            self.avg_pedaling_power = self.pedaling_power/self.pedaling_power_seconds
 
 
 if __name__ == '__main__':
