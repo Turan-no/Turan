@@ -7,46 +7,82 @@
 {% endblock %}
 {% block content %}
 <h2>{{trip1}} {{trip1.duration}} versus {{ trip2 }} {{trip2.duration }}</h2>
-First is yellow, second is blue !
-<h2>{% trans "Speed" %}</h2>
-<div id="speediv" style="width:1000px;height:200px"></div>
-<h2>{% trans "HR" %}</h2>
-<div id="hrdiv" style="width:1000px;height:200px"></div>
-<h2>{% trans "Cadence" %}</h2>
-<div id="caddiv" style="width:1000px;height:200px"></div>
-<h2>{% trans "Power" %}</h2>
-<div id="powerdiv" style="width:1000px;height:200px"></div>
+{{trip.id}} is yellow, {{trip2.id}} is blue !
+<h2 class="speed">{% trans "Speed" %}</h2>
+<div class="graph speed" id="speediv" style="width:1000px;height:200px"></div>
+<h2 class="hr">{% trans "HR" %}</h2>
+<div class="graph hr" id="hrdiv" style="width:1000px;height:200px"></div>
+<h2 class="cadence">{% trans "Cadence" %}</h2>
+<div class="graph cadence" id="cadencediv" style="width:1000px;height:200px"></div>
+<h2 class="power">{% trans "Power" %}</h2>
+<div class="graph power" id="powerdiv" style="width:1000px;height:200px"></div>
 <script id="source" language="javascript" type="text/javascript">
     var alt = { 
         data: [{{ alt }}], 
         yaxis: 2, 
+        color: 3,
         lines: {
             fill: 0.2,
-            color: 2
         }
     };
     var options = { 
-yaxes: [ {}, { min: 0,
+        yaxes: [ {}, { min: 0,
                  max: {{ alt_max }},
                  position: "right",
                }],
+        selection: { mode: "x" },
+        grid: { 
+                    hoverable: true, 
+                    clickable: true,
+                }
     };
 
 {% comment %}v ar datasets = [ {{ datasets }}]; {% endcomment %}
 var datasets1 = {{ datasets1 }};
 var datasets2 = {{ datasets2 }};
-    /*var speeddata = [];
-    for (var i in datasets) {
-        speeddata.push(datasets[i]["speed"]["data"]);
-    }*/
-    if (('hr' in datasets1) && ('hr' in datasets2)) 
-    $.plot($("#hrdiv"), [datasets1["hr"]["data"], datasets2["hr"]["data"], alt], options);
-    if (('speed' in datasets1) && ('speed' in datasets2)) 
-    $.plot($("#speediv"), [datasets1["speed"]["data"], datasets2["speed"]["data"], alt], options);
-    if (('cadence' in datasets1) && ('cadence' in datasets2)) 
-        $.plot($("#caddiv"), [datasets1["cadence"]["data"], datasets2["cadence"]["data"], alt], options);
-    if (('power' in datasets1) && ('power' in datasets2)) 
-    $.plot($("#powerdiv"), [datasets1["power"]["data"], datasets2["power"]["data"], alt], options);
+    function plotThem(ranges) {
+        if (ranges.xaxis != undefined) {
+            if (('speed' in datasets1) && ('speed' in datasets2)) 
+                plot = $.plot($("#speediv"), [datasets1["speed"]["data"], datasets2["speed"]["data"], alt], $.extend(true, {}, options, { xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }}));
+            if (('hr' in datasets1) && ('hr' in datasets2)) 
+                plot = $.plot($("#hrdiv"), [datasets1["hr"]["data"], datasets2["hr"]["data"], alt], $.extend(true, {}, options, { xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }}));
+            if (('cadence' in datasets1) && ('cadence' in datasets2)) 
+                plot = $.plot($("#cadencediv"), [datasets1["cadence"]["data"], datasets2["cadence"]["data"], alt], $.extend(true, {}, options, { xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }}));
+            if (('power' in datasets1) && ('power' in datasets2)) 
+                plot = $.plot($("#powerdiv"), [datasets1["power"]["data"], datasets2["power"]["data"], alt], $.extend(true, {}, options, { xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }}));
+        }
+        else {
+            if (('hr' in datasets1) && ('hr' in datasets2)) 
+                $.plot($("#hrdiv"), [datasets1["hr"]["data"], datasets2["hr"]["data"], alt], options);
+            else
+                $(".hr").hide()
+            if (('speed' in datasets1) && ('speed' in datasets2)) 
+                $.plot($("#speediv"), [datasets1["speed"]["data"], datasets2["speed"]["data"], alt], options);
+            else
+                $(".speed").hide()
+            if (('cadence' in datasets1) && ('cadence' in datasets2)) 
+                $.plot($("#cadencediv"), [datasets1["cadence"]["data"], datasets2["cadence"]["data"], alt], options);
+            else
+                $(".cadence").hide()
+            if (('power' in datasets1) && ('power' in datasets2)) 
+                $.plot($("#powerdiv"), [datasets1["power"]["data"], datasets2["power"]["data"], alt], options);
+            else
+                $(".power").hide()
+        }
+    }
+
+    $(".graph").bind("plotselected", function (event, ranges) {            
+            plotThem(ranges);
+        //  $("#gradientinfo").text(ranges.xaxis.from.toFixed(1) + " {% trans "to" %} " + ranges.xaxis.to.toFixed(1));
+       //   $("#gradientinfo2").text( "{% trans "Click graph to reset selection" %}");
+    });                                                                      
+   $(".graph").bind("plotclick", function (event, pos, item) {
+       plotThem({});
+          // plot = $.plot($("#speediv"), [datasets1["speed"]["data"], datasets2["speed"]["data"], alt], $.extend(true, {}, options, { xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }, options);
+         // $("#gradientinfo").text("");
+         // $("#gradientinfo2").text("");
+    });
+   plotThem({});
 $(function () {
 });
 </script>
