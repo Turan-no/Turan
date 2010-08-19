@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import datetime
-import sys
 
 class HRMEntry(object):
 
@@ -54,7 +53,6 @@ class HRMParser(object):
         lapstarted = False
         notestarted = False
         for line in f:
-            sys.stdout.write('%s ' %i)
             if hrstarted:
                 line = line.strip()
                 power = 0
