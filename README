@@ -1,0 +1,5 @@
+Turan
+
+Log, analyze and graph your exercises 
+
+lart.no/turan makes use of a bunch of excellent and free (speech and beer) tools including the Python programming language, the Django web framework, the Pinax social web framework, Yahoo! UI Library for style sheets, and icons from FamFamFam. And also Flot, openlayers, openstreetmap, and jquery.
