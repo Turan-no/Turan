@@ -257,9 +257,8 @@ class Exercise(models.Model):
     def get_details(self):
         return self.exercisedetail_set
 
-    def save(self):
-        ''' if sensor_file is set and children count is 0, parser sensor
-        file and create children '''
+    def save(self, force_insert=False, force_update=False):
+        ''' Trigger reparse on every save. Create gpx if needed '''
         super(Exercise, self).save() # sensor parser needs id
         if self.sensor_file:
             parse_sensordata(self)
