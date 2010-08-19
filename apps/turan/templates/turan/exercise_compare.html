@@ -7,7 +7,7 @@
 {% endblock %}
 {% block content %}
 <h2>{{trip1}} {{trip1.duration}} versus {{ trip2 }} {{trip2.duration }}</h2>
-{{trip.id}} is yellow, {{trip2.id}} is blue !
+{{trip1.id}} is yellow, {{trip2.id}} is blue !
 <h2 class="speed">{% trans "Speed" %}</h2>
 <div class="graph speed" id="speediv" style="width:1000px;height:200px"></div>
 <h2 class="hr">{% trans "HR" %}</h2>
