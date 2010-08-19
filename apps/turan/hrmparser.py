@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import datetime
+import sys
 
 class HRMEntry(object):
 
@@ -15,40 +16,37 @@ class HRMEntry(object):
 
 class HRMParser(object):
 
-    entries = []
-    start_time = 0
-    date = 0
-    interval = 0
-    duration = 0
-    temperature = 0
+    def __init__(self):
+        self.entries = []
 
-    smode = 0 # Polar specific mode (sensor mode)
+        self.start_time = 0
+        self.date = 0
+        self.interval = 0
+        self.duration = 0
+        self.temperature = 0
 
-    max_hr = 0
-    max_speed = 0
-    max_cadence = 0
-    max_power = 0
+        self.smode = 0 # Polar specific mode (sensor mode)
 
-    hr_sum = 0
-    speed_sum = 0
-    cadence_sum = 0
-    distance_sum = 0
-    kcal_sum = 0
-    power_sum = 0
-    pedaling_cad_seconds = 0
-    pedaling_cad = 0
-    pedaling_power = 0
-    pedaling_power_seconds = 0
+        self.max_hr = 0
+        self.max_speed = 0
+        self.max_cadence = 0
+        self.max_power = 0
 
-    comment = ''
+        self.hr_sum = 0
+        self.speed_sum = 0
+        self.cadence_sum = 0
+        self.distance_sum = 0
+        self.kcal_sum = 0
+        self.power_sum = 0
+        self.pedaling_cad_seconds = 0
+        self.pedaling_cad = 0
+        self.pedaling_power = 0
+        self.pedaling_power_seconds = 0
+
+        self.comment = ''
 
 
     def parse_uploaded_file(self, f):
-
-        # Workaround for some race conditions (?) with file object
-        #
-
-        f = file(f.name, 'r')
 
         i = 0
         laprow = 0
@@ -56,6 +54,7 @@ class HRMParser(object):
         lapstarted = False
         notestarted = False
         for line in f:
+            sys.stdout.write('%s ' %i)
             if hrstarted:
                 line = line.strip()
                 power = 0
@@ -156,7 +155,6 @@ class HRMParser(object):
                 #hours = line[7:9]
                 #minutes = line[10:12]
                 #seconds = line[13:]
-                #print seconds
                 self.duration = '%ss' %(int(int(hours)*3600 + (int(minutes)*60) + float(seconds))) # FIXME support for microseconds
                 #self.duration = '%sh %sm %ss' % (hours, minutes, seconds)
 
@@ -168,10 +166,11 @@ class HRMParser(object):
             self.avg_pedaling_cad = self.pedaling_cad/self.pedaling_cad_seconds
         if self.pedaling_power and self.pedaling_power_seconds:
             self.avg_pedaling_power = self.pedaling_power/self.pedaling_power_seconds
+        sys.stdout.flush()
 
 
 if __name__ == '__main__':
-    
+
     import pprint
     import sys
     h = HRMParser()

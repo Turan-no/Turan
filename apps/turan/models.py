@@ -1,6 +1,6 @@
 from django.db import models
+from django.db import connection, transaction
 
-from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.contrib.auth.models import User
@@ -259,19 +259,19 @@ class Exercise(models.Model):
     def get_details(self):
         return self.exercisedetail_set
 
-    def save(self, force_insert=False, force_update=False):
-        ''' Trigger reparse on every save. Create gpx if needed '''
-        super(Exercise, self).save() # sensor parser needs id
-        if self.sensor_file:
-            parse_sensordata(self)
-            create_gpx_from_details(self)
+    def save(self, *args, **kwargs):
+    #    ''' Trigger reparse on every save. Create gpx if needed '''
+    #    super(Exercise, self).save(*args, **kwargs)
+        #if self.sensor_file:
+        #    parse_sensordata(self)
+        #    create_gpx_from_details(self)
 
 
         # set avg_speed if distance and duration is given
         if self.route and self.route.distance and self.duration and not self.avg_speed:
             self.avg_speed = float(self.route.distance)/(float(self.duration.seconds)/60/60)
 
-        super(Exercise, self).save(force_update=True)
+        super(Exercise, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         route_name = ''
@@ -430,13 +430,11 @@ class Location(models.Model):
         verbose_name = _("Location")
         verbose_name_plural = _("Locations")
 
-@transaction.commit_manually
 def parse_sensordata(event):
     ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
 
-
     # eh..yeah
-    EXPERIMENTAL_POLAR_GPX_HRM_COMBINER = 0
+    #EXPERIMENTAL_POLAR_GPX_HRM_COMBINER = 0
 
     filename = event.sensor_file.name
 
@@ -454,33 +452,39 @@ def parse_sensordata(event):
     else:
         return # Maybe warn user somehow?
 
-    if event.get_details().count: # If the event already has details, delete them and reparse
-        event.get_details().all().delete()
+    if event.get_details().count(): # If the event already has details, delete them and reparse
+        # Django is super shitty when it comes to deleation. If you want to delete 25k objects, it uses 500 queries to do so.
+        # So. We do some RAWness.
+        cursor = connection.cursor()
+
+        # Data modifying operation - commit required
+        cursor.execute("DELETE FROM turan_exercisedetail WHERE exercise_id = %s", [event.id])
+        transaction.commit_unless_managed()
+
+        #event.get_details().all().delete()
 
     event.sensor_file.file.seek(0)
     parser.parse_uploaded_file(event.sensor_file.file)
-    values = parser.entries
-    if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
-        gpxvalues = GPXParser(event.route.gpx_file.file).entries
+    #if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
+    #    gpxvalues = GPXParser(event.route.gpx_file.file).entries
 
-    for i, val in enumerate(values):
-        d = ExerciseDetail()
-
-        d.exercise_id = event.id
+    for val in parser.entries:
+        detail = ExerciseDetail()
+        detail.exercise_id = event.id
 
         # Figure out which values the parser has
         for v in ('time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power'):
             if hasattr(val, v):
                 #if not types.NoneType == type(val[v]):
-                setattr(d, v, getattr(val, v))
-        if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
-            if not d.lat and not d.lon: # try and get from .gpx FIXME yeah...you know why
-                try:
-                    d.lon = gpxvalues[i]['lon']
-                    d.lat = gpxvalues[i]['lat']
-                except IndexError:
-                    pass # well..it might not match
-        d.save()
+                setattr(detail, v, getattr(val, v))
+        #if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
+        #    if not d.lat and not d.lon: # try and get from .gpx FIXME yeah...you know why
+        #        try:
+        #            d.lon = gpxvalues[i]['lon']
+        #            d.lat = gpxvalues[i]['lat']
+        #        except IndexError:
+        #            pass # well..it might not match
+        detail.save()
 
     event.max_hr = parser.max_hr
     event.max_speed = parser.max_speed
@@ -545,7 +549,7 @@ def parse_sensordata(event):
             event.route.ascent = ascent
             event.route.descent = descent
             event.route.save()
-    transaction.commit()
+    del parser
 
 def smoothListGaussian(list,degree=5):
     list = [list[0]]*(degree-1) + list + [list[-1]]*degree
@@ -646,3 +650,9 @@ def new_comment(sender, instance, **kwargs):
             notification.send([exercise.user], "exercise_comment",
                 {"user": instance.user, "exercise": exercise, "comment": instance})
 models.signals.post_save.connect(new_comment, sender=ThreadedComment)
+
+def exercise_save(sender, instance, **kwargs):
+    if instance.sensor_file:
+        parse_sensordata(instance)
+        create_gpx_from_details(instance)
+models.signals.post_save.connect(exercise_save, sender=Exercise)
