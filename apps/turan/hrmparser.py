@@ -3,7 +3,7 @@ import datetime
 
 class HRMEntry(object):
 
-    def __init__(self, time, hr, speed, cadence, altitude):
+    def __init__(self, time, hr, speed, cadence, altitude, power):
         self.time = time
         self.hr = hr
         self.speed = speed
@@ -11,6 +11,7 @@ class HRMEntry(object):
         self.altitude = altitude
         self.lat = 0 #not supported by hrm shit
         self.lon = 0 #not supported by hrm shit
+        self.power = power
 
 class HRMParser(object):
 
@@ -26,12 +27,14 @@ class HRMParser(object):
     max_hr = 0
     max_speed = 0
     max_cadence = 0
+    max_power = 0
 
     hr_sum = 0
     speed_sum = 0
     cadence_sum = 0
     distance_sum = 0
     kcal_sum = 0
+    power_sum = 0
     pedaling_cad_seconds = 0
     pedaling_cad = 0
 
@@ -53,8 +56,15 @@ class HRMParser(object):
         for line in f:
             if hrstarted:
                 line = line.strip()
+                power = 0
                 if line:
-                    if self.smode == '111000100':
+                    if self.smode == '111111100':
+                        try:
+                            hr, speed, cadence, altitude, power, wat = line.split('\t')
+                        except ValueError:
+                            #garbled data
+                            continue
+                    elif self.smode == '111000100':
                         hr, speed, cadence, altitude = line.split('\t')
                     elif self.smode == '110000100':
                         hr, speed, cadence = line.split('\t')
@@ -84,6 +94,10 @@ class HRMParser(object):
                     speed = float(speed)/10
                     cadence = int(cadence)
                     altitude = int(altitude)
+                    power = int(power)
+
+                    self.power_sum += power
+                    self.max_power = max(power, self.max_power)
 
                     self.hr_sum += hr
                     if hr > self.max_hr:
@@ -104,7 +118,7 @@ class HRMParser(object):
 
                     time = datetime.datetime(self.date.year, self.date.month, self.date.day, self.start_time.hour, self.start_time.minute, self.start_time.second)
                     time = time + datetime.timedelta(0, self.interval*i)
-                    self.entries.append(HRMEntry(time, hr, speed, cadence, altitude))
+                    self.entries.append(HRMEntry(time, hr, speed, cadence, altitude, power))
                     i += 1
             elif lapstarted:
                 laprow += 1
@@ -132,11 +146,15 @@ class HRMParser(object):
             elif line.startswith('SMode'):
                 self.smode = line[6:].strip()
             elif line.startswith('Length'):
-                hours = line[7:9]
-                minutes = line[10:12]
-                seconds = line[13:15]
-                self.duration = '%sh %sm %ss' % (hours, minutes, seconds)
+                hours, minutes, seconds = line.strip().split('=')[1].split(':')
+                #hours = line[7:9]
+                #minutes = line[10:12]
+                #seconds = line[13:]
+                #print seconds
+                self.duration = '%ss' %(int(int(hours)*3600 + (int(minutes)*60) + float(seconds))) # FIXME support for microseconds
+                #self.duration = '%sh %sm %ss' % (hours, minutes, seconds)
 
+        self.avg_power = self.power_sum/len(self.entries)
         self.avg_hr = self.hr_sum/len(self.entries)
         self.avg_speed = self.speed_sum/len(self.entries)
         self.avg_cadence = self.cadence_sum/len(self.entries)
