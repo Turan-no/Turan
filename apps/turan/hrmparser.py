@@ -164,7 +164,6 @@ class HRMParser(object):
             self.avg_pedaling_cad = self.pedaling_cad/self.pedaling_cad_seconds
         if self.pedaling_power and self.pedaling_power_seconds:
             self.avg_pedaling_power = self.pedaling_power/self.pedaling_power_seconds
-        sys.stdout.flush()
 
 
 if __name__ == '__main__':
