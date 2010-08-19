@@ -199,7 +199,6 @@ class TCXParser(object):
                     self.pedaling_cad += cadence*timedelta
                     pedaling_cad_seconds += timedelta
 
-
             self.entries.append(TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power))
             self.cur_time = time
 
