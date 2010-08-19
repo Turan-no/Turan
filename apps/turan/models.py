@@ -1,4 +1,6 @@
 from django.db import models
+
+from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.contrib.auth.models import User
@@ -428,7 +430,7 @@ class Location(models.Model):
         verbose_name = _("Location")
         verbose_name_plural = _("Locations")
 
-
+@transaction.commit_manually
 def parse_sensordata(event):
     ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
 
@@ -479,7 +481,6 @@ def parse_sensordata(event):
                 except IndexError:
                     pass # well..it might not match
         d.save()
-
 
     event.max_hr = parser.max_hr
     event.max_speed = parser.max_speed
@@ -544,6 +545,7 @@ def parse_sensordata(event):
             event.route.ascent = ascent
             event.route.descent = descent
             event.route.save()
+    transaction.commit()
 
 def smoothListGaussian(list,degree=5):
     list = [list[0]]*(degree-1) + list + [list[-1]]*degree
