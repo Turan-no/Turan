@@ -288,7 +288,7 @@ class Exercise(models.Model):
         return self.exercise_type.icon()
 
     def is_smart_sampled(self):
-        exercise_details = self.get_details
+        exercise_details = self.get_details()
         delta_t = (exercise_details[i].time - exercise_details[i-1].time).seconds
         if delta_t > 1:
             return True
