@@ -754,7 +754,7 @@ def calculate_best_efforts(exercise):
         if filldistance(details):
             effort_range = [5,30,60,300,600,1800,3600]
             for seconds in effort_range:
-                if exercise.avg_power:
+                if exercise.avg_power and not exercise.is_smart_sampled():
                     speed, pos, length, power, power_pos, power_length = best_x_sec(details, seconds, power=True)
                     if power:
                         be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds)
