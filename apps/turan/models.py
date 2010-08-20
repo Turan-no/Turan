@@ -261,12 +261,12 @@ class Exercise(models.Model):
         return self.exercisedetail_set
 
     def save(self, *args, **kwargs):
-    #    ''' Trigger reparse on every save. Create gpx if needed '''
-    #    super(Exercise, self).save(*args, **kwargs)
-        #if self.sensor_file:
-        #    parse_sensordata(self)
-        #    create_gpx_from_details(self)
-
+        ''' Trigger reparse on every save. Create gpx if needed '''
+        super(Exercise, self).save(*args, **kwargs)
+        if self.sensor_file:
+            parse_sensordata(self)
+            create_gpx_from_details(self)
+            calculate_best_efforts(self)
 
         # set avg_speed if distance and duration is given
         if self.route and self.route.distance and self.duration and not self.avg_speed:
@@ -563,7 +563,6 @@ def parse_sensordata(event):
             event.route.ascent = ascent
             event.route.descent = descent
             event.route.save()
-    del parser
 
 def smoothListGaussian(list,degree=5):
     list = [list[0]]*(degree-1) + list + [list[-1]]*degree
@@ -775,9 +774,9 @@ def new_comment(sender, instance, **kwargs):
                 {"user": instance.user, "exercise": exercise, "comment": instance})
 models.signals.post_save.connect(new_comment, sender=ThreadedComment)
 
-def exercise_save(sender, instance, **kwargs):
-    if instance.sensor_file:
-        parse_sensordata(instance)
-        create_gpx_from_details(instance)
-        calculate_best_efforts(instance)
-models.signals.post_save.connect(exercise_save, sender=Exercise)
+#def exercise_save(sender, instance, **kwargs):
+#    if instance.sensor_file:
+#        parse_sensordata(instance)
+#        create_gpx_from_details(instance)
+#        calculate_best_efforts(instance)
+#models.signals.post_save.connect(exercise_save, sender=Exercise)
