@@ -289,10 +289,10 @@ class Exercise(models.Model):
 
     def is_smart_sampled(self):
         exercise_details = self.get_details
-        if exercise_details[2].seconds - exercise_details[1].seconds < 1:
+        delta_t = (exercise_details[i].time - exercise_details[i-1].time).seconds
+        if delta_t > 1:
             return True
-        else:
-            return False
+        return False
 
     class Meta:
         verbose_name = _("Exercise")
