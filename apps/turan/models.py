@@ -739,14 +739,6 @@ def calculate_best_efforts(exercise):
     if filldistance(details):
         effort_range = [5,30,60,300,600,1800,3600]
         for seconds in effort_range:
-            #try:
-            #best[i] = {}
-            #if object.avg_power:
-            #    best[i]['speed'], best[i]['speed_pos'], best[i]['speed_length'], best[i]['power'], best[i]['power_pos'], best[i]['power_length'] = best_x_sec(details, seconds, power=True)
-            #    #best[i]['wkg'] = best[i]['power'] / userweight
-            #else:
-            #    best[i]['speed'], best[i]['speed_pos'], best[i]['speed_length'] = best_x_sec(details, seconds, power=False)
-            #best[i]['dur'] = seconds
             if exercise.avg_power:
                 speed, pos, length, power, power_pos, power_length = best_x_sec(details, seconds, power=True)
                 be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds)
@@ -755,12 +747,6 @@ def calculate_best_efforts(exercise):
                 speed, pos, length = best_x_sec(details, seconds, power=False)
             be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds)
             be.save()
-            #except:
-            #    del best[j]
-            #    pass
-            #else:
-            #    if best[j]['speed'] == 0.0:
-            #        del best[j]
 
 # handle notification of new comments
 from threadedcomments.models import ThreadedComment
