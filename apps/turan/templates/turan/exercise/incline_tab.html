@@ -49,7 +49,7 @@
                     data: [[{{ i_type }}, {{ length }}]],
                     bars: { show: true},
                     color: {{ forloop.counter }}
-                },
+                }{% if not forloop.last%},{%endif%}
             {% endif %}
             {% endfor %}
     ];

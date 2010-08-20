@@ -115,7 +115,7 @@
                     data: [[{{ key }}, {{ effort.power }}]],
                     bars: { show: true},
                     color: {{ forloop.counter }}
-                },
+                }{% if not forloop.last %},{%endif%}
             {% endif %}
             {% endfor %}
     ];
@@ -130,7 +130,7 @@
                     data: [[{{ key }}, {{ effort.speed }}]],
                     bars: { show: true},
                     color: {{ forloop.counter }}
-                },
+                }{% if not forloop.last %},{%endif%}
             {% endif %}
             {% endfor %}
     ];

@@ -3,23 +3,23 @@
 <div id="hrhzonediv" style="width:900px;height:400px; float: right;"></div>
 <div id="hrhzonetable" style="width:1px; height: 400px;"></div>
 <script type="text/javascript">
-    {% comment %}
-    var hrhzonedata = [
-                {
-    color: 2,
-   lines: { fill: 0.6, },
-data: [{% for hr, length in hrhzones.items %}{% if length %}[{{ hr }},{{ length }}],{% endif %}{% endfor %}], }, 
-{
-}
-    ];
+{% comment %}
+    var hrhzonedata = [ {
+        color: 2,
+        lines: { fill: 0.6, },
+        data: [{% for hr, length in hrhzones.items %}{% if length %}[{{ hr }},{{ length }}],{% endif %}{% endfor %}],
+    }];
 {% endcomment %}
     var hrhzonedata = [
             {% for zone in hrhzones%}
                 {
+            {% if zone.items %}
                     data: [{% for hr, percent in zone.items %}[{{ hr }},{{ percent }}],{% endfor %} ],
                     bars: { show: true},
                     color: colors[{{ forloop.counter0 }}]
-                },
+            {% endif %}
+                }
+{% if not forloop.last%},{%endif%}
             {% endfor %}
     ];
 
