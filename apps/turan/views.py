@@ -40,7 +40,6 @@ from turan.models import Route
 from urllib2 import urlopen
 from tempfile import NamedTemporaryFile
 
-from collections import deque
 
 from BeautifulSoup import BeautifulSoup
 
@@ -1082,6 +1081,7 @@ def exercise(request, object_id):
     object = get_object_or_404(Exercise, pk=object_id)
 
     # Permission checks
+    power_show = True
     if not object.user == request.user:  # Allow self
         if object.exercise_permission == 'N':
             return redirect_to_login(request.path)
@@ -1092,6 +1092,31 @@ def exercise(request, object_id):
             if not is_friend:
                 return redirect_to_login(request.path)
 
+            # Check for permission to display attributes
+            try:
+                # Try to find permission object for this exercise
+                permission = object.exercisepermission
+
+                if hasattr(permission, "power"):
+                    permission_val = getattr(permission, "power")
+                    if permission_val == 'A':
+                        power_show = True
+                    elif permission_val == 'F' and is_friend:
+                        power_show = True
+                    else: #'N' or not friends
+                        power_show = False
+                #if hasattr(permission, "poweravg30s"):
+                #    permission_val = getattr(permission, "poweravg30s")
+                #    if permission_val == 'A':
+                #        poweravg30_show = True
+                #    elif permission_val == 'F' and is_friend:
+                #        poweravg30_show = True
+                #    else: #'N' or not friends
+                #        poweravg30_show = False
+            except ExercisePermission.DoesNotExist:
+                # No permissionobject found
+                # Allowed to see.
+                pass
 
     # Provide template string for maximum yaxis value for HR, for easier comparison
     maxhr_js = ''
@@ -1132,69 +1157,9 @@ def exercise(request, object_id):
         zones = getzones(details)
         hrhzones = gethrhzones(details)
         inclinesummary = getinclinesummary(details)
-        effort_range = [5,30,60,300,600,1800,3600]
 
-        power_show = True
         #poweravg30_show = True
 
-        if not object.user == request.user and object.avg_power:
-
-            is_friend = False
-
-            if request.user.is_authenticated():
-                is_friend = Friendship.objects.are_friends(request.user, object.user)
-            # Check for permission to display attributes
-            try:
-                # Try to find permission object for this exercise
-                permission = object.exercisepermission
-
-                if hasattr(permission, "power"):
-                    permission_val = getattr(permission, "power")
-                    if permission_val == 'A':
-                        power_show = True
-                    elif permission_val == 'F' and is_friend:
-                        power_show = True
-                    else: #'N' or not friends
-                        power_show = False
-                #if hasattr(permission, "poweravg30s"):
-                #    permission_val = getattr(permission, "poweravg30s")
-                #    if permission_val == 'A':
-                #        poweravg30_show = True
-                #    elif permission_val == 'F' and is_friend:
-                #        poweravg30_show = True
-                #    else: #'N' or not friends
-                #        poweravg30_show = False
-            except ExercisePermission.DoesNotExist:
-                # No permissionojbect found
-                pass
-        else:
-            power_show = True
-            #avg30_show = True
-
-        cache_key = '%s_%s_%d' %(object.id, 'best', power_show)
-        best = cache.get(cache_key)
-        if not best:
-            best = {}
-            j = 0
-            for i in effort_range:
-                try:
-                    best[j] = {}
-                    if object.avg_power and power_show:
-                        best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'], best[j]['power'], best[j]['power_pos'], best[j]['power_length'] = best_x_sec(details, i, True)
-                        best[j]['wkg'] = best[j]['power'] / userweight 
-                    else:
-                        best[j]['speed'], best[j]['speed_pos'], best[j]['speed_length'] = best_x_sec(details, i, False)
-
-                    best[j]['dur'] = i
-                except:
-                    del best[j]
-                    pass
-                else:
-                    if best[j]['speed'] == 0.0:
-                        del best[j]
-                j += 1
-            cache.set(cache_key, best, 86400*7)
-        object.best = best
 
         if object.avg_power and power_show:
             object.normalized = power_30s_average(details)
@@ -1506,80 +1471,3 @@ def power_30s_average(details):
     normalized = int(round(pow((fourth/power_avg_count), (0.25))))
     return normalized
 
-def best_x_sec(details, length, power):
-
-    best_speed = 0.0
-    best_power = 0.0
-    best_power = 0.0
-    sum_q_power = 0.0
-    best_start_km_speed = 0.0
-    best_start_km_power = 0.0
-    q_speed = deque()
-    q_power = deque()
-    best_length_speed = 0.0
-    best_length_power = 0.0
-
-    q_speed.appendleft(details[0].speed)
-    if power:
-        q_power.appendleft(details[0].power)
-    j = 2
-    for i in xrange(1, 10000):
-        try:
-            delta_t = (details[i].time - details[i-1].time).seconds
-            q_speed.appendleft(details[i].speed * delta_t)
-            if power:
-                q_power.appendleft(details[i].power * delta_t)
-            j += 1
-            delta_t_total = (details[i].time - details[0].time).seconds
-            if delta_t_total >= length:
-                break
-        except:
-            continue
-
-    for i in xrange(j, len(details)):
-
-        try:
-            if len(q_speed) != 0:
-                sum_q_speed_tmp = sum(q_speed)
-                delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
-
-                if delta_t_total != 0:
-                    sum_q_speed = sum_q_speed_tmp / (details[i].time - details[i-len(q_speed)].time).seconds
-                else:
-                    # What can one do?
-                    sum_q_speed = sum_q_speed_tmp / len(q_speed)
-            if len(q_power) != 0:
-                if power:
-                    sum_q_power_tmp = sum(q_power)
-                    delta_t_total_power = (details[i].time - details[i-len(q_power)].time).seconds
-                    if delta_t_total_power != 0:
-                        sum_q_power = sum_q_power_tmp / delta_t_total_power
-                    else:
-                        sum_q_speed = sum_q_speed_tmp / len(q_power)
-            if sum_q_speed > best_speed:
-                best_speed = sum_q_speed
-                best_start_km_speed = details[i-len(q_speed)].distance / 1000
-                best_length_speed = (details[i].distance) - best_start_km_speed * 1000
-            if sum_q_power > best_power:
-                best_power = sum_q_power
-                best_start_km_power = details[i-len(q_power)].distance / 1000
-                best_length_power = (details[i].distance) - best_start_km_power * 1000
-
-            delta_t = (details[i].time - details[i-1].time).seconds
-            q_speed.appendleft(details[i].speed*delta_t)
-            if power:
-                q_power.appendleft(details[i].power*delta_t)
-            while ((details[i].time - details[i-len(q_speed)].time).seconds) > length:
-                q_speed.pop()
-            while (power and (details[i].time - details[i-len(q_power)].time).seconds > length):
-                q_power.pop()
-        except Exception as e:
-            print "something wrong %s" % e
-            #raise
-            continue
-
-
-    if power:
-        return best_speed, best_start_km_speed, best_length_speed, best_power, best_start_km_power, best_length_power
-    else:
-        return best_speed, best_start_km_speed, best_length_speed

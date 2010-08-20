@@ -24,7 +24,7 @@
                 {% trans "Length" %}
             </th>
         </tr>
-            {% for key, effort in object.best.items %}
+            {% for effort in object.bestpowereffort_set.all %}
             <tr>
                     <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
                         <script type="text/javascript">
@@ -32,26 +32,26 @@
                                     function (evt) { 
                                     plot.setSelection({ 
                                         xaxis: { 
-                                            from: {{effort.power_pos}}, to: {{effort.power_pos}}+{{effort.power_length}}/1000
+                                            from: {{effort.pos}}, to: {{effort.pos}}+{{effort.length}}/1000
                                         }
                                     })
                                     });
                         </script>
                     </td>
                 <td> 
-                    {{ effort.dur|durationformat }} 
+                    {{ effort.duration|durationformat }} 
                 </td>
                 <td>
                     {{ effort.power }} {% trans "W" %}
                 </td>
                 <td>
-                    {{ effort.wkg|floatformat }} {% trans "W/kg" %}
+                    {{ effort.power|divide:userweight|floatformat }} {% trans "W/kg" %}
                 </td>
                 <td>
-                    {{ effort.power_pos|floatformat }} {% trans "km" %}
+                    {{ effort.pos|floatformat }} {% trans "km" %}
                 </td>
                 <td>
-                    {{ effort.power_length|distanceformat }}
+                    {{ effort.length|distanceformat }}
                 </td>
             </tr>
             {% endfor %}
@@ -75,7 +75,7 @@
                 {% trans "Length" %}
             </th>
         </tr>
-        {% for key, effort in object.best.items %}
+        {% for effort in object.bestspeedeffort_set.all %}
         <tr>
              <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="szoom{{forloop.counter0}}-link-1" class="zoom-select" />
                     <script type="text/javascript">
@@ -83,23 +83,23 @@
                                 function (evt) { 
                                 plot.setSelection({ 
                                     xaxis: { 
-                                        from: {{effort.speed_pos}}, to: {{effort.speed_pos}}+{{effort.speed_length}}/1000
+                                        from: {{effort.pos}}, to: {{effort.pos}}+{{effort.length}}/1000
                                     }
                                 })
                                 });
                     </script>
             </td>
             <td> 
-                {{ effort.dur|durationformat }} 
+                {{ effort.duration|durationformat }} 
             </td>
             <td>
                 {{ effort.speed|floatformat }} {% trans "km/h" %}
             </td>
             <td>
-                {{ effort.speed_pos|floatformat }} {% trans "km" %}
+                {{ effort.pos|floatformat }} {% trans "km" %}
             </td>
             <td>
-                {{ effort.speed_length|distanceformat }}
+                {{ effort.length|distanceformat }}
             </td>
         </tr>
         {% endfor %}
@@ -109,10 +109,10 @@
 {% if object.avg_power %}
 <script type="text/javascript">
     var best_effort_data = [
-            {% for key, effort in object.best.items %}
+            {% for effort in object.bestpowereffort_set.all %}
             {% if effort %}
                 {
-                    data: [[{{ key }}, {{ effort.power }}]],
+                    data: [[{{ forloop.counter0 }}, {{ effort.power }}]],
                     bars: { show: true},
                     color: {{ forloop.counter }}
                 }{% if not forloop.last %},{%endif%}
@@ -124,10 +124,10 @@
 {% else %}
 <script type="text/javascript">
     var best_effort_data = [
-            {% for key, effort in object.best.items %}
+            {% for effort in object.bestspeedeffort_set.all %}
             {% if effort %}
                 {
-                    data: [[{{ key }}, {{ effort.speed }}]],
+                    data: [[{{ forloop.counter0 }}, {{ effort.speed }}]],
                     bars: { show: true},
                     color: {{ forloop.counter }}
                 }{% if not forloop.last %},{%endif%}

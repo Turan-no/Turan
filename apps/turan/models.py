@@ -33,6 +33,7 @@ from csvparser import CSVParser
 from gpxwriter import GPXWriter
 
 import numpy
+from collections import deque
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -331,18 +332,18 @@ class ExerciseDetail(models.Model):
 
 
 class BestPowerEffort(models.Model):
-    exercise = models.OneToOneField(Exercise, primary_key=True)
+    exercise = models.ForeignKey(Exercise)
     pos = models.FloatField()
     length = models.FloatField()
     duration = models.IntegerField()
     power = models.IntegerField()
 
 class BestSpeedEffort(models.Model):
-    exercise = models.OneToOneField(Exercise, primary_key=True)
+    exercise = models.ForeignKey(Exercise)
     pos = models.FloatField()
     length = models.FloatField()
     duration = models.IntegerField()
-    speed = models.IntegerField()
+    speed = models.FloatField()
 
 def create_gpx_from_details(trip):
     if not trip.route:
@@ -641,6 +642,126 @@ def normalize_altitude(event):
             d.altitude += altitude_min
             d.save()
 
+def best_x_sec(details, length, power):
+
+    best_speed = 0.0
+    best_power = 0.0
+    best_power = 0.0
+    sum_q_power = 0.0
+    best_start_km_speed = 0.0
+    best_start_km_power = 0.0
+    q_speed = deque()
+    q_power = deque()
+    best_length_speed = 0.0
+    best_length_power = 0.0
+
+    q_speed.appendleft(details[0].speed)
+    if power:
+        q_power.appendleft(details[0].power)
+    j = 2
+    for i in xrange(1, 10000):
+        try:
+            delta_t = (details[i].time - details[i-1].time).seconds
+            q_speed.appendleft(details[i].speed * delta_t)
+            if power:
+                q_power.appendleft(details[i].power * delta_t)
+            j += 1
+            delta_t_total = (details[i].time - details[0].time).seconds
+            if delta_t_total >= length:
+                break
+        except:
+            continue
+
+    for i in xrange(j, len(details)):
+
+        try:
+            if len(q_speed) != 0:
+                sum_q_speed_tmp = sum(q_speed)
+                delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
+
+                if delta_t_total != 0:
+                    sum_q_speed = sum_q_speed_tmp / (details[i].time - details[i-len(q_speed)].time).seconds
+                else:
+                    # What can one do?
+                    sum_q_speed = sum_q_speed_tmp / len(q_speed)
+            if len(q_power) != 0:
+                if power:
+                    sum_q_power_tmp = sum(q_power)
+                    delta_t_total_power = (details[i].time - details[i-len(q_power)].time).seconds
+                    if delta_t_total_power != 0:
+                        sum_q_power = sum_q_power_tmp / delta_t_total_power
+                    else:
+                        sum_q_speed = sum_q_speed_tmp / len(q_power)
+            if sum_q_speed > best_speed:
+                best_speed = sum_q_speed
+                best_start_km_speed = details[i-len(q_speed)].distance / 1000
+                best_length_speed = (details[i].distance) - best_start_km_speed * 1000
+            if sum_q_power > best_power:
+                best_power = sum_q_power
+                best_start_km_power = details[i-len(q_power)].distance / 1000
+                best_length_power = (details[i].distance) - best_start_km_power * 1000
+
+            delta_t = (details[i].time - details[i-1].time).seconds
+            q_speed.appendleft(details[i].speed*delta_t)
+            if power:
+                q_power.appendleft(details[i].power*delta_t)
+            while ((details[i].time - details[i-len(q_speed)].time).seconds) > length:
+                q_speed.pop()
+            while (power and (details[i].time - details[i-len(q_power)].time).seconds > length):
+                q_power.pop()
+        except Exception as e:
+            print "something wrong %s" % e
+            #raise
+            continue
+
+
+    if power:
+        return best_speed, best_start_km_speed, best_length_speed, best_power, best_start_km_power, best_length_power
+    else:
+        return best_speed, best_start_km_speed, best_length_speed
+
+def calculate_best_efforts(exercise):
+    ''' Iterate over details for different effort ranges finding best
+    speed and power efforts '''
+
+    # First: Delete any existing best efforts
+    exercise.bestspeedeffort_set.all().delete()
+
+    def filldistance(values):
+        d = 0
+        values[0].distance = 0
+        for i in xrange(1,len(values)):
+            delta_t = (values[i].time - values[i-1].time).seconds
+            d += values[i].speed/3.6 * delta_t
+            values[i].distance = d
+        return d
+    details = exercise.get_details().all()
+    if filldistance(details):
+        effort_range = [5,30,60,300,600,1800,3600]
+        for seconds in effort_range:
+            #try:
+            #best[i] = {}
+            #if object.avg_power:
+            #    best[i]['speed'], best[i]['speed_pos'], best[i]['speed_length'], best[i]['power'], best[i]['power_pos'], best[i]['power_length'] = best_x_sec(details, seconds, power=True)
+            #    #best[i]['wkg'] = best[i]['power'] / userweight
+            #else:
+            #    best[i]['speed'], best[i]['speed_pos'], best[i]['speed_length'] = best_x_sec(details, seconds, power=False)
+            #best[i]['dur'] = seconds
+            if exercise.avg_power:
+                speed, pos, length, power, power_pos, power_length = best_x_sec(details, seconds, power=True)
+                be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds)
+                be.save()
+            else:
+                speed, pos, length = best_x_sec(details, seconds, power=False)
+            be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds)
+            be.save()
+            #except:
+            #    del best[j]
+            #    pass
+            #else:
+            #    if best[j]['speed'] == 0.0:
+            #        del best[j]
+
 # handle notification of new comments
 from threadedcomments.models import ThreadedComment
 def new_comment(sender, instance, **kwargs):
@@ -655,4 +776,5 @@ def exercise_save(sender, instance, **kwargs):
     if instance.sensor_file:
         parse_sensordata(instance)
         create_gpx_from_details(instance)
+        calculate_best_efforts(instance)
 models.signals.post_save.connect(exercise_save, sender=Exercise)
