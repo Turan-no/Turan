@@ -760,6 +760,9 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
                         continue
                     else: #'N' or not friends
                         del js_strings[val]
+                        if val == 'power':
+                            # we don't store poweravg30s in db, but if you cant see power you shouldn't see that
+                            del js_strings['poweravg30s']
 
         except ExercisePermission.DoesNotExist:
             # No permissionojbect found
@@ -1082,41 +1085,42 @@ def exercise(request, object_id):
 
     # Permission checks
     power_show = True
+    poweravg30_show = True
     if not object.user == request.user:  # Allow self
+        is_friend = False
+        if request.user.is_authenticated():
+            is_friend = Friendship.objects.are_friends(request.user, object.user)
         if object.exercise_permission == 'N':
             return redirect_to_login(request.path)
         elif object.exercise_permission == 'F':
-            is_friend = False
-            if request.user.is_authenticated():
-                is_friend = Friendship.objects.are_friends(request.user, object.user)
             if not is_friend:
                 return redirect_to_login(request.path)
 
-            # Check for permission to display attributes
-            try:
-                # Try to find permission object for this exercise
-                permission = object.exercisepermission
+        # Check for permission to display attributes
+        try:
+            # Try to find permission object for this exercise
+            permission = object.exercisepermission
 
-                if hasattr(permission, "power"):
-                    permission_val = getattr(permission, "power")
-                    if permission_val == 'A':
-                        power_show = True
-                    elif permission_val == 'F' and is_friend:
-                        power_show = True
-                    else: #'N' or not friends
-                        power_show = False
-                #if hasattr(permission, "poweravg30s"):
-                #    permission_val = getattr(permission, "poweravg30s")
-                #    if permission_val == 'A':
-                #        poweravg30_show = True
-                #    elif permission_val == 'F' and is_friend:
-                #        poweravg30_show = True
-                #    else: #'N' or not friends
-                #        poweravg30_show = False
-            except ExercisePermission.DoesNotExist:
-                # No permissionobject found
-                # Allowed to see.
-                pass
+            if hasattr(permission, "power"):
+                permission_val = getattr(permission, "power")
+                if permission_val == 'A':
+                    power_show = True
+                elif permission_val == 'F' and is_friend:
+                    power_show = True
+                else: #'N' or not friends
+                    power_show = False
+            if hasattr(permission, "poweravg30s"):
+                permission_val = getattr(permission, "poweravg30s")
+                if permission_val == 'A':
+                    poweravg30_show = True
+                elif permission_val == 'F' and is_friend:
+                    poweravg30_show = True
+                else: #'N' or not friends
+                    poweravg30_show = False
+        except ExercisePermission.DoesNotExist:
+            # No permissionobject found
+            # Allowed to see.
+            pass
 
     # Provide template string for maximum yaxis value for HR, for easier comparison
     maxhr_js = ''
@@ -1157,9 +1161,6 @@ def exercise(request, object_id):
         zones = getzones(details)
         hrhzones = gethrhzones(details)
         inclinesummary = getinclinesummary(details)
-
-        #poweravg30_show = True
-
 
         if object.avg_power and power_show:
             object.normalized = power_30s_average(details)
