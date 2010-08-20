@@ -287,6 +287,13 @@ class Exercise(models.Model):
     def icon(self):
         return self.exercise_type.icon()
 
+    def is_smart_sampled(self):
+        exercise_details = self.get_details
+        if exercise_details[2].seconds - exercise_details[1].seconds < 1:
+            return True
+        else:
+            return False
+
     class Meta:
         verbose_name = _("Exercise")
         verbose_name_plural = _("Exercises")
