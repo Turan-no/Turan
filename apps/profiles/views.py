@@ -20,6 +20,8 @@ from microblogging.models import Following
 from profiles.models import Profile, UserProfileDetail
 from profiles.forms import ProfileForm
 
+from turan.models import BestPowerEffort, BestSpeedEffort
+
 from avatar.templatetags.avatar_tags import avatar
 from itertools import groupby
 #from gravatar.templatetags.gravatar import gravatar as avatar
@@ -427,6 +429,19 @@ def profile_statistics(request, username, template_name="profiles/statistics.htm
     weekseries_trips = weekseries_trips.rstrip(' ,')"""
 
     #assert False, workouts_by_week
+
+    bestpowerefforts = ""
+    bestspeedefforts = ""
+    effort_range = [5,30,60,300,600,1800,3600]
+    for seconds in effort_range:
+        try:
+            tmp = BestPowerEffort.objects.filter(exercise__user__username=username, duration=seconds).aggregate(Max('power'))
+            bestpowerefforts += "[%d, %d]," % (seconds, tmp['power__max'])
+            tmp = BestSpeedEffort.objects.filter(exercise__user__username=username, duration=seconds).aggregate(Max('speed'))
+            bestspeedefforts += "[%d, %d]," % (seconds, tmp['speed__max'])
+        except:
+            continue
+
 
     return render_to_response(template_name, locals(),
             context_instance=RequestContext(request))
