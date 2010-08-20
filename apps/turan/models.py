@@ -338,12 +338,18 @@ class BestPowerEffort(models.Model):
     duration = models.IntegerField()
     power = models.IntegerField()
 
+    class Meta:
+        ordering = ('duration',)
+
 class BestSpeedEffort(models.Model):
     exercise = models.ForeignKey(Exercise)
     pos = models.FloatField()
     length = models.FloatField()
     duration = models.IntegerField()
     speed = models.FloatField()
+
+    class Meta:
+        ordering = ('duration',)
 
 def create_gpx_from_details(trip):
     if not trip.route:
@@ -736,17 +742,20 @@ def calculate_best_efforts(exercise):
             values[i].distance = d
         return d
     details = exercise.get_details().all()
-    if filldistance(details):
-        effort_range = [5,30,60,300,600,1800,3600]
-        for seconds in effort_range:
-            if exercise.avg_power:
-                speed, pos, length, power, power_pos, power_length = best_x_sec(details, seconds, power=True)
-                be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds)
-                be.save()
-            else:
-                speed, pos, length = best_x_sec(details, seconds, power=False)
-            be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds)
-            be.save()
+    if details:
+        if filldistance(details):
+            effort_range = [5,30,60,300,600,1800,3600]
+            for seconds in effort_range:
+                if exercise.avg_power:
+                    speed, pos, length, power, power_pos, power_length = best_x_sec(details, seconds, power=True)
+                    if power:
+                        be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds)
+                        be.save()
+                else:
+                    speed, pos, length = best_x_sec(details, seconds, power=False)
+                if speed:
+                    be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds)
+                    be.save()
 
 # handle notification of new comments
 from threadedcomments.models import ThreadedComment
