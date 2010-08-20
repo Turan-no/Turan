@@ -1454,14 +1454,20 @@ def power_30s_average(details):
     power_avg_count = 0
 
     #EXPECTING 1 SEC SAMPLE INTERVAL!
-    for i in range(0, datasetlen):
+    for i in xrange(0, datasetlen):
         foo = 0.0
         foo_element = 0.0
-        for j in range(0,30):
+        for j in xrange(0,30):
             if (i+j-30) > 0 and (i+j-30) < datasetlen:
                 delta_t = (details[i+j-30].time - details[i+j-31].time).seconds
-                foo += details[i+j-30].power*delta_t
-                foo_element += 1.0
+                # Break if exerciser is on a break as well
+                if delta_t < 60:
+                    foo += details[i+j-30].power*delta_t
+                    foo_element += 1.0
+                else:
+                    foo = 0
+                    foo_element = 0.0
+                    break
         if foo_element:
             poweravg30s = foo/foo_element
             details[i].poweravg30s = poweravg30s

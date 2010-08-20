@@ -660,6 +660,7 @@ def best_x_sec(details, length, power):
     best_power = 0.0
     best_power = 0.0
     sum_q_power = 0.0
+    sum_q_speed = 0.0
     best_start_km_speed = 0.0
     best_start_km_power = 0.0
     q_speed = deque()
@@ -674,11 +675,18 @@ def best_x_sec(details, length, power):
     for i in xrange(1, 10000):
         try:
             delta_t = (details[i].time - details[i-1].time).seconds
-            q_speed.appendleft(details[i].speed * delta_t)
+            # Break if exerciser is on a break as well
+            if delta_t < 60:
+                q_speed.appendleft(details[i].speed * delta_t)
+            else:
+                q_speed = deque()
             if power:
-                q_power.appendleft(details[i].power * delta_t)
+                if delta_t < 60:
+                    q_power.appendleft(details[i].power * delta_t)
+                else:
+                    q_power = deque()
+            delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
             j += 1
-            delta_t_total = (details[i].time - details[0].time).seconds
             if delta_t_total >= length:
                 break
         except:
@@ -714,9 +722,15 @@ def best_x_sec(details, length, power):
                 best_length_power = (details[i].distance) - best_start_km_power * 1000
 
             delta_t = (details[i].time - details[i-1].time).seconds
-            q_speed.appendleft(details[i].speed*delta_t)
+            if delta_t < 60:
+                q_speed.appendleft(details[i].speed*delta_t)
+            else:
+                q_speed = deque()
             if power:
-                q_power.appendleft(details[i].power*delta_t)
+                if delta_t < 60:
+                    q_power.appendleft(details[i].power*delta_t)
+                else:
+                    q_power = deque()
             while ((details[i].time - details[i-len(q_speed)].time).seconds) > length:
                 q_speed.pop()
             while (power and (details[i].time - details[i-len(q_power)].time).seconds > length):
