@@ -732,6 +732,7 @@ def calculate_best_efforts(exercise):
 
     # First: Delete any existing best efforts
     exercise.bestspeedeffort_set.all().delete()
+    exercise.bestpowereffort_set.all().delete()
 
     def filldistance(values):
         d = 0
