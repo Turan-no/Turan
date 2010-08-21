@@ -109,6 +109,7 @@ var Mapper = {
                                   }
                         )
                 }),
+                projection: this.projection,
                 styleMap: styles
             });
             this.map.addLayer(vectors);
