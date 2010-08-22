@@ -1365,6 +1365,7 @@ def turan_delete_detailset_value(request, model, object_id, value=False):
 class ImportForm(forms.Form):
     import_url = forms.CharField(label='Url to external exercise', required=True)
 
+@login_required
 def import_data(request):
     if request.method == 'POST':
         form = ImportForm(request.POST)
