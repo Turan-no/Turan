@@ -40,5 +40,8 @@
 <hr class="clear" />
 {% block graph %}
 {% endblock %}
+{% comment %} include commentform only if no graph, because usually it lives inside tabs {% endcomment %}
+{% ifequal object.exercisedetail_set.count 0 %}
+{% include "turan/commentform.html" %}
+{% endifequal %}
 {% endblock content %}
-
