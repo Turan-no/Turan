@@ -17,28 +17,32 @@
 <div id="tabs">
     <ul>
         <li class="selected" id="tabs-select-1">{% trans "Graph" %}</li>
-        <li id="tabs-select-2">{% trans "Zones" %}</li>
-        <li id="tabs-select-3">{% trans "HR Freq" %}</li>
+        <li id="tabs-select-2">{% trans "Comments" %}</li>
+        <li id="tabs-select-3">{% trans "Zones" %}</li>
+        <li id="tabs-select-4">{% trans "HR Freq" %}</li>
     {% ifequal object.exercise_type.slopes 1 %}
-        <li id="tabs-select-4">{% trans "Slopes" %}</li>
+        <li id="tabs-select-5">{% trans "Slopes" %}</li>
     {% endifequal %}
     {% ifequal object.exercise_type.altitude 1 %}
-        <li id="tabs-select-5">{% trans "Inclinesums" %}</li>
-        <li id="tabs-select-6">{% trans "Gradients" %}</li>
+        <li id="tabs-select-6">{% trans "Inclinesums" %}</li>
+        <li id="tabs-select-7">{% trans "Gradients" %}</li>
     {% endifequal %}
-    <li id="tabs-select-7">{% trans "Best Efforts" %}</li>
+    <li id="tabs-select-8">{% trans "Best Efforts" %}</li>
     </ul>
     <div id="tabs-1" class="graph visible">
         {% include "turan/exercise/graph.html" %}
     </div>
-    <div id="tabs-2" class="zone_tab">
+    <div id="tabs-2" class="comments">
+            {% include "turan/commentform.html" %}
+    </div>
+    <div id="tabs-3" class="zone_tab">
         {% include "turan/exercise/zone_tab.html" %}
     </div>
-    <div id="tabs-3" class="hrhzone_tab">
+    <div id="tabs-4" class="hrhzone_tab">
         {% include "turan/exercise/hrhzone_tab.html" %}
     </div>
     {% ifequal object.exercise_type.slopes 1 %}
-    <div id="tabs-4" class="slope_tab">
+    <div id="tabs-5" class="slope_tab">
         <table class="fullsize">
             <tr>
                 <th>
@@ -112,14 +116,14 @@
     </div>
     {% endifequal %}
     {% ifequal object.exercise_type.altitude 1 %}
-    <div id="tabs-5">
+    <div id="tabs-6">
         {% include "turan/exercise/incline_tab.html" %}
     </div>
-    <div id="tabs-6" class="gradient_tab">
+    <div id="tabs-7" class="gradient_tab">
         {% include "turan/exercise/gradient_tab.html" %}
     </div>
     {% endifequal %}
-    <div id="tabs-7">
+    <div id="tabs-8">
         {% include "turan/exercise/best_effort_tab.html" %}
     </div>
 </div>
