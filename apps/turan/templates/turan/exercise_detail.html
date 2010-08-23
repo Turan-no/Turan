@@ -32,7 +32,7 @@
     <div id="tabs-1" class="graph visible">
         {% include "turan/exercise/graph.html" %}
     </div>
-    <div id="tabs-2" class="comments">
+    <div id="tabs-2">
             {% include "turan/commentform.html" %}
     </div>
     <div id="tabs-3" class="zone_tab">
@@ -142,7 +142,7 @@
     $('.zoom-select').each(function () {
         $(this).bind("click", selectTab);
     });
-var commentcount = $('.comments').size()+1;
+var commentcount = $('.bulk').size();
 $('#tabs-select-2').text('{% trans "Comments" %} (' + commentcount + ')');
 
 
