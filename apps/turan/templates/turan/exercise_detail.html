@@ -142,6 +142,10 @@
     $('.zoom-select').each(function () {
         $(this).bind("click", selectTab);
     });
+var commentcount = $('.comments').size()+1;
+$('#tabs-select-2').text('{% trans "Comments" %} (' + commentcount + ')');
+
+
 </script>
 {% endifnotequal %}
 {% endblock %}
