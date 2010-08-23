@@ -29,8 +29,6 @@ from django.core.cache import cache
 from django.utils.decorators import decorator_from_middleware
 from django.utils.datastructures import SortedDict
 from django.middleware.gzip import GZipMiddleware
-from django.utils.datastructures import SortedDict
-
 
 from django.core.files.base import ContentFile
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -947,9 +945,12 @@ def getgradients(values):
 
     altitudes = []
     distances = []
+    inclinesums = {}
+
 
     for d in values:
         altitudes.append(d.altitude)
+        # Distances is used in the graph, so divide by 1000 to get graph xasis in km
         distances.append(d.distance/1000)
 
     # Smooth 10 Wide!
@@ -967,6 +968,10 @@ def getgradients(values):
                 gradient = h_delta*100/d_delta
                 if gradient < 50 and gradient > -50:
                     gradients.append(gradient)
+                    roundedgradient = int(round(gradient))
+                    if not roundedgradient in inclinesums:
+                        inclinesums[roundedgradient] = 0
+                    inclinesums[roundedgradient] += d_delta/1000
 
         previous_altitude = altitudes[i]
         previous_distance = d*1000
@@ -974,7 +979,15 @@ def getgradients(values):
     if gradients: # Don't try to smooth empty list
         gradients = smoothListGaussian(gradients)
 
-    return zip(distances, gradients)
+
+    # Clean values to reduce clutter
+    # and round distance values
+    cutoff = 1 # 1 km
+    inclinesums = dict((k, round(v, 1)) for k, v in inclinesums.items() if v >= 1)
+    # sort the dictionary on gradient
+    inclinesums = [ (k,inclinesums[k]) for k in sorted(inclinesums.keys())]
+
+    return zip(distances, gradients), inclinesums
 
 def getslopes(values):
     slopes = []
@@ -1156,11 +1169,11 @@ def exercise(request, object_id):
                     slope.avg_power_kg = 0
 
 
-            gradients = getgradients(details)
+            gradients, inclinesums = getgradients(details)
 
         zones = getzones(details)
         hrhzones = gethrhzones(details)
-        inclinesummary = getinclinesummary(details)
+        #inclinesummary = getinclinesummary(details)
 
         if object.avg_power and power_show:
             object.normalized = power_30s_average(details)

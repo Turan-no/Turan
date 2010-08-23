@@ -1,57 +1,45 @@
 {% load i18n %}
 {% load turan_extras %}
-<div id="inclinediv" style="width:400px;height:400px; float: right;"></div>
-<div id="incline" style="width:500px; height: 400px;">
-        <table class="fullsize">
+<div id="inclinediv" style="width:700px;height:400px; float: right;"></div>
+<div id="incline" style="width:200px; height: 400px;">
+        <table class="fullsize" cellspacing="0" cellpadding="0">
             <tr>
                 <th>
                     {% trans "Type" %}
                 </th>
                 <th>
-                    {% trans "Duration" %}
+                    {% trans "Distance" %}
                 </th>
                 <th>
                     {% trans "%" %}
                 </th>
             </tr>
-            {% for i_type, length in inclinesummary.items %}
-            {% if length %}
+            {% for item in inclinesums %}
             <tr>
                 <td>
-                    {% ifequal i_type 0 %}
-                        {% trans "Flat" %}
-                    {% endifequal %}
-                    {% ifequal i_type 1 %}
-                        {% trans "Uphill" %}
-                    {% endifequal %}
-                    {% ifequal i_type -1 %}
-                        {% trans "Downhill" %}
-                    {% endifequal %}
+                    {{ item.0 }} %
                 </td>
                 <td>
-                    {{ length|durationformat }}
+                    {{ item.1}} km
                 </td>
                 <td>
-                    {% if object.duration %}
-                        {{ length|percent:object.duration.seconds }}
+                    {% if object.route.distance %}
+                        {{ item.1|percent:object.route.distance }}
                     {% endif %}
                 </td>
             </tr>
-            {% endif %}
             {% endfor %}
         </table>
     </div>
 <script type="text/javascript">
     var inclinedata = [
-            {% for i_type, length in inclinesummary.items %}
-            {% if length %}
+            {% for item in inclinesums %}
                 {
-                    data: [[{{ i_type }}, {{ length }}]],
+                    data: [[{{ item.0 }}, {{ item.1 }}]],
                     bars: { show: true},
                     color: {{ forloop.counter }}
                 }{% if not forloop.last%},{%endif%}
-            {% endif %}
             {% endfor %}
     ];
-    $.plot($("#inclinediv"), inclinedata, { grid: { show: false } });
+    $.plot($("#inclinediv"), inclinedata, { grid: { show: true } });
 </script>
