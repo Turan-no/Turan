@@ -189,10 +189,6 @@ def distanceformat(value):
 
 @register.filter
 def exercise_mouseover(obj):
-    #t = loader.get_template('turan/exercise/mouseover.html')
-    #c = Context({'object': obj})
-    #html = t.render(c)
-    #return html
     return render_to_string('turan/exercise/mouseover.html', {'object': obj})
 
 @register.filter
