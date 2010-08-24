@@ -709,7 +709,7 @@ msgstr ""
 #: apps/turan/templates/messages/new_message.html:9
 #, python-format
 msgid "Sent from %(site_url)s"
-msgstr "Treninger for %(username)s"
+msgstr "Sent frå %(site_url)s"
 
 #: apps/turan/templates/messages/new_message.html:11
 #: apps/turan/templates/messages/view.html:18
