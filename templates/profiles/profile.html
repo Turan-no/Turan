@@ -83,7 +83,7 @@ $(function () {
                 <h1>{% blocktrans %}Profile for <span class="fn nickname">{{ other_user }}</span>{% endblocktrans %}</h1>
             {% endif %}
             
-            <a href="{% url calendar-index %}?username={{ other_user }}">{% trans "Show " %}{{ other_user }}{% trans "'s calendar" %}</a>
+            <a href="{% url calendar-index %}?username={{ other_user }}">{% trans "Show" %} {{ other_user }}{% trans "'s calendar" %}</a>
             <div class="attributes spacer">
                 {% if other_user.get_profile.name %}<p><b>{% trans "Name" %}</b>: <span class="fn">{{ other_user.get_profile.name }}</span></p>{% endif %}
                 {% if other_user.get_profile.about %}<p><b>{% trans "About" %}</b>: {{ other_user.get_profile.about }}</p>{% endif %}
@@ -130,6 +130,7 @@ $(function () {
                     </div>
                 {% endif %}
             {% endif %}
+            <br />
 
             {% if total_duration %}
             <div class="box spacer">
