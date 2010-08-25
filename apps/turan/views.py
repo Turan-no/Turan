@@ -97,7 +97,7 @@ def exercise_compare(request, exercise1, exercise2):
         # TODO Friend check
 
     alt = tripdetail_js(None, trip1.id, 'altitude')
-    alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
+    #alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
     datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False, use_constraints=False)
     datasets2 = js_trip_series(request, trip2.get_details().all(), time_xaxis=False, use_constraints=False)

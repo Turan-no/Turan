@@ -26,9 +26,23 @@
         }
     };
     var options = { 
-        yaxes: [ {}, { min: 0,
-                 max: {{ alt_max }},
-                 position: "right",
+yaxes: [{},  {
+                // max: {{ alt_max }},
+                    position: "right",
+               }],
+        selection: { mode: "x" },
+        grid: { 
+                    hoverable: true, 
+                    clickable: true,
+                }
+    };
+    var speedoptions = { 
+        yaxes: [ 
+               {
+                    max: 90 }, 
+               { 
+                // max: {{ alt_max }},
+                    position: "right",
                }],
         selection: { mode: "x" },
         grid: { 
@@ -43,7 +57,7 @@ var datasets2 = {{ datasets2 }};
     function plotThem(ranges) {
         if (ranges.xaxis != undefined) {
             if (('speed' in datasets1) && ('speed' in datasets2)) 
-                plot = $.plot($("#speediv"), [datasets1["speed"]["data"], datasets2["speed"]["data"], alt], $.extend(true, {}, options, { xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }}));
+                plot = $.plot($("#speediv"), [datasets1["speed"]["data"], datasets2["speed"]["data"], alt], $.extend(true, {}, speedoptions, { xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }}));
             if (('hr' in datasets1) && ('hr' in datasets2)) 
                 plot = $.plot($("#hrdiv"), [datasets1["hr"]["data"], datasets2["hr"]["data"], alt], $.extend(true, {}, options, { xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }}));
             if (('cadence' in datasets1) && ('cadence' in datasets2)) 
@@ -57,7 +71,7 @@ var datasets2 = {{ datasets2 }};
             else
                 $(".hr").hide()
             if (('speed' in datasets1) && ('speed' in datasets2)) 
-                $.plot($("#speediv"), [datasets1["speed"]["data"], datasets2["speed"]["data"], alt], options);
+                $.plot($("#speediv"), [datasets1["speed"]["data"], datasets2["speed"]["data"], alt], speedoptions);
             else
                 $(".speed").hide()
             if (('cadence' in datasets1) && ('cadence' in datasets2)) 
