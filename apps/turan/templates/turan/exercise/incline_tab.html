@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load turan_extras %}
-<div id="inclinediv" style="width:700px;height:400px; float: right;"></div>
+<div id="inclinediv" style="width:700px;height:100%; float: right;"></div>
 <div id="incline" style="width:200px">
         <table class="fullsize" cellspacing="0" cellpadding="0">
             <tr>
@@ -41,5 +41,6 @@
                 }{% if not forloop.last%},{%endif%}
             {% endfor %}
     ];
+    $("#inclinediv").css("height", $("#inclinediv").parent().css("height"));
     $.plot($("#inclinediv"), inclinedata, { grid: { show: true } });
 </script>
