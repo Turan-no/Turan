@@ -11,24 +11,6 @@ class TCXWriter(object):
     xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <TrainingCenterDatabase xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.garmin.com/xmlschemas/ActivityExtension/v2 http://www.garmin.com/xmlschemas/ActivityExtensionv2.xsd http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd">
 
-  <Activities>
-    <Activity Sport="Biking">
-      <Id>2010-06-20T10:45:10Z</Id>
-      <Lap StartTime="2010-06-20T10:45:10Z">
-        <TotalTimeSeconds>292.7700000</TotalTimeSeconds>
-        <DistanceMeters>1948.5429688</DistanceMeters>
-        <MaximumSpeed>9.0850000</MaximumSpeed>
-        <Calories>177</Calories>
-        <AverageHeartRateBpm xsi:type="HeartRateInBeatsPerMinute_t">
-          <Value>157</Value>
-        </AverageHeartRateBpm>
-        <MaximumHeartRateBpm xsi:type="HeartRateInBeatsPerMinute_t">
-          <Value>207</Value>
-        </MaximumHeartRateBpm>
-        <Intensity>Active</Intensity>
-        <Cadence>88</Cadence>
-        <TriggerMethod>Manual</TriggerMethod>
-      <Track>
 '''
     xmlfooter = '''
       </Track>
@@ -69,13 +51,32 @@ class TCXWriter(object):
 
 
 
-    def __init__(self, objects):
+    def __init__(self, objects, distance, avg_hr, max_hr, kcal, max_speed, duration, time, avg_cadence):
+
+        time = time.strftime('%Y-%m-%dT%H:%M:%SZ')
+        act_block = '''
+  <Activities>
+    <Activity Sport="Biking">
+      <Id>%(time)s</Id>
+      <Lap StartTime="%(time)s">
+        <TotalTimeSeconds>%(duration)s</TotalTimeSeconds>
+        <DistanceMeters>%(distance)s</DistanceMeters>
+        <MaximumSpeed>%(max_speed)s</MaximumSpeed>
+        <Calories>%(kcal)s</Calories>
+        <AverageHeartRateBpm xsi:type="HeartRateInBeatsPerMinute_t">
+          <Value>%(avg_hr)s</Value>
+        </AverageHeartRateBpm>
+        <MaximumHeartRateBpm xsi:type="HeartRateInBeatsPerMinute_t">
+          <Value>%(max_hr)s</Value>
+        </MaximumHeartRateBpm>
+        <Intensity>Active</Intensity>
+        <Cadence>%(avg_cadence)s</Cadence>
+        <TriggerMethod>Manual</TriggerMethod>
+      <Track>
+      ''' %locals()
+        self.xml += act_block
 
         def point2xmlblock(time, lon, lat, alt, distance, hr, cadence):
-            #xmlp = '<trkpt lat="%s" lon="%s">\n' %(lat, lon)
-            #xmlp+= ' <ele>%.1f</ele>\n' %alt
-            #xmlp+= ' <time>%s</time>\n' %time.strftime('%Y-%m-%dT%H:%M:%SZ')
-            #xmlp+= '</trkpt>\n'
             posblock = ''
             if lat and lon:
                 posblock = \
