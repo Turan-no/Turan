@@ -619,9 +619,14 @@ def geojson(request, object_id):
     give each line a zone property so it can be styled differently'''
 
     qs = ExerciseDetail.objects.filter(exercise=object_id)
+    qs = list(qs.exclude(lon=0).exclude(lat=0))
 
-    qs = qs.exclude(lon=0).exclude(lat=0)
-    if qs.count() == 0:
+    start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
+    if start and stop:
+        start, stop = int(start), int(stop)
+        qs = qs[start:stop]
+
+    if len(qs) == 0:
         return HttpResponse('{}')
 
     max_hr = qs[0].exercise.user.get_profile().max_hr

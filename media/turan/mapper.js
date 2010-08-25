@@ -77,8 +77,9 @@ var Mapper = {
             layerMarkers.addMarker(new OpenLayers.Marker(endlonlat, icon.clone()));
         }
 
+        this.geojson_url = geojson_url;
         if (geojson_url) {
-            var styles = new OpenLayers.StyleMap({
+            this.styles = new OpenLayers.StyleMap({
                 "default": {
                     strokeWidth: 2
                 },
@@ -89,7 +90,7 @@ var Mapper = {
             });
         
             // add rules from the above lookup table
-            styles.addUniqueValueRules("default", "ZONE", {
+            this.styles.addUniqueValueRules("default", "ZONE", {
                 0: {strokeColor: "#CCCCCC", strokeWidth: 4},
                 1: {strokeColor: "#3366FF", strokeWidth: 4},
                 2: {strokeColor: "#66CC00", strokeWidth: 4},
@@ -99,7 +100,7 @@ var Mapper = {
                 6: {strokeColor: "#FF99FF", strokeWidth: 4},
             });
 
-            var vectors = new OpenLayers.Layer.Vector("HR Line", {
+            this.vectors = new OpenLayers.Layer.Vector("HR Line", {
                 strategies: [new OpenLayers.Strategy.Fixed()],                
                 protocol: new OpenLayers.Protocol.HTTP({
                     url: geojson_url,
@@ -110,12 +111,27 @@ var Mapper = {
                         )
                 }),
                 projection: this.projection,
-                styleMap: styles
+                styleMap: this.styles
             });
-            this.map.addLayer(vectors);
+            this.map.addLayer(this.vectors);
         }
         
         this.map.render("map");
         return this.map;
-    }
+    },
+    loadGeoJSON: function(minIndex, maxIndex) {
+        if (this.map != null) {
+            this.map.removeLayer(this.map.getLayersByName('HR Line')[0]);
+            var selection_vectors = new OpenLayers.Layer.Vector("HR Line", {
+                    strategies: [new OpenLayers.Strategy.Fixed()],                
+                    protocol: new OpenLayers.Protocol.HTTP({
+                        url: this.geojson_url + '?start=' + minIndex + '&stop=' + maxIndex,
+                        format: new OpenLayers.Format.GeoJSON({ 'internalProjection': new OpenLayers.Projection("EPSG:4326"), })
+                    }),
+                    projection: this.projection,
+                    styleMap: this.styles
+                });
+                this.map.addLayer(selection_vectors);
+                selection_vectors.events.register("loadend", this, this.resizeMapToLayerExtents);
+    }}
 };

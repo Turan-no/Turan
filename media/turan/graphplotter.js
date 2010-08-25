@@ -55,6 +55,8 @@ var GraphPlotter = {
         }
 
         if (minIndex != null && maxIndex != null) {
+            if (typeof(Mapper) != "undefined")
+                Mapper.loadGeoJSON(minIndex, maxIndex);
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
                 var items = $("#averages ul .data");
                 $("#averages h4").removeClass("hidden");
@@ -74,6 +76,8 @@ var GraphPlotter = {
             });
         }
         else {
+            if (typeof(Mapper) != "undefined")
+                Mapper.loadGeoJSON(0, 0);
             $("#averages ul li").addClass("hidden");
             $("#averages h4").addClass("hidden");
         }
