@@ -79,7 +79,9 @@ class Route(models.Model):
                     g = GPXParser(self.gpx_file.file)
                     if g:
                         # set coordinates for route if it doesn't exist
+                        print 'test'
                         if not self.start_lat:
+                            print 'test2'
                             self.start_lon = g.start_lon
                             self.start_lat = g.start_lat
                             self.end_lon = g.end_lon
@@ -290,7 +292,7 @@ class Exercise(models.Model):
         return self.exercise_type.icon()
 
     def is_smart_sampled(self):
-        filename = event.sensor_file.name
+        filename = self.sensor_file.name
         if filname.endswith('.tcx'):
             exercise_details = self.get_details().all()[1:3]
             delta_t = (exercise_details[1].time - exercise_details[0].time).seconds
