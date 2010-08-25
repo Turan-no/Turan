@@ -674,7 +674,8 @@ def best_x_sec(details, length, power):
     if power:
         q_power.appendleft(details[0].power)
     j = 2
-    for i in xrange(1, 10000):
+    len_i = len(details)
+    for i in xrange(2, len_i):
         try:
             delta_t = (details[i].time - details[i-1].time).seconds
             # Break if exerciser is on a break as well
@@ -682,17 +683,22 @@ def best_x_sec(details, length, power):
                 q_speed.appendleft(details[i].speed * delta_t)
             else:
                 q_speed = deque()
+                q_speed.appendleft(details[i].speed)
             if power:
                 if delta_t < 60:
                     q_power.appendleft(details[i].power * delta_t)
                 else:
                     q_power = deque()
+                    q_power.appendleft(details[i].power)
             delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
-            j += 1
             if delta_t_total >= length:
                 break
-        except:
+            j += 1
+        except Exception as e:
+            #print "%s %s %s %s %s" % (e, i, j, delta_t, len(q_speed))
+            #j += 1
             continue
+    j += 1
 
     for i in xrange(j, len(details)):
 
@@ -738,7 +744,7 @@ def best_x_sec(details, length, power):
             while (power and (details[i].time - details[i-len(q_power)].time).seconds > length):
                 q_power.pop()
         except Exception as e:
-            print "something wrong %s" % e
+            #print "something wrong %s, %s, %s, %s" % (e, len(q_speed), i, j)
             #raise
             continue
 
