@@ -265,6 +265,7 @@ class Exercise(models.Model):
         super(Exercise, self).save(*args, **kwargs)
         if self.sensor_file:
             parse_sensordata(self)
+            merge_sensordata(self)
             create_gpx_from_details(self)
             calculate_best_efforts(self)
 
@@ -360,6 +361,23 @@ class BestSpeedEffort(models.Model):
     class Meta:
         ordering = ('duration',)
 
+merge_choices = (
+            ('M', _('Merge')),
+            ('P', _('Prepend')),
+            ('A', _('Append')),
+                    )
+
+class MergeSensorFile(models.Model):
+    exercise = models.ForeignKey(Exercise)
+    merge_strategy = models.CharField(max_length=1, choices=merge_choices, default='M', help_text=_('Merge strategy. Merge = Merge on top of current, Append = Append to end, Prepend = Insert before current'))
+    sensor_file = models.FileField(upload_to='sensor', storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv)'))
+    hr = models.BooleanField(blank=True, default=0)
+    power = models.BooleanField(blank=True, default=0)
+    cadence = models.BooleanField(blank=True, default=0)
+    altitude = models.BooleanField(blank=True, default=0)
+    position = models.BooleanField(blank=True, default=0)
+    speed = models.BooleanField(blank=True, default=0)
+
 def create_gpx_from_details(trip):
     if not trip.route:
         return
@@ -446,13 +464,8 @@ class Location(models.Model):
         verbose_name = _("Location")
         verbose_name_plural = _("Locations")
 
-def parse_sensordata(event):
-    ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
-
-    # eh..yeah
-    #EXPERIMENTAL_POLAR_GPX_HRM_COMBINER = 0
-
-    filename = event.sensor_file.name
+def find_parser(filename):
+    ''' Returns correctly initianted parser-class given a filename '''
 
     if filename.endswith('.hrm'): # Polar !
         parser = HRMParser()
@@ -464,9 +477,40 @@ def parse_sensordata(event):
     elif filename.endswith('.csv'): # PowerTap
         parser = CSVParser()
     elif filename.endswith('.gpx'):
-        parser = GPXParser(event.sensor_file) # Different constructor than the others
+        parser = GPXParser()
     else:
-        return # Maybe warn user somehow?
+        raise Exception('Parser not found') # Maybe warn user somehow?
+    return parser
+
+def merge_sensordata(event):
+
+    for merger in event.mergesensorfile_set.all():
+
+        # TODO, merge_types, this is only the merge kind.
+
+        merger.sensor_file.file.seek(0)
+        parser = find_parser(merger.sensor_file.name)
+        parser.parse_uploaded_file(merger.sensor_file.file)
+        for val in parser.entries:
+            # Lookup correct detail based on time TODO: more merge strategies
+            try:
+                ed = ExerciseDetail.objects.get(exercise=event,time=val.time)
+                for v in ('hr', 'altitude', 'speed', 'cadence', 'position'):
+                    want_value = getattr(merger, v)
+                    if want_value:
+                        if v == 'position':
+                            ed.lat = val.lat
+                            ed.lon = val.lon
+                        else:
+                            setattr(ed, v, getattr(val, v))
+                ed.save()
+            except ExerciseDetail.DoesNotExist:
+                pass # Did not find match, silently continue
+
+
+def parse_sensordata(event):
+    ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
+
 
     if event.get_details().count(): # If the event already has details, delete them and reparse
         # Django is super shitty when it comes to deleation. If you want to delete 25k objects, it uses 500 queries to do so.
@@ -479,7 +523,9 @@ def parse_sensordata(event):
 
         #event.get_details().all().delete()
 
+
     event.sensor_file.file.seek(0)
+    parser = find_parser(event.sensor_file.name)
     parser.parse_uploaded_file(event.sensor_file.file)
     #if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
     #    gpxvalues = GPXParser(event.route.gpx_file.file).entries

@@ -36,5 +36,6 @@ admin.site.register(Location)
 #admin.site.register(TeamMembership)
 admin.site.register(ExerciseType)
 admin.site.register(ExercisePermission)
+admin.site.register(MergeSensorFile)
 #admin.site.register(Teamsport)
 

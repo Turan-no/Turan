@@ -50,9 +50,6 @@ class GPXParser(object):
     kcal_sum = 0
     # comment = '' Fixme
 
-    def parse_uploaded_file(self, fileame):
-        ''' Not used in this class '''
-        pass
 
     def val_or_none(self, item, val):
         ''' Return value if found or none if not. makes it easier to deal with 
@@ -65,7 +62,15 @@ class GPXParser(object):
         except AttributeError:
             return None # missing element
 
-    def __init__(self, filename):
+    def __init__(self, filename=None):
+        if filename:
+            self.parse_uploaded_file(filename)
+
+    def parse_uploaded_file(self, filename):
+        if self.entries: # Do not parse again if sent filename in constructor
+            print "Not reparsing."
+            return
+
         try:
             doc = ET.parse(filename)
         except:
