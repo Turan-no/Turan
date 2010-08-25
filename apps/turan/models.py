@@ -31,6 +31,7 @@ from tcxparser import TCXParser
 from csvparser import CSVParser
 
 from gpxwriter import GPXWriter
+from tcxwriter import TCXWriter
 
 import numpy
 from collections import deque
@@ -397,6 +398,16 @@ def create_gpx_from_details(trip):
 
             # Save the Route (because of triggers for pos setting and such)
             trip.route.save()
+
+def create_tcx_from_details(event):
+    # Check if the details have lon, some parsers doesn't provide position
+    if event.get_details().filter(lon__gt=0).filter(lat__gt=0).count() > 0:
+        details = event.get_details().all()
+        if filldistance(details):
+            g = TCXWriter(details)
+            filename = '/tmp/%s.tcx' %event.id
+
+            file(filename, 'w').write(g.xml)
 
 
 
@@ -800,6 +811,15 @@ def best_x_sec(details, length, power):
     else:
         return best_speed, best_start_km_speed, best_length_speed
 
+def filldistance(values):
+    d = 0
+    values[0].distance = 0
+    for i in xrange(1,len(values)):
+        delta_t = (values[i].time - values[i-1].time).seconds
+        d += values[i].speed/3.6 * delta_t
+        values[i].distance = d
+    return d
+
 def calculate_best_efforts(exercise):
     ''' Iterate over details for different effort ranges finding best
     speed and power efforts '''
@@ -808,14 +828,6 @@ def calculate_best_efforts(exercise):
     exercise.bestspeedeffort_set.all().delete()
     exercise.bestpowereffort_set.all().delete()
 
-    def filldistance(values):
-        d = 0
-        values[0].distance = 0
-        for i in xrange(1,len(values)):
-            delta_t = (values[i].time - values[i-1].time).seconds
-            d += values[i].speed/3.6 * delta_t
-            values[i].distance = d
-        return d
     details = exercise.get_details().all()
     if details:
         if filldistance(details):
