@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load turan_extras %}
-<div id="besteffortdiv" style="width:400px;height:400px; float: right;"></div>
+<div id="besteffortdiv" style="width:400px;height:100px; float: right;"></div>
 <div id="bestefforttable" style="width:500px;">
     {% if object.avg_power and power_show %}
     <table class="fullsize">
@@ -106,8 +106,8 @@
     </table>
 </div>
 
-{% if object.avg_power %}
 <script type="text/javascript">
+{% if object.avg_power %}
     var best_effort_data = [
             {% for effort in object.bestpowereffort_set.all %}
             {% if effort %}
@@ -120,9 +120,7 @@
             {% endfor %}
     ];
     $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: false } });
-</script>
 {% else %}
-<script type="text/javascript">
     var best_effort_data = [
             {% for effort in object.bestspeedeffort_set.all %}
             {% if effort %}
@@ -134,7 +132,8 @@
             {% endif %}
             {% endfor %}
     ];
+{% endif %}
+    $("#besteffortdiv").css("height", $("#besteffortdiv").parent().css("height"));
     $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: false } });
 </script>
-{% endif %}
 
