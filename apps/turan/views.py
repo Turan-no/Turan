@@ -31,9 +31,6 @@ from django.utils.datastructures import SortedDict
 from django.middleware.gzip import GZipMiddleware
 
 from django.core.files.base import ContentFile
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render_to_response
-from django import forms
 from turan.models import Route
 from urllib2 import urlopen
 from tempfile import NamedTemporaryFile
