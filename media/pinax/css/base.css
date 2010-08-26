@@ -99,6 +99,7 @@ input[type="text"], input[type="password"], textarea {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4f96ca', endColorstr='#005476'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#4f96ca), to(#005476)); /* for webkit browsers */
     background: -moz-linear-gradient(top,  #4f96ca,  #005476); /* for firefox 3.6+ */
+    background: -o-linear-gradient(top,  #4f96ca,  #005476); /* for firefox 3.6+ */
 }
 #tabhead .logo {
     height: 80px;

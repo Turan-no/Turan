@@ -43,21 +43,23 @@
 {% endblock %}
 
 {% block logo_link_image %}<pre id="logo">
-                  ________   _ _____ _____ ___ _                       ❅  
-         ,-.O    |__   ___| | |  _  |  _  |   | |    _O_,         BETA    ❄  ❆   
+                  ________   _ _____ _____ ___ _            BETA       ❅  
+         ,-.O    |__   ___| | |  _  |  _  |   | |    _O_,                 ❄  ❆   
       ,-p\.(6,.     | | | |_| | |/ /  |_| | | | |   ´_|     _.,~^   ❄   o__,   ❄
      ( '--\--` )    | | |     | |\ \  | | | |   |     /,~'´^     ❅  ,__/| /  ❄
  ~~~~ `-' ° `-' ~~~~~~~~~~~( som tælle )~~~~~~~~~-.-'´^   _ __ __ _ ___/)/__,   ❄
-{% trans "The unexamined exercise is not worth doing" %}
+  {% trans "The unexamined exercise is not worth doing" %}
            </pre>{% endblock %}
+{% block left_tabs %}
+<ul class="tabs">
+    <li id="tab_turan"><a href="{% url turanindex %}">{% trans "Turan" %}</a></li>
+</ul>
+{% endblock %}
 {% block right_tabs %}
         <ul class="tabs">{% spaceless %}
-            <li id="tab_turan" class="selected"><a href="{% url turanindex %}">{% trans "Turan" %}</a></li>
-            <li id="tab_profile"><a href="{% url profile_list %}">{% trans "Exercisers" %}</a></li>
-            <li id="tab_tribes"><a href="{% url tribe_list %}">{% trans "Teams" %}</a></li>
+            <li><a href="{% url events %}">{% trans "Exercises" %}</a></li>
+            <li id="tab_routes"><a href="{% url routes %}">{% trans "Routes" %}</a></li>
     {% if user.is_authenticated %}
-            <li id="tab_photos"><a href="{% url photos %}">{% trans "Photos" %}</a></li>
-            <li id="tab_profile"><a href="{% url profile_detail user %}">{% trans "Profile" %}</a></li>
             <li id="tab_inbox"><a href="{% url messages_inbox %}">{% trans "Inbox" %} ({{ combined_inbox_count }})</a></li>
     {% endif %}
         {% endspaceless %}</ul>
