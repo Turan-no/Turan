@@ -23,9 +23,9 @@ var Mapper = {
             controls:[
                 new OpenLayers.Control.Navigation(),
                 new OpenLayers.Control.PanZoomBar(),
-                new OpenLayers.Control.MousePosition(),
+                //new OpenLayers.Control.MousePosition(),
                 //new OpenLayers.Control.Permalink('permalink'),
-                new OpenLayers.Control.OverviewMap(),
+                //new OpenLayers.Control.OverviewMap(),
                 new OpenLayers.Control.LayerSwitcher(),
                 new OpenLayers.Control.Attribution()],
             //maxExtent: lgpx.getDataExtent(),
