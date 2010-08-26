@@ -47,3 +47,10 @@ ul.tabs li {
 ul.tabs {
     margin: 0 0 0px;
 }
+body.routes #tab_routes a,
+body.exercises #tab_exercises a,
+body.inbox #tab_inbox a {
+    background-position:0 -56px; 
+    color:#272B2F; 
+    font-weight:bold; 
+}

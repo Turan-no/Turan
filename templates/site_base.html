@@ -57,7 +57,7 @@
 {% endblock %}
 {% block right_tabs %}
         <ul class="tabs">{% spaceless %}
-            <li><a href="{% url events %}">{% trans "Exercises" %}</a></li>
+            <li id="tab_exercises"><a href="{% url events %}">{% trans "Exercises" %}</a></li>
             <li id="tab_routes"><a href="{% url routes %}">{% trans "Routes" %}</a></li>
     {% if user.is_authenticated %}
             <li id="tab_inbox"><a href="{% url messages_inbox %}">{% trans "Inbox" %} ({{ combined_inbox_count }})</a></li>
