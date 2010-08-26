@@ -2,9 +2,9 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.auth.models import User
 
-from tribes.models import Tribe
-from bookmarks.models import Bookmark
-from blog.models import Post
+#from tribes.models import Tribe
+#from bookmarks.models import Bookmark
+#from blog.models import Post
 
 _inbox_count_sources = None
 
@@ -44,10 +44,10 @@ def combined_inbox_count(request):
                     pass
     return {'combined_inbox_count': count,}
 
-def footer(request):
-    return {
-        'latest_tribes': Tribe.objects.all().order_by('-created')[:5],
-        'latest_users': User.objects.all().order_by('-date_joined')[:9],
-        'latest_bookmarks': Bookmark.objects.all().order_by('-added')[:5],
-        'latest_blogs': Post.objects.filter(status=2).order_by('-publish')[:5],
-    }
+#def footer(request):
+#    return {
+#        'latest_tribes': Tribe.objects.all().order_by('-created')[:5],
+#        'latest_users': User.objects.all().order_by('-date_joined')[:9],
+#        'latest_bookmarks': Bookmark.objects.all().order_by('-added')[:5],
+#        'latest_blogs': Post.objects.filter(status=2).order_by('-publish')[:5],
+#    }
