@@ -27,9 +27,12 @@ ul.tabs a:hover,
 ul.tabs a:focus {
     background-position: 0 -27px; color:#FFF;             
 }
-.profile ul.tabs #tab_profile a,
-.turan ul.tabs #tab_turan a,
-.tribes ul.tabs #tab_tribes a {
+body.profile ul.tabs #tab_profile a,
+body.turan ul.tabs #tab_turan a,
+body.routes #tab_routes a,
+body.exercises #tab_exercises a,
+body.tribes ul.tabs #tab_tribes a 
+body.inbox #tab_inbox a {
     padding:6px 0 5px 0; 
     background-position:0 -56px; 
     color:#272B2F; 

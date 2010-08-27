@@ -8,6 +8,8 @@
 {{ block.super }}
 {% trans "Routes" %}
 {% endblock %}
+
+{% block body_class%}routes{% endblock %}
 {% block searchenginemeta %}
 <meta name="description" content="{% trans "All routes" %}" />
 {% endblock %}

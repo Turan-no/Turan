@@ -31,9 +31,6 @@ from django.utils.datastructures import SortedDict
 from django.middleware.gzip import GZipMiddleware
 
 from django.core.files.base import ContentFile
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render_to_response
-from django import forms
 from turan.models import Route
 from urllib2 import urlopen
 from tempfile import NamedTemporaryFile
@@ -612,8 +609,8 @@ def powerjson(request, object_id):
             del ret[a]
     return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
-#@cache_page(86400*7)
 #@decorator_from_middleware(GZipMiddleware)
+#@cache_page(86400*7)
 def geojson(request, object_id):
     ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
     give each line a zone property so it can be styled differently'''
@@ -624,7 +621,8 @@ def geojson(request, object_id):
     start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
     if start and stop:
         start, stop = int(start), int(stop)
-        qs = qs[start:stop]
+        if start and stop:
+            qs = qs[start:stop+1]
 
     if len(qs) == 0:
         return HttpResponse('{}')
@@ -633,37 +631,39 @@ def geojson(request, object_id):
 
     class Feature(object):
 
-        linestrings = '\n'
-
         def __init__(self, zone):
+            self.linestrings = []
             self.jsonhead = '''
-            { "type": "Feature", "properties":
-                { "ZONE": %s },
+            { "type": "Feature",
+              "properties": {
+                  "ZONE": %s
+                },
                 "geometry": {
                     "type": "LineString", "coordinates": [ ''' %zone
-            self.jsonfoot = '''] }
-            },'''
+            self.jsonfoot = ''']
+                }
+            }'''
 
         def addLine(self, a, b, c, d):
-            self.linestrings += '[%s, %s], [%s, %s],\n' %(a,b,c,d)
+            self.linestrings.append('[%s,%s],[%s,%s]' %(a,b,c,d))
 
         @property
         def json(self):
-            if self.linestrings == '\n':
+            if not self.linestrings:
                 # Don't return empty feature
                 return ''
-            return self.jsonhead + self.linestrings + self.jsonfoot
+            return self.jsonhead + ','.join(self.linestrings) + self.jsonfoot
 
     features = []
 
-    previous_lon, previous_lat, previous_zone = 0, 0, 0
+    previous_lon, previous_lat, previous_zone = 0, 0, -1
     previous_feature = False
     for d in qs:
         if previous_lon and previous_lat:
             hr_percent = float(d.hr)*100/max_hr
             zone = hr2zone(hr_percent)
-            if zone == 0: # TODO WTF? Bug in this shit
-                zone = 1
+            #if zone == 0: # Stylemap does not support zone 0. FIXME
+            #    zone = 1
 
             if previous_zone == zone:
                 previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
@@ -677,20 +677,18 @@ def geojson(request, object_id):
         previous_lat = d.lat
 
     # add last segment
-    features.append(previous_feature)
+    if previous_zone == zone:
+        previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
+    else:
+        features.append(previous_feature)
 
 
     gjhead = '''{
     "type": "FeatureCollection",
         "features": ['''
-    gjfoot = ']}'
-    gjstr = gjhead
-    for f in features:
-        gjstr += f.json
-    gjstr = gjstr.rstrip(',')
-    gjstr += gjfoot
+    gjstr = '%s%s]}' % (gjhead, ','.join(filter(lambda x: x, [f.json for f in features])))
 
-    return HttpResponse(re.sub('\s','', gjstr), mimetype='text/javascript')
+    return HttpResponse(gjstr, mimetype='text/javascript')
 
 def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     if start:
@@ -987,8 +985,8 @@ def getgradients(values):
 
     # Clean values to reduce clutter
     # and round distance values
-    cutoff = 1 # 1 km
-    inclinesums = dict((k, round(v, 1)) for k, v in inclinesums.items() if v >= 1)
+    cutoff = 0.1 # km
+    inclinesums = dict((k, round(v, 1)) for k, v in inclinesums.items() if v >= cutoff)
     # sort the dictionary on gradient
     inclinesums = [ (k,inclinesums[k]) for k in sorted(inclinesums.keys())]
 
