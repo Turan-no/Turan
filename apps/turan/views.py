@@ -679,8 +679,7 @@ def geojson(request, object_id):
     # add last segment
     if previous_zone == zone:
         previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
-    else:
-        features.append(previous_feature)
+    features.append(previous_feature)
 
 
     gjhead = '''{
