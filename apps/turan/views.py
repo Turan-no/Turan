@@ -985,8 +985,8 @@ def getgradients(values):
 
     # Clean values to reduce clutter
     # and round distance values
-    cutoff = 1 # 1 km
-    inclinesums = dict((k, round(v, 1)) for k, v in inclinesums.items() if v >= 1)
+    cutoff = 0.1 # km
+    inclinesums = dict((k, round(v, 1)) for k, v in inclinesums.items() if v >= cutoff)
     # sort the dictionary on gradient
     inclinesums = [ (k,inclinesums[k]) for k in sorted(inclinesums.keys())]
 
