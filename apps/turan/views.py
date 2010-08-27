@@ -609,8 +609,8 @@ def powerjson(request, object_id):
             del ret[a]
     return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
-#@cache_page(86400*7)
 #@decorator_from_middleware(GZipMiddleware)
+#@cache_page(86400*7)
 def geojson(request, object_id):
     ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
     give each line a zone property so it can be styled differently'''
@@ -630,7 +630,7 @@ def geojson(request, object_id):
 
     class Feature(object):
 
-        linestrings = '\n'
+        linestrings = []
 
         def __init__(self, zone):
             self.jsonhead = '''
@@ -642,14 +642,14 @@ def geojson(request, object_id):
             },'''
 
         def addLine(self, a, b, c, d):
-            self.linestrings += '[%s, %s], [%s, %s],\n' %(a,b,c,d)
+            self.linestrings.append('[%s,%s],[%s,%s],' %(a,b,c,d))
 
         @property
         def json(self):
-            if self.linestrings == '\n':
+            if not self.linestrings:
                 # Don't return empty feature
                 return ''
-            return self.jsonhead + self.linestrings + self.jsonfoot
+            return self.jsonhead + ''.join(self.linestrings) + self.jsonfoot
 
     features = []
 
@@ -682,12 +682,10 @@ def geojson(request, object_id):
         "features": ['''
     gjfoot = ']}'
     gjstr = gjhead
-    for f in features:
-        gjstr += f.json
-    gjstr = gjstr.rstrip(',')
+    gjstr += ','.join([f.json for f in features])
     gjstr += gjfoot
 
-    return HttpResponse(re.sub('\s','', gjstr), mimetype='text/javascript')
+    return HttpResponse(gjstr, mimetype='text/javascript')
 
 def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     if start:
