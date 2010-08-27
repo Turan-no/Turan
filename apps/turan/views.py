@@ -622,7 +622,7 @@ def geojson(request, object_id):
     if start and stop:
         start, stop = int(start), int(stop)
         if start and stop:
-            qs = qs[start:stop]
+            qs = qs[start:stop+1]
 
     if len(qs) == 0:
         return HttpResponse('{}')
