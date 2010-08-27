@@ -16,6 +16,8 @@ from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 from django.core.files.base import ContentFile
 from tagging.fields import TagField
 import types
+from subprocess import call
+from os.path import join
 
 from photos.models import Pool, Image
 
@@ -79,9 +81,7 @@ class Route(models.Model):
                     g = GPXParser(self.gpx_file.file)
                     if g:
                         # set coordinates for route if it doesn't exist
-                        print 'test'
                         if not self.start_lat:
-                            print 'test2'
                             self.start_lon = g.start_lon
                             self.start_lat = g.start_lat
                             self.end_lon = g.end_lon
@@ -105,12 +105,30 @@ class Route(models.Model):
                     # TODO better exception handling ?
                     pass
 
+            # generate simplified gpx to use as layer, for faster loading
+            filename = 'gpx/%s.simpler.gpx' %self.id
+            if not gpxstore.exists(filename):
+                cmd = 'gpsbabel -i gpx -f %s -x duplicate,location -x position,distance=1m -x simplify,crosstrack,error=0.005k -o gpx -F %s' % (\
+                        self.gpx_file.path,
+                        '/'.join(self.gpx_file.path.split('/')[0:-2]) + '/' + filename)
+                retcode = call(cmd.split())
 
     def __unicode__(self):
         if self.name:
             return self.name
         else:
             return ("Unnamed trip")
+
+    def get_simplegpx_url(self):
+        url = None
+        if self.gpx_file:
+            filename = 'gpx/%s.simpler.gpx' %self.id
+            if gpxstore.exists(filename):
+                url = filename
+                #//url = '/'.join(self.gpx_file.url.split('/')[0:-2]) + '/' + filename
+            else:
+                url = self.gpx_file
+        return url
 
     def get_absolute_url(self):
         return reverse('route', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
@@ -286,6 +304,11 @@ class Exercise(models.Model):
 
     def get_geojson_url(self):
         return reverse('geojson', kwargs={'object_id': self.id})
+
+    def get_simplegpx_url(self):
+        ''' Also defined here in addition to in Route because of how Mapper.js is initiated '''
+        if self.route:
+            return self.route.get_simplegpx_url()
 
 
     def icon(self):
@@ -838,7 +861,7 @@ def calculate_best_efforts(exercise):
     details = exercise.get_details().all()
     if details:
         if filldistance(details):
-            effort_range = [5,30,60,300,600,1800,3600]
+            effort_range = [5, 30, 60, 300, 600, 1800, 3600]
             for seconds in effort_range:
                 if exercise.avg_power and not exercise.is_smart_sampled():
                     speed, pos, length, power, power_pos, power_length = best_x_sec(details, seconds, power=True)

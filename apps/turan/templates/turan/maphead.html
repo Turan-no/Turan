@@ -8,7 +8,7 @@
         var map;
         $(document).ready(function(evt) {
             map = Mapper.init(
-                "{{ MEDIA_URL }}turan/{{ gpx_file }}", 
+                "{{ MEDIA_URL }}turan/{{ object.get_simplegpx_url }}", 
                 "{{ object.get_geojson_url }}",
                 [{{object.route.start_lon}}, {{object.route.start_lat}}], 
                 [{{object.route.end_lon}}, {{object.route.end_lat}}]

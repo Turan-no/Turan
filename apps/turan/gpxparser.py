@@ -68,7 +68,6 @@ class GPXParser(object):
 
     def parse_uploaded_file(self, filename):
         if self.entries: # Do not parse again if sent filename in constructor
-            print "Not reparsing."
             return
 
         try:
