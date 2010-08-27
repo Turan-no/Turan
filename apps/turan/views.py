@@ -621,7 +621,8 @@ def geojson(request, object_id):
     start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
     if start and stop:
         start, stop = int(start), int(stop)
-        qs = qs[start:stop]
+        if start and stop:
+            qs = qs[start:stop]
 
     if len(qs) == 0:
         return HttpResponse('{}')
@@ -630,37 +631,39 @@ def geojson(request, object_id):
 
     class Feature(object):
 
-        linestrings = []
-
         def __init__(self, zone):
+            self.linestrings = []
             self.jsonhead = '''
-            { "type": "Feature", "properties":
-                { "ZONE": %s },
+            { "type": "Feature",
+              "properties": {
+                  "ZONE": %s
+                },
                 "geometry": {
                     "type": "LineString", "coordinates": [ ''' %zone
-            self.jsonfoot = '''] }
-            },'''
+            self.jsonfoot = ''']
+                }
+            }'''
 
         def addLine(self, a, b, c, d):
-            self.linestrings.append('[%s,%s],[%s,%s],' %(a,b,c,d))
+            self.linestrings.append('[%s,%s],[%s,%s]' %(a,b,c,d))
 
         @property
         def json(self):
             if not self.linestrings:
                 # Don't return empty feature
                 return ''
-            return self.jsonhead + ''.join(self.linestrings) + self.jsonfoot
+            return self.jsonhead + ','.join(self.linestrings) + self.jsonfoot
 
     features = []
 
-    previous_lon, previous_lat, previous_zone = 0, 0, 0
+    previous_lon, previous_lat, previous_zone = 0, 0, -1
     previous_feature = False
     for d in qs:
         if previous_lon and previous_lat:
             hr_percent = float(d.hr)*100/max_hr
             zone = hr2zone(hr_percent)
-            if zone == 0: # TODO WTF? Bug in this shit
-                zone = 1
+            #if zone == 0: # Stylemap does not support zone 0. FIXME
+            #    zone = 1
 
             if previous_zone == zone:
                 previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
@@ -674,16 +677,16 @@ def geojson(request, object_id):
         previous_lat = d.lat
 
     # add last segment
-    features.append(previous_feature)
+    if previous_zone == zone:
+        previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
+    else:
+        features.append(previous_feature)
 
 
     gjhead = '''{
     "type": "FeatureCollection",
         "features": ['''
-    gjfoot = ']}'
-    gjstr = gjhead
-    gjstr += ','.join([f.json for f in features])
-    gjstr += gjfoot
+    gjstr = '%s%s]}' % (gjhead, ','.join(filter(lambda x: x, [f.json for f in features])))
 
     return HttpResponse(gjstr, mimetype='text/javascript')
 
