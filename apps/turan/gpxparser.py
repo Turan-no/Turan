@@ -103,7 +103,7 @@ class GPXParser(object):
                             lat = self.entries[-1].lat
                             lon = self.entries[-1].lon
 
-                    speed = 0
+                    speed = self.val_or_none(trkpt, 'speed')
                     tstring = trkpt.find(ns + 'time').text
                     time = datetime.datetime(*map(int, map(float, tstring.replace("T","-").replace(":","-").strip("Z").split("-"))))
 
@@ -140,7 +140,7 @@ class GPXParser(object):
                                 self.ascent = self.ascent + delta_ele
                             else:
                                 self.descent = self.descent + delta_ele
-                        if this_distance:
+                        if not speed and this_distance:
                             speed = 3.6 * this_distance/(time - self.entries[-1].time).seconds
 
                     e = GPXEntry(time, hr, speed, cad, ele, lon, lat)
