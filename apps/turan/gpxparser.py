@@ -51,15 +51,19 @@ class GPXParser(object):
     # comment = '' Fixme
 
 
-    def val_or_none(self, item, val):
+    def val_or_none(self, item, val, return_zero=False):
         ''' Return value if found or none if not. makes it easier to deal with 
         missing elements in xml'''
         try:
             e = item.find(self.ns + val)
             return float(e.text)
         except ValueError:
+            if return_zero:
+                return 0
             return None # missing element
         except AttributeError:
+            if return_zero:
+                return 0
             return None # missing element
 
     def __init__(self, filename=None):
@@ -103,7 +107,7 @@ class GPXParser(object):
                             lat = self.entries[-1].lat
                             lon = self.entries[-1].lon
 
-                    speed = self.val_or_none(trkpt, 'speed')
+                    speed = self.val_or_none(trkpt, 'speed', return_zero=True)
                     tstring = trkpt.find(ns + 'time').text
                     time = datetime.datetime(*map(int, map(float, tstring.replace("T","-").replace(":","-").strip("Z").split("-"))))
 
