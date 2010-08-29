@@ -7,6 +7,7 @@ var Mapper = {
 
     resizeMapToLayerExtents: function (evt) {
         this.map.zoomToExtent(evt.object.getDataExtent());
+        this.layerMarkers.redraw()
     },
 
     init: function(gpx_file, geojson_url, start, end) {
@@ -71,9 +72,16 @@ var Mapper = {
 
             var icon = new OpenLayers.Icon('http://www.openstreetmap.org/openlayers/img/marker.png',size,offset);
             layerMarkers = new OpenLayers.Layer.Markers("Markers");
+            this.layerMarkers = layerMarkers;
             this.map.addLayer(layerMarkers);
+            this.icon = icon;
 
-            layerMarkers.addMarker(new OpenLayers.Marker(startlonlat, icon));
+
+
+            this.startMarker = new OpenLayers.Marker(startlonlat, icon);
+            this.posMarker = null;
+
+            layerMarkers.addMarker(this.startMarker);
             layerMarkers.addMarker(new OpenLayers.Marker(endlonlat, icon.clone()));
         }
 
@@ -118,6 +126,18 @@ var Mapper = {
         
         this.map.render("map");
         return this.map;
+    },
+    updatePosMarker: function(x, y) {
+        if (x != undefined && y != undefined ) {
+            if ( this.posMarker != null )
+                this.posMarker.erase();
+            //this.posMarker = this.startMarker.clone()
+            //this.startMarker.erase();
+            var lonlat = new OpenLayers.LonLat(x, y).transform(this.projection, this.map.getProjectionObject());
+            this.posMarker = new OpenLayers.Marker(lonlat, this.icon.clone());
+            this.layerMarkers.addMarker(this.posMarker);
+            //        this.layerMarkers.redraw();
+        }
     },
     loadGeoJSON: function(minIndex, maxIndex) {
         if (this.map != null) {

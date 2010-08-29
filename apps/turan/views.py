@@ -1169,6 +1169,9 @@ def exercise(request, object_id):
                         slope.avg_power_kg = slope.avg_power / userweight
                 except ZeroDivisionError:
                     slope.avg_power_kg = 0
+            lonlats = []
+            for d in details:
+                lonlats.append((d.lon, d.lat))
 
 
             gradients, inclinesums = getgradients(details)

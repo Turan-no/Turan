@@ -139,13 +139,14 @@ var GraphPlotter = {
         this.plotAccordingToChoices({});
         var previousPoint = null;
         $("#tripdiv").bind("plothover", function (event, pos, item) {
-            var y = 0;
-            if (pos.y)
-                y = pos.y;
-            else
-                y = pos.y2;
-
             if (item) {
+                // Move marker to current pos
+                if (typeof(Mapper) != "undefined") {
+                    var x = route_points[item.dataIndex].x;
+                    var y = route_points[item.dataIndex].y;
+                    Mapper.updatePosMarker(x, y);
+                }
+
                 if (previousPoint != item.datapoint) {
                     previousPoint = item.datapoint;
                     
@@ -155,6 +156,7 @@ var GraphPlotter = {
                     
                     that.showTooltip(item.pageX, item.pageY,
                     item.series.label + " at " + x + " is " + y);
+
                 }
             }
             else {
