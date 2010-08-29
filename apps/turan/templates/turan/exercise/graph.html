@@ -67,7 +67,8 @@
     GraphPlotter.init({
         datasets: datasets, 
         backendUrl: "{% url powerjson object.id %}",
-        max_hr: {{ max_hr }}
+        max_hr: {{ max_hr }},
+        xaxisformatter: {% if time_xaxis %}"time"{%else%}"length"{%endif%}
     });
 </script>
 

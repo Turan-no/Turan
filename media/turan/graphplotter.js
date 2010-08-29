@@ -8,6 +8,26 @@ var GraphPlotter = {
     datasets: null,
     backendUrl: null,
     max_hr: 200,
+    formatters: {
+            speed: function(val, axis) {
+                return (val / 1000).toFixed(axis.tickDecimals) + ' km/h';
+            },
+            altitude: function(val, axis) {
+                return (val / 1000).toFixed(axis.tickDecimals) + ' m';
+            },
+            length: function(val, axis) {
+                return (val).toFixed(axis.tickDecimals) + ' km';
+            },
+            time: function(val, axis) {
+                var hours = Math.floor(val / 60);
+                var minutes = val;
+
+                if (hours)
+                        return hours + 'h&nbsp;' + minutes + 'm';
+                return minutes + 'm';
+            }
+
+    },
 
     plotAccordingToChoices: function(ranges) {
         data = [];
@@ -18,6 +38,7 @@ var GraphPlotter = {
         var max = null;
         var xaxisattrs = { 
             tickDecimals: 0,
+            tickFormatter: this.xaxisformatter
         };
         if (ranges.xaxis != undefined) {
             var xaxe = plot.getXAxes()[0];
@@ -99,6 +120,7 @@ var GraphPlotter = {
         this.datasets = args.datasets;
         var backendUrl = args.backendUrl;
         this.max_hr = args.max_hr;
+        this.xaxisformatter = this.formatters[args.xaxisformatter];
 
         var that = this;
         this.backendUrl = backendUrl;
