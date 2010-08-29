@@ -23,6 +23,11 @@
             <th>
                 {% trans "Length" %}
             </th>
+            {% if object.route.ascent or object.route.descent %}
+            <th>
+                {% trans "Elevation" %}
+            </th>
+            {% endif %}
         </tr>
             {% for effort in object.bestpowereffort_set.all %}
             <tr>
@@ -53,6 +58,11 @@
                 <td>
                     {{ effort.length|distanceformat }}
                 </td>
+                {% if object.route.ascent or object.route.descent %}
+                <td>
+                    +{{ effort.ascent|default_if_none:"N" }} / -{{ effort.descent|default_if_none:"A" }} {% trans "m" %}
+                </td>
+                {% endif %}
             </tr>
             {% endfor %}
     </table>
@@ -74,6 +84,11 @@
             <th>
                 {% trans "Length" %}
             </th>
+            {% if object.route.ascent or object.route.descent %}
+            <th>
+                {% trans "Elevation" %}
+            </th>
+            {% endif %}
         </tr>
         {% for effort in object.bestspeedeffort_set.all %}
         <tr>
@@ -101,6 +116,11 @@
             <td>
                 {{ effort.length|distanceformat }}
             </td>
+            {% if object.route.ascent or object.route.descent %}
+            <td>
+                +{{ effort.ascent|default_if_none:"N" }} / -{{ effort.descent|default_if_none:"A" }} {% trans "m" %}
+            </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>

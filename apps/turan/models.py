@@ -373,6 +373,8 @@ class BestPowerEffort(models.Model):
     length = models.FloatField()
     duration = models.IntegerField()
     power = models.IntegerField()
+    ascent = models.IntegerField()
+    descent = models.IntegerField()
 
     class Meta:
         ordering = ('duration',)
@@ -383,6 +385,8 @@ class BestSpeedEffort(models.Model):
     length = models.FloatField()
     duration = models.IntegerField()
     speed = models.FloatField()
+    ascent = models.IntegerField()
+    descent = models.IntegerField()
 
     class Meta:
         ordering = ('duration',)
@@ -810,10 +814,12 @@ def best_x_sec(details, length, power):
             if sum_q_speed > best_speed:
                 best_speed = sum_q_speed
                 best_start_km_speed = details[i-len(q_speed)].distance / 1000
+                best_speed_start_end = (i, i-len(q_speed))
                 best_length_speed = (details[i].distance) - best_start_km_speed * 1000
             if sum_q_power > best_power:
                 best_power = sum_q_power
                 best_start_km_power = details[i-len(q_power)].distance / 1000
+                best_power_start_end = (i, i-len(q_speed))
                 best_length_power = (details[i].distance) - best_start_km_power * 1000
 
             delta_t = (details[i].time - details[i-1].time).seconds
@@ -837,9 +843,16 @@ def best_x_sec(details, length, power):
 
 
     if power:
-        return best_speed, best_start_km_speed, best_length_speed, best_power, best_start_km_power, best_length_power
+        a, b = best_power_start_end
+        c, d = best_speed_start_end
+        best_power_ascent, best_power_descent = calculate_ascent_descent_gaussian(details[b:a])
+        best_speed_ascent, best_speed_descent = calculate_ascent_descent_gaussian(details[d:c])
+
+        return best_speed, best_start_km_speed, best_length_speed, best_speed_ascent, best_speed_descent, best_power, best_start_km_power, best_length_power, best_power_ascent, best_power_descent
     else:
-        return best_speed, best_start_km_speed, best_length_speed
+        a, b = best_speed_start_end
+        best_speed_ascent, best_speed_descent = calculate_ascent_descent_gaussian(details[b:a])
+        return best_speed, best_start_km_speed, best_length_speed, best_speed_ascent, best_speed_descent
 
 def filldistance(values):
     d = 0
@@ -864,14 +877,14 @@ def calculate_best_efforts(exercise):
             effort_range = [5, 30, 60, 300, 600, 1800, 3600]
             for seconds in effort_range:
                 if exercise.avg_power and not exercise.is_smart_sampled():
-                    speed, pos, length, power, power_pos, power_length = best_x_sec(details, seconds, power=True)
+                    speed, pos, length, speed_ascent, speed_descent, power, power_pos, power_length, power_ascent, power_descent = best_x_sec(details, seconds, power=True)
                     if power:
-                        be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds)
+                        be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds, ascent=power_ascent, descent=power_descent)
                         be.save()
                 else:
-                    speed, pos, length = best_x_sec(details, seconds, power=False)
+                    speed, pos, length, speed_ascent, speed_descent = best_x_sec(details, seconds, power=False)
                 if speed:
-                    be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds)
+                    be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds, ascent=speed_ascent, descent=speed_descent)
                     be.save()
 
 # handle notification of new comments
