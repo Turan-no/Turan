@@ -756,6 +756,8 @@ def best_x_sec(details, length, power):
     sum_q_speed = 0.0
     best_start_km_speed = 0.0
     best_start_km_power = 0.0
+    best_speed_start_end = 0
+    best_power_start_end = 0
     q_speed = deque()
     q_power = deque()
     best_length_speed = 0.0
@@ -843,15 +845,24 @@ def best_x_sec(details, length, power):
 
 
     if power:
-        a, b = best_power_start_end
-        c, d = best_speed_start_end
-        best_power_ascent, best_power_descent = calculate_ascent_descent_gaussian(details[b:a])
-        best_speed_ascent, best_speed_descent = calculate_ascent_descent_gaussian(details[d:c])
+        best_speed_ascent = 0
+        best_speed_descent = 0
+        best_power_ascent = 0
+        best_power_descent = 0
+        if best_speed_start_end:
+            c, d = best_speed_start_end
+            best_speed_ascent, best_speed_descent = calculate_ascent_descent_gaussian(details[d:c])
+        if best_power_start_end:
+            a, b = best_power_start_end
+            best_power_ascent, best_power_descent = calculate_ascent_descent_gaussian(details[b:a])
 
         return best_speed, best_start_km_speed, best_length_speed, best_speed_ascent, best_speed_descent, best_power, best_start_km_power, best_length_power, best_power_ascent, best_power_descent
     else:
-        a, b = best_speed_start_end
-        best_speed_ascent, best_speed_descent = calculate_ascent_descent_gaussian(details[b:a])
+        best_speed_ascent = 0
+        best_speed_descent = 0
+        if best_speed_start_end:
+            a, b = best_speed_start_end
+            best_speed_ascent, best_speed_descent = calculate_ascent_descent_gaussian(details[b:a])
         return best_speed, best_start_km_speed, best_length_speed, best_speed_ascent, best_speed_descent
 
 def filldistance(values):
