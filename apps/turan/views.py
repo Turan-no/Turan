@@ -660,7 +660,9 @@ def geojson(request, object_id):
     previous_feature = False
     for d in qs:
         if previous_lon and previous_lat:
-            hr_percent = float(d.hr)*100/max_hr
+            hr_percent = 0
+            if d.hr: # To prevent zerodivision
+                hr_percent = float(d.hr)*100/max_hr
             zone = hr2zone(hr_percent)
             #if zone == 0: # Stylemap does not support zone 0. FIXME
             #    zone = 1
