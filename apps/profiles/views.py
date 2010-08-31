@@ -200,7 +200,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
             tripdataseries += '[%s, %s],' % ( nr_trips, trip.route.distance)
 
             if trip.route.distance > longest_trip:
-                longest_trip = trip.route.distance
+                longest_trip = round(trip.route.distance)
             total_distance += trip.route.distance
 
         if trip.duration:
