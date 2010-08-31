@@ -77,20 +77,14 @@ $(function () {
                 {% endif %}
             </div>
 
-            {% if other_user.get_profile.name %}
-                <h1>{% blocktrans %}Profile for <span class="nickname">{{ other_user }}</span>{% endblocktrans %}</h1>
-            {% else %}
-                <h1>{% blocktrans %}Profile for <span class="fn nickname">{{ other_user }}</span>{% endblocktrans %}</h1>
-            {% endif %}
-            
             <a href="{% url calendar-index %}?username={{ other_user }}">{% trans "Show" %} {{ other_user }}{% trans "'s calendar" %}</a>
-            <div class="attributes spacer">
-                {% if other_user.get_profile.name %}<p><b>{% trans "Name" %}</b>: <span class="fn">{{ other_user.get_profile.name }}</span></p>{% endif %}
+            <div class="box spacer">
+                {% if other_user.get_profile.name %}<h2><span class="fn">{{ other_user.get_profile.name }}</span></h2>{% endif %}
                 {% if other_user.get_profile.about %}<p><b>{% trans "About" %}</b>: {{ other_user.get_profile.about }}</p>{% endif %}
                 {% if other_user.get_profile.location%}<p><b>{% trans "Location" %}</b>: {{ other_user.get_profile.location }}</p>{% endif %}
                 {% if other_user.get_profile.website %}<p><b>{% trans "Website" %}</b>: <a class="url" href="{{ other_user.get_profile.website }}">{{ other_user.get_profile.website }}</a></p>{% endif %}
                 {% with other_user.get_profile as object %}
-                <ul class="user_details">
+                <ul class="iconlist">
                     {% if object.weight %}
                         <li class="weight"><span class="label">{% trans "Weight" %}:</span> {{ object.weight }} kg</li>
                     {% endif %}

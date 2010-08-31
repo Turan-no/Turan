@@ -5,7 +5,7 @@
 
 <div class="profile">
     <div class="floatleft">{% avatar user 40 %}</div>
-    <ul class="attributes">
+    <ul class="iconlist">
         <li><a href="{% url profile_detail user.username %}">{{ user }}</a></li>
     {% if user.get_profile.name %}
         <li><span class="label">{% trans "Name" %}</span>: {{ user.get_profile.name }}</li>
