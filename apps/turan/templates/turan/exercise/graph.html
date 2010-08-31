@@ -63,12 +63,8 @@
         color: "rgb(255,0,0)",
         evaluate : evaluate
     }
-    var route_coordinates = [{% for lonlat in lonlats %}[{{lonlat.0}},{{lonlat.1}}]{% if forloop.last%}{%else%},{%endif%} {% endfor %}];
+    var route_coordinates = [{% for lonlat in lonlats %}{% if lonlat.0 %}[{{lonlat.0}},{{lonlat.1}}]{% if forloop.last%}{%else%},{%endif%} {%endif%}{% endfor %}];
     var route_points = [];
-    for (var i = 0; i < route_coordinates.length; i++) {
-        var p = route_coordinates[i];
-        route_points.push(new OpenLayers.Geometry.Point(p[0], p[1]));
-    }
     datasets = {{ datasets }};
     GraphPlotter.init({
         datasets: datasets, 
