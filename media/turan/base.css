@@ -466,14 +466,12 @@ ul.attributes li {
 div.attributes ul li {
 }
 div.attributes {
-    -moz-border-radius: 1em 1em 1em 1em; 
-    -moz-box-shadow: 2px 2px 4px rgb(204, 204, 204);
+    -moz-border-radius: 1em 1em 0em 0em; 
     -webkit-border-radius: 1em 1em 1em 1em; 
-    -webkit-box-shadow: 2px 2px 4px rgb(204, 204, 204);
     border-radius: 1em 1em 1em 1em; 
-    box-shadow: 2px 2px 4px rgb(204, 204, 204);
-	background: #DEF;
-	border: 1px solid #99BBCC;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#ffffff'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#dddddd), to(#ffffff)); /* for webkit browsers */
+    background: -moz-linear-gradient(top, #eeeeee,  #ffffff); /* for firefox 3.6+ */
     padding: 5px;
     padding-left: 1em;
     width: 458px;
