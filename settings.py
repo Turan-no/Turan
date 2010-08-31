@@ -121,7 +121,7 @@ TEMPLATE_DIRS = (
 )
 
 
-DEFAULT_FROM_EMAIL = 'xt@bash.no'
+DEFAULT_FROM_EMAIL = 'turan@turan.no'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.auth",
@@ -253,7 +253,7 @@ AVATAR_GRAVATAR_DEFAULT = 'http://turan.no/site_media/turan/unknown.png'
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
-CONTACT_EMAIL = "xt@bash.no"
+CONTACT_EMAIL = "turan@turan.no"
 SITE_NAME = "Turan"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "what_next"
