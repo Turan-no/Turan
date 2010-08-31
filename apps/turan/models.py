@@ -286,9 +286,9 @@ class Exercise(models.Model):
         super(Exercise, self).save(*args, **kwargs)
         if self.sensor_file:
             parse_sensordata(self)
-            merge_sensordata(self)
             create_gpx_from_details(self)
             calculate_best_efforts(self)
+            merge_sensordata(self)
 
         # set avg_speed if distance and duration is given
         if self.route and self.route.distance and self.duration and not self.avg_speed:
@@ -407,6 +407,11 @@ class MergeSensorFile(models.Model):
     altitude = models.BooleanField(blank=True, default=0)
     position = models.BooleanField(blank=True, default=0)
     speed = models.BooleanField(blank=True, default=0)
+
+    def save(self, *args, **kwargs):
+        ''' Trigger merging on creation '''
+        super(MergeSensorFile, self).save(*args, **kwargs)
+        merge_sensordata(self.exercise)
 
 def create_gpx_from_details(trip):
     if not trip.route:
