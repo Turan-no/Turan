@@ -42,78 +42,7 @@
         {% include "turan/exercise/hrhzone_tab.html" %}
     </div>
     {% ifequal object.exercise_type.slopes 1 %}
-    <div id="tabs-5" class="slope_tab">
-        <table class="fullsize">
-            <tr>
-                <th>
-                    {% trans "Zoom" %}
-                </th>
-                <th>
-                    {% trans "Start" %}
-                </th>
-                <th>
-                    {% trans "Length" %}
-                </th>
-                <th>
-                    {% trans "Ascent" %}
-                </th>
-                <th>
-                    {% trans "Gradient" %}
-                </th>
-                <th>
-                    {% trans "Duration" %}
-                </th>
-                <th>
-                    {% trans "Speed" %}
-                </th>
-                {% if slope.actual_power %}
-                    <th>
-                        {% trans "Avg power (actual)" %}
-                    </th>
-                {% endif %}
-                <th>
-                    {% trans "Avg power (est)" %}
-                </th>
-                <th>
-                    {% trans "Avg power/kg" %}
-                </th>
-                <th>
-                    {% trans "Avg HR" %}
-                </th>
-            </tr>
-        {% for slope in slopes %}
-            <tr>
-                <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select" />
-                    <script type="text/javascript">
-                        $('#zoom{{forloop.counter0}}-link-1').bind("click", 
-                                function (evt) { 
-                                plot.setSelection({ 
-                                    xaxis: { 
-                                        from: {{slope.start_km}}, to: {{slope.start_km}}+{{slope.length}}/1000
-                                    }
-                                })
-                                });
-                    </script>
-                </td>
-                <td>{{ slope.start_km|floatformat }} {% trans "km" %} </td>
-                <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
-                <td>{{slope.hdelta}} {% trans "m" %}</td>
-                <td>{{slope.gradient|floatformat}} %</td>
-                <td>{{ slope.duration.seconds|durationformat }} </td>
-                <td>{{slope.speed|floatformat}} {% trans "km/h" %}</td>
-                {% if slope.actual_power %}
-                    <td>{{slope.actual_power|floatformat}} {% trans "W" %} </td>
-                {% endif %}
-                <td>{{slope.avg_power|floatformat}} {% trans "W" %} </td>
-                <td>{{slope.avg_power_kg|floatformat}} {% trans "W/kg" %} </td>
-                <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}
-                    {% if object.user.get_profile.max_hr %}
-                    ({{ slope.avg_hr|percent:object.user.get_profile.max_hr }})
-                    {% endif %} </td>
-            </tr>
-        {% endfor %}
-        </table>
-    </div>
+        {% include "turan/exercise/slope_tab.html" %}
     {% endifequal %}
     {% ifequal object.exercise_type.altitude 1 %}
     <div id="tabs-6">

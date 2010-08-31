@@ -1164,6 +1164,7 @@ def exercise(request, object_id):
                 slope.avg_hr = getavghr(details, slope.start, slope.end)
                 slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
                 slope.actual_power = getavgpwr(details, slope.start, slope.end)
+                slope.vam = int(round((float(slope.hdelta)/slope.duration.seconds)*3600))
                 try:
                     if slope.actual_power:
                         slope.avg_power_kg = slope.actual_power / userweight
