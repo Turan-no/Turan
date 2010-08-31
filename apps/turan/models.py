@@ -413,6 +413,17 @@ class MergeSensorFile(models.Model):
         super(MergeSensorFile, self).save(*args, **kwargs)
         merge_sensordata(self.exercise)
 
+    def __unicode__(self):
+        result = 'Merge type %s with types: ' % self.merge_strategy
+        vals = []
+        for val in ('hr', 'power', 'cadence', 'altitude', 'speed', 'position'):
+            if getattr(self, val):
+                vals.append(val)
+        result += ','.join(vals)
+        result += u', into %s' % self.exercise
+
+        return result
+
 def create_gpx_from_details(trip):
     if not trip.route:
         return
