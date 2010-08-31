@@ -469,6 +469,7 @@ div.attributes {
     -moz-border-radius: 1em 1em 0em 0em; 
     -webkit-border-radius: 1em 1em 1em 1em; 
     border-radius: 1em 1em 1em 1em; 
+    background-color: #eeeeee;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#ffffff'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#dddddd), to(#ffffff)); /* for webkit browsers */
     background: -moz-linear-gradient(top, #eeeeee,  #ffffff); /* for firefox 3.6+ */
