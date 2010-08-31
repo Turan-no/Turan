@@ -60,7 +60,7 @@
                 <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
                 <td>{{slope.hdelta}} {% trans "m" %}</td>
                 <td>{{slope.gradient|floatformat}} %</td>
-                <td>{{ slope.duration.seconds|durationformat }} </td>
+                <td>{{ slope.duration.seconds|durationformatshort }} </td>
                 <td>{{slope.speed|floatformat}} {% trans "km/h" %}</td>
                 {% if slope.actual_power %}
                     <td>{{slope.actual_power|floatformat}} {% trans "W" %} </td>

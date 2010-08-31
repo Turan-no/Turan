@@ -52,6 +52,43 @@ def retarddurationformat(value, longFormat=True):
     return durationformat(int(value / 1000000), longFormat)
 
 @register.filter
+def durationformatshort(value):
+    string = ""
+
+    daySec = 86400
+    hourSec = 3600
+    minSec = 60
+
+    years = months = days = hours = mins = secs = 0
+    if value >= daySec:
+        days = int(value / daySec)
+        value = value - (days * daySec)
+        dStr = ''
+        string = u"%s%02d%s" % (string, days, dStr)
+
+    if value >= hourSec:
+        hours = int(value / hourSec)
+        value = value - (hours * hourSec)
+        hStr = (":")
+        string = u"%s02d%s" % (string, hours, hStr)
+
+    if value >= minSec:
+        mins = int(value / minSec)
+        value = value - (mins * minSec)
+        minStr = ":"
+        string = u"%s%02d%s" % (string, mins, minStr)
+
+    if value > 0:
+        secs = value
+        sStr = ":"
+        string = u"%s%02d%s" % (string, secs, sStr)
+
+    if len(string) == 0:
+        string = '0'
+
+    return string.strip(':')
+
+@register.filter
 def durationformat(value, longFormat=True):
     """ Converts a number of seconds to a textual string """
 
