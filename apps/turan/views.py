@@ -1080,6 +1080,29 @@ class Slope(object):
         self.gradient = gradient
         self.start_km = start_km
 
+    @property
+    def category(self):
+        grade = self.gradient * self.length
+        if grade < 8000:
+            return 5
+        elif grade < 16000:
+            return 4
+        elif grade < 32000:
+            return 3
+        elif grade < 64000:
+            return 2
+        elif grade < 128000:
+            return 1
+        else:
+            return 0 # HC ?
+
+    @property
+    def vam(self):
+        ret = ''
+        if self.category < 4:
+            ret = int(round((float(self.hdelta)/self.duration.seconds)*3600))
+        return ret
+
 def calcpower(userweight, eqweight, gradient, speed,
         rollingresistance = 0.006 ,
         airdensity = 1.22 ,
@@ -1160,7 +1183,6 @@ def exercise(request, object_id):
                 slope.avg_hr = getavghr(details, slope.start, slope.end)
                 slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
                 slope.actual_power = getavgpwr(details, slope.start, slope.end)
-                slope.vam = int(round((float(slope.hdelta)/slope.duration.seconds)*3600))
                 try:
                     if slope.actual_power:
                         slope.avg_power_kg = slope.actual_power / userweight

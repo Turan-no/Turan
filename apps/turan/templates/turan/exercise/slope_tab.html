@@ -39,6 +39,9 @@
                     VAM
                 </th>
                 <th>
+                    Category
+                </th>
+                <th>
                     {% trans "Avg HR" %}
                 </th>
             </tr>
@@ -68,6 +71,7 @@
                 <td>{{slope.avg_power|floatformat}} {% trans "W" %} </td>
                 <td>{{slope.avg_power_kg|floatformat}} {% trans "W/kg" %} </td>
                 <td>{{slope.vam}}</td>
+                <td>{{slope.category}}</td>
                 <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}
                     {% if object.user.get_profile.max_hr %}
                     ({{ slope.avg_hr|percent:object.user.get_profile.max_hr }})
