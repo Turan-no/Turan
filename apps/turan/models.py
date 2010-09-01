@@ -696,8 +696,8 @@ def parse_sensordata(event):
         event.avg_cadence = parser.avg_cadence
     if hasattr(parser, 'avg_pedaling_cad'):
         event.avg_pedaling_cad = parser.avg_pedaling_cad
-
-    event.duration = parser.duration
+    if hasattr(parser, 'duration'):
+        event.duration = parser.duration
 
     if parser.kcal_sum: # only some parsers provide kcal
         event.kcal = parser.kcal_sum
