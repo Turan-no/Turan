@@ -432,15 +432,57 @@ def profile_statistics(request, username, template_name="profiles/statistics.htm
 
     bestpowerefforts = ""
     bestspeedefforts = ""
+    besteffort_ticks = ""
     effort_range = [5,30,60,300,600,1800,3600]
+    first_day_date = datetime(first_day.year, first_day.month, first_day.day)
+    last_day_date = datetime(last_day.year, last_day.month, last_day.day)
+    first_day_year = datetime(first_day.year, 1, 1)
+    last_day_year = datetime(first_day.year, 12, 31)
+    i = 1
     for seconds in effort_range:
         try:
-            tmp = BestPowerEffort.objects.filter(exercise__user__username=username, duration=seconds).aggregate(Max('power'))
-            bestpowerefforts += "[%d, %d]," % (seconds, tmp['power__max'])
-            tmp = BestSpeedEffort.objects.filter(exercise__user__username=username, duration=seconds).aggregate(Max('speed'))
-            bestspeedefforts += "[%d, %d]," % (seconds, tmp['speed__max'])
+            if year:
+                if month:
+                    try:
+                        tmp = BestPowerEffort.objects.filter(exercise__user__username=username, duration=seconds, exercise__date__gt=first_day_date, exercise__date__lt=last_day_date).aggregate(Max('power'))
+                        bestpowerefforts += "[%d, %d]," % (i, tmp['power__max'])
+                    except:
+                        pass
+                    tmp = BestSpeedEffort.objects.filter(exercise__user__username=username, duration=seconds, exercise__date__gt=first_day_date, exercise__date__lt=last_day_date).aggregate(Max('speed'))
+                    bestspeedefforts += "[%d, %d]," % (i, tmp['speed__max'])
+                    if seconds < 60:
+                        besteffort_ticks += "[%d.5, %s]," % (i, "\"%d sekunder\"" % seconds)
+                    else:
+                        besteffort_ticks += "[%d.5, %s]," % (i, "\"%d minutter\"" % (seconds / 60))
+                else:
+                    try:
+                        tmp = BestPowerEffort.objects.filter(exercise__user__username=username, duration=seconds, exercise__date__gt=first_day_year, exercise__date__lt=last_day_year).aggregate(Max('power'))
+                        bestpowerefforts += "[%d, %d]," % (i, tmp['power__max'])
+                    except:
+                        pass
+                    tmp = BestSpeedEffort.objects.filter(exercise__user__username=username, duration=seconds, exercise__date__gt=first_day_year, exercise__date__lt=last_day_year).aggregate(Max('speed'))
+                    bestspeedefforts += "[%d, %d]," % (i, tmp['speed__max'])
+                    if seconds < 60:
+                        besteffort_ticks += "[%d.5, %s]," % (i, "\"%d sekunder\"" % seconds)
+                    else:
+                        besteffort_ticks += "[%d.5, %s]," % (i, "\"%d minutter\"" % (seconds / 60))
+            else:
+                try:
+                    tmp = BestPowerEffort.objects.filter(exercise__user__username=username, duration=seconds).aggregate(Max('power'))
+                    bestpowerefforts += "[%d, %d]," % (i, tmp['power__max'])
+                except:
+                    pass
+                tmp = BestSpeedEffort.objects.filter(exercise__user__username=username, duration=seconds).aggregate(Max('speed'))
+                bestspeedefforts += "[%d, %d]," % (i, tmp['speed__max'])
+                if seconds < 60:
+                    besteffort_ticks += "[%d.5, %s]," % (i, "\"%d sekunder\"" % seconds)
+                else:
+                    besteffort_ticks += "[%d.5, %s]," % (i, "\"%d minutter\"" % (seconds / 60))
         except:
             continue
+        i += 1
+
+    besteffort_ticks = mark_safe(besteffort_ticks)
 
 
     return render_to_response(template_name, locals(),

@@ -18,8 +18,8 @@ $(function () {
     var d7 = { label: "avg hr", color: 9, data: [{{weekseries_avg_hr}}], };
     var d8 = { label: "avg speed", color: 5, data: [{{weekseries_avg_speed}}], };
     var d9 = { label: "duration", color: 0, data: [{{weekseries_duration}}], };
-    var d10 = { label: "max powereffort", color: 7, data: [{{bestpowerefforts}}], lines: { show: true } };
-    var d11 = { label: "max speedeffort", color: 6, data: [{{bestspeedefforts}}], lines: { show: true } };
+    var d10 = { label: "max powereffort", color: 7, data: [{{bestpowerefforts}}], bars: { show: true }, ticks: [{{besteffort_ticks}}] };
+    var d11 = { label: "max speedeffort", color: 6, data: [{{bestspeedefforts}}], bars: { show: true }, };
 
     var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0} };
 	var hroptions = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 100, max: 200 } };
@@ -27,7 +27,8 @@ $(function () {
     var d3options =  { xaxis: { mode: "time", timeformat: "%y/%m/%d" } };
     var pieoptions = { pie: {show: true, autoScale: true, fillOpacity: 1 } };
     var weekoptions = { yaxis: { max: 600 }, hoverable: true, clickable: true };
-    var poweroptions = { xaxis: { mode: "x", }, yaxis: { min: 0, max: 5000 } };
+    var poweroptions = { xaxis: { ticks: [{{besteffort_ticks}}]  } };
+    var speedoptions = { xaxis: { ticks: [{{besteffort_ticks}}]  } };
 
     $.plot($("#weeks"), [d5, d4, d6, d7, d8, d9], weekoptions);
     $.plot($("#pulsediv"), [d1], options);
@@ -46,7 +47,7 @@ $(function () {
             //label: "km",
         }], hroptions );
     $.plot($("#maxpowereffortdiv"), [d10], poweroptions);
-    $.plot($("#maxspeedeffortdiv"), [d11] );
+    $.plot($("#maxspeedeffortdiv"), [d11], speedoptions );
 
 });
 </script>
