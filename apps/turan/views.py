@@ -1048,8 +1048,11 @@ def getslopes(values, userweight):
                         slope.avg_hr = getavghr(values, cur_start, cur_end)
                         slope.est_power = calcpower(userweight, 10, slope.grade, slope.speed/3.6)
                         slope.act_power = getavgpwr(values, cur_start, cur_end)
-                        slope.save()
-                        slopes.append(slope)
+
+                        # Sanity check
+                        if not slope.grade > 100:
+                            slope.save()
+                            slopes.append(slope)
                 cur_start = i+1
         elif values[i].altitude <= values[cur_start].altitude:
             cur_start = i
