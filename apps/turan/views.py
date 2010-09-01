@@ -989,7 +989,14 @@ def getgradients(values):
 
     return zip(distances, gradients), inclinesums
 
-def getslopes(values):
+def getslopes(values, userweight):
+    ''' Given values and weight at the time of exercise, find
+    and calculate stats for slopes in exercise and save to db, returning
+    the slopes found. Deletes any existing slopes for exercise '''
+
+    # Make sure we don't create duplicate slopes
+    values[0].exercise.slope_set.all().delete()
+
     slopes = []
     min_slope = 40
     cur_start = 0
@@ -1004,7 +1011,10 @@ def getslopes(values):
         if inslope:
             if values[i].altitude > values[cur_end].altitude:
                 cur_end = i
-            hdelta = values[cur_end].altitude - values[cur_start].altitude
+            try:
+                hdelta = values[cur_end].altitude - values[cur_start].altitude
+            except TypeError:
+                pass
             if stop_since:
                 stop_duration = (values[i].time - values[stop_since].time).seconds
             else:
@@ -1025,7 +1035,18 @@ def getslopes(values):
                 if hdelta >= min_slope:
                     distance = values[cur_end].distance - values[cur_start].distance
                     if distance > 10:
-                        slopes.append(Slope(cur_start, cur_end, distance, hdelta, hdelta/distance * 100, values[cur_start].distance/1000))
+                        slope = Slope(exercise=values[cur_start].exercise,
+                                    start=values[cur_start].distance/1000,
+                                    length = distance,
+                                    ascent = hdelta,
+                                    grade = hdelta/distance * 100)
+                        slope.duration = (values[cur_end].time - values[cur_start].time).seconds
+                        slope.speed = slope.length/slope.duration * 3.6
+                        slope.avg_hr = getavghr(values, cur_start, cur_end)
+                        slope.est_power = calcpower(userweight, 10, slope.grade, slope.speed/3.6)
+                        slope.act_power = getavgpwr(values, cur_start, cur_end)
+                        slope.save()
+                        slopes.append(slope)
                 cur_start = i+1
         elif values[i].altitude <= values[cur_start].altitude:
             cur_start = i
@@ -1067,41 +1088,9 @@ def getavgpwr(values, start, end):
         try:
             pwr += values[i].power*delta_t
         except TypeError:
-            return None
+            return 0
     delta_t = (values[end].time - values[start].time).seconds
     return float(pwr)/delta_t
-
-class Slope(object):
-    def __init__(self, start, end, length, hdelta, gradient, start_km):
-        self.start = start
-        self.end = end
-        self.length = length
-        self.hdelta = hdelta
-        self.gradient = gradient
-        self.start_km = start_km
-
-    @property
-    def category(self):
-        grade = self.gradient * self.length
-        if grade < 8000:
-            return 5
-        elif grade < 16000:
-            return 4
-        elif grade < 32000:
-            return 3
-        elif grade < 64000:
-            return 2
-        elif grade < 128000:
-            return 1
-        else:
-            return 0 # HC ?
-
-    @property
-    def vam(self):
-        ret = ''
-        if self.category < 4:
-            ret = int(round((float(self.hdelta)/self.duration.seconds)*3600))
-        return ret
 
 def calcpower(userweight, eqweight, gradient, speed,
         rollingresistance = 0.006 ,
@@ -1176,23 +1165,14 @@ def exercise(request, object_id):
             if not req_t == 'time':
                 time_xaxis = False
             userweight = object.user.get_profile().get_weight(object.date)
-            slopes = getslopes(details)
-            for slope in slopes:
-                slope.duration = details[slope.end].time - details[slope.start].time
-                slope.speed = slope.length/slope.duration.seconds * 3.6
-                slope.avg_hr = getavghr(details, slope.start, slope.end)
-                slope.avg_power = calcpower(userweight, 10, slope.gradient, slope.speed/3.6)
-                slope.actual_power = getavgpwr(details, slope.start, slope.end)
-                try:
-                    if slope.actual_power:
-                        slope.avg_power_kg = slope.actual_power / userweight
-                    else:
-                        slope.avg_power_kg = slope.avg_power / userweight
-                except ZeroDivisionError:
-                    slope.avg_power_kg = 0
-            lonlats = []
-            for d in details:
-                lonlats.append((d.lon, d.lat))
+            slopecount = object.slope_set.count()
+            if not slopecount:
+                slopes = getslopes(details, userweight)
+            else:
+                slopes = object.slope_set.all()
+            #lonlats = []
+            #for d in details:
+            #    lonlats.append((d.lon, d.lat))
 
 
             gradients, inclinesums = getgradients(details)

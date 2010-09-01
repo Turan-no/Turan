@@ -53,23 +53,23 @@
                                 function (evt) { 
                                 plot.setSelection({ 
                                     xaxis: { 
-                                        from: {{slope.start_km}}, to: {{slope.start_km}}+{{slope.length}}/1000
+                                        from: {{slope.start}}, to: {{slope.start}}+{{slope.length}}/1000
                                     }
                                 })
                                 });
                     </script>
                 </td>
-                <td>{{ slope.start_km|floatformat }} {% trans "km" %} </td>
+                <td>{{ slope.start|floatformat }} {% trans "km" %} </td>
                 <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
-                <td>{{slope.hdelta}} {% trans "m" %}</td>
-                <td>{{slope.gradient|floatformat}} %</td>
-                <td>{{ slope.duration.seconds|durationformatshort }} </td>
+                <td>{{slope.ascent}} {% trans "m" %}</td>
+                <td>{{slope.grade|floatformat}} %</td>
+                <td>{{ slope.duration|durationformatshort }} </td>
                 <td>{{slope.speed|floatformat}} {% trans "km/h" %}</td>
-                {% if slope.actual_power %}
-                    <td>{{slope.actual_power|floatformat}} {% trans "W" %} </td>
+                {% if slope.act_power %}
+                    <td>{{slope.act_power|floatformat}} {% trans "W" %} </td>
                 {% endif %}
-                <td>{{slope.avg_power|floatformat}} {% trans "W" %} </td>
-                <td>{{slope.avg_power_kg|floatformat}} {% trans "W/kg" %} </td>
+                <td>{{slope.est_power|floatformat}} {% trans "W" %} </td>
+                <td>{{slope.power_per_kg|floatformat}} {% trans "W/kg" %} </td>
                 <td>{{slope.vam}}</td>
                 <td><div class="slope-categories slope-category-{{slope.category}}"><span>{{slope.category}}</span></div></td>
                 <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}

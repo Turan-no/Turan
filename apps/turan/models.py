@@ -424,6 +424,76 @@ class MergeSensorFile(models.Model):
 
         return result
 
+class Slope(models.Model):
+    exercise = models.ForeignKey(Exercise)
+    start = models.FloatField(help_text=_('in km'), default=0)
+    length = models.FloatField(help_text=_('in km'), default=0)
+    ascent = models.FloatField(help_text=_('in m'), default=0)
+    grade = models.FloatField()
+    duration = models.IntegerField()
+    speed = models.FloatField()
+    est_power = models.FloatField()
+    act_power = models.FloatField(default=0)
+    power_per_kg = models.FloatField()
+    vam = models.IntegerField(default=0)
+    category = models.IntegerField()
+    avg_hr = models.IntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        ''' Calculate extra values before save '''
+
+        self.power_per_kg = self.get_avg_power_kg()
+        self.vam = self.get_vam()
+        self.category = self.get_category()
+
+        super(Slope, self).save(*args, **kwargs)
+
+    def get_category(self):
+        ''' The categories are the same as in the Tour De France or other bike race
+        What we do is take the grade of the climb and the distance and multiply them. So, for example, a 2
+        kilometer climb at 4% grade = 8000, and 8000 to 16000 is a category 4 climb. 16 to 32 is a category
+        3 etc.
+        Our categorization is based on the official UCI but with some modification.
+        '''
+        grade = self.grade * self.length
+        if grade < 8000:
+            return 5
+        elif grade < 16000:
+            return 4
+        elif grade < 32000:
+            return 3
+        elif grade < 64000:
+            return 2
+        elif grade < 128000:
+            return 1
+        else:
+            return 0 # HC ?
+
+    def get_vam(self):
+        ''' Return Vertical Ascended Meters / Hour,
+        but only if slope category is 3 or lower '''
+
+        ret = ''
+        if self.category < 4:
+            ret = int(round((float(self.ascent)/self.duration)*3600))
+        return ret
+
+    def get_avg_power_kg(self):
+        ''' Find weight during exercise and calculate W/kg'''
+        userweight = self.exercise.user.get_profile().get_weight(self.exercise.date)
+        try:
+            if self.act_power:
+                return self.act_power/userweight
+            return self.est_power / userweight
+        except ZeroDivisionError:
+            return 0
+
+    def __unicode__(self):
+        return u'%s, %s, %s' % (self.exercise, round(self.grade), round(self.length))
+
+    class Meta:
+        ordering = ('start',)
+
 def create_gpx_from_details(trip):
     if not trip.route:
         return
@@ -883,7 +953,8 @@ def best_x_sec(details, length, power):
 
 def filldistance(values):
     d = 0
-    values[0].distance = 0
+    if values:
+        values[0].distance = 0
     for i in xrange(1,len(values)):
         delta_t = (values[i].time - values[i-1].time).seconds
         d += values[i].speed/3.6 * delta_t
