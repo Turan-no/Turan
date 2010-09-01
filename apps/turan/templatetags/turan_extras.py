@@ -69,8 +69,8 @@ def durationformatshort(value):
     if value >= hourSec:
         hours = int(value / hourSec)
         value = value - (hours * hourSec)
-        hStr = (":")
-        string = u"%s02d%s" % (string, hours, hStr)
+        hStr = ":"
+        string = u"%s%02d%s" % (string, hours, hStr)
 
     if value >= minSec:
         mins = int(value / minSec)
