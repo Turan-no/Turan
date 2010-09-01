@@ -54,6 +54,8 @@ class TCXParser(object):
                 kcal_sum = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Calories").text)
             except AttributeError:
                 kcal_sum = 0
+            except ValueError:
+                kcal_sum = int(float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Calories").text))
 
             try:
                 avg_cadence = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Cadence").text)
