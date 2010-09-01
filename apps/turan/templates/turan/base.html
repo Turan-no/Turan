@@ -10,6 +10,7 @@
 
 {% block subnav %}
     <ul>
+        <li><a href="{% url slopes %}">{% trans "Slopes" %}</a></li>
         <li><a href="{% url calendar-index %}">{% trans "Calendar" %}</a></li>
         <li><a href="{% url statistics %}">{% trans "Statistics" %}</a></li>
         {% if user.get_profile.id %}
