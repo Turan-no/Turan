@@ -1175,7 +1175,7 @@ def exercise(request, object_id):
             if not slopecount:
                 slopes = getslopes(details, userweight)
             else:
-                slopes = object.slope_set.all()
+                slopes = object.slope_set.all().order_by('start')
             #lonlats = []
             #for d in details:
             #    lonlats.append((d.lon, d.lat))
