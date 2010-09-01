@@ -66,9 +66,7 @@
     <td>{{object.grade|floatformat}} %</td>
     <td>{{ object.duration|durationformatshort }} </td>
     <td>{{object.speed|floatformat}} {% trans "km/h" %}</td>
-    {% if object.act_power %}
-        <td>{{object.act_power|floatformat}} {% trans "W" %} </td>
-    {% endif %}
+    <td>{% if object.act_power%}{{object.act_power|floatformat}} {% trans "W" %} {% endif %}</td>
     <td>{{object.est_power|floatformat}} {% trans "W" %} </td>
     <td>{{object.power_per_kg|floatformat}} {% trans "W/kg" %} </td>
     <td>{{object.vam}}</td>

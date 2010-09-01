@@ -1008,7 +1008,7 @@ def getslopes(values, userweight):
     cur_end = 0
     stop_since = False
     inslope = False
-    print values[0].exercise
+    print values[0].exercise_id # DEBUG, FIXME remove
     for i in xrange(1,len(values)):
         if values[i].speed < 0.05 and not stop_since:
             stop_since = i
@@ -1017,10 +1017,7 @@ def getslopes(values, userweight):
         if inslope:
             if values[i].altitude > values[cur_end].altitude:
                 cur_end = i
-            try:
-                hdelta = values[cur_end].altitude - values[cur_start].altitude
-            except TypeError:
-                pass
+            hdelta = values[cur_end].altitude - values[cur_start].altitude
             if stop_since:
                 stop_duration = (values[i].time - values[stop_since].time).seconds
             else:

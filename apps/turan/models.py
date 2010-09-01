@@ -473,8 +473,8 @@ class Slope(models.Model):
         ''' Return Vertical Ascended Meters / Hour,
         but only if slope category is 3 or lower '''
 
-        ret = ''
-        if self.category < 4:
+        ret = 0
+        if self.get_category() < 4:
             ret = int(round((float(self.ascent)/self.duration)*3600))
         return ret
 
