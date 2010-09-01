@@ -108,7 +108,11 @@ class GPXParser(object):
                             lon = self.entries[-1].lon
 
                     speed = self.val_or_none(trkpt, 'speed', return_zero=True)
-                    tstring = trkpt.find(ns + 'time').text
+                    try:
+                        tstring = trkpt.find(ns + 'time').text
+                    except AttributeError:
+                        # maybe stupid garmin format with multiple trkseg, one without time. skip skip
+                        continue
                     time = datetime.datetime(*map(int, map(float, tstring.replace("T","-").replace(":","-").strip("Z").split("-"))))
 
                     # extensions (hr)
