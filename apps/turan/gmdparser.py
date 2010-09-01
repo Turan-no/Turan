@@ -49,7 +49,7 @@ class GMDParser(object):
         self.date = self.datetime.date()
         self.cur_time = self.datetime
         self.cur_distance = 0.0
-        self.duration = "%sh %smin %ss" % tuple(lap['duration'].split(".")[0].split(":"))
+        self.duration = "%sh %sm %ss" % tuple(lap['duration'].split(".")[0].split(":"))
         self.distance_sum = float(lap['distance'])
 
         self.max_speed = float(lap.max_speed.string)*3.6
