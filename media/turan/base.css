@@ -903,8 +903,7 @@ div.tooltip {
     padding: 5px;
 }
 div.slope-categories span {
-    margin-left: -100px;
-    overflow: hidden;
+    margin-left: -10000px;
 }
 div.slope-categories {
     background: url(/site_media/turan/slope-categories.png);
