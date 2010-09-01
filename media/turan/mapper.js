@@ -7,7 +7,6 @@ var Mapper = {
 
     resizeMapToLayerExtents: function (evt) {
         this.map.zoomToExtent(evt.object.getDataExtent());
-        this.layerMarkers.redraw()
     },
 
     init: function(gpx_file, geojson_url, start, end) {
