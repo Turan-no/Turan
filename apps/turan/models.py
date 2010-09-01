@@ -498,7 +498,7 @@ class Slope(models.Model):
         return u'%s, %s, %s' % (self.exercise, round(self.grade), round(self.length))
 
     class Meta:
-        ordering = ('-vam',)
+        ordering = ('-exercise__date',)
 
 def create_gpx_from_details(trip):
     if not trip.route:
