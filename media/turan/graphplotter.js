@@ -47,13 +47,19 @@ var GraphPlotter = {
             xaxisattrs.min = min;
             xaxisattrs.max = max;
 
-            for (k in this.datasets.index) {
-                if (min >= this.datasets.index[k])
-                    minIndex = k;
-                if (max <= this.datasets.index[k]) {
-                    maxIndex = k;
-                    break;
+            for (dataset in this.datasets) { 
+
+                series = this.datasets[dataset]['data']
+
+                for (k in series) {
+                    if (min >= series[k][0])
+                        minIndex = k;
+                    if (max <= series[k][0]) {
+                        maxIndex = k;
+                        break;
+                    }
                 }
+                break;
             }
         }
         $("#choices").find("input:checked").each(function () {
