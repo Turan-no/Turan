@@ -734,7 +734,6 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
             'altitude': [],
             'cadence': [],
             'hr': [],
-            #'index': [],
         }
 
     x = 0
@@ -791,9 +790,6 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
 
         for val in js_strings.keys():
             try:
-                #if val == 'index':
-                #    js_strings['index'] += '%.4f,' % (x)
-
                 dval = getattr(d, val)
                 if dval > 0: # skip zero values (makes prettier graph)
                     js_strings[val] += '[%.4f,%s],' % (x, dval)
