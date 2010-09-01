@@ -428,7 +428,7 @@ class Slope(models.Model):
     exercise = models.ForeignKey(Exercise)
     start = models.FloatField(help_text=_('in km'), default=0)
     length = models.FloatField(help_text=_('in km'), default=0)
-    ascent = models.FloatField(help_text=_('in m'), default=0)
+    ascent = models.IntegerField(help_text=_('in m'), default=0)
     grade = models.FloatField()
     duration = models.IntegerField()
     speed = models.FloatField()
