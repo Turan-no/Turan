@@ -218,7 +218,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
 # Alternative to fastcgi
-    'gunicorn',
+#    'gunicorn',
 
 )
 
