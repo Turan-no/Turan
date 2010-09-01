@@ -1,0 +1,84 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% load turan_extras %}
+{% load avatar_tags %}
+{% load pagination_tags %}
+{% load sorting_tags %}
+{% block title %}
+{% trans "Slopes" %}
+{% endblock %}
+{% block content %}
+
+<h1>
+    {% trans "Slopes" %}
+</h1>
+{% autosort object_list %}
+{% autopaginate object_list %}
+<div class="floatright" style="clear: right;">
+{% paginate %}
+</div>
+
+<table class="fullsize">
+    <tr>
+        <th>
+            {% anchortrans exercise %}
+        </th>
+        <th>
+            {% anchortrans length "Length" %}
+        </th>
+        <th>
+            {% anchortrans ascent "Ascent" %}
+        </th>
+        <th>
+            {% anchortrans grade "Grade" %}
+        </th>
+        <th>
+            {% anchortrans duration "Duration" %}
+        </th>
+        <th>
+            {% anchortrans speed "Speed" %}
+        </th>
+        <th>
+            {% anchortrans act_power "Avg power (actual)" %}
+        </th>
+        <th>
+            {% anchortrans est_power "Avg power (est)" %}
+        </th>
+        <th>
+            {% anchortrans power_per_kg "Avg power/kg" %}
+        </th>
+        <th>
+            {% anchortrans vam "VAM" %}
+        </th>
+        <th>
+            {% anchortrans category %}
+        </th>
+        <th>
+            {% anchortrans avg_hr "Avg HR" %}
+        </th>
+    </tr>
+{% for object in object_list %}
+<tr class="{% cycle even,odd %}" id="object_{{object.id}}">
+    <td><a href="{{object.exercise.get_absolute_url}}">{{object.exercise|slice:"10"}}</a></td>
+    <td>{{ object.length|floatformat }} {% trans "m" %} </td>
+    <td>{{object.ascent}} {% trans "m" %}</td>
+    <td>{{object.grade|floatformat}} %</td>
+    <td>{{ object.duration|durationformatshort }} </td>
+    <td>{{object.speed|floatformat}} {% trans "km/h" %}</td>
+    {% if object.act_power %}
+        <td>{{object.act_power|floatformat}} {% trans "W" %} </td>
+    {% endif %}
+    <td>{{object.est_power|floatformat}} {% trans "W" %} </td>
+    <td>{{object.power_per_kg|floatformat}} {% trans "W/kg" %} </td>
+    <td>{{object.vam}}</td>
+    <td><div class="object-category-{{object.category}}">{{object.category}}</div></td>
+    <td>{{object.avg_hr|floatformat}} {% trans "BPM" %}
+        {% if object.user.get_profile.max_hr %}
+        ({{ object.avg_hr|percent:object.user.get_profile.max_hr }})
+        {% endif %} </td>
+</tr>
+{%endfor %}
+</table>
+{% endblock content %}
+
