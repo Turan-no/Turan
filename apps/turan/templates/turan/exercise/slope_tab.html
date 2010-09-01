@@ -24,10 +24,10 @@
                 <th>
                     {% trans "Speed" %}
                 </th>
-                {% if slope.actual_power %}
-                    <th>
-                        {% trans "Avg power (actual)" %}
-                    </th>
+                {% if object.avg_power %}
+                <th>
+                    {% trans "Avg power (actual)" %}
+                </th>
                 {% endif %}
                 <th>
                     {% trans "Avg power (est)" %}
@@ -66,11 +66,13 @@
                 <td>{{ slope.duration|durationformatshort }} </td>
                 <td>{{slope.speed|floatformat}} {% trans "km/h" %}</td>
                 {% if slope.act_power %}
-                    <td>{{slope.act_power|floatformat}} {% trans "W" %} </td>
+                <td>
+                    {{slope.act_power|floatformat}} {% trans "W" %}
+                </td>
                 {% endif %}
                 <td>{{slope.est_power|floatformat}} {% trans "W" %} </td>
                 <td>{{slope.power_per_kg|floatformat}} {% trans "W/kg" %} </td>
-                <td>{{slope.vam}}</td>
+                <td>{% if slope.vam %}{{slope.vam}}{% endif %}</td>
                 <td><div class="slope-categories slope-category-{{slope.category}}"><span>{{slope.category}}</span></div></td>
                 <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}
                     {% if object.user.get_profile.max_hr %}
