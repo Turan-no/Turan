@@ -117,6 +117,7 @@ class TCXParser(object):
         pedaling_cad_seconds = 0
         pedaling_power_seconds = 0
         self.powersum = 0
+        last_altitude = 0
         for e in t.getiterator(tag="{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint"):
             try:
                 tstring = e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Time").text
@@ -131,7 +132,7 @@ class TCXParser(object):
             try:
                 altitude = float(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}AltitudeMeters").text)
             except AttributeError:
-                altitude = 0
+                altitude = last_altitude
 
             try:
                 distance = float(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}DistanceMeters").text)
@@ -201,6 +202,7 @@ class TCXParser(object):
 
             self.entries.append(TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power))
             self.cur_time = time
+            last_altitude = altitude
 
         seconds = sum([self.laps[i].duration for i in xrange(0,len(self.laps))])
         self.avg_speed = self.distance_sum / seconds * 3.6
