@@ -652,7 +652,8 @@ def parse_sensordata(event):
         cursor.execute("DELETE FROM turan_exercisedetail WHERE exercise_id = %s", [event.id])
         transaction.commit_unless_managed()
 
-        #event.get_details().all().delete()
+    if event.slope_set.count(): # If the event has slopes, delete them too
+        event.slope_set.all().delete()
 
 
     event.sensor_file.file.seek(0)
