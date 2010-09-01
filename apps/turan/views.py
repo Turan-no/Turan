@@ -997,12 +997,18 @@ def getslopes(values, userweight):
     # Make sure we don't create duplicate slopes
     values[0].exercise.slope_set.all().delete()
 
+    # Make sure exercise type is cycling, this only makes sense for cycling
+    exercise_type = values[0].exercise.exercise_type
+    if not str(exercise_type) == 'Cycling':
+        return []
+
     slopes = []
     min_slope = 40
     cur_start = 0
     cur_end = 0
     stop_since = False
     inslope = False
+    print values[0].exercise
     for i in xrange(1,len(values)):
         if values[i].speed < 0.05 and not stop_since:
             stop_since = i
