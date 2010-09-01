@@ -911,12 +911,21 @@ div.slope-categories {
     height: 16px;
     width: 16px;
 }
+div.slope-category-5 {
+    background-position: -80px;
+}
 div.slope-category-4 {
-    background-position: -48px;
+    background-position: -64px;
 }
 div.slope-category-3 {
-    background-position: -32px;
+    background-position: -48px;
 }
 div.slope-category-2 {
+    background-position: -32px;
+}
+div.slope-category-1 {
     background-position: -16px;
+}
+div.slope-category-0 {
+    background-position: 0px;
 }
