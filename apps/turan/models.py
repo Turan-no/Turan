@@ -631,7 +631,7 @@ def merge_sensordata(event):
         for val in parser.entries:
             # Lookup correct detail based on time TODO: more merge strategies
             try:
-                ed = ExerciseDetail.objects.get(exercise=event,time=val.time)
+                ed = ExerciseDetail.objects.get(exercise=event, time=val.time)
                 for v in ('hr', 'altitude', 'speed', 'cadence', 'position'):
                     want_value = getattr(merger, v)
                     if want_value:
@@ -642,6 +642,7 @@ def merge_sensordata(event):
                             setattr(ed, v, getattr(val, v))
                 ed.save()
             except ExerciseDetail.DoesNotExist:
+                print "No match: %s" % val.time
                 pass # Did not find match, silently continue
 
 
