@@ -587,7 +587,6 @@ div.mapcontainer {
     padding: 10px;
     top: -1px;
     left: 0px;
-    z-index: -1;
     -webkit-box-shadow: 3px 3px 10px rgb(80, 80, 80);
     box-shadow: 3px 3px 10px rgb(80, 80, 80);
     -moz-box-shadow: 3px 3px 10px #555555;
@@ -598,6 +597,8 @@ div.mapcontainer {
 #tabs>ul {
     overflow: hidden;
     margin: 5px 0 0 0;
+    position: relative;
+    z-index: 1;
 }
 #tabs>ul>li {
     float: left;
