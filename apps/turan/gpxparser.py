@@ -30,29 +30,8 @@ class GPXEntry(object):
 
 class GPXParser(object):
 
-    garmin_ns = '{http://www.garmin.com/xmlschemas/TrackPointExtension/v1}'
-    start_lon = 0.0
-    start_lat = 0.0
-
-    end_lon = 0.0
-    end_lat = 0.0
-
-    entries = []
-    distance = 0.0
-    ascent = 0.0
-    descent = 0.0
-    max_speed = 0
-    avg_speed = 0
-    max_hr = 0
-    avg_hr = 0
-    avg_cadence = 0
-    max_cadence = 0
-    kcal_sum = 0
-    # comment = '' Fixme
-
-
     def val_or_none(self, item, val, return_zero=False):
-        ''' Return value if found or none if not. makes it easier to deal with 
+        ''' Return value if found or none if not. makes it easier to deal with
         missing elements in xml'''
         try:
             e = item.find(self.ns + val)
@@ -69,6 +48,25 @@ class GPXParser(object):
     def __init__(self, filename=None):
         if filename:
             self.parse_uploaded_file(filename)
+        self.garmin_ns = '{http://www.garmin.com/xmlschemas/TrackPointExtension/v1}'
+        self.start_lon = 0.0
+        self.start_lat = 0.0
+
+        self.end_lon = 0.0
+        self.end_lat = 0.0
+
+        self.entries = []
+        self.distance = 0.0
+        self.ascent = 0.0
+        self.descent = 0.0
+        self.max_speed = 0
+        self.avg_speed = 0
+        self.max_hr = 0
+        self.avg_hr = 0
+        self.avg_cadence = 0
+        self.max_cadence = 0
+        self.kcal_sum = 0
+        # self.comment = '' Fixme
 
     def parse_uploaded_file(self, filename):
         if self.entries: # Do not parse again if sent filename in constructor
