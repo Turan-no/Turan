@@ -560,6 +560,7 @@ div.map {
     -moz-box-shadow: 1px 1px 7px rgb(150, 150, 150);
 }
 div.mapcontainer {
+    padding-top: 1px; /* Adjust for misalignment mirage */
     float: right;
 }
 
