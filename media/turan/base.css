@@ -789,7 +789,7 @@ div.box {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#ffffff'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#dddddd), to(#ffffff)); /* for webkit browsers */
     background: -moz-linear-gradient(top, #eeeeee,  #ffffff); /* for firefox 3.6+ */
-    padding: 5px;
+    padding: 10px;
 }
 div.box h2 {
     -moz-border-radius: 0.5em;
