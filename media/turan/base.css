@@ -581,20 +581,26 @@ div.mapcontainer {
     display: block;
 	border: 2px solid silver;
     position: relative;
-    padding: 5px;
+    padding: 10px;
+    top: -1px;
     left: 0px;
+    z-index: -1;
+    border-radius: 0 1em 1em 1em;
+    -webkit-border-radius: 0 1em 1em 1em;
+    -moz-border-radius: 0 1em 1em 1em;
+    -moz-box-shadow: 3px 3px 10px #555555;
 }
 #tabs>ul {
     overflow: hidden;
-    margin: 5px 0 0 3px;
+    margin: 5px 0 0 0;
 }
 #tabs>ul>li {
     float: left;
-    width: 110px;
+    width: 108px;
     height: 20px;
     list-style-type: none;
-    margin: 2px 2px 0px 2px;
-    padding: 2px 3px 1px 4px;
+    margin: 2px 4px 0 0;
+    padding: 5px 0 0 5px;
     background-color: #eee;
     cursor: pointer;
     color: #444; /* unselected tab text colour */
@@ -608,8 +614,7 @@ div.mapcontainer {
     -moz-border-radius: 0.5em 0.5em 0 0;
 }
 #tabs>ul>li:hover {
-    color: #FFF;
-    background: #ccc;
+    background: #ddd;
 }
 #tabs>ul>li.selected:hover {
     color: #000;
@@ -617,9 +622,13 @@ div.mapcontainer {
 #tabs>ul>li.selected {
     background-color: #FFF;
     font-weight: bold;
-    border-top: 1px solid black;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
+    height: 22px;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    -moz-box-shadow: 3px 3px 7px #555555;
+    -webkit-box-shadow: 3px 3px 7px rgb(80, 80, 80);
+    box-shadow: 3px 3px 7px rgb(80, 80, 80);
 }
 
 #tabs h3 {
