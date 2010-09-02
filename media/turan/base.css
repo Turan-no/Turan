@@ -555,7 +555,9 @@ table.month .today div.day {
 div.map {
     width: 500px;
     height: 500px;
-	border: 1px solid #99BBCC;
+    -webkit-box-shadow: 1px 1px 7px rgb(150, 150, 150);
+    box-shadow: 1px 1px 7px rgb(150, 150, 150);
+    -moz-box-shadow: 1px 1px 7px rgb(150, 150, 150);
 }
 div.mapcontainer {
     float: right;
@@ -585,10 +587,12 @@ div.mapcontainer {
     top: -1px;
     left: 0px;
     z-index: -1;
+    -webkit-box-shadow: 3px 3px 10px rgb(80, 80, 80);
+    box-shadow: 3px 3px 10px rgb(80, 80, 80);
+    -moz-box-shadow: 3px 3px 10px #555555;
     border-radius: 0 1em 1em 1em;
     -webkit-border-radius: 0 1em 1em 1em;
     -moz-border-radius: 0 1em 1em 1em;
-    -moz-box-shadow: 3px 3px 10px #555555;
 }
 #tabs>ul {
     overflow: hidden;
