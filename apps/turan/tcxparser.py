@@ -71,7 +71,7 @@ class TCXParser(object):
                 avg_hr = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}AverageHeartRateBpm").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Value").text)
             except AttributeError:
                 avg_hr = 0    # Ring 113
-            
+
             try:
                 distance_sum = float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}DistanceMeters").text)
             except AttributeError:
@@ -119,7 +119,7 @@ class TCXParser(object):
         pedaling_cad_seconds = 0
         pedaling_power_seconds = 0
         self.powersum = 0
-        last_altitude = 0
+        need_initial_altitude = 0
         for e in t.getiterator(tag="{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint"):
             try:
                 tstring = e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Time").text
@@ -133,8 +133,20 @@ class TCXParser(object):
 
             try:
                 altitude = float(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}AltitudeMeters").text)
+                if need_initial_altitude:
+                    # We never found altitude until now. Set the same altitude on all prevfious entries
+                    for e in self.entries:
+                        e.altitude = altitude
+                    need_initial_altitude = False
             except AttributeError:
-                altitude = last_altitude
+                # Some garmin devices just don't report altitude in all points, 
+                # so we just use the previous value
+                if self.entries:
+                    altitude = self.entries[-1].altitude
+                else: # Missing altitude in the first value
+                    altitude = 0
+                    need_initial_altitude = True
+
 
             try:
                 distance = float(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}DistanceMeters").text)
@@ -204,7 +216,6 @@ class TCXParser(object):
 
             self.entries.append(TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power))
             self.cur_time = time
-            last_altitude = altitude
 
         seconds = sum([self.laps[i].duration for i in xrange(0,len(self.laps))])
         self.avg_speed = self.distance_sum / seconds * 3.6
