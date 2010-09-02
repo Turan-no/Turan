@@ -1504,3 +1504,32 @@ def power_30s_average(details):
     normalized = int(round(pow((fourth/power_avg_count), (0.25))))
     return normalized
 
+def slopes(request, queryset):
+    ''' Slope list view, based on turan_object_list. Changed a bit for search
+    and filter purposes '''
+
+    search_query = request.GET.get('q', '')
+    if search_query:
+        qset = (
+            Q(exercise__route__name__icontains=search_query) |
+            Q(exercise__route__description__icontains=search_query) |
+            Q(exercise__tags__icontains=search_query)
+        )
+        queryset = queryset.filter(qset).distinct()
+
+    latitude = request.GET.get('lat', '')
+    longitude = request.GET.get('lon', '')
+
+    if latitude and longitude:
+        # A litle aprox box around your area
+        queryset = queryset.filter(start_lat__gt=float(latitude) - 0.5)
+        queryset = queryset.filter(start_lat__lt=float(latitude) + 0.5)
+        queryset = queryset.filter(start_lon__gt=float(longitude) - 1.0)
+        queryset = queryset.filter(start_lon__lt=float(longitude) + 1.0)
+
+    username = request.GET.get('username', '')
+    if username:
+        user = get_object_or_404(User, username=username)
+        queryset = queryset.filter(exercise__user=user)
+
+    return object_list(request, queryset=queryset, extra_context=locals())
