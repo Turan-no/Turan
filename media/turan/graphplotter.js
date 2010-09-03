@@ -155,7 +155,10 @@ var GraphPlotter = {
                 '" ' + checked + ' id="chk_' + key + '"><label for="chk_' + key + 
                 '">' + val.label + '</label></input>');
         });
-        this.choiceContainer.append('<input type="reset" value="Reset zoom" />');
+        $("#reset_zoom").bind("click", function(evt) {
+                evt.preventDefault();
+                that.plotAccordingToChoices({}); 
+        });
         this.choiceContainer.find("input").bind("click", function(evt) {
                 that.plotAccordingToChoices({}); 
         });

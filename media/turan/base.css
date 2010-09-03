@@ -943,3 +943,11 @@ div.slope-category-1 {
 div.slope-category-0 {
     background-position: 0px;
 }
+
+#tripdiv_legend table td.legendColorBox {
+    padding: 0 2px 0 12px;
+}
+
+p#choices input {
+    margin-left: 12px;
+}

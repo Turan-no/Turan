@@ -1,9 +1,11 @@
 {% load i18n %}
+<a href="#" title="{% trans "Zoom out" %}" id="reset_zoom" >
+    <img style="float: right" src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom_out.png" />
+</a>
+<div id="tripdiv_legend" style="width:450px;float:right"></div>
+<hr class="clear" />
 <div id="tripdiv" style="width:980px;height:500px; background: white;"></div>
 <div class="averages" id="averages">
-<div id="tripdiv_legend" style="width:450px;height:10px;"></div>
-<p style="float: right;" id="choices">{% trans "Show" %}:</p>
-<h4 class="hidden">{% trans "Selection data" %}</h4>
     <ul>
         <!-- Restructure as needed data appears in spans automagic -->
         <li class="hidden duration"><span class="data duration"></span> s</li>
@@ -25,6 +27,7 @@
         <li class="hidden power"><span class="data power__avg"></span> W</li>
         <li class="hidden power"><span class="data power__avg_est"></span> W</li>
     </ul>
+    <p style="float: right;" id="choices">{% trans "Graph" %}:</p>
     <hr class="clear" />
 </div>
 <script id="source" type="text/javascript" src="{{ MEDIA_URL }}turan/graphplotter.js"></script>
