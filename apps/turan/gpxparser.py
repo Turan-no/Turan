@@ -46,8 +46,6 @@ class GPXParser(object):
             return None # missing element
 
     def __init__(self, filename=None):
-        if filename:
-            self.parse_uploaded_file(filename)
         self.garmin_ns = '{http://www.garmin.com/xmlschemas/TrackPointExtension/v1}'
         self.start_lon = 0.0
         self.start_lat = 0.0
@@ -67,6 +65,8 @@ class GPXParser(object):
         self.max_cadence = 0
         self.kcal_sum = 0
         # self.comment = '' Fixme
+        if filename:
+            self.parse_uploaded_file(filename)
 
     def parse_uploaded_file(self, filename):
         if self.entries: # Do not parse again if sent filename in constructor
