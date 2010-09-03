@@ -62,10 +62,10 @@
         id = "tabs-" + id.split('-')[2];
         $('#tabs div.visible').removeClass('visible');
         $('#tabs div#' + id).addClass('visible');
-        $('#tabs ul li').removeClass('selected');
+        $('#tabs>ul>li').removeClass('selected');
         $(this).addClass('selected');
     }
-    $('#tabs ul li').each(function () {
+    $('#tabs>ul>li').each(function () {
         $(this).bind("click", selectTab);
     });
     $('.zoom-select').each(function () {
