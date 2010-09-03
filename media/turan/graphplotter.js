@@ -85,7 +85,7 @@ var GraphPlotter = {
                 xaxis: xaxisattrs,
                 legend: { 
                     container: $("#tripdiv_legend"),
-                    noColumns: 10
+                    noColumns: 15
                 },
                 grid: { 
                     hoverable: true, 
