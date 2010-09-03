@@ -10,13 +10,19 @@ var GraphPlotter = {
     max_hr: 200,
     formatters: {
             speed: function(val, axis) {
-                return (val / 1000).toFixed(axis.tickDecimals) + ' km/h';
+                return (val).toFixed(axis.tickDecimals) + ' km/h';
             },
             altitude: function(val, axis) {
-                return (val / 1000).toFixed(axis.tickDecimals) + ' m';
+                return (val).toFixed(axis.tickDecimals) + ' m';
             },
             length: function(val, axis) {
                 return (val).toFixed(axis.tickDecimals) + ' km';
+            },
+            power: function(val, axis) {
+                return (val).toFixed(axis.tickDecimals) + ' W';
+            },
+            hr: function(val, axis) {
+                return (val).toFixed(axis.tickDecimals) + ' BPM';
             },
             time: function(val, axis) {
                 var hours = Math.floor(val / 60);
@@ -70,9 +76,17 @@ var GraphPlotter = {
 
         if (data.length > 0) {
             plot = $.plot($("#tripdiv"), data, {
-                yaxes: [{ min: 0 }, { position: "right", min: 80, max: this.max_hr }, { position: "right"}],
+                yaxes: [
+                    { tickFormatter: this.formatters['speed']},
+                    { position: "right", min: 80, max: this.max_hr, tickFormatter: this.formatters['hr'] }, 
+                    { position: "right", tickFormatter: this.formatters['power']},
+                    { tickFormatter: this.formatters['altitude']}
+                    ],
                 xaxis: xaxisattrs,
-                legend: { container: $("#tripdiv_legend") },
+                legend: { 
+                    container: $("#tripdiv_legend"),
+                    noColumns: 10
+                },
                 grid: { 
                     hoverable: true, 
                     clickable: true,
@@ -133,10 +147,13 @@ var GraphPlotter = {
         this.choiceContainer = $("#choices");
 
         $.each(this.datasets, function(key, val) {
-            if (key != "index") 
-                that.choiceContainer.append('<input type="checkbox" name="' + key +
-                    '" checked="checked" id="chk_' + key + '"><label for="chk_' + key + 
-                    '">' + val.label + '</label></input>');
+            var checked = "checked = checked";
+            if (key == 'cadence') 
+                checked = ''
+
+            that.choiceContainer.append('<input type="checkbox" name="' + key +
+                '" ' + checked + ' id="chk_' + key + '"><label for="chk_' + key + 
+                '">' + val.label + '</label></input>');
         });
         this.choiceContainer.append('<input type="reset" value="Reset zoom" />');
         this.choiceContainer.find("input").bind("click", function(evt) {

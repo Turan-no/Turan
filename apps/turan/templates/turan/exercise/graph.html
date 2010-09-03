@@ -1,9 +1,9 @@
 {% load i18n %}
-<div id="tripdiv_legend" style="width:50px;height:400px; float: right;"></div>
-<div id="tripdiv" style="width:920px;height:400px; background: white;"></div>
+<div id="tripdiv" style="width:980px;height:500px; background: white;"></div>
 <div class="averages" id="averages">
+<div id="tripdiv_legend" style="width:450px;height:10px;"></div>
 <p style="float: right;" id="choices">{% trans "Show" %}:</p>
-    <h4 class="hidden">{% trans "Selection data" %}</h4>
+<h4 class="hidden">{% trans "Selection data" %}</h4>
     <ul>
         <!-- Restructure as needed data appears in spans automagic -->
         <li class="hidden duration"><span class="data duration"></span> s</li>
@@ -27,7 +27,6 @@
     </ul>
     <hr class="clear" />
 </div>
-
 <script id="source" type="text/javascript" src="{{ MEDIA_URL }}turan/graphplotter.js"></script>
 <script type="text/javascript">
     function evaluate(y,threshold) { 
