@@ -3,7 +3,7 @@ from itertools import groupby
 from forms import ExerciseForm
 from profiles.models import Profile
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseForbidden, Http404
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseForbidden, Http404, HttpResponseServerError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.template import RequestContext, Context, loader
@@ -1533,3 +1533,9 @@ def slopes(request, queryset):
         queryset = queryset.filter(exercise__user=user)
 
     return object_list(request, queryset=queryset, extra_context=locals())
+
+def internal_server_error(request, template_name='500.html'):
+    ''' Custom http code 500 view, to include Context for MEDIA_URL and such '''
+
+    t = loader.get_template(template_name)
+    return HttpResponseServerError(t.render(RequestContext(request, {})))

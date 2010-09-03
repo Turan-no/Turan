@@ -58,6 +58,8 @@ urlpatterns = patterns('',
     (r'', include('turan.urls')),
 )
 
+
+handler500 = 'turan.views.internal_server_error'
 ## @@@ for now, we'll use friends_app to glue this stuff together
 
 from photos.models import Image
