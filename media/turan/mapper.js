@@ -61,9 +61,17 @@ var Mapper = {
         var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
         var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 
-        this.map.addLayers([FKB, FKBraster, layerMapnik, layerCycleMap, layerTilesAtHome, lgpx]);
+        var defaultlayers = [FKB, FKBraster, layerMapnik, layerCycleMap, layerTilesAtHome, lgpx];
+        if (start) {
+            if (start[0] >= 7) { // Quickfix for checking for norwegian maps or not
+                defaultlayers = [layerMapnik, layerCycleMap, layerTilesAtHome, FKB, FKBraster, lgpx];
+            }
+        }
+        this.map.addLayers(defaultlayers);
+        
 
         if (start) {
+
             var size = new OpenLayers.Size(20,25);
             var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
             var startlonlat = new OpenLayers.LonLat(start[0],start[1]).transform(this.projection, this.map.getProjectionObject());
@@ -82,8 +90,7 @@ var Mapper = {
 
             layerMarkers.addMarker(this.startMarker);
             layerMarkers.addMarker(new OpenLayers.Marker(endlonlat, icon.clone()));
-        }
-
+        } 
         this.geojson_url = geojson_url;
         if (geojson_url) {
             this.styles = new OpenLayers.StyleMap({
