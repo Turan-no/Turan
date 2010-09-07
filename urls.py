@@ -56,6 +56,7 @@ urlpatterns = patterns('',
     (r'^feeds/posts/(.*)/$', 'django.contrib.syndication.views.feed', blogs_feed_dict),
     (r'^feeds/bookmarks/(.*)/?$', 'django.contrib.syndication.views.feed', bookmarks_feed_dict),
     (r'', include('turan.urls')),
+    (r'', include('djangodblog.urls')),
 )
 
 
