@@ -216,6 +216,7 @@ INSTALLED_APPS = (
     'groups',
     
     'django.contrib.admin',
+    'wakawaka',
 
 # Alternative to fastcgi
 #    'gunicorn',
@@ -296,6 +297,7 @@ BEHIND_PROXY = False
 FORCE_LOWERCASE_TAGS = True
 
 WIKI_REQUIRES_LOGIN = True
+WAKAWAKA_DEFAULT_INDEX = 'TuranFaq'
 
 # Uncomment this line after signing up for a Yahoo Maps API key at the
 # following URL: https://developer.yahoo.com/wsregapp/

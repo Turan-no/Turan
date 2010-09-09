@@ -41,6 +41,8 @@ urlpatterns = patterns('',
     url(r'^json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/?$', json_tripdetail, name='json_tripdetail'),
     url(r'^json/geo/(?P<object_id>\d+)', geojson, name='geojson'),
     url(r'^json/power/(?P<object_id>\d+)', powerjson, name='powerjson'),
+    url(r'^json/wiki/(?P<slug>\w+)/?$', wikijson, name='wikijson'),
+    url(r'^json/wiki/(?P<slug>\w+)/(?P<rev_id>\d+)/?', wikijson, name='wikijson'),
 
       url(r'^autocomplete/(?P<app_label>\w+)/(?P<model>\w+)/$', autocomplete_route, name='autocomplete_route'),
 

@@ -41,6 +41,7 @@ from BeautifulSoup import BeautifulSoup
 from tagging.models import Tag
 from tribes.models import Tribe
 from friends.models import Friendship
+from wakawaka.models import WikiPage, Revision
 
 import re
 from datetime import timedelta, datetime
@@ -608,6 +609,26 @@ def powerjson(request, object_id):
         if not b:
             del ret[a]
     return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
+
+def wikijson(request, slug, rev_id=None):
+    '''
+    JSON wiki page
+    '''
+    try:
+        page = WikiPage.objects.get(slug=slug)
+        rev = page.current
+
+        # Display an older revision if rev_id is given
+        if rev_id:
+            rev_specific = Revision.objects.get(pk=rev_id)
+            if rev.pk != rev_specific.pk:
+                rev_specific.is_not_current = True
+            rev = rev_specific
+
+    except WikiPage.DoesNotExist:
+        raise Http404
+
+    return HttpResponse(serializers.serialize('json', [rev], indent=4), mimetype='text/javascript')
 
 #@decorator_from_middleware(GZipMiddleware)
 #@cache_page(86400*7)

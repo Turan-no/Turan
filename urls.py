@@ -52,6 +52,7 @@ urlpatterns = patterns('',
     (r'^photos/', include('photos.urls')),
     (r'^avatar/', include('avatar.urls')),
     (r'^flag/', include('flag.urls')),
+    (r'^wiki/', include('wakawaka.urls.authenticated')),
     
     (r'^feeds/posts/(.*)/$', 'django.contrib.syndication.views.feed', blogs_feed_dict),
     (r'^feeds/bookmarks/(.*)/?$', 'django.contrib.syndication.views.feed', bookmarks_feed_dict),
