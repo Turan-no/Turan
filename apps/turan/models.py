@@ -894,19 +894,19 @@ def best_x_sec(details, length, power):
                 sum_q_speed_tmp = sum(q_speed)
                 delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
 
-                if delta_t_total != 0:
+                if delta_t_total != 0 and delta_t_total == length:
                     sum_q_speed = sum_q_speed_tmp / (details[i].time - details[i-len(q_speed)].time).seconds
                 else:
                     # What can one do?
-                    sum_q_speed = sum_q_speed_tmp / len(q_speed)
+                    sum_q_speed = 0
             if len(q_power) != 0:
                 if power:
                     sum_q_power_tmp = sum(q_power)
                     delta_t_total_power = (details[i].time - details[i-len(q_power)].time).seconds
-                    if delta_t_total_power != 0:
+                    if delta_t_total_power != 0 and delta_t_total_power == length:
                         sum_q_power = sum_q_power_tmp / delta_t_total_power
                     else:
-                        sum_q_speed = sum_q_speed_tmp / len(q_power)
+                        sum_q_power = 0
             if sum_q_speed > best_speed:
                 best_speed = sum_q_speed
                 best_start_km_speed = details[i-len(q_speed)].distance / 1000
