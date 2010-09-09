@@ -4,6 +4,8 @@ import datetime
 import pyproj
 from math import hypot
 
+garmin_ns = '{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}'
+
 class TCXEntry(object):
     def __init__(self, time, hr, speed, cadence, altitude, lon, lat, power):
         self.time = time
@@ -42,48 +44,48 @@ class TCXParser(object):
 
         self.laps = []
         # warning. ugly xml crap ahead
-        lapskaus = t.getiterator("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Lap")
+        lapskaus = t.getiterator(garmin_ns + "Lap")
         for lap in lapskaus:
             try:
                 startstring = dict(lap.items())["StartTime"]
             except:
-                startstring = t.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Courses").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Course").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Track").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Time").text
+                startstring = t.find(garmin_ns + "Courses").find(garmin_ns + "Course").find(garmin_ns + "Track").find(garmin_ns + "Trackpoint").find(garmin_ns + "Time").text
             time = datetime.datetime(*map(int, startstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
 
             try:
-                kcal_sum = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Calories").text)
+                kcal_sum = int(lap.find(garmin_ns + "Calories").text)
             except AttributeError:
                 kcal_sum = 0
             except ValueError:
-                kcal_sum = int(float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Calories").text))
+                kcal_sum = int(float(lap.find(garmin_ns + "Calories").text))
 
             try:
-                avg_cadence = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Cadence").text)
+                avg_cadence = int(lap.find(garmin_ns + "Cadence").text)
             except AttributeError:
                 avg_cadence = 0
 
             try:
-                max_hr = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}MaximumHeartRateBpm").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Value").text)
+                max_hr = int(lap.find(garmin_ns + "MaximumHeartRateBpm").find(garmin_ns + "Value").text)
             except AttributeError:
                 max_hr = 0    # Ring 113
 
             try:
-                avg_hr = int(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}AverageHeartRateBpm").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Value").text)
+                avg_hr = int(lap.find(garmin_ns + "AverageHeartRateBpm").find(garmin_ns + "Value").text)
             except AttributeError:
                 avg_hr = 0    # Ring 113
 
             try:
-                distance_sum = float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}DistanceMeters").text)
+                distance_sum = float(lap.find(garmin_ns + "DistanceMeters").text)
             except AttributeError:
                 distance_sum = 0.0
 
             try:
-                duration = float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}TotalTimeSeconds").text)
+                duration = float(lap.find(garmin_ns + "TotalTimeSeconds").text)
             except AttributeError:
                 duration = 1.0 # we're going to divide by this, can't set to 0
 
             try:
-                max_speed = float(lap.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}MaximumSpeed").text)*3.6
+                max_speed = float(lap.find(garmin_ns + "MaximumSpeed").text)*3.6
             except AttributeError:
                 max_speed = None
 
@@ -120,19 +122,19 @@ class TCXParser(object):
         pedaling_power_seconds = 0
         self.powersum = 0
         need_initial_altitude = 0
-        for e in t.getiterator(tag="{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Trackpoint"):
+        for e in t.getiterator(tag=garmin_ns + "Trackpoint"):
             try:
-                tstring = e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Time").text
+                tstring = e.find(garmin_ns + "Time").text
             except AttributeError:
                 continue
 
             try:
-                hr = int(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}HeartRateBpm").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Value").text)
+                hr = int(e.find(garmin_ns + "HeartRateBpm").find(garmin_ns + "Value").text)
             except AttributeError:
                 hr = 0
 
             try:
-                altitude = float(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}AltitudeMeters").text)
+                altitude = float(e.find(garmin_ns + "AltitudeMeters").text)
                 if need_initial_altitude:
                     # We never found altitude until now. Set the same altitude on all prevfious entries
                     for e in self.entries:
@@ -149,27 +151,27 @@ class TCXParser(object):
 
 
             try:
-                distance = float(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}DistanceMeters").text)
+                distance = float(e.find(garmin_ns + "DistanceMeters").text)
             except AttributeError:
                 distance = 0
 
             try:
-                cadence = int(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Cadence").text)
+                cadence = int(e.find(garmin_ns + "Cadence").text)
             except AttributeError:
                 cadence = 0
 
             try:
-                lon = float(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Position").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}LongitudeDegrees").text)
+                lon = float(e.find(garmin_ns + "Position").find(garmin_ns + "LongitudeDegrees").text)
             except AttributeError:
                 lon = 0.0
 
             try:
-                lat = float(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Position").find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}LatitudeDegrees").text)
+                lat = float(e.find(garmin_ns + "Position").find(garmin_ns + "LatitudeDegrees").text)
             except AttributeError:
                 lat = 0.0
 
             try:
-                power = int(e.find("{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}Extensions").find("{http://www.garmin.com/xmlschemas/ActivityExtension/v2}TPX").find("{http://www.garmin.com/xmlschemas/ActivityExtension/v2}Watts").text)
+                power = int(e.find(garmin_ns + "Extensions").find("{http://www.garmin.com/xmlschemas/ActivityExtension/v2}TPX").find("{http://www.garmin.com/xmlschemas/ActivityExtension/v2}Watts").text)
             except AttributeError:
                 power = 0
 
@@ -228,7 +230,7 @@ class TCXParser(object):
                 pass
             if not self.max_speed:
                 self.max_speed = max(filter(lambda x: x<= 200,[self.entries[i].speed for i in xrange(0,len(self.entries))]))
- 
+
         self.max_cadence = max([self.entries[i].cadence for i in xrange(0,len(self.entries))])
         if self.rotations > 1.0:
             self.avg_cadence = self.rotations/seconds
@@ -242,12 +244,13 @@ class TCXParser(object):
             self.avg_pedaling_power = self.powersum/pedaling_power_seconds
 
 if __name__ == '__main__':
-    
+
     import pprint
     import sys
     t = TCXParser()
     t.parse_uploaded_file(file(sys.argv[1]))
 
+    print "Time, Speed, Altitude, Hr, Cadence"
     for x in t.entries:
         print x.time, x.speed, x.altitude, x.hr, x.cadence
 
