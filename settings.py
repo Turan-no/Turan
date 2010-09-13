@@ -214,7 +214,8 @@ INSTALLED_APPS = (
     'tag_app',
     'topics',
     'groups',
-    
+
+    'djcelery',
     'django.contrib.admin',
     'wakawaka',
 
@@ -302,6 +303,15 @@ WAKAWAKA_DEFAULT_INDEX = 'TuranFaq'
 # Uncomment this line after signing up for a Yahoo Maps API key at the
 # following URL: https://developer.yahoo.com/wsregapp/
 # YAHOO_MAPS_API_KEY = ''
+
+import djcelery
+djcelery.setup_loader()
+
+BROKER_HOST = "localhost"
+BROKER_PORT = 5672
+BROKER_USER = "turan"
+BROKER_PASSWORD = "tur4n"
+BROKER_VHOST = "turan"
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

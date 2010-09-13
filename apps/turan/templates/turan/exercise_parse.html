@@ -1,0 +1,43 @@
+{% extends "turan/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div id="result">
+    <h1>Parsing exercise {{ exercise }}</h1>
+<div id="progress"></div>
+</div>
+
+<script type="text/javascript">
+    var job_id = "{{ task_id }}";
+
+    // wait for the DOM to be loaded then start polling for conversion status
+$(document).ready(function() {
+    var interval = 0;
+    var reDirect = function () {
+            var url = "{{ exercise.get_absolute_url }}";    
+            $(location).attr('href',url);
+    };
+    var getConvertStatus = function(){
+        $.getJSON("{% url celery-task_status task_id %}",
+            function(data){
+              var status = data['task']['status'];
+              if (status == 'PENDING' || status == 'RETRY')  {
+                $('#progress').html($('#progress').html() + '.');
+                }
+              else if (status == 'FAILURE') {
+              $('#result').html('<h1> Parse failed </h1>' + data['task']['result']);
+                clearInterval(interval);
+                }
+              else if (status == 'SUCCESS') {
+                clearInterval(interval);
+                $('#result').html('<h1> Parse completed </h1> Redirecting ...');
+                setTimeout(reDirect, 100);
+                }
+              
+            });
+    }
+    interval = setInterval(getConvertStatus, 750);
+
+});
+</script>
+{% endblock content %}
