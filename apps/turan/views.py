@@ -1182,10 +1182,9 @@ def create_object(request, model=None, template_name=None,
 
 
             if model == Exercise:
-                # FIXME enable for prod 
                 # notify friends of new object
-                #if notification and user_required: # only notify for user owned objects
-                #    notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
+                if notification and user_required: # only notify for user owned objects
+                    notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
 
                 task = new_object.parse()
                 if task:
