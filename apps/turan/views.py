@@ -1,4 +1,5 @@
 from models import *
+from tasks import smoothListGaussian
 from itertools import groupby
 from forms import ExerciseForm
 from profiles.models import Profile
@@ -55,6 +56,8 @@ from feeds import ExerciseCalendar
 
 import simplejson
 from profiler import profile
+
+from celery.result import AsyncResult
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -1010,85 +1013,13 @@ def getgradients(values):
 
     return zip(distances, gradients), inclinesums
 
-def getslopes(values, userweight):
-    ''' Given values and weight at the time of exercise, find
-    and calculate stats for slopes in exercise and save to db, returning
-    the slopes found. Deletes any existing slopes for exercise '''
 
-    # Make sure we don't create duplicate slopes
-    values[0].exercise.slope_set.all().delete()
-
-    # Make sure exercise type is cycling, this only makes sense for cycling
-    exercise_type = values[0].exercise.exercise_type
-    if not str(exercise_type) == 'Cycling':
-        return []
-
-    slopes = []
-    min_slope = 40
-    cur_start = 0
-    cur_end = 0
-    stop_since = False
-    inslope = False
-    print values[0].exercise_id # DEBUG, FIXME remove
-    for i in xrange(1,len(values)):
-        if values[i].speed < 0.05 and not stop_since:
-            stop_since = i
-        if values[i].speed >= 0.05:
-            stop_since = False
-        if inslope:
-            if values[i].altitude > values[cur_end].altitude:
-                cur_end = i
-            hdelta = values[cur_end].altitude - values[cur_start].altitude
-            if stop_since:
-                stop_duration = (values[i].time - values[stop_since].time).seconds
-            else:
-                stop_duration = 0
-            try:
-                if (values[i+1].time - values[i].time).seconds > 60:
-                    stop_duration = max( \
-                            (values[i+1].time - values[i].time).seconds, \
-                            stop_duration )
-            except IndexError:
-                pass
-            if values[i].altitude < values[cur_start].altitude + hdelta*0.9 \
-                    or i == len(values)-1 \
-                    or stop_duration > 60:
-                if stop_duration > 60:
-                    cur_stop = stop_since
-                inslope = False
-                if hdelta >= min_slope:
-                    distance = values[cur_end].distance - values[cur_start].distance
-                    if distance > 10:
-                        slope = Slope(exercise=values[cur_start].exercise,
-                                    start=values[cur_start].distance/1000,
-                                    length = distance,
-                                    ascent = hdelta,
-                                    grade = hdelta/distance * 100)
-                        slope.duration = (values[cur_end].time - values[cur_start].time).seconds
-                        slope.speed = slope.length/slope.duration * 3.6
-                        slope.avg_hr = getavghr(values, cur_start, cur_end)
-                        slope.est_power = calcpower(userweight, 10, slope.grade, slope.speed/3.6)
-                        slope.act_power = getavgpwr(values, cur_start, cur_end)
-
-                        # Sanity check
-                        if not slope.grade > 100:
-                            slope.save()
-                            slopes.append(slope)
-                cur_start = i+1
-        elif values[i].altitude <= values[cur_start].altitude:
-            cur_start = i
-            cur_end  = i
-        elif values[i].altitude > values[cur_start].altitude:
-            cur_end = i
-            inslope = True
-    return slopes
-
-def getdistance(values, start, end):
-    d = 0
-    for i in xrange(start+1, end+1):
-        delta_t = (values[i].time - values[i-1].time).seconds
-        d += values[i].speed/3.6 * delta_t
-    return d
+#def getdistance(values, start, end):
+#    d = 0
+#    for i in xrange(start+1, end+1):
+#        delta_t = (values[i].time - values[i-1].time).seconds
+#        d += values[i].speed/3.6 * delta_t
+#    return d
 
 def filldistance(values):
     d = 0
@@ -1099,35 +1030,6 @@ def filldistance(values):
         values[i].distance = d
     return d
 
-def getavghr(values, start, end):
-    hr = 0
-    for i in xrange(start+1, end+1):
-        delta_t = (values[i].time - values[i-1].time).seconds
-        if values[i].hr:
-            hr += values[i].hr*delta_t
-    delta_t = (values[end].time - values[start].time).seconds
-    return float(hr)/delta_t
-
-def getavgpwr(values, start, end):
-    pwr = 0
-    for i in xrange(start+1, end+1):
-        delta_t = (values[i].time - values[i-1].time).seconds
-        try:
-            pwr += values[i].power*delta_t
-        except TypeError:
-            return 0
-    delta_t = (values[end].time - values[start].time).seconds
-    return float(pwr)/delta_t
-
-def calcpower(userweight, eqweight, gradient, speed,
-        rollingresistance = 0.006 ,
-        airdensity = 1.22 ,
-        frontarea = 0.7 ):
-    tot_weight = userweight+eqweight
-    gforce = tot_weight * gradient/100 * 9.81
-    frictionforce = rollingresistance * tot_weight * 9.81
-    windforce = 0.5**2 * speed**2  * airdensity * frontarea
-    return (gforce + frictionforce + windforce)*speed
 
 #@profile("exercise_detail")
 def exercise(request, object_id):
@@ -1192,16 +1094,12 @@ def exercise(request, object_id):
             if not req_t == 'time':
                 time_xaxis = False
             userweight = object.user.get_profile().get_weight(object.date)
-            slopecount = object.slope_set.count()
-            if not slopecount:
-                slopes = getslopes(details, userweight)
-            else:
-                slopes = object.slope_set.all().order_by('start')
+            slopes = object.slope_set.all().order_by('start')
             #lonlats = []
             #for d in details:
             #    lonlats.append((d.lon, d.lat))
 
-
+            # Todo, maybe calculate and save in db or cache ?
             gradients, inclinesums = getgradients(details)
 
         zones = getzones(details)
@@ -1281,9 +1179,20 @@ def create_object(request, model=None, template_name=None,
                 new_object.userprofile = request.user.get_profile()
             new_object.save()
 
-            # notify friends of new object
-            if notification and user_required: # only notify for user owned objects
-                notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
+
+
+            if model == Exercise:
+                # FIXME enable for prod 
+                # notify friends of new object
+                #if notification and user_required: # only notify for user owned objects
+                #    notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
+
+                task = new_object.parse()
+                if task:
+                    return HttpResponseRedirect(\
+                            reverse('exercise_parse_progress', kwargs = {
+                                'object_id': new_object.id,
+                                'task_id': task.task_id}))
 
 
             if request.user.is_authenticated():
@@ -1391,6 +1300,13 @@ def turan_delete_object(request, model=None, post_delete_redirect='/turan/', obj
     obj = lookup_object(model, object_id, slug, slug_field)
     if not obj.user == request.user:
         return HttpResponseForbidden('Wat?')
+
+    # Check if exercise has singelserving route, if so, delete it
+    #if model == Exercise:
+    #    if obj.route:
+    #        if obj.route.single_serving == True:
+    #            obj.route.delete()
+
 
     return delete_object(request, model, post_delete_redirect, object_id, login_required=login_required)
 
@@ -1560,3 +1476,23 @@ def internal_server_error(request, template_name='500.html'):
 
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request, {})))
+
+def exercise_parse(request, object_id):
+    ''' View to trigger reparse of a single exercise given exercise id '''
+
+    exercise = get_object_or_404(Exercise, id=object_id)
+    task = exercise.parse()
+    if task:
+        return HttpResponseRedirect(\
+                reverse('exercise_parse_progress', kwargs = {
+                    'object_id': object_id,
+                    'task_id': task.task_id}))
+
+def exercise_parse_progress(request, object_id, task_id):
+    ''' View to display progress on parsing and redirect user
+    to fully parsed exercised when done '''
+
+    exercise = get_object_or_404(Exercise, id=object_id)
+    result = AsyncResult(task_id).status
+
+    return render_to_response('turan/exercise_parse.html', locals(), context_instance=RequestContext(request))

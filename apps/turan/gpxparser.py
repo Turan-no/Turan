@@ -195,5 +195,6 @@ if __name__ == '__main__':
     print 'descent: ', g.descent
     print 'avg_hr: ', g.avg_hr
     print 'avg_cadence: ', g.avg_cadence
+    print 'avg_speed: ', g.avg_speed
 
 

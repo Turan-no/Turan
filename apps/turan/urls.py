@@ -6,6 +6,8 @@ from forms import *
 from feeds import *
 from threadedcomments.models import ThreadedComment as Comment
 from django.contrib.sitemaps import GenericSitemap
+from djcelery import views as celery_views
+
 
 sitemaps = {
         'trips': GenericSitemap({'queryset': Exercise.objects.all(), 'date_field': 'date'}, priority=0.5),
@@ -44,6 +46,14 @@ urlpatterns = patterns('',
     url(r'^json/wiki/(?P<slug>\w+)/?$', wikijson, name='wikijson'),
     url(r'^json/wiki/(?P<slug>\w+)/(?P<rev_id>\d+)/?', wikijson, name='wikijson'),
 
+
+# celery
+    url(r'^json/(?P<task_id>[\w\d\-]+)/done/?$', celery_views.is_task_successful,
+                    name="celery-is_task_successful"),
+    url(r'^json/(?P<task_id>[\w\d\-]+)/status/?$', celery_views.task_status,
+                    name="celery-task_status"),
+    url(r'^json/tasks/?$', celery_views.registered_tasks, name='celery-tasks'),
+
       url(r'^autocomplete/(?P<app_label>\w+)/(?P<model>\w+)/$', autocomplete_route, name='autocomplete_route'),
 
     url(r'^/?$', index, name='turanindex'),
@@ -60,6 +70,8 @@ urlpatterns += patterns('django.views.generic.list_detail',
 
     url(r'^exercise/?$', turan_object_list, { 'queryset': Exercise.objects.select_related().order_by('-date') }, name='exercises'),
     url(r'^exercise/(?P<object_id>\d+)', exercise, name='exercise'),
+    url(r'^exercise/parse/(?P<object_id>\d+)/(?P<task_id>.*)/?$', exercise_parse_progress, name='exercise_parse_progress'),
+    url(r'^exercise/parse/(?P<object_id>\d+)/?$', exercise_parse, name='exercise_parse'),
 )
 urlpatterns += patterns('django.views.generic.simple',
     url(r'^about/', 'direct_to_template', {'template': 'turan/about.html'}, name='turan_about'),
@@ -80,4 +92,6 @@ urlpatterns += patterns('django.views.generic.create_update',
 # Detail deletes
 #    url(r'^exercise/detail_delete/(?P<object_id>\d+)/(?P<value>\w+)/', turan_delete_detailset_value, {'model': Exercise, },name='exercise_detail_delete'),
 )
+
+
 
