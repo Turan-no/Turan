@@ -147,6 +147,66 @@ class Route(models.Model):
         ''' used in triplist, nice for sorting '''
         return len(self.get_trips())
 
+    def get_geo_title(self):
+        lon1, lat1 = self.start_lon, self.start_lat
+        lon2, lat2 = self.end_lon, self.end_lat
+        if lon1 and lat1 and lat2 and lon2:
+            s_distance = 99999999
+            farthest_lon, farthest_lat = self.find_farthest_pos_from_start()
+            f_distance = 99999999
+            e_distance = 99999999
+            start_town = ''
+            farthest_town = ''
+            end_town = ''
+
+            for loc in Location.objects.all():
+                this_distance = proj_distance(lat1, lon1, loc.lat, loc.lon)
+                if this_distance < s_distance:
+                    start_town = loc.town
+                    s_distance = this_distance
+                if farthest_lon and farthest_lat:
+                    this_distance = proj_distance(farthest_lat, farthest_lon, loc.lat, loc.lon)
+                    if this_distance < f_distance:
+                        farthest_town = loc.town
+                        f_distance = this_distance
+                this_distance = proj_distance(lat2, lon2, loc.lat, loc.lon)
+                if this_distance < e_distance:
+                    end_town = loc.town
+                    e_distance = this_distance
+            if farthest_town:
+                if start_town == end_town and farthest_town != end_town:
+                    return '%s %s %s' %(start_town, farthest_town, end_town)
+                if start_town != farthest_town != end_town:
+                    return '%s %s %s' %(start_town, farthest_town, end_town)
+                if start_town == farthest_town == end_town:
+                    return start_town
+                elif start_town == farthest_town:
+                    return '%s %s' %(start_town, end_town)
+                elif end_town == farthest_town:
+                    return '%s %s' %(start_town, end_town)
+                if start_town == end_town:
+                    return start_town
+            else:
+                if start_town == end_town:
+                    return start_town
+                return '%s %s' %(start_town, end_town)
+
+    def find_farthest_pos_from_start(self):
+        if self.gpx_file:
+            details = GPXParser(self.gpx_file).entries
+            if details:
+                lon, lat = details[0].lon, details[0].lat
+                distance = 0
+                max_lon, max_lat = 0, 0
+                for d in details:
+                    this_lon, this_lat = d.lon, d.lat
+                    if this_lon and this_lat:
+                        this_distance = proj_distance(lat, lon, this_lat, this_lon)
+                        if this_distance > distance:
+                            distance = this_distance
+                            max_lon, max_lat = this_lon, this_lat
+                return max_lon, max_lat
+
 
 class ExerciseManager(models.Manager):
     ''' Some permission related purposes '''
@@ -348,11 +408,6 @@ class Exercise(models.Model):
                 r.delete()
         super(Exercise, self).delete(*args, **kwargs)
 
-    def find_nearest_town(self):
-        if self.route:
-            lon, lat = self.route.start_lon, self.route.start_lat
-            if lon and lat :
-                return find_nearest_town(lon, lat)
 
 class ExercisePermission(models.Model):
     exercise = models.OneToOneField(Exercise, primary_key=True)
