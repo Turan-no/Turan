@@ -346,6 +346,14 @@ class Exercise(models.Model):
 
         return u'%s, %s %s' %(name, _('by'), self.user)
 
+    def delete(self, *args, **kwargs):
+        ''' Also delete single serving route '''
+        if self.route:
+            if self.route.single_serving:
+                r = self.route
+                r.delete()
+        super(Exercise, self).delete(*args, **kwargs)
+
 class ExercisePermission(models.Model):
     exercise = models.OneToOneField(Exercise, primary_key=True)
     speed = models.CharField(max_length=1, choices=permission_choices, default='A')
