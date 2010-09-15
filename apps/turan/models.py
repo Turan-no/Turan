@@ -90,7 +90,7 @@ class Route(models.Model):
             # generate svg if it doesn't exist (after save, it uses id for filename)
             filename = 'svg/%s.svg' %self.id
             if not gpxstore.exists(filename):
-                create_svg_from_gpx(self.gpx_file.path, filename)
+                create_svg_from_gpx.delay(self.gpx_file.path, filename)
 
             # generate simplified gpx to use as layer, for faster loading
             filename = 'gpx/%s.simpler.gpx' %self.id
