@@ -26,7 +26,7 @@ from datetime import datetime
 from svg import GPX2SVG
 from durationfield import DurationField
 
-from gpxparser import GPXParser
+from gpxparser import GPXParser, proj_distance
 from hrmparser import HRMParser
 from gmdparser import GMDParser
 from tcxparser import TCXParser
@@ -354,6 +354,12 @@ class Exercise(models.Model):
                 r.delete()
         super(Exercise, self).delete(*args, **kwargs)
 
+    def find_nearest_town(self):
+        if self.route:
+            lon, lat = self.route.start_lon, self.route.start_lat
+            if lon and lat :
+                return find_nearest_town(lon, lat)
+
 class ExercisePermission(models.Model):
     exercise = models.OneToOneField(Exercise, primary_key=True)
     speed = models.CharField(max_length=1, choices=permission_choices, default='A')
@@ -608,6 +614,21 @@ class Location(models.Model):
     class Meta:
         verbose_name = _("Location")
         verbose_name_plural = _("Locations")
+
+
+def find_nearest_town(lon, lat):
+    ''' Iterate saved locations and find nearest town '''
+
+    distance = 99999999
+    town = ''
+
+    for loc in Location.objects.all():
+        this_distance = proj_distance(lat, lon, loc.lat, loc.lon)
+        if this_distance < distance:
+            town = loc.town
+            distance = this_distance
+
+    return town
 
 def find_parser(filename):
     ''' Returns correctly initianted parser-class given a filename '''
