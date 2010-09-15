@@ -547,3 +547,56 @@ def parse_sensordata(exercise, callback=None):
     calculate_best_efforts(exercise)
     getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date))
 
+@task
+def create_tcx_from_details(event):
+    # Check if the details have lon, some parsers doesn't provide position
+    if event.get_details().filter(lon__gt=0).filter(lat__gt=0).count() > 0:
+        details = event.get_details().all()
+        if filldistance(details):
+            cadence = 0
+            if event.avg_pedaling_cad:
+                cadence = event.avg_pedaling_cad
+            elif event.avg_cadence:
+                cadence = event.avg_cadence
+            g = TCXWriter(details, event.route.distance*1000, event.avg_hr, event.max_hr, event.kcal, event.max_speed, event.duration.seconds, details[0].time, cadence)
+            filename = '/tmp/%s.tcx' %event.id
+
+            file(filename, 'w').write(g.xml)
+
+def calculate_ascent_descent(event):
+    ''' Calculate ascent and descent for an exercise and put on the route.
+    Use the 2 previous and the 2 next samples for moving average
+    '''
+
+
+    average_altitudes = []
+    details = list(event.get_details().all())
+    for i, d in enumerate(details):
+        if i > 2 and i < (len(details)-2):
+            altitude = d.altitude
+            altitude += details[i-1].altitude
+            altitude += details[i-2].altitude
+            altitude += details[i+1].altitude
+            altitude += details[i+2].altitude
+            altitude = float(altitude) / 5 
+
+        else: # Don't worry about averages at start or end
+            altitude = d.altitude
+        average_altitudes.append(altitude)
+
+
+    ascent = 0
+    descent = 0
+    previous = -1
+
+    for a in average_altitudes:
+        if previous == -1:
+            previous = a
+
+        if a > previous:
+            ascent += (a - previous)
+        if a < previous:
+            descent += (previous - a)
+
+        previous = a
+    return round(ascent), round(descent)
