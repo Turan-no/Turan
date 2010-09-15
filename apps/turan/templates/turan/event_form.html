@@ -35,13 +35,6 @@
     });
 
 $(document).ready(function() { 
-var job_id = 0; //usj need from json
-var getConvertStatus = function(){
-    console.log('getting some status');
-    $.getJSON("/json/" + job_id + "/done/", function(data){
-        console.log('callback works: ' + data);
-    });
-};
 $('#form').bind('submit', function(evt) {
         $('#result').html('<h1>{% trans "Uploading" %} ...</h1>');
 })

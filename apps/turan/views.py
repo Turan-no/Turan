@@ -1190,7 +1190,7 @@ def create_object(request, model=None, template_name=None,
                 task = new_object.parse()
                 if task:
                     return HttpResponseRedirect(\
-                            reverse('exercise_parse', kwargs = {
+                            reverse('exercise_parse_progress', kwargs = {
                                 'object_id': new_object.id,
                                 'task_id': task.task_id}))
 
@@ -1224,9 +1224,6 @@ def update_object_user(request, model=None, object_id=None, slug=None,
     obj = lookup_object(model, object_id, slug, slug_field)
     if not obj.user == request.user:
         return HttpResponseForbidden('Wat?')
-    if model == Exercise:
-        # Trigger reparse
-        obj.parse()
 
     return update_object(request, model, object_id, slug, slug_field, template_name,
             template_loader, extra_context, post_save_redirect, login_required,
@@ -1480,7 +1477,20 @@ def internal_server_error(request, template_name='500.html'):
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request, {})))
 
-def exercise_parse(request, object_id, task_id):
+def exercise_parse(request, object_id):
+    ''' View to trigger reparse of a single exercise given exercise id '''
+
+    exercise = get_object_or_404(Exercise, id=object_id)
+    task = exercise.parse()
+    if task:
+        return HttpResponseRedirect(\
+                reverse('exercise_parse_progress', kwargs = {
+                    'object_id': object_id,
+                    'task_id': task.task_id}))
+
+def exercise_parse_progress(request, object_id, task_id):
+    ''' View to display progress on parsing and redirect user
+    to fully parsed exercised when done '''
 
     exercise = get_object_or_404(Exercise, id=object_id)
     result = AsyncResult(task_id).status

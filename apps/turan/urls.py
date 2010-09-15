@@ -70,7 +70,8 @@ urlpatterns += patterns('django.views.generic.list_detail',
 
     url(r'^exercise/?$', turan_object_list, { 'queryset': Exercise.objects.select_related().order_by('-date') }, name='exercises'),
     url(r'^exercise/(?P<object_id>\d+)', exercise, name='exercise'),
-    url(r'^exercise/parse/(?P<object_id>\d+)/(?P<task_id>.*)/?$', exercise_parse, name='exercise_parse'),
+    url(r'^exercise/parse/(?P<object_id>\d+)/(?P<task_id>.*)/?$', exercise_parse_progress, name='exercise_parse_progress'),
+    url(r'^exercise/parse/(?P<object_id>\d+)/?$', exercise_parse, name='exercise_parse'),
 )
 urlpatterns += patterns('django.views.generic.simple',
     url(r'^about/', 'direct_to_template', {'template': 'turan/about.html'}, name='turan_about'),
