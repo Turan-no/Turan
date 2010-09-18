@@ -65,12 +65,12 @@ class TCXParser(object):
                 avg_cadence = 0
 
             try:
-                max_hr = int(lap.find(garmin_ns + "MaximumHeartRateBpm").find(garmin_ns + "Value").text)
+                max_hr = int(float(lap.find(garmin_ns + "MaximumHeartRateBpm").find(garmin_ns + "Value").text))
             except AttributeError:
                 max_hr = 0    # Ring 113
 
             try:
-                avg_hr = int(lap.find(garmin_ns + "AverageHeartRateBpm").find(garmin_ns + "Value").text)
+                avg_hr = int(float(lap.find(garmin_ns + "AverageHeartRateBpm").find(garmin_ns + "Value").text))
             except AttributeError:
                 avg_hr = 0    # Ring 113
 
@@ -129,7 +129,7 @@ class TCXParser(object):
                 continue
 
             try:
-                hr = int(e.find(garmin_ns + "HeartRateBpm").find(garmin_ns + "Value").text)
+                hr = int(float(e.find(garmin_ns + "HeartRateBpm").find(garmin_ns + "Value").text))
             except AttributeError:
                 hr = 0
 
