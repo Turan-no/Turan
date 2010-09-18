@@ -184,7 +184,7 @@ def create_gpx_from_details(exercise, callback=None):
         if not exercise.route.gpx_file:
 
             # Check if the details have lon, some parsers doesn't provide position
-            if exercise.get_details().filter(lon__gt=0).filter(lat__gt=0).count() > 0:
+            if exercise.get_details().filter(lon__gt=0).count() > 0 or exercise.get_details().filter(lon__lt=0).count():
                 g = GPXWriter(exercise.get_details().all())
                 filename = 'gpx/%s.gpx' %exercise.id
 
