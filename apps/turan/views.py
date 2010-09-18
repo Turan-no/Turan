@@ -1,5 +1,5 @@
 from models import *
-from tasks import smoothListGaussian
+from tasks import smoothListGaussian, calcpower
 from itertools import groupby
 from forms import ExerciseForm
 from profiles.models import Profile
