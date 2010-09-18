@@ -63,8 +63,6 @@ var Mapper = {
 
         var defaultlayers = [layerMapnik, layerCycleMap, layerTilesAtHome, FKB, FKBraster, lgpx];
         if (start) {
-            alert(start[0]);
-            alert(start[1]);
             if (start[0] > 4 && start[1] > 57) { // Quickfix for checking for norwegian maps or not
                 defaultlayers = [FKB, FKBraster, layerMapnik, layerCycleMap, layerTilesAtHome, lgpx];
             }
