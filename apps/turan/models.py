@@ -70,7 +70,7 @@ class Route(models.Model):
     def save(self, force_insert=False, force_update=False):
         # If we have gpx file set but not start_lat set, parse gpx and set start and end positions
         if self.gpx_file:
-            if not self.start_lat or self.distance or self.ascent:
+            if not self.start_lat or not self.distance or not self.ascent:
                     g = GPXParser(self.gpx_file.file)
                     if g:
                         # set coordinates for route if it doesn't exist
