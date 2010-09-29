@@ -97,6 +97,7 @@ class HRMParser(object):
                     cadence = int(cadence)
                     altitude = int(altitude)
                     power = int(power)
+                    self.distance_sum += speed*self.interval
 
                     self.power_sum += power
                     self.max_power = max(power, self.max_power)
@@ -186,3 +187,4 @@ if __name__ == '__main__':
     h.parse_uploaded_file(file(sys.argv[1]))
     print h.avg_hr, h.avg_speed, h.avg_cadence, h.avg_pedaling_cad
     print h.max_hr, h.max_speed, h.max_cadence
+    print "Distance:", h.distance_sum
