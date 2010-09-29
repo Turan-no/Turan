@@ -517,25 +517,26 @@ def parse_sensordata(exercise, callback=None):
     normalize_altitude(exercise)
 
     # Auto calculate total ascent and descent
-    if exercise.route:
-        if exercise.route.distance:
+    route = exercise.route
+    if route:
+        if route.distance:
             # Sum is in meter, but routes like km.
             # use the distance from sensor instead of gps
-            if parser.distance_sum and parser.distance_sum/1000 != exercise.route.distance:
-                exercise.route.distance = parser.distance_sum/1000
-                exercise.route.save()
+            if parser.distance_sum and parser.distance_sum/1000 != route.distance:
+                route.distance = parser.distance_sum/1000
+                route.save()
         elif parser.distance_sum:
-            exercise.route.distance = parser.distance_sum/1000
-            exercise.route.save()
+            route.distance = parser.distance_sum/1000
+            route.save()
 
         ascent, descent = calculate_ascent_descent_gaussian(exercise.get_details().all())
         # prefer ascent/descent calculated from sensor data over gps
-        if exercise.route.ascent == 0 or exercise.route.descent == 0 \
-                or not exercise.route.ascent or not exercise.route.descent \
-                or exercise.route.descent != descent or exercise.route.ascent != ascent:
-            exercise.route.ascent = ascent
-            exercise.route.descent = descent
-            exercise.route.save()
+        if route.ascent == 0 or route.descent == 0 \
+                or not route.ascent or not route.descent \
+                or route.descent != descent or route.ascent != ascent:
+            route.ascent = ascent
+            route.descent = descent
+            route.save()
     exercise.save()
 
     if not callback is None:
