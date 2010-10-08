@@ -72,7 +72,7 @@
     {% endif %}
     {% if object.comment %}
     <li class="comment">{{ object.user }} {% trans "writes" %}:
-        <p>{{ object.comment }}|linebreaks</p>
+        <p>{{ object.comment|linebreaks }}</p>
     </li>
     {% endif %}
 </ul>
