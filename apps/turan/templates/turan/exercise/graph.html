@@ -30,7 +30,7 @@
     <p style="float: right;" id="choices">{% trans "Graph" %}:</p>
     <hr class="clear" />
 </div>
-<script id="source" type="text/javascript" src="{{ MEDIA_URL }}turan/graphplotter.js"></script>
+<script id="source" type="text/javascript" asyncsrc="{{ MEDIA_URL }}turan/graphplotter.js"></script>
 <script type="text/javascript">
     function evaluate(y,threshold) { 
         return y < threshold;
