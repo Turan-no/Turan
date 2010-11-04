@@ -228,8 +228,11 @@ class TCXParser(object):
                 self.max_speed = max([self.laps[i].max_speed for i in xrange(0,len(self.laps))])
             except:
                 pass
-            if not self.max_speed:
-                self.max_speed = max(filter(lambda x: x<= 200,[self.entries[i].speed for i in xrange(0,len(self.entries))]))
+            try:
+                if not self.max_speed:
+                    self.max_speed = max(filter(lambda x: x<= 200,[self.entries[i].speed for i in xrange(0,len(self.entries))]))
+            except:
+                pass
 
         self.max_cadence = max([self.entries[i].cadence for i in xrange(0,len(self.entries))])
         if self.rotations > 1.0:
