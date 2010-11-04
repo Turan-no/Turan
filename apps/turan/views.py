@@ -397,6 +397,28 @@ def statistics(request, year=None, month=None, day=None, week=None):
 
     return render_to_response('turan/statistics.html', locals(), context_instance=RequestContext(request))
 
+def bestest(request):
+
+    bestest_speed = []
+    bestest_power = []
+    intervals = [5, 30, 60, 300, 600, 1800, 3600]
+    for i in intervals:
+        userweight_tmp = []
+        best_speed_tmp = BestSpeedEffort.objects.filter(exercise__exercise_type__name="Cycling", duration=i).order_by('-speed')[:10]
+        for a in best_speed_tmp:
+            userweight_tmp.append(a.exercise.user.get_profile().get_weight(a.exercise.date))
+        bestest_speed.append(zip(best_speed_tmp, userweight_tmp))
+
+        userweight_tmp = []
+        best_power_tmp = BestPowerEffort.objects.filter(exercise__exercise_type__name="Cycling", duration=i).order_by('-power')[:10]
+        for a in best_power_tmp:
+            userweight_tmp.append(a.exercise.user.get_profile().get_weight(a.exercise.date))
+        bestest_power.append(zip(best_power_tmp, userweight_tmp))
+
+    bestest_speed = zip(intervals, bestest_speed)
+    bestest_power = zip(intervals, bestest_power)
+    return render_to_response('turan/bestest.html', locals(), context_instance=RequestContext(request))
+
 
 def hr2zone(hr_percent):
     ''' Given a HR percentage return sport zone based on Olympiatoppen zones'''

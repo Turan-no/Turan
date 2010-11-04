@@ -313,7 +313,7 @@ BROKER_USER = "turan"
 BROKER_PASSWORD = "tur4n"
 BROKER_VHOST = "turan"
 CELERYD_CONCURRENCY = 1
-CELERYD_LOG_FILE = '/var/log/celeryd.log'
+CELERYD_LOG_FILE = 'celeryd.log'
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

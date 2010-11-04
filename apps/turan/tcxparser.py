@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from xml.etree import ElementTree
+from django.http import HttpResponse
 import datetime
 import pyproj
 from math import hypot
@@ -176,7 +177,7 @@ class TCXParser(object):
                 power = 0
 
             # Quickfix to skip empty trackpoints found at least in Garmin Edge 500 tcx-files
-            if lat == 0.0 and lon == 0.0 and distance == 0:
+            if lat == 0.0 and lon == 0.0 and distance == 0 and hr == 0:
                 continue
 
             time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
@@ -234,7 +235,11 @@ class TCXParser(object):
             except:
                 pass
 
-        self.max_cadence = max([self.entries[i].cadence for i in xrange(0,len(self.entries))])
+        try:
+            self.max_cadence = max([self.entries[i].cadence for i in xrange(0,len(self.entries))])
+        except:
+            self.max_cadence = 0
+            pass
         if self.rotations > 1.0:
             self.avg_cadence = self.rotations/seconds
             self.avg_pedaling_cad = self.pedaling_cad/pedaling_cad_seconds

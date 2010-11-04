@@ -529,7 +529,11 @@ def parse_sensordata(exercise, callback=None):
             route.distance = parser.distance_sum/1000
             route.save()
 
-        ascent, descent = calculate_ascent_descent_gaussian(exercise.get_details().all())
+        if route.distance:
+            ascent, descent = calculate_ascent_descent_gaussian(exercise.get_details().all())
+        else:
+            ascent = 0
+            descent = 0
         # prefer ascent/descent calculated from sensor data over gps
         if route.ascent == 0 or route.descent == 0 \
                 or not route.ascent or not route.descent \
@@ -546,7 +550,8 @@ def parse_sensordata(exercise, callback=None):
     merge_sensordata(exercise)
     create_gpx_from_details(exercise)
     calculate_best_efforts(exercise)
-    getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date))
+    if hasattr(route, 'ascent') and route.ascent > 0:
+        getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date))
 
 @task
 def create_tcx_from_details(event):
