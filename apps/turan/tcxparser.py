@@ -251,6 +251,7 @@ class TCXParser(object):
             self.max_power = max([self.entries[i].power for i in xrange(0,len(self.entries))])
             self.avg_pedaling_power = self.powersum/pedaling_power_seconds
 
+
 if __name__ == '__main__':
 
     import pprint
