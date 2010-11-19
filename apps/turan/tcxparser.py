@@ -154,6 +154,8 @@ class TCXParser(object):
             try:
                 distance = float(e.find(garmin_ns + "DistanceMeters").text)
             except AttributeError:
+                ## TODO figure out why elements lack distance, make this smarter ?
+                #distance = self.cur_distance
                 distance = 0
 
             try:
@@ -178,6 +180,9 @@ class TCXParser(object):
 
             # Quickfix to skip empty trackpoints found at least in Garmin Edge 500 tcx-files
             if lat == 0.0 and lon == 0.0 and distance == 0 and hr == 0:
+                continue
+            # Fix for activity_57126477.tcx running event with many trkpts with only info lon/lat
+            if distance == 0 and hr == 0:
                 continue
 
             time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
@@ -256,7 +261,7 @@ if __name__ == '__main__':
 
     import pprint
     import sys
-    t = TCXParser()
+    t = TCXParser(0)
     t.parse_uploaded_file(file(sys.argv[1]))
 
     print "Time, Speed, Altitude, Hr, Cadence"
@@ -267,3 +272,4 @@ if __name__ == '__main__':
     print t.max_hr, t.max_speed, t.max_cadence
     print t.start_time
     print t.date
+    print t.distance_sum
