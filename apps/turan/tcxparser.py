@@ -18,7 +18,10 @@ class TCXEntry(object):
         self.lat = lat
         self.power = power
     def __unicode__(self):
-         return '[%s] hr: %s, speed: %s, cadence: %s, alt: %s, lon %s, lat: %s, power: %s' % (self.time, self.hr, self.speed, self.cadence, self.altitude, self.lon, self.lat, self.power)
+        return '[%s] hr: %s, speed: %s, cadence: %s, alt: %s, lon %s, lat: %s, power: %s' % (self.time, self.hr, self.speed, self.cadence, self.altitude, self.lon, self.lat, self.power)
+
+    def __str__(self):
+        return self.__unicode__()
 
 class LapData(object):
     def __init__(self, start_time, duration, distance,  max_speed, avg_hr, max_hr, avg_cadence, kcal_sum):
@@ -184,31 +187,29 @@ class TCXParser(object):
             # Quickfix to skip empty trackpoints found at least in Garmin Edge 500 tcx-files
             if lat == 0.0 and lon == 0.0 and distance == 0 and hr == 0:
                 continue
-            # Fix for activity_57126477.tcx running event with many trkpts with only info lon/lat
-            #if distance == 0 and hr == 0:
-            #    continue
 
             time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
 
             timedelta = (time - self.cur_time).seconds
             distdelta = 0
-
             if self.gps_distance or (distance == 0 and lon and lat):
                  # Didn't find DistanceMeterElement..but we have lon/lat, so calculate
-                if len(self.entries):
-                    try:
-                        hdelta = self.geod.inv(lon, lat, self.entries[-1].lon, self.entries[-1].lat)[2]
-                        distdelta = hypot(hdelta, self.entries[-1].altitude-altitude)
-                    except ValueError:
-                        distdelta = 0
-                self.distance_sum += distdelta
-            else:
-                distdelta = distance - self.cur_distance
-                self.cur_distance = distance
+                if self.entries:
+                    o = self.entries[-1]
+                    if o.lon and o.lat:
+                        try:
+                            hdelta = self.geod.inv(lon, lat, o.lon, o.lat)[2]
+                            distdelta = hypot(hdelta, o.altitude-altitude)
+                        except ValueError:
+                            distdelta = 0
+            if not distdelta:
+                if distance:
+                    distdelta = distance - self.cur_distance
+                    self.cur_distance = distance
 
             if timedelta and distdelta:
                 speed = distdelta/timedelta * 3.6
-                if speed >= 200:
+                if speed >= 200: #FIXME oh so naive
                     if self.entries:
                         speed = self.entries[-1].speed
                     else:
@@ -226,7 +227,8 @@ class TCXParser(object):
                     self.pedaling_cad += cadence*timedelta
                     pedaling_cad_seconds += timedelta
 
-            self.entries.append(TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power))
+            t = TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power)
+            self.entries.append(t)
             self.cur_time = time
 
         seconds = sum([self.laps[i].duration for i in xrange(0,len(self.laps))])
