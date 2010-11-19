@@ -35,8 +35,9 @@ class TCXParser(object):
     def __init__(self, gps_distance=False):
         self.entries = []
         self.gps_distance = gps_distance
-        if gps_distance:
-            self.geod = pyproj.Geod(ellps='WGS84')
+        #if gps_distance:
+        #initialize it no matter if we need or not
+        self.geod = pyproj.Geod(ellps='WGS84')
 
     def parse_uploaded_file(self, f):
         self.cur_distance = 0
@@ -133,6 +134,8 @@ class TCXParser(object):
                 hr = int(float(e.find(garmin_ns + "HeartRateBpm").find(garmin_ns + "Value").text))
             except AttributeError:
                 hr = 0
+                if self.entries:
+                    hr = self.entries[-1].hr
 
             try:
                 altitude = float(e.find(garmin_ns + "AltitudeMeters").text)
@@ -182,15 +185,16 @@ class TCXParser(object):
             if lat == 0.0 and lon == 0.0 and distance == 0 and hr == 0:
                 continue
             # Fix for activity_57126477.tcx running event with many trkpts with only info lon/lat
-            if distance == 0 and hr == 0:
-                continue
+            #if distance == 0 and hr == 0:
+            #    continue
 
             time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
 
             timedelta = (time - self.cur_time).seconds
             distdelta = 0
 
-            if self.gps_distance:
+            if self.gps_distance or (distance == 0 and lon and lat):
+                 # Didn't find DistanceMeterElement..but we have lon/lat, so calculate
                 if len(self.entries):
                     try:
                         hdelta = self.geod.inv(lon, lat, self.entries[-1].lon, self.entries[-1].lat)[2]
