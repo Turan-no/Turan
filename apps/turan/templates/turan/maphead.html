@@ -1,8 +1,8 @@
 {% load i18n %}
 {% if gpx_file %}
-    <script type="text/javascript" asyncsrc="http://openlayers.org/api/2.8/OpenLayers.js"></script>
-    <script type="text/javascript" asyncsrc="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
-    <script type="text/javascript" asyncsrc="{{ MEDIA_URL }}turan/mapper.js"></script>
+    <script type="text/javascript" src="http://openlayers.org/api/2.8/OpenLayers.js"></script>
+    <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}turan/mapper.js"></script>
 
     <script type="text/javascript">
         var map;
