@@ -2148,7 +2148,7 @@ msgstr " sin kalender"
 
 #: templates/profiles/profile.html:91
 msgid "Website"
-msgstr "Vekt"
+msgstr "Nettsted"
 
 #: templates/profiles/profile.html:104
 msgid "Resting pulse"
