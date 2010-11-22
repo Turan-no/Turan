@@ -25,17 +25,18 @@ gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 
 def find_parser(filename):
     ''' Returns correctly initianted parser-class given a filename '''
+    f_lower = filename.lower()
 
-    if filename.endswith('.hrm'): # Polar !
+    if f_lower.endswith('.hrm'): # Polar !
         parser = HRMParser()
-    elif filename.endswith('.gmd'): # garmin-tools-dump
+    elif f_lower.endswith('.gmd'): # garmin-tools-dump
         parser = GMDParser()
-    elif filename.endswith('.tcx'): # garmin training centre
+    elif f_lower.endswith('.tcx'): # garmin training centre
         parser = TCXParser(gps_distance=False) #should have menu on
                                                #upload page 
-    elif filename.endswith('.csv'): # PowerTap
+    elif f_lower.endswith('.csv'): # PowerTap
         parser = CSVParser()
-    elif filename.endswith('.gpx'):
+    elif f_lower.endswith('.gpx'):
         parser = GPXParser()
     else:
         raise Exception('Parser not found') # Maybe warn user somehow?

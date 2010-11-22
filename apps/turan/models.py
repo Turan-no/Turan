@@ -376,7 +376,7 @@ class Exercise(models.Model):
 
     def is_smart_sampled(self):
         filename = self.sensor_file.name
-        if filename.endswith('.tcx'):
+        if filename.lower().endswith('.tcx'):
             exercise_details = self.get_details().all()[1:3]
             delta_t = (exercise_details[1].time - exercise_details[0].time).seconds
             if delta_t > 1:
