@@ -19,6 +19,7 @@ from hrmparser import HRMParser
 from gmdparser import GMDParser
 from tcxparser import TCXParser
 from csvparser import CSVParser
+from pwxparser import PWXParser
 
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
@@ -38,6 +39,8 @@ def find_parser(filename):
         parser = CSVParser()
     elif f_lower.endswith('.gpx'):
         parser = GPXParser()
+    elif f_lower.endswith('.pwx'):
+        parser = PWXParser()
     else:
         raise Exception('Parser not found') # Maybe warn user somehow?
     return parser
