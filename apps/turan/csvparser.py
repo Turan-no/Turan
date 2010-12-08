@@ -87,6 +87,8 @@ class CSVParser(object):
         self.avg_speed = self.speed_sum/len(self.entries)
         self.avg_cadence = self.cadence_sum/len(self.entries)
         self.avg_power = self.power_sum/len(self.entries)
+        # Get duration from last sample
+        self.duration =  '%ss' %seconds
 
 
 
@@ -102,3 +104,5 @@ if __name__ == "__main__":
 
     print c.avg_hr, c.avg_speed, c.avg_cadence, c.avg_power
     print c.max_hr, c.max_speed, c.max_cadence, c.max_power
+
+    print c.duration
