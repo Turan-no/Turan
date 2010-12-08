@@ -65,7 +65,7 @@ class PWXParser(object):
         self.date = start.date()
 
         summary = workout.find(tp_ns + "summarydata")
-        self.duration = int(summary.find(tp_ns + "duration").text)
+        self.duration = '%ss' % (int(summary.find(tp_ns + "duration").text))
         try:
             self.distance = float(summary.find(tp_ns + "dist").text)
         except AttributeError:
