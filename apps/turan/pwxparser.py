@@ -50,6 +50,10 @@ class PWXParser(object):
         self.max_power = 0
         self.avg_torque = 0.0
         self.max_torque = 0.0
+        self.pedaling_cad_seconds = 0
+        self.pedaling_cad = 0
+        self.pedaling_power = 0
+        self.pedaling_power_seconds = 0
         self.avg_temp = 0.0
         self.max_temp = 0.0
         self.kcal_sum = 0
@@ -82,6 +86,7 @@ class PWXParser(object):
         self.avg_temp    = float(summary_attrib(summary, "avg", "temp"))
         self.max_temp    = float(summary_attrib(summary, "max", "temp"))
         self.ascent = float(sample_value(summary, "climbingelevation"))
+        self.kcal_sum = int(float(sample_value(summary, "work"))*0.239005736)
 
         samples = workout.getiterator(tp_ns + "sample")
         for sample in samples:
@@ -99,6 +104,24 @@ class PWXParser(object):
             
             self.entries.append(PWXEntry(time,hr,spd,cad,pwr,torque,temp,alt, lat, lon))
 
+        last = self.entries[0].time
+        for e in self. entries:
+            interval = (e.time - last).seconds
+            if e.cadence > 0:
+                self.pedaling_cad += e.cadence*interval
+                self.pedaling_cad_seconds += interval
+            if e.power > 0:
+                self.pedaling_power += e.power*interval
+                self.pedaling_power_seconds += interval
+            last = e.time
+        if self.pedaling_cad and self.pedaling_cad_seconds:
+            self.avg_pedaling_cad = self.pedaling_cad/self.pedaling_cad_seconds
+        if self.pedaling_power and self.pedaling_power_seconds:
+            self.avg_pedaling_power = self.pedaling_power/self.pedaling_power_seconds
+
+                
+            
+
 if __name__ == '__main__':
     import pprint
     import sys
@@ -111,7 +134,7 @@ if __name__ == '__main__':
     print 'start: %s %s - duration: %s' % (t.date, t.start_time, t.duration)
     print 'HR - avg: %s - max: %s' % (t.avg_hr, t.max_hr)
     print 'SPEED - avg: %s - max: %s' % (t.avg_speed, t.max_speed)
-    print 'CADENCE - avg: %s - max: %s' % (t.avg_cadence, t.max_cadence)
-    print 'POWER - avg: %s - max: %s' % (t.avg_power, t.max_power)
+    print 'CADENCE - avg: %s - max: %s - pedal: %s' % (t.avg_cadence, t.max_cadence, t.avg_pedaling_cad)
+    print 'POWER - avg: %s - max: %s - pedal: %s' % (t.avg_power, t.max_power, t.avg_pedaling_power)
     print 'TORQUE - avg: %s - max: %s' % (t.avg_torque, t.max_torque)
     print 'TEMP - avg: %s - max: %s' % (t.avg_temp, t.max_temp)
