@@ -18,7 +18,6 @@ def sample_value(sample, type):
         value = 0
     return value
 
-
 class PWXEntry(object):
     def __init__(self, time, hr, speed, cadence, power, torque, temp, altitude, lat, lon):
         self.time = time
@@ -72,8 +71,8 @@ class PWXParser(object):
             self.distance = 0.0
         self.avg_hr      = int(summary_attrib(summary, "avg", "hr"))
         self.max_hr      = int(summary_attrib(summary, "max", "hr"))
-        self.avg_speed   = float(summary_attrib(summary, "avg", "spd"))
-        self.max_speed   = float(summary_attrib(summary, "max", "spd"))
+        self.avg_speed   = float(summary_attrib(summary, "avg", "spd"))*3.6
+        self.max_speed   = float(summary_attrib(summary, "max", "spd"))*3.6
         self.avg_cadence = int(summary_attrib(summary, "avg", "cad"))
         self.max_cadence = int(summary_attrib(summary, "max", "cad"))
         self.avg_power   = int(summary_attrib(summary, "avg", "pwr"))
@@ -89,7 +88,7 @@ class PWXParser(object):
             time = start + timedelta(0, int(sample.find(tp_ns + "timeoffset").text))
 
             hr     = int(sample_value(sample, "hr"))
-            spd    = float(sample_value(sample, "spd"))
+            spd    = float(sample_value(sample, "spd"))*3.6
             cad    = int(sample_value(sample, "cad"))
             pwr    = int(sample_value(sample, "pwr"))
             torque = float(sample_value(sample, "torq"))
