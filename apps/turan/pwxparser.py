@@ -118,9 +118,9 @@ class PWXParser(object):
                 self.pedaling_power_seconds += interval
             last = e.time
         if self.pedaling_cad and self.pedaling_cad_seconds:
-            self.avg_pedaling_cad = self.pedaling_cad/self.pedaling_cad_seconds
+            self.avg_pedaling_cad = int(round(float(self.pedaling_cad)/float(self.pedaling_cad_seconds)))
         if self.pedaling_power and self.pedaling_power_seconds:
-            self.avg_pedaling_power = self.pedaling_power/self.pedaling_power_seconds
+            self.avg_pedaling_power = int(round(float(self.pedaling_power)/float(self.pedaling_power_seconds)))
 
                 
             
