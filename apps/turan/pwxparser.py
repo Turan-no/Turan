@@ -32,10 +32,14 @@ class PWXEntry(object):
         self.lat = lat
 
     def __str__(self):
-        return '[%s] hr: %s spd: %s cad %s pwr %s torque: %s temp: %s alt: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.torque, self.temp, self.altitude)
+        return '[%s] hr: %s spd: %s cad %s pwr %s torque: %s temp: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.torque, self.temp, self.altitude, self.lat, self.lon)
 
 class PWXParser(object):
     def __init__(self, gps_distance=False):
+        self.start_lon = 0.0
+        self.start_lat = 0.0
+        self.end_lon = 0.0
+        self.end_lat = 0.0
         self.entries = []
         self.distance = 0.0
         self.ascent = 0.0
@@ -50,10 +54,8 @@ class PWXParser(object):
         self.max_power = 0
         self.avg_torque = 0.0
         self.max_torque = 0.0
-        self.pedaling_cad_seconds = 0
-        self.pedaling_cad = 0
-        self.pedaling_power = 0
-        self.pedaling_power_seconds = 0
+        self.avg_pedaling_cad = 0
+        self.avg_pedaling_power = 0
         self.avg_temp = 0.0
         self.max_temp = 0.0
         self.kcal_sum = 0
@@ -107,22 +109,30 @@ class PWXParser(object):
             
             self.entries.append(PWXEntry(time,hr,spd,cad,pwr,torque,temp,alt, lat, lon))
 
-        last = self.entries[0].time
-        for e in self. entries:
-            interval = (e.time - last).seconds
-            if e.cadence > 0:
-                self.pedaling_cad += e.cadence*interval
-                self.pedaling_cad_seconds += interval
-            if e.power > 0:
-                self.pedaling_power += e.power*interval
-                self.pedaling_power_seconds += interval
-            last = e.time
-        if self.pedaling_cad and self.pedaling_cad_seconds:
-            self.avg_pedaling_cad = int(round(float(self.pedaling_cad)/self.pedaling_cad_seconds))
-        if self.pedaling_power and self.pedaling_power_seconds:
-            self.avg_pedaling_power = int(round(float(self.pedaling_power)/self.pedaling_power_seconds))
+        if self.entries:
+            self.start_lon = self.entries[0].lon
+            self.start_lat = self.entries[0].lat
+            self.end_lon = self.entries[-1].lon
+            self.end_lat = self.entries[-1].lat
 
-                
+            pedaling_cad = 0
+            pedaling_cad_seconds = 0
+            pedaling_power = 0
+            pedaling_power_seconds = 0
+            last = self.entries[0].time
+            for e in self. entries:
+                interval = (e.time - last).seconds
+                if e.cadence > 0:
+                    pedaling_cad += e.cadence*interval
+                    pedaling_cad_seconds += interval
+                if e.power > 0:
+                    pedaling_power += e.power*interval
+                    pedaling_power_seconds += interval
+                last = e.time
+            if pedaling_cad and pedaling_cad_seconds:
+                self.avg_pedaling_cad = int(round(float(pedaling_cad)/pedaling_cad_seconds))
+            if pedaling_power and pedaling_power_seconds:
+                self.avg_pedaling_power = int(round(float(pedaling_power)/pedaling_power_seconds))
             
 
 if __name__ == '__main__':
@@ -135,6 +145,8 @@ if __name__ == '__main__':
         print pwx_e
 
     print 'start: %s %s - duration: %s' % (t.date, t.start_time, t.duration)
+    print 'start - lat: %s - lon: %s' % (t.start_lat, t.start_lon)
+    print 'end - lat: %s - lon: %s' % (t.end_lat, t.end_lon)
     print 'HR - avg: %s - max: %s' % (t.avg_hr, t.max_hr)
     print 'SPEED - avg: %s - max: %s' % (t.avg_speed, t.max_speed)
     print 'CADENCE - avg: %s - max: %s - pedal: %s' % (t.avg_cadence, t.max_cadence, t.avg_pedaling_cad)
