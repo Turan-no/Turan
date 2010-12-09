@@ -76,7 +76,7 @@ class PWXParser(object):
         summary = workout.find(tp_ns + "summarydata")
         self.duration = '%ss' % (int(summary.find(tp_ns + "duration").text))
 
-        self.distance_sum = float(sample_value(summary, "dist"))
+        self.distance_sum = float(sample_value(summary, "dist"))/10
         self.avg_hr      = int(summary_attrib(summary, "avg", "hr"))
         self.max_hr      = int(summary_attrib(summary, "max", "hr"))
         self.avg_speed   = float(summary_attrib(summary, "avg", "spd"))*3.6
