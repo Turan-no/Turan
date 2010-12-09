@@ -90,8 +90,11 @@ class PWXParser(object):
 
         samples = workout.getiterator(tp_ns + "sample")
         for sample in samples:
-            time = start + timedelta(0, int(sample.find(tp_ns + "timeoffset").text))
-
+            try:
+                time = datetime.strptime(sample.find(tp_ns + "time").text,"%Y-%m-%dT%H:%M:%S")
+            except AttributeError:
+                time = start + timedelta(0, int(sample.find(tp_ns + "timeoffset").text))
+            
             hr     = int(sample_value(sample, "hr"))
             spd    = float(sample_value(sample, "spd"))*3.6
             cad    = int(sample_value(sample, "cad"))
