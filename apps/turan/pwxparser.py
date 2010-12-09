@@ -35,13 +35,13 @@ class PWXEntry(object):
         return '[%s] hr: %s spd: %s cad %s pwr %s torque: %s temp: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.torque, self.temp, self.altitude, self.lat, self.lon)
 
 class PWXParser(object):
-    def __init__(self, gps_distance=False):
+    def __init__(self):
         self.start_lon = 0.0
         self.start_lat = 0.0
         self.end_lon = 0.0
         self.end_lat = 0.0
         self.entries = []
-        self.distance = 0.0
+        self.distance_sum = 0.0
         self.ascent = 0.0
         self.descent = 0.0
         self.max_speed = 0
@@ -75,10 +75,8 @@ class PWXParser(object):
 
         summary = workout.find(tp_ns + "summarydata")
         self.duration = '%ss' % (int(summary.find(tp_ns + "duration").text))
-        try:
-            self.distance = float(summary.find(tp_ns + "dist").text)
-        except AttributeError:
-            self.distance = 0.0
+
+        self.distance_sum = float(sample_value(summary, "dist"))
         self.avg_hr      = int(summary_attrib(summary, "avg", "hr"))
         self.max_hr      = int(summary_attrib(summary, "max", "hr"))
         self.avg_speed   = float(summary_attrib(summary, "avg", "spd"))*3.6
@@ -142,13 +140,13 @@ class PWXParser(object):
 if __name__ == '__main__':
     import pprint
     import sys
-    t = PWXParser(0)
+    t = PWXParser()
     t.parse_uploaded_file(file(sys.argv[1]))
 
     for pwx_e in t.entries:
         print pwx_e
 
-    print 'start: %s %s - duration: %s' % (t.date, t.start_time, t.duration)
+    print 'start: %s %s - duration: %s - distance: %s' % (t.date, t.start_time, t.duration, t.distance_sum)
     print 'start - lat: %s - lon: %s' % (t.start_lat, t.start_lon)
     print 'end - lat: %s - lon: %s' % (t.end_lat, t.end_lon)
     print 'HR - avg: %s - max: %s' % (t.avg_hr, t.max_hr)
