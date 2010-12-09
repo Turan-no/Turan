@@ -77,6 +77,8 @@ class PWXParser(object):
         self.duration = '%ss' % (int(summary.find(tp_ns + "duration").text))
 
         self.distance_sum = float(sample_value(summary, "dist"))/10
+        # Schema says meters, file has decimeters. We fix.
+
         self.avg_hr      = int(summary_attrib(summary, "avg", "hr"))
         self.max_hr      = int(summary_attrib(summary, "max", "hr"))
         self.avg_speed   = float(summary_attrib(summary, "avg", "spd"))*3.6
@@ -91,6 +93,7 @@ class PWXParser(object):
         self.max_temp    = float(summary_attrib(summary, "max", "temp"))
         self.ascent = float(sample_value(summary, "climbingelevation"))
         self.kcal_sum = int(float(sample_value(summary, "work"))*0.239005736)
+        # Work is in kilojoules. We no like SI, so we fix.
 
         samples = workout.getiterator(tp_ns + "sample")
         for sample in samples:
@@ -100,7 +103,7 @@ class PWXParser(object):
                 time = start + timedelta(0, int(sample.find(tp_ns + "timeoffset").text))
             
             hr     = int(sample_value(sample, "hr"))
-            spd    = float(sample_value(sample, "spd"))*3.6
+            spd    = float(sample_value(sample, "spd"))*3.6 # Speed is in m/s
             cad    = int(sample_value(sample, "cad"))
             pwr    = int(sample_value(sample, "pwr"))
             torque = float(sample_value(sample, "torq"))
