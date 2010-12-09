@@ -61,7 +61,11 @@ class PWXParser(object):
         self.kcal_sum = 0
 
     def parse_uploaded_file(self, f):
-        doc = ET.parse(f)
+        try:
+            doc = ET.parse(f)
+        except:
+            return
+        
         workout = doc.find(tp_ns + "workout")
 
         start = datetime.strptime(workout.find(tp_ns + "time").text,"%Y-%m-%dT%H:%M:%S")
