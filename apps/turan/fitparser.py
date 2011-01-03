@@ -193,20 +193,22 @@ class FITParser(object):
         while f.tell() < data_size + hdr_size:
             (hdr,) = struct.unpack('B',f.read(1))
             hdr_type = (hdr >> 7) & 1
+
             if hdr_type == 0:
                 msg_type = (hdr >> 6) & 1
-                local_msg_type = (hdr) & 15
-                time_offset = -1
-            elif hdr_type == 1:
-                local_msg_type = (hdr >> 5) & 3
-                time_offset = (hdr) & 31
+                local_msg_type = (hdr) & int('1111',2)
             else:
-                # Invalid header type
+                """
+                Invalid header type.
+                """
                 return
 
             if msg_type == 0:
                 fields = {}
+                if local_msg_type not in local_msg_types:
+                    continue
                 global_msg_type = local_msg_types[local_msg_type]['global_msg_number']
+
                 for field in local_msg_types[local_msg_type]['fields']:
                     base_type = fit_base_types[field['base_type']]
                     endian = local_msg_types[local_msg_type]['endian']
@@ -218,6 +220,9 @@ class FITParser(object):
                     fields[field['def_num']] = {'value': field_value, 'base_type': base_type}
                 if global_msg_type == 0:
                     if get_field_value(fields, fit_file_id, 'type') != 4:
+                        """
+                        Will only parse activity files.
+                        """
                         return
                 elif global_msg_type == 18:
                     self.distance_sum = get_field_value(fields, fit_session, 'distance')/100.
@@ -245,10 +250,6 @@ class FITParser(object):
                     cad = get_field_value(fields, fit_record, 'cadence')
 
                     self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon))
-                """
-                else:
-                    print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
-                """
             elif msg_type == 1:                
                 def_hdr = f.read(5)
                 (arch,) = struct.unpack('B',def_hdr[1:2])
@@ -263,7 +264,7 @@ class FITParser(object):
                 for i in range(n_fields):
                     (field_def_num,field_size,base_type) = struct.unpack('BBB',f.read(3))
                     field_endian = (base_type >> 7) & 1
-                    field_base_type = (base_type) & 31
+                    field_base_type = (base_type) & int('11111', 2)
                     fields.append({'def_num': field_def_num, 'size': field_size, 'endian': field_endian, 'base_type': field_base_type})
                 local_msg_types[local_msg_type] = {'arch': arch, 'endian': endian, 'global_msg_number': global_msg_number, 'fields': fields}
 
@@ -282,7 +283,6 @@ class FITParser(object):
 
             temp = 0
             temp_seconds = 0
-            max_temp = fit_base_types[1]['invalid']
             max_temp = -273.15
 
             last = self.entries[0].time
