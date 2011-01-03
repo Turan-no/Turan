@@ -26,6 +26,29 @@ fit_record = {
     'cycle_length': 12,
     'temperature': 13}
 
+fit_session = {
+    'timestamp': 253,
+    'start_time': 2,
+    'start_lat': 3,
+    'start_lon': 4,
+    'elapsed_time': 7,
+    'timer_time': 8,
+    'distance': 9,
+    'cycles': 10,
+    'calories': 11,
+    'avg_speed': 14,
+    'max_speed': 15,
+    'avg_power': 20,
+    'max_power': 21,
+    'ascent': 22,
+    'descent': 23,
+    'first_lap': 25,
+    'laps': 26,
+    'avg_hr': 16,
+    'max_hr': 17,
+    'avg_cad': 18,
+    'max_cad': 19}
+
 fit_file_type = {
     1:  'device',
     2:  'settings',
@@ -104,6 +127,7 @@ fit_type_unpack = {
     'byte':    'c'}
 
 timestamp_offset = datetime(1989,12,31,00,00)-datetime.utcfromtimestamp(0)
+semicircle_deg = 180./(2**31)
 
 def get_field_value(fields, field_def, field_name):
     try:
@@ -195,12 +219,25 @@ class FITParser(object):
                 if global_msg_type == 0:
                     if get_field_value(fields, fit_file_id, 'type') != 4:
                         return
-                if global_msg_type == 20:
+                elif global_msg_type == 18:
+                    self.distance_sum = get_field_value(fields, fit_session, 'distance')/100.
+                    self.duration = ('%ss') % (int(round(get_field_value(fields, fit_session, 'timer_time')/1000.)))
+                    self.start_lat = get_field_value(fields, fit_session, 'start_lat')*semicircle_deg
+                    self.start_lon = get_field_value(fields, fit_session, 'start_lon')*semicircle_deg
+                    self.avg_hr = get_field_value(fields, fit_session, 'avg_hr')
+                    self.max_hr = get_field_value(fields, fit_session, 'max_hr')
+                    self.avg_speed = get_field_value(fields, fit_session, 'avg_speed')/1000.*3.6
+                    self.max_speed = get_field_value(fields, fit_session, 'max_speed')/1000.*3.6
+                    self.avg_cadence = get_field_value(fields, fit_session, 'avg_cad')
+                    self.max_cadence = get_field_value(fields, fit_session, 'max_cad')
+                    self.avg_power = get_field_value(fields, fit_session, 'avg_power')
+                    self.max_power = get_field_value(fields, fit_session, 'max_power')
+                elif global_msg_type == 20:
                     hr = get_field_value(fields, fit_record, 'hr')
                     pwr = get_field_value(fields, fit_record, 'power')
                     alt = (get_field_value(fields, fit_record, 'alt') - 500) / 5.
-                    lat = get_field_value(fields, fit_record, 'lat')
-                    lon = get_field_value(fields, fit_record, 'lon')
+                    lat = get_field_value(fields, fit_record, 'lat')*semicircle_deg
+                    lon = get_field_value(fields, fit_record, 'lon')*semicircle_deg
                     spd = get_field_value(fields, fit_record, 'speed')/1000.*3.6
                     time = datetime.fromtimestamp(get_field_value(fields, fit_record, 'timestamp'))+timestamp_offset
                     grade = get_field_value(fields, fit_record, 'grade')
@@ -208,7 +245,10 @@ class FITParser(object):
                     cad = get_field_value(fields, fit_record, 'cadence')
 
                     self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon))
-                    
+                """
+                else:
+                    print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
+                """
             elif msg_type == 1:                
                 def_hdr = f.read(5)
                 (arch,) = struct.unpack('B',def_hdr[1:2])
@@ -227,15 +267,56 @@ class FITParser(object):
                     fields.append({'def_num': field_def_num, 'size': field_size, 'endian': field_endian, 'base_type': field_base_type})
                 local_msg_types[local_msg_type] = {'arch': arch, 'endian': endian, 'global_msg_number': global_msg_number, 'fields': fields}
 
+        if self.entries:
+            self.start_time = self.entries[0].time.time()
+            self.date = self.entries[0].time.date()
+            self.start_lon = self.entries[0].lon
+            self.start_lat = self.entries[0].lat
+            self.end_lon = self.entries[-1].lon
+            self.end_lat = self.entries[-1].lat
+
+            pedaling_cad = 0
+            pedaling_cad_seconds = 0
+            pedaling_power = 0
+            pedaling_power_seconds = 0
+
+            temp = 0
+            temp_seconds = 0
+            max_temp = fit_base_types[1]['invalid']
+            max_temp = -273.15
+
+            last = self.entries[0].time
+            for e in self. entries:
+                interval = (e.time - last).seconds
+                if e.cadence > 0:
+                    pedaling_cad += e.cadence*interval
+                    pedaling_cad_seconds += interval
+                if e.power > 0:
+                    pedaling_power += e.power*interval
+                    pedaling_power_seconds += interval
+                if e.temp != fit_base_types[1]['invalid']:
+                    temp += e.temp*interval
+                    temp_seconds += interval
+                    if e.temp > max_temp:
+                        max_temp = e.temp
+            if pedaling_cad and pedaling_cad_seconds:
+                self.avg_pedaling_cad = int(round(float(pedaling_cad)/pedaling_cad_seconds))
+            if pedaling_power and pedaling_power_seconds:
+                self.avg_pedaling_power = int(round(float(pedaling_power)/pedaling_power_seconds))
+            if temp and temp_seconds:
+                self.avg_temp = int(round(float(temp)/temp_seconds))
+                self.max_temp = max_temp
+
 if __name__ == '__main__':
     import pprint
     import sys
     t = FITParser()
     t.parse_uploaded_file(file(sys.argv[1]))
 
-    for fit_e in t.entries:
-        print fit_e
-    """
+    if t.entries:
+        print t.entries[0]
+        print t.entries[-1]
+
     print 'start: %s %s - duration: %s - distance: %s' % (t.date, t.start_time, t.duration, t.distance_sum)
     print 'start - lat: %s - lon: %s' % (t.start_lat, t.start_lon)
     print 'end - lat: %s - lon: %s' % (t.end_lat, t.end_lon)
@@ -243,6 +324,4 @@ if __name__ == '__main__':
     print 'SPEED - avg: %s - max: %s' % (t.avg_speed, t.max_speed)
     print 'CADENCE - avg: %s - max: %s - pedal: %s' % (t.avg_cadence, t.max_cadence, t.avg_pedaling_cad)
     print 'POWER - avg: %s - max: %s - pedal: %s' % (t.avg_power, t.max_power, t.avg_pedaling_power)
-    print 'TORQUE - avg: %s - max: %s' % (t.avg_torque, t.max_torque)
     print 'TEMP - avg: %s - max: %s' % (t.avg_temp, t.max_temp)
-    """
