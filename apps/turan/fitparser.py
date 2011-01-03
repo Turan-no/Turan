@@ -9,6 +9,37 @@ fit_file_id = {
     'product': 2,
     'number': 5}
 
+fit_lap = {
+    'message_index': 254,
+    'timestamp': 253,
+    'event': 0,
+    'event_type': 1,
+    'start_time': 2,
+    'start_lat': 3,
+    'start_lon': 4,
+    'end_lat': 5,
+    'end_lon': 6,
+    'elapsed_time': 7,
+    'timer_time': 8,
+    'distance': 9,
+    'cycles': 10,
+    'calories': 11,
+    'fat_calories': 12,
+    'avg_speed': 13,
+    'max_speed': 14,
+    'avg_hr': 15,
+    'max_hr': 16,
+    'avg_cadence': 17,
+    'max_cadence': 18,
+    'avg_power': 19,
+    'max_power': 20,
+    'ascent': 21,
+    'descent': 22,
+    'intensity': 23,
+    'trigger': 24,
+    'sport': 25,
+    'event_group': 26}
+
 fit_record = {
     'timestamp': 253,
     'lat': 0,
@@ -236,6 +267,11 @@ class FITParser(object):
                     self.max_cadence = get_field_value(fields, fit_session, 'max_cad')
                     self.avg_power = get_field_value(fields, fit_session, 'avg_power')
                     self.max_power = get_field_value(fields, fit_session, 'max_power')
+                    self.kcal_sum = get_field_value(fields, fit_session, 'calories')
+                elif global_msg_type == 19:
+                    '''No lap handling'''
+                    print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
+                    pass
                 elif global_msg_type == 20:
                     hr = get_field_value(fields, fit_record, 'hr')
                     pwr = get_field_value(fields, fit_record, 'power')
@@ -249,6 +285,12 @@ class FITParser(object):
                     cad = get_field_value(fields, fit_record, 'cadence')
 
                     self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon))
+                elif global_msg_type == 21:
+                    print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
+                    for field in fields:
+                        print '%i: %s' % (field, fields[field])
+                else:
+                    print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
             elif msg_type == 1:                
                 def_hdr = f.read(5)
                 (arch,) = struct.unpack('B',def_hdr[1:2])
