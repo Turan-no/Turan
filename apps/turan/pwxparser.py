@@ -146,8 +146,9 @@ if __name__ == '__main__':
     t = PWXParser()
     t.parse_uploaded_file(file(sys.argv[1]))
 
-    for pwx_e in t.entries:
-        print pwx_e
+    if t.entries:
+        print t.entries[0]
+        print t.entries[-1]
 
     print 'start: %s %s - duration: %s - distance: %s' % (t.date, t.start_time, t.duration, t.distance_sum)
     print 'start - lat: %s - lon: %s' % (t.start_lat, t.start_lon)
