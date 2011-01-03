@@ -20,6 +20,7 @@ from gmdparser import GMDParser
 from tcxparser import TCXParser
 from csvparser import CSVParser
 from pwxparser import PWXParser
+from fitparser import FITParser
 
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)

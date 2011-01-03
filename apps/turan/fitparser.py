@@ -155,7 +155,6 @@ class FITEntry(object):
         return '[%s] hr: %s spd: %s cad: %s pwr: %s temp: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.temp, self.altitude, self.lat, self.lon)
 
 class FITParser(object):
-    
     def __init__(self):
         self.start_lon = 0.0
         self.start_lat = 0.0
