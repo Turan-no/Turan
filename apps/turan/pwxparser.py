@@ -66,51 +66,51 @@ class PWXParser(object):
         except:
             return
         
-        workout = doc.find(tp_ns + "workout")
+        workout = doc.find(tp_ns + 'workout')
 
-        start = datetime.strptime(workout.find(tp_ns + "time").text,"%Y-%m-%dT%H:%M:%S")
+        start = datetime.strptime(workout.find(tp_ns + 'time').text,'%Y-%m-%dT%H:%M:%S')
 
         self.start_time = start.time()
         self.date = start.date()
 
-        summary = workout.find(tp_ns + "summarydata")
-        self.duration = '%ss' % (int(summary.find(tp_ns + "duration").text))
+        summary = workout.find(tp_ns + 'summarydata')
+        self.duration = '%ss' % (int(summary.find(tp_ns + 'duration').text))
 
-        self.distance_sum = float(sample_value(summary, "dist"))/10
+        self.distance_sum = float(sample_value(summary, 'dist'))/10
         # Schema says meters, file has decimeters. We fix.
 
-        self.avg_hr      = int(summary_attrib(summary, "avg", "hr"))
-        self.max_hr      = int(summary_attrib(summary, "max", "hr"))
-        self.avg_speed   = float(summary_attrib(summary, "avg", "spd"))*3.6
-        self.max_speed   = float(summary_attrib(summary, "max", "spd"))*3.6
-        self.avg_cadence = int(summary_attrib(summary, "avg", "cad"))
-        self.max_cadence = int(summary_attrib(summary, "max", "cad"))
-        self.avg_power   = int(summary_attrib(summary, "avg", "pwr"))
-        self.max_power   = int(summary_attrib(summary, "max", "pwr"))
-        self.avg_torque  = float(summary_attrib(summary, "avg", "torq"))
-        self.max_torque  = float(summary_attrib(summary, "max", "torq"))
-        self.avg_temp    = float(summary_attrib(summary, "avg", "temp"))
-        self.max_temp    = float(summary_attrib(summary, "max", "temp"))
-        self.ascent = float(sample_value(summary, "climbingelevation"))
-        self.kcal_sum = int(float(sample_value(summary, "work"))*0.239005736)
+        self.avg_hr      = int(summary_attrib(summary, 'avg', 'hr'))
+        self.max_hr      = int(summary_attrib(summary, 'max', 'hr'))
+        self.avg_speed   = float(summary_attrib(summary, 'avg', 'spd'))*3.6
+        self.max_speed   = float(summary_attrib(summary, 'max', 'spd'))*3.6
+        self.avg_cadence = int(summary_attrib(summary, 'avg', 'cad'))
+        self.max_cadence = int(summary_attrib(summary, 'max', 'cad'))
+        self.avg_power   = int(summary_attrib(summary, 'avg', 'pwr'))
+        self.max_power   = int(summary_attrib(summary, 'max', 'pwr'))
+        self.avg_torque  = float(summary_attrib(summary, 'avg', 'torq'))
+        self.max_torque  = float(summary_attrib(summary, 'max', 'torq'))
+        self.avg_temp    = float(summary_attrib(summary, 'avg', 'temp'))
+        self.max_temp    = float(summary_attrib(summary, 'max', 'temp'))
+        self.ascent = float(sample_value(summary, 'climbingelevation'))
+        self.kcal_sum = int(float(sample_value(summary, 'work'))*0.239005736)
         # Work is in kilojoules. We no like SI, so we fix.
 
-        samples = workout.getiterator(tp_ns + "sample")
+        samples = workout.getiterator(tp_ns + 'sample')
         for sample in samples:
             try:
-                time = datetime.strptime(sample.find(tp_ns + "time").text,"%Y-%m-%dT%H:%M:%S")
+                time = datetime.strptime(sample.find(tp_ns + 'time').text,'%Y-%m-%dT%H:%M:%S')
             except AttributeError:
-                time = start + timedelta(0, int(sample.find(tp_ns + "timeoffset").text))
+                time = start + timedelta(0, int(sample.find(tp_ns + 'timeoffset').text))
             
-            hr     = int(sample_value(sample, "hr"))
-            spd    = float(sample_value(sample, "spd"))*3.6 # Speed is in m/s
-            cad    = int(sample_value(sample, "cad"))
-            pwr    = int(sample_value(sample, "pwr"))
-            torque = float(sample_value(sample, "torq"))
-            temp   = float(sample_value(sample, "temp"))
-            alt    = float(sample_value(sample, "alt"))
-            lat    = float(sample_value(sample, "lat"))
-            lon    = float(sample_value(sample, "lon"))
+            hr     = int(sample_value(sample, 'hr'))
+            spd    = float(sample_value(sample, 'spd'))*3.6 # Speed is in m/s
+            cad    = int(sample_value(sample, 'cad'))
+            pwr    = int(sample_value(sample, 'pwr'))
+            torque = float(sample_value(sample, 'torq'))
+            temp   = float(sample_value(sample, 'temp'))
+            alt    = float(sample_value(sample, 'alt'))
+            lat    = float(sample_value(sample, 'lat'))
+            lon    = float(sample_value(sample, 'lon'))
             
             self.entries.append(PWXEntry(time,hr,spd,cad,pwr,torque,temp,alt, lat, lon))
 

@@ -198,9 +198,9 @@ class FITParser(object):
                 msg_type = (hdr >> 6) & 1
                 local_msg_type = (hdr) & int('1111',2)
             else:
-                """
+                '''
                 Invalid header type.
-                """
+                '''
                 return
 
             if msg_type == 0:
@@ -220,9 +220,9 @@ class FITParser(object):
                     fields[field['def_num']] = {'value': field_value, 'base_type': base_type}
                 if global_msg_type == 0:
                     if get_field_value(fields, fit_file_id, 'type') != 4:
-                        """
+                        '''
                         Will only parse activity files.
-                        """
+                        '''
                         return
                 elif global_msg_type == 18:
                     self.distance_sum = get_field_value(fields, fit_session, 'distance')/100.

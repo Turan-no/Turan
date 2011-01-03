@@ -41,6 +41,8 @@ def find_parser(filename):
         parser = GPXParser()
     elif f_lower.endswith('.pwx'):
         parser = PWXParser()
+    elif f_lower.endswith('.fit'):
+        parser = FITParser()
     else:
         raise Exception('Parser not found') # Maybe warn user somehow?
     return parser
