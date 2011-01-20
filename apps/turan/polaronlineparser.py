@@ -67,7 +67,7 @@ class POLParser(object):
         self.date = self.start.date()
 
         result = exercise.find(ns+'result')
-        self.kcal_sum = result.find(ns + 'calories')
+        self.kcal_sum = int(result.find(ns + 'calories').text)
         duration = result.find(ns+'duration').text
         hour, minute, second = int(duration[0:2]), int(duration[3:5]), int(duration[6:8])
         self.seconds = hour*3600 + minute*60 + second
