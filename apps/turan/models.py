@@ -469,7 +469,7 @@ merge_choices = (
 class MergeSensorFile(models.Model):
     exercise = models.ForeignKey(Exercise)
     merge_strategy = models.CharField(max_length=1, choices=merge_choices, default='M', help_text=_('Merge strategy. Merge = Merge on top of current, Append = Append to end, Prepend = Insert before current'))
-    sensor_file = models.FileField(upload_to='sensor', storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, .pwx)'))
+    sensor_file = models.FileField(upload_to='sensor', storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, .pwx, .xml, .fit)'))
     hr = models.BooleanField(blank=True, default=0)
     power = models.BooleanField(blank=True, default=0)
     cadence = models.BooleanField(blank=True, default=0)
