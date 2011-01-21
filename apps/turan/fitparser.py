@@ -175,19 +175,19 @@ def get_field_value(fields, field_def, field_name):
     return value
 
 class FITEntry(object):
-    def __init__(self, time, hr, speed, cadence, power, temp, altitude, lat, lon):
+    def __init__(self, time, hr, speed, cadence, power, temperature, altitude, lat, lon):
         self.time = time
         self.hr = hr
         self.speed = speed
         self.cadence = cadence
         self.power = power
-        self.temp = temp
+        self.temperature = temperature
         self.altitude = altitude
         self.lon = lon
         self.lat = lat
 
     def __str__(self):
-        return '[%s] hr: %s spd: %s cad: %s pwr: %s temp: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.temp, self.altitude, self.lat, self.lon)
+        return '[%s] hr: %s spd: %s cad: %s pwr: %s temperature: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.temperature, self.altitude, self.lat, self.lon)
 
 class FITParser(object):
     def __init__(self):
@@ -213,6 +213,7 @@ class FITParser(object):
         self.avg_pedaling_power = 0
         self.avg_temp = 0.0
         self.max_temp = 0.0
+        self.temperature = 0
         self.kcal_sum = 0
 
     def parse_uploaded_file(self, f):
@@ -356,6 +357,7 @@ class FITParser(object):
             if temp and temp_seconds:
                 self.avg_temp = int(round(float(temp)/temp_seconds))
                 self.max_temp = max_temp
+                self.temperature = self.avg_temp
 
 if __name__ == '__main__':
     import pprint
