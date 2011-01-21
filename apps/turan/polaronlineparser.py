@@ -66,6 +66,14 @@ class POLParser(object):
 
         result = exercise.find(ns+'result')
         self.kcal_sum = int(result.find(ns + 'calories').text)
+        self.distance_sum = 0
+        try:
+            self.distance_sum = float(result.find(ns + 'distance').text)
+        except: pass # element missing in many files
+        self.comment = ''
+        try:
+            self.comment = result.find(ns + 'note').text.strip()
+        except: pass # element missing in many files
         duration = result.find(ns+'duration').text
         hour, minute, second = int(duration[0:2]), int(duration[3:5]), int(duration[6:8])
         self.seconds = hour*3600 + minute*60 + second
@@ -107,10 +115,8 @@ class POLParser(object):
                     self.entries[i].cadence = cadence
 
         if self.entries:
-            self.distance_sum = 0
             if self.avg_speed:
                 self.avg_speed = self.avg_speed/len(self.entries)
-                self.distance_sum = self.interval*len(self.entries) * self.avg_speed
             if self.avg_hr:
                 self.avg_hr = self.avg_hr/len(self.entries)
             if self.avg_cadence:
@@ -131,11 +137,10 @@ if __name__ == '__main__':
         #else:
         #    print e['time'], e['lon'], e['lat']
     print 'distance: ', g.distance_sum
-    print 'ascent: ', g.ascent
-    print 'descent: ', g.descent
     print 'avg_hr: ', g.avg_hr
     print 'avg_cadence: ', g.avg_cadence
     print 'avg_speed: ', g.avg_speed
     print 'calories: ', g.kcal_sum
+    print 'comment: ', g.comment
 
 
