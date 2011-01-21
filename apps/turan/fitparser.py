@@ -157,7 +157,11 @@ fit_type_unpack = {
     'uint32z': 'I',
     'byte':    'c'}
 
-timestamp_offset = datetime(1989,12,31,00,00)-datetime.utcfromtimestamp(0)
+'''Timestamps are referenced from 1989-12-31 00:00 UTC,
+   so we have to add the bit missing from where 0 timestamp normally is.'''
+timestamp_offset = datetime(1989,12,30,23,59,59)-datetime.utcfromtimestamp(0)
+'''latitude/longitude is stored in semicircles,
+   this is the appropriate conversion factor to get degrees.'''
 semicircle_deg = 180./(2**31)
 
 def get_field_value(fields, field_def, field_name):
@@ -270,7 +274,7 @@ class FITParser(object):
                     self.kcal_sum = get_field_value(fields, fit_session, 'calories')
                 elif global_msg_type == 19:
                     '''No lap handling'''
-                    print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
+                    #print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
                     pass
                 elif global_msg_type == 20:
                     hr = get_field_value(fields, fit_record, 'hr')
@@ -286,11 +290,16 @@ class FITParser(object):
 
                     self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon))
                 elif global_msg_type == 21:
+                    '''
                     print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
                     for field in fields:
                         print '%i: %s' % (field, fields[field])
+                    '''
+                    pass
+                '''
                 else:
                     print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
+                '''
             elif msg_type == 1:                
                 def_hdr = f.read(5)
                 (arch,) = struct.unpack('B',def_hdr[1:2])
