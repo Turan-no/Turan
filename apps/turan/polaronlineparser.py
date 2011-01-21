@@ -12,8 +12,6 @@ class Entry(object):
         self.hr = hr
         self.speed = speed
         self.cadence = cadence
-        if not altitude:
-            altitude = 0
         self.altitude = altitude
         self.lat = lat
         self.lon = lon
@@ -73,9 +71,12 @@ class POLParser(object):
         self.seconds = hour*3600 + minute*60 + second
         self.duration = '%ss' %(self.seconds)
 
+        self.interval = 5 # default
+
         for sample in result.find(ns+'samples').getchildren():
-            if sample.find(ns+'type').text == 'HEARTRATE':
-                values = sample.find(ns+'values').text.strip().split(',')
+            sampletype = sample.find(ns+'type').text
+            values = sample.find(ns+'values').text.strip().split(',')
+            if sampletype == 'HEARTRATE':
                 # Try to determine interval based on number of samples and duration
                 self.interval = int(round(1. / (float(len(values)) / self.seconds)))
                 for i, value in enumerate(values):
@@ -85,11 +86,30 @@ class POLParser(object):
                     if hr > self.max_hr:
                         self.max_hr = hr
                     self.entries.append(Entry(time, hr, 0, 0, 0,0,0))
+            elif sampletype == 'SPEED':
+                for i, value in enumerate(values):
+                    if not value: continue # protect against empty samples
+                    speed = float(value)
+                    if speed > self.max_speed:
+                        self.max_speed = speed
+                    self.avg_speed += speed
+                    self.entries[i].speed = speed
+            elif sampletype == 'ALTITUDE':
+                for i, value in enumerate(values):
+                    if not value: continue # protect against empty samples
+                    altitude = float(value)
+                    self.entries[i].altitude = int(round(altitude)) # somehow these are floats?? round to int 
+            elif sampletype == 'RUN_CADENCE':
+                for i, value in enumerate(values):
+                    if not value: continue # protect against empty samples
+                    cadence = float(value)
+                    self.entries[i].cadence = cadence
 
         if self.entries:
 
             self.distance_sum = 0
-            #self.avg_speed = self.avg_speed/len(self.entries)
+            if self.avg_speed:
+                self.avg_speed = self.avg_speed/len(self.entries)
             if self.avg_hr:
                 self.avg_hr = self.avg_hr/len(self.entries)
             #if self.avg_cadence:
@@ -108,7 +128,7 @@ if __name__ == '__main__':
 
     for e in g.entries:
         #if 'speed' in e and 'altitude' in e:
-        print e.time, e.hr, e.lon, e.lat, e.altitude, e.speed
+        print e.time, e.hr, e.speed, e.altitude, e.lon, e.lat
         #else:
         #    print e['time'], e['lon'], e['lat']
     print 'distance: ', g.distance
@@ -117,5 +137,6 @@ if __name__ == '__main__':
     print 'avg_hr: ', g.avg_hr
     print 'avg_cadence: ', g.avg_cadence
     print 'avg_speed: ', g.avg_speed
+    print 'calories: ', g.kcal_sum
 
 
