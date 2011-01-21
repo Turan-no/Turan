@@ -85,7 +85,7 @@ class POLParser(object):
                     self.avg_hr += int(hr)
                     if hr > self.max_hr:
                         self.max_hr = hr
-                    self.entries.append(Entry(time, hr, 0, 0, 0,0,0))
+                    self.entries.append(Entry(time, hr, 0, 0, 0, 0, 0))
             elif sampletype == 'SPEED':
                 for i, value in enumerate(values):
                     if not value: continue # protect against empty samples
@@ -103,19 +103,18 @@ class POLParser(object):
                 for i, value in enumerate(values):
                     if not value: continue # protect against empty samples
                     cadence = float(value)
+                    self.avg_cadence += cadence
                     self.entries[i].cadence = cadence
 
         if self.entries:
-
             self.distance_sum = 0
             if self.avg_speed:
                 self.avg_speed = self.avg_speed/len(self.entries)
+                self.distance_sum = self.interval*len(self.entries) * self.avg_speed
             if self.avg_hr:
                 self.avg_hr = self.avg_hr/len(self.entries)
-            #if self.avg_cadence:
-            #    self.avg_cadence = self.avg_cadence/len(self.entries)
-            #self.start_time = datetime.time(s_t.hour, s_t.minute, s_t.second)
-            #self.date = datetime.date(s_t.year, s_t.month, s_t.day)
+            if self.avg_cadence:
+                self.avg_cadence = self.avg_cadence/len(self.entries)
 
 
 
@@ -131,7 +130,7 @@ if __name__ == '__main__':
         print e.time, e.hr, e.speed, e.altitude, e.lon, e.lat
         #else:
         #    print e['time'], e['lon'], e['lat']
-    print 'distance: ', g.distance
+    print 'distance: ', g.distance_sum
     print 'ascent: ', g.ascent
     print 'descent: ', g.descent
     print 'avg_hr: ', g.avg_hr
