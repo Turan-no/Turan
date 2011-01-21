@@ -19,20 +19,20 @@ def sample_value(sample, type):
     return value
 
 class PWXEntry(object):
-    def __init__(self, time, hr, speed, cadence, power, torque, temp, altitude, lat, lon):
+    def __init__(self, time, hr, speed, cadence, power, torque, temperature, altitude, lat, lon):
         self.time = time
         self.hr = hr
         self.speed = speed
         self.cadence = cadence
         self.power = power
         self.torque = torque
-        self.temp = temp
+        self.temperature = temperature
         self.altitude = altitude
         self.lon = lon
         self.lat = lat
 
     def __str__(self):
-        return '[%s] hr: %s spd: %s cad %s pwr %s torque: %s temp: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.torque, self.temp, self.altitude, self.lat, self.lon)
+        return '[%s] hr: %s spd: %s cad %s pwr %s torque: %s temp: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.torque, self.temperatur, self.altitude, self.lat, self.lon)
 
 class PWXParser(object):
     def __init__(self):
@@ -59,6 +59,7 @@ class PWXParser(object):
         self.avg_temp = 0.0
         self.max_temp = 0.0
         self.kcal_sum = 0
+        self.temperature = 0
 
     def parse_uploaded_file(self, f):
         try:
@@ -91,6 +92,7 @@ class PWXParser(object):
         self.max_torque  = float(summary_attrib(summary, 'max', 'torq'))
         self.avg_temp    = float(summary_attrib(summary, 'avg', 'temp'))
         self.max_temp    = float(summary_attrib(summary, 'max', 'temp'))
+        self.temperature = self.avg_temp
         self.ascent = float(sample_value(summary, 'climbingelevation'))
         self.kcal_sum = int(float(sample_value(summary, 'work'))*0.239005736)
         # Work is in kilojoules. We no like SI, so we fix.
