@@ -470,7 +470,7 @@ def parse_sensordata(exercise, callback=None):
         detail.exercise_id = exercise.id
 
         # Figure out which values the parser has
-        for v in ('time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power'):
+        for v in ('time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power', 'temp'):
             if hasattr(val, v):
                 #if not types.NoneType == type(val[v]):
                 setattr(detail, v, getattr(val, v))
@@ -521,11 +521,11 @@ def parse_sensordata(exercise, callback=None):
 
     if hasattr(parser, 'min_temp'):
         if parser.min_temp:
-            exercise.min_temp = parser.min_temp
+            exercise.min_temperature = parser.min_temp
 
     if hasattr(parser, 'max_temp'):
         if parser.max_temp:
-            exercise.max_temp = parser.max_temp
+            exercise.max_temperature = parser.max_temp
 
     if hasattr(parser, 'comment'): # Polar has this
         if parser.comment: # comment isn't always set

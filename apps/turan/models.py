@@ -429,6 +429,7 @@ class ExerciseDetail(models.Model):
     lon = models.FloatField(blank=True, null=True)
     cadence = models.IntegerField(blank=True, null=True)
     power = models.IntegerField(blank=True, null=True)
+    temp = models.FloatField(blank=True, null=True)
 
     def get_relative_time(self):
         start_time = datetime(self.time.year, self.time.month, self.time.day, self.trip.time.hour, self.trip.time.minute, self.trip.time.second)

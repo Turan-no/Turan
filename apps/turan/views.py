@@ -587,20 +587,23 @@ def powerjson(request, object_id):
 
     #ret = object.get_details().all()[start:stop].aggregate( Avg('speed'), Avg('hr'), Avg('cadence'), Avg('power'), Min('speed'), Min('hr'), Min('cadence'), Min('power'), Max('speed'), Max('hr'), Max('cadence'), Max('power'))
 
-    val_types = ('speed', 'hr', 'cadence', 'power')
+    val_types = ('speed', 'hr', 'cadence', 'power', 'temp')
     ret = {
             'speed__min': 9999,
             'hr__min': 9999,
             'cadence__min': 9999,
             'power__min': 9999,
+            'temp__min': 9999,
             'speed__max': 0,
             'hr__max': 0,
             'cadence__max': 0,
+            'temp__max': 0,
             'power__max': 0,
             'speed__avg': 0,
             'hr__avg': 0,
             'cadence__avg': 0,
             'power__avg': 0,
+            'temp__avg': 0,
     }
     for d in details:
         for val in val_types:
@@ -780,6 +783,7 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
             'altitude': [],
             'cadence': [],
             'hr': [],
+            'temp': [],
         }
 
     x = 0
@@ -820,6 +824,13 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
     if not has_altitude:
         del js_strings['altitude']
 
+# Check if we should export temperature to graph
+    has_temperature = False
+    if details[0].exercise.max_temperature:
+        has_temperature = True
+    if not has_temperature:
+        del js_strings['temp']
+
     for i, d in enumerate(details):
         if start and start < i:
             continue
@@ -839,10 +850,8 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
                 dval = getattr(d, val)
                 if dval > 0: # skip zero values (makes prettier graph)
                     js_strings[val] += '[%.4f,%s],' % (x, dval)
-
             except AttributeError: # not all formats support all values
                 pass
-
 
     # Convert lists into strings
     for val in js_strings.keys():

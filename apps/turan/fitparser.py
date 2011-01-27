@@ -175,19 +175,19 @@ def get_field_value(fields, field_def, field_name):
     return value
 
 class FITEntry(object):
-    def __init__(self, time, hr, speed, cadence, power, temperature, altitude, lat, lon):
+    def __init__(self, time, hr, speed, cadence, power, temp, altitude, lat, lon):
         self.time = time
         self.hr = hr
         self.speed = speed
         self.cadence = cadence
         self.power = power
-        self.temperature = temperature
+        self.temp = temp
         self.altitude = altitude
         self.lon = lon
         self.lat = lat
 
     def __str__(self):
-        return '[%s] hr: %s spd: %s cad: %s pwr: %s temperature: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.temperature, self.altitude, self.lat, self.lon)
+        return '[%s] hr: %s spd: %s cad: %s pwr: %s temperature: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.temp, self.altitude, self.lat, self.lon)
 
 class FITParser(object):
     def __init__(self):
@@ -347,14 +347,14 @@ class FITParser(object):
                 if e.power > 0:
                     pedaling_power += e.power*interval
                     pedaling_power_seconds += interval
-                if e.temperature != fit_base_types[1]['invalid']:
-                    temp += e.temperature*interval
+                if e.temp != fit_base_types[1]['invalid']:
+                    temp += e.temp*interval
                     temp_seconds += interval
-                    if e.temperature > max_temp:
-                        max_temp = e.temperature
-                    if e.temperature: # Skip 0 values, can we determine if it's actually zero?
-                        if e.temperature < min_temp:
-                            min_temp = e.temperature
+                    if e.temp > max_temp:
+                        max_temp = e.temp
+                    if e.temp: # Skip 0 values, can we determine if it's actually zero?
+                        if e.temp < min_temp:
+                            min_temp = e.temp
             if pedaling_cad and pedaling_cad_seconds:
                 self.avg_pedaling_cad = int(round(float(pedaling_cad)/pedaling_cad_seconds))
             if pedaling_power and pedaling_power_seconds:

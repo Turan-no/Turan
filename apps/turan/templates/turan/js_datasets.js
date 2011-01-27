@@ -52,6 +52,14 @@
             yaxis: 3
             },
         {% endif %}
+        {% if temp%}
+        "temp": {
+            data: [ {{ temp}}],
+            label: "{% trans "Temp" %}",
+            color: 6,
+            yaxis: 5
+            },
+        {% endif %}
         {% if index %}
         {% autoescape off %}
         "index": [ {{ index }} ]

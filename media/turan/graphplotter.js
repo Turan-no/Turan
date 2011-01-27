@@ -24,6 +24,9 @@ var GraphPlotter = {
             hr: function(val, axis) {
                 return (val).toFixed(axis.tickDecimals) + ' BPM';
             },
+            temp: function(val, axis) {
+                return (val).toFixed(axis.tickDecimals) + ' ℃';
+            },
             time: function(val, axis) {
                 var hours = Math.floor(val / 60);
                 var minutes = val;
@@ -149,6 +152,8 @@ var GraphPlotter = {
         $.each(this.datasets, function(key, val) {
             var checked = "checked = checked";
             if (key == 'cadence') 
+                checked = ''
+            if (key == 'temp') 
                 checked = ''
 
             that.choiceContainer.append('<input type="checkbox" name="' + key +
