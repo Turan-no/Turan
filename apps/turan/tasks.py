@@ -519,11 +519,11 @@ def parse_sensordata(exercise, callback=None):
         if parser.temperature:
             exercise.temperature = parser.temperature
 
-    if hasattr(parser, 'min_temperature'):
+    if hasattr(parser, 'min_temp'):
         if parser.min_temp:
             exercise.min_temp = parser.min_temp
 
-    if hasattr(parser, 'max_temperature'):
+    if hasattr(parser, 'max_temp'):
         if parser.max_temp:
             exercise.max_temp = parser.max_temp
 
