@@ -308,6 +308,8 @@ class Exercise(models.Model):
     kcal = models.IntegerField(blank=True, default=0, help_text=_('Only needed for Polar products'))
 
     temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
+    min_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
+    max_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv)'))
 
     exercise_permission = models.CharField(max_length=1, choices=permission_choices, default='A', help_text=_('Visibility choice'))
