@@ -159,7 +159,7 @@ fit_type_unpack = {
 
 '''Timestamps are referenced from 1989-12-31 00:00 UTC,
    so we have to add the bit missing from where 0 timestamp normally is.'''
-timestamp_offset = datetime(1989,12,30,23,59,59)-datetime.utcfromtimestamp(0)
+timestamp_offset = datetime(1989,12,31,00,00,00)-datetime.utcfromtimestamp(0)
 '''latitude/longitude is stored in semicircles,
    this is the appropriate conversion factor to get degrees.'''
 semicircle_deg = 180./(2**31)
