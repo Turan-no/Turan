@@ -345,11 +345,11 @@ class FITParser(object):
                 if e.power > 0:
                     pedaling_power += e.power*interval
                     pedaling_power_seconds += interval
-                if e.temp != fit_base_types[1]['invalid']:
-                    temp += e.temp*interval
+                if e.temperature != fit_base_types[1]['invalid']:
+                    temp += e.temperature*interval
                     temp_seconds += interval
-                    if e.temp > max_temp:
-                        max_temp = e.temp
+                    if e.temperature > max_temp:
+                        max_temp = e.temperature
             if pedaling_cad and pedaling_cad_seconds:
                 self.avg_pedaling_cad = int(round(float(pedaling_cad)/pedaling_cad_seconds))
             if pedaling_power and pedaling_power_seconds:
