@@ -59,3 +59,9 @@ class DurationField(Field):
     def formfield(self, form_class=FDurationField, **kwargs):
         return super(DurationField, self).formfield(form_class, **kwargs)
 
+    def south_field_triple(self):
+        from south.modelsinspector import introspector
+        field_class = "django.db.models.fields.DecimalField"
+        args, kwargs = introspector(self)
+        return (field_class, args, kwargs)
+

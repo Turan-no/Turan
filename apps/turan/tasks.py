@@ -515,9 +515,17 @@ def parse_sensordata(exercise, callback=None):
         if parser.date:
             exercise.date = parser.date
 
-    if hasattr(parser, 'temperature'): # Polar has this
+    if hasattr(parser, 'temperature'):
         if parser.temperature:
             exercise.temperature = parser.temperature
+
+    if hasattr(parser, 'min_temperature'):
+        if parser.min_temp:
+            exercise.min_temp = parser.min_temp
+
+    if hasattr(parser, 'max_temperature'):
+        if parser.max_temp:
+            exercise.max_temp = parser.max_temp
 
     if hasattr(parser, 'comment'): # Polar has this
         if parser.comment: # comment isn't always set
