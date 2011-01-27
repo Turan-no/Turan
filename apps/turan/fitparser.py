@@ -213,6 +213,7 @@ class FITParser(object):
         self.avg_pedaling_power = 0
         self.avg_temp = 0.0
         self.max_temp = 0.0
+        self.min_temp = 0.0
         self.temperature = 0
         self.kcal_sum = 0
 
@@ -335,9 +336,10 @@ class FITParser(object):
             temp = 0
             temp_seconds = 0
             max_temp = -273.15
+            min_temp = 273.15
 
             last = self.entries[0].time
-            for e in self. entries:
+            for e in self.entries:
                 interval = (e.time - last).seconds
                 if e.cadence > 0:
                     pedaling_cad += e.cadence*interval
@@ -350,6 +352,9 @@ class FITParser(object):
                     temp_seconds += interval
                     if e.temperature > max_temp:
                         max_temp = e.temperature
+                    if e.temperature: # Skip 0 values, can we determine if it's actually zero?
+                        if e.temperature < min_temp:
+                            min_temp = e.temperature
             if pedaling_cad and pedaling_cad_seconds:
                 self.avg_pedaling_cad = int(round(float(pedaling_cad)/pedaling_cad_seconds))
             if pedaling_power and pedaling_power_seconds:
@@ -357,6 +362,7 @@ class FITParser(object):
             if temp and temp_seconds:
                 self.avg_temp = int(round(float(temp)/temp_seconds))
                 self.max_temp = max_temp
+                self.min_temp = min_temp
                 self.temperature = self.avg_temp
 
 if __name__ == '__main__':
@@ -376,4 +382,4 @@ if __name__ == '__main__':
     print 'SPEED - avg: %s - max: %s' % (t.avg_speed, t.max_speed)
     print 'CADENCE - avg: %s - max: %s - pedal: %s' % (t.avg_cadence, t.max_cadence, t.avg_pedaling_cad)
     print 'POWER - avg: %s - max: %s - pedal: %s' % (t.avg_power, t.max_power, t.avg_pedaling_power)
-    print 'TEMP - avg: %s - max: %s' % (t.avg_temp, t.max_temp)
+    print 'TEMP - avg: %s - max: %s - min: %s' % (t.avg_temp, t.max_temp, t.min_temp)
