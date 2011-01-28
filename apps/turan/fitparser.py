@@ -279,13 +279,24 @@ class FITParser(object):
                     #print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
                     pass
                 elif global_msg_type == 20:
+                    time = datetime.fromtimestamp(get_field_value(fields, fit_record, 'timestamp'))
+                    if time == None:
+                        '''Samples without timestamp are broken'''
+                        pass
+                    time = time + timestamp_offset
                     hr = get_field_value(fields, fit_record, 'hr')
                     pwr = get_field_value(fields, fit_record, 'power')
-                    alt = get_field_value(fields, fit_record, 'alt')/5. - 500
-                    lat = get_field_value(fields, fit_record, 'lat')*semicircle_deg
-                    lon = get_field_value(fields, fit_record, 'lon')*semicircle_deg
-                    spd = get_field_value(fields, fit_record, 'speed')/1000.*3.6
-                    time = datetime.fromtimestamp(get_field_value(fields, fit_record, 'timestamp'))+timestamp_offset
+                    alt = get_field_value(fields, fit_record, 'alt')
+                    if alt != None:
+                        alt = alt/5. - 500
+                    lat = get_field_value(fields, fit_record, 'lat')
+                    lon = get_field_value(fields, fit_record, 'lon')
+                    if lat != None and lon != None:
+                        lat = lat*semicircle_deg
+                        lon = lon*semicircle_deg
+                    spd = get_field_value(fields, fit_record, 'speed')
+                    if spd != None:
+                        spd = spd/1000.*3.6
                     grade = get_field_value(fields, fit_record, 'grade')
                     temp = get_field_value(fields, fit_record, 'temperature')
                     cad = get_field_value(fields, fit_record, 'cadence')
