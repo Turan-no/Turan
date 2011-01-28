@@ -169,9 +169,9 @@ def get_field_value(fields, field_def, field_name):
         field = fields[field_def[field_name]]
         value = field['value']
         if value == field['base_type']['invalid']:
-            value = 0
+            value = None
     except KeyError:
-        value = 0
+        value = None
     return value
 
 class FITEntry(object):
@@ -281,7 +281,7 @@ class FITParser(object):
                 elif global_msg_type == 20:
                     hr = get_field_value(fields, fit_record, 'hr')
                     pwr = get_field_value(fields, fit_record, 'power')
-                    alt = (get_field_value(fields, fit_record, 'alt') - 500) / 5.
+                    alt = get_field_value(fields, fit_record, 'alt')/5. - 500
                     lat = get_field_value(fields, fit_record, 'lat')*semicircle_deg
                     lon = get_field_value(fields, fit_record, 'lon')*semicircle_deg
                     spd = get_field_value(fields, fit_record, 'speed')/1000.*3.6
@@ -347,7 +347,7 @@ class FITParser(object):
                 if e.power > 0:
                     pedaling_power += e.power*interval
                     pedaling_power_seconds += interval
-                if e.temp != fit_base_types[1]['invalid']:
+                if e.temp != None:
                     temp += e.temp*interval
                     temp_seconds += interval
                     if e.temp > max_temp:
