@@ -855,7 +855,7 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
 
     # Convert lists into strings
     for val in js_strings.keys():
-        js_strings[val] = ''.join(js_strings[val])
+        js_strings[val] = ''.join(js_strings[val]).rstrip(',')
 
     t = loader.get_template('turan/js_datasets.js')
     js_strings['use_constraints'] = use_constraints
