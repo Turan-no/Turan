@@ -352,10 +352,10 @@ class FITParser(object):
             last = self.entries[0].time
             for e in self.entries:
                 interval = (e.time - last).seconds
-                if e.cadence > 0:
+                if e.cadence != None and e.cadence > 0:
                     pedaling_cad += e.cadence*interval
                     pedaling_cad_seconds += interval
-                if e.power > 0:
+                if e.power != None and e.power > 0:
                     pedaling_power += e.power*interval
                     pedaling_power_seconds += interval
                 if e.temp != None:
