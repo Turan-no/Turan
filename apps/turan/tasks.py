@@ -443,6 +443,9 @@ def normalize_altitude(exercise):
             d.altitude += altitude_min
             d.save()
     # Find min and max and populate route object
+    # reget new values after normalize
+    altitude_min = exercise.get_details().aggregate(Min('altitude'))['altitude__min']
+    altitude_max = exercise.get_details().aggregate(Max('altitude'))['altitude__max']
     r = exercise.route
     if r:
         if not r.min_altitude:
