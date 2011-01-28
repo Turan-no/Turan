@@ -436,6 +436,13 @@ def normalize_altitude(exercise):
 
     altitude_min = exercise.get_details().aggregate(Min('altitude'))['altitude__min']
     altitude_max = exercise.get_details().aggregate(Max('altitude'))['altitude__max']
+    # Normalize values
+    if altitude_min and altitude_min < 0:
+        altitude_min = 0 - altitude_min
+        for d in exercise.get_details().all():
+            d.altitude += altitude_min
+            d.save()
+    # Find min and max and populate route object
     r = exercise.route
     if r:
         if not r.min_altitude:
@@ -443,12 +450,6 @@ def normalize_altitude(exercise):
         if not r.max_altitude:
             r.max_altitude = altitude_max
         r.save()
-    # Normalize values
-    if altitude_min and altitude_min < 0:
-        altitude_min = 0 - altitude_min
-        for d in exercise.get_details().all():
-            d.altitude += altitude_min
-            d.save()
 
 @task
 def parse_sensordata(exercise, callback=None):
