@@ -21,4 +21,10 @@
     {% if object.descent %}
     <li class="descent"><span class="label">{% trans "Descent" %}:</span> {{ object.descent }} {% trans "m" %}</li>
     {% endif %}
+    {% if object.min_altitude %}
+    <li class="altitude"><span class="label">{% trans "Min altitude" %}:</span> {{ object.min_altitude }} {% trans "m" %}</li>
+    {% endif %}
+    {% if object.max_altitude %}
+    <li class="altitude"><span class="label">{% trans "Max altitude" %}:</span> {{ object.max_altitude }} {% trans "m" %}</li>
+    {% endif %}
 </ul>

@@ -431,9 +431,19 @@ def calculate_best_efforts(exercise, callback=None):
         subtask(callback).delay(exercise)
 
 def normalize_altitude(exercise):
-    ''' Normalize altitude, that is, if it's below zero scale every value up '''
+    ''' Normalize altitude, that is, if it's below zero scale every value up.
+    Also set max and min altitude on route'''
 
     altitude_min = exercise.get_details().aggregate(Min('altitude'))['altitude__min']
+    altitude_max = exercise.get_details().aggregate(Max('altitude'))['altitude__max']
+    r = exercise.route
+    if r:
+        if not r.min_altitude:
+            r.min_altitude = altitude_min
+        if not r.max_altitude:
+            r.max_altitude = altitude_max
+        r.save()
+    # Normalize values
     if altitude_min and altitude_min < 0:
         altitude_min = 0 - altitude_min
         for d in exercise.get_details().all():
