@@ -111,7 +111,10 @@ class GPXParser(object):
                     except AttributeError:
                         # maybe stupid garmin format with multiple trkseg, one without time. skip skip
                         continue
-                    time = datetime.datetime(*map(int, map(float, tstring.replace("T","-").replace(":","-").strip("Z").split("-"))))
+                    if '+' in tstring:
+                        tstring = tstring[0:tstring.index('+')]
+                    tstringtemp = tstring.replace("T","-").replace(":","-").strip("Z\n ").split("-")
+                    time = datetime.datetime(*map(int, map(float, tstringtemp)))
 
                     # extensions (hr)
                     hr = 0
