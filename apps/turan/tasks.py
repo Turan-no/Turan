@@ -14,6 +14,7 @@ from collections import deque
 
 from svg import GPX2SVG
 from gpxwriter import GPXWriter
+from tcxwriter import TCXWriter
 from gpxparser import GPXParser
 from hrmparser import HRMParser
 from gmdparser import GMDParser
