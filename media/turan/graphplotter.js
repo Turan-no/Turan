@@ -85,7 +85,7 @@ var GraphPlotter = {
                     { position: "right", tickFormatter: this.formatters['power']},
                     { tickFormatter: this.formatters['altitude']},
                     { tickFormatter: this.formatters['temp']},
-                    }
+                    
                     ],
                 xaxis: xaxisattrs,
                 legend: { 
