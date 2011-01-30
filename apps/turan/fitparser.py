@@ -371,7 +371,7 @@ class FITParser(object):
             if pedaling_power and pedaling_power_seconds:
                 self.avg_pedaling_power = int(round(float(pedaling_power)/pedaling_power_seconds))
             if temp and temp_seconds:
-                self.avg_temp = int(round(float(temp)/temp_seconds))
+                self.avg_temp = round(float(temp)/temp_seconds)
                 self.max_temp = max_temp
                 self.min_temp = min_temp
                 self.temperature = self.avg_temp
