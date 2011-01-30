@@ -363,9 +363,8 @@ class FITParser(object):
                     temp_seconds += interval
                     if e.temp > max_temp:
                         max_temp = e.temp
-                    if e.temp: # Skip 0 values, can we determine if it's actually zero?
-                        if e.temp < min_temp:
-                            min_temp = e.temp
+                    if e.temp < min_temp:
+                        min_temp = e.temp
             if pedaling_cad and pedaling_cad_seconds:
                 self.avg_pedaling_cad = int(round(float(pedaling_cad)/pedaling_cad_seconds))
             if pedaling_power and pedaling_power_seconds:
