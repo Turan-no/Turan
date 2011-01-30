@@ -83,7 +83,9 @@ var GraphPlotter = {
                     { tickFormatter: this.formatters['speed']},
                     { position: "right", min: 80, max: this.max_hr, tickFormatter: this.formatters['hr'] }, 
                     { position: "right", tickFormatter: this.formatters['power']},
-                    { tickFormatter: this.formatters['altitude']}
+                    { tickFormatter: this.formatters['altitude']},
+                    { tickFormatter: this.formatters['temp']},
+                    }
                     ],
                 xaxis: xaxisattrs,
                 legend: { 
