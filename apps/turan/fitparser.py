@@ -270,8 +270,11 @@ class FITParser(object):
                         self.start_lon = self.start_lon * semicircle_deg
                     self.avg_hr = get_field_value(fields, fit_session, 'avg_hr')
                     self.max_hr = get_field_value(fields, fit_session, 'max_hr')
-                    self.avg_speed = get_field_value(fields, fit_session, 'avg_speed')/1000.*3.6
-                    self.max_speed = get_field_value(fields, fit_session, 'max_speed')/1000.*3.6
+                    self.avg_speed = get_field_value(fields, fit_session, 'avg_speed')
+                    self.max_speed = get_field_value(fields, fit_session, 'max_speed')
+                    if self.avg_speed != None and self.max_speed != None:
+                        self.avg_speed = self.avg_speed/1000.*3.6
+                        self.max_speed = self.max_speed/1000.*3.6
                     self.avg_cadence = get_field_value(fields, fit_session, 'avg_cad')
                     self.max_cadence = get_field_value(fields, fit_session, 'max_cad')
                     self.avg_power = get_field_value(fields, fit_session, 'avg_power')
