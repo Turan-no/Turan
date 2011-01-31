@@ -80,14 +80,14 @@ class Route(models.Model):
                         self.start_lat = g.start_lat
                         self.end_lon = g.end_lon
                         self.end_lat = g.end_lat
-                        sell.set_geo_description()
+                        self.set_geo_description()
                     if not self.distance:
                         # distance calculated in meters in parser
                         self.distance = g.distance/1000.0
                     if not self.ascent:
                         self.ascent = g.ascent
                         self.descent = g.descent
-        sell.set_geo_description()
+        self.set_geo_description()
         super(Route, self).save(force_insert, force_update)
         if self.gpx_file:
             # generate svg if it doesn't exist (after save, it uses id for filename)
