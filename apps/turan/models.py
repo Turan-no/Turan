@@ -434,7 +434,7 @@ class ExerciseDetail(models.Model):
     time = models.DateTimeField()
     speed = models.FloatField(blank=True, null=True)
     hr = models.IntegerField(blank=True, null=True)
-    altitude = models.IntegerField(blank=True, null=True)
+    altitude = models.FloatField(blank=True, null=True)
     lat = models.FloatField(blank=True, null=True)
     lon = models.FloatField(blank=True, null=True)
     cadence = models.IntegerField(blank=True, null=True)

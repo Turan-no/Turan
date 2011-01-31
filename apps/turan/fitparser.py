@@ -384,6 +384,8 @@ if __name__ == '__main__':
     if t.entries:
         print t.entries[0]
         print t.entries[-1]
+    #for e in t.entries:
+    #    print e
 
     print 'start: %s %s - duration: %s - distance: %s' % (t.date, t.start_time, t.duration, t.distance_sum)
     print 'start - lat: %s - lon: %s' % (t.start_lat, t.start_lon)
