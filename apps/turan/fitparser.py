@@ -263,8 +263,11 @@ class FITParser(object):
                 elif global_msg_type == 18:
                     self.distance_sum = get_field_value(fields, fit_session, 'distance')/100.
                     self.duration = ('%ss') % (int(round(get_field_value(fields, fit_session, 'timer_time')/1000.)))
-                    self.start_lat = get_field_value(fields, fit_session, 'start_lat')*semicircle_deg
-                    self.start_lon = get_field_value(fields, fit_session, 'start_lon')*semicircle_deg
+                    self.start_lat = get_field_value(fields, fit_session, 'start_lat')
+                    self.start_lon = get_field_value(fields, fit_session, 'start_lon')
+                    if self.start_lat != None and self.start_lon != None:
+                        self.start_lat = self.start_lat * semicircle_deg
+                        self.start_lon = self.start_lon * semicircle_deg
                     self.avg_hr = get_field_value(fields, fit_session, 'avg_hr')
                     self.max_hr = get_field_value(fields, fit_session, 'max_hr')
                     self.avg_speed = get_field_value(fields, fit_session, 'avg_speed')/1000.*3.6
@@ -334,8 +337,9 @@ class FITParser(object):
         if self.entries:
             self.start_time = self.entries[0].time.time()
             self.date = self.entries[0].time.date()
-            self.start_lon = self.entries[0].lon
-            self.start_lat = self.entries[0].lat
+            if self.start_lon == None or self.start_lat == None:
+                self.start_lon = self.entries[0].lon
+                self.start_lat = self.entries[0].lat
             self.end_lon = self.entries[-1].lon
             self.end_lat = self.entries[-1].lat
 
