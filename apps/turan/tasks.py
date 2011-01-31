@@ -477,8 +477,6 @@ def parse_sensordata(exercise, callback=None):
     exercise.sensor_file.file.seek(0)
     parser = find_parser(exercise.sensor_file.name)
     parser.parse_uploaded_file(exercise.sensor_file.file)
-    #if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
-    #    gpxvalues = GPXParser(exercise.route.gpx_file.file).entries
 
     for val in parser.entries:
         detail = ExerciseDetail()
@@ -489,13 +487,6 @@ def parse_sensordata(exercise, callback=None):
             if hasattr(val, v):
                 #if not types.NoneType == type(val[v]):
                 setattr(detail, v, getattr(val, v))
-        #if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
-        #    if not d.lat and not d.lon: # try and get from .gpx FIXME yeah...you know why
-        #        try:
-        #            d.lon = gpxvalues[i]['lon']
-        #            d.lat = gpxvalues[i]['lat']
-        #        except IndexError:
-        #            pass # well..it might not match
         detail.save()
 
     exercise.max_hr = parser.max_hr
