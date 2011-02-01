@@ -95,7 +95,12 @@ $.plot($("#altdiv"), [alt], options);
             </td>
             <td><a href="{{ object.get_absolute_url }}">{{object.exercise.date|naturalday}}</a></td>
             <td>{{ object.duration|durationformat }}</td>
-            <td>{{ object.avg_hr }}&nbsp;bpm {% if object.avg_hr and object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}) {% endif %}</td>
+            <td>
+                {% if object.avg_hr and object.exercise.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.exercise.user.get_profile.max_hr }} 
+                {% else%}
+                {{ object.avg_hr }}&nbsp;bpm 
+                {% endif %}
+            </td>
             <td>{{ object.speed|floatformat }}&nbsp;{% trans "km/h" %}</td>
             <td>{{ object.ascent }} m</td>
     <td>{% if object.act_power%}{{object.act_power|floatformat}} {% trans "W" %} {% endif %}</td>
