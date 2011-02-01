@@ -198,6 +198,53 @@ def route_detail(request, object_id):
         pass
     return render_to_response('turan/route_detail.html', locals(), context_instance=RequestContext(request))
 
+def segment_detail(request, object_id):
+    object = get_object_or_404(Segment, pk=object_id)
+    usertimes = {}
+ #   try:
+    #    for trip in sorted(object., key=lambda x:x.date):
+    #        if not trip.user in usertimes:
+    #            usertimes[trip.user] = ''
+    #        try:
+    #            time = trip.duration.seconds/60
+    #            if trip.avg_speed: # Or else graph bugs with None-values
+    #                usertimes[trip.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed))
+    #        except AttributeError:
+    #            pass # stupid decimal value in trip duration!
+    #
+    done_altitude_profile = False
+    slope = object.slope_set.all()[0]
+    trip = slope.exercise
+    if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
+
+        tripdetails = trip.get_details().all()
+        if filldistance(tripdetails):
+            i = 0
+            start, stop= 0, 0
+            for d in tripdetails:
+                if d.distance == slope.start*1000:
+                    start = i
+                if start:
+                    #assert False, (d.distance,  slope.start*1000, slope.start*1000+slope.length)
+                    if d.distance > (slope.start*1000+ slope.length):
+                        stop = i
+                        break
+                i += 1
+        #assert False, (start, stop)
+        #start =  trip.get_details().filter(lon=slope.start_lon).filter(lat=slope.start_lat)[0].id
+        #stop =  trip.get_details().filter(lon=slope.end_lon).filter(lat=slope.end_lat)[0].id
+        alt = tripdetail_js(None, trip.id, 'altitude', start=start, stop=stop)
+        alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
+        done_altitude_profile = True
+#
+#    except TypeError:
+#        # bug for trips without date
+#        pass
+#    except UnboundLocalError:
+        # no trips found
+#        pass
+    return render_to_response('turan/segment_detail.html', locals(), context_instance=RequestContext(request))
+
 def week(request, week, user_id='all'):
 
     object_list = []
@@ -753,9 +800,9 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     previous_time = False
     js = ''
     for i, d in enumerate(qs.all().values('time', 'speed', val)):
-        if start and start < i:
+        if start and i < start:
             continue
-        if stop and i > stop:
+        if stop and i >= stop:
             break
         if not previous_time:
             previous_time = d['time']
@@ -1054,10 +1101,12 @@ def getgradients(values):
 
 def filldistance(values):
     d = 0
-    values[0].distance = 0
+    if values:
+        values[0].distance = 0
     for i in xrange(1,len(values)):
         delta_t = (values[i].time - values[i-1].time).seconds
-        d += values[i].speed/3.6 * delta_t
+        if values[i].speed:
+            d += values[i].speed/3.6 * delta_t
         values[i].distance = d
     return d
 
@@ -1473,6 +1522,36 @@ def power_30s_average(details):
 
 def slopes(request, queryset):
     ''' Slope list view, based on turan_object_list. Changed a bit for search
+    and filter purposes '''
+
+    search_query = request.GET.get('q', '')
+    if search_query:
+        qset = (
+            Q(exercise__route__name__icontains=search_query) |
+            Q(exercise__route__description__icontains=search_query) |
+            Q(exercise__tags__icontains=search_query)
+        )
+        queryset = queryset.filter(qset).distinct()
+
+    latitude = request.GET.get('lat', '')
+    longitude = request.GET.get('lon', '')
+
+    if latitude and longitude:
+        # A litle aprox box around your area
+        queryset = queryset.filter(start_lat__gt=float(latitude) - 0.5)
+        queryset = queryset.filter(start_lat__lt=float(latitude) + 0.5)
+        queryset = queryset.filter(start_lon__gt=float(longitude) - 1.0)
+        queryset = queryset.filter(start_lon__lt=float(longitude) + 1.0)
+
+    username = request.GET.get('username', '')
+    if username:
+        user = get_object_or_404(User, username=username)
+        queryset = queryset.filter(exercise__user=user)
+
+    return object_list(request, queryset=queryset, extra_context=locals())
+
+def segments(request, queryset):
+    ''' Segment list view, based on turan_object_list. Changed a bit for search
     and filter purposes '''
 
     search_query = request.GET.get('q', '')

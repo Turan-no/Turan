@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^bestest/?', bestest, name='bestest'),
     url(r'^generate/tshirt', generate_tshirt, name='generate_tshirt'),
     url(r'^route/(?P<object_id>\d+)', route_detail, name='route'),
+    url(r'^segment/(?P<object_id>\d+)', segment_detail, name='segment'),
     url(r'^week/(?P<week>\d+)', week, name='week-all'),
     url(r'^week/(?P<week>\d+)/(?P<user_id>)', week, name='week'),
     url(r'^import/$', 'turan.views.import_data', name='import_data'),
@@ -68,6 +69,7 @@ urlpatterns = patterns('',
 urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^route/?$', turan_object_list, { 'queryset': Route.objects.select_related().filter(distance__gt=0).extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }) }, name='routes'),
     url(r'^slope', slopes, { 'queryset': Slope.objects.select_related()}, name='slopes'),
+    url(r'^segment', segments, { 'queryset': Segment.objects.select_related()}, name='segments'),
 
     url(r'^exercise/?$', turan_object_list, { 'queryset': Exercise.objects.select_related().order_by('-date') }, name='exercises'),
     url(r'^exercise/(?P<object_id>\d+)', exercise, name='exercise'),
@@ -86,6 +88,7 @@ urlpatterns += patterns('django.views.generic.create_update',
 
 
     url(r'^route/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': FullRouteForm},name='route_update'),
+    url(r'^segment/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': FullSegmentForm},name='segment_update'),
     url(r'^exercise/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': FullExerciseForm},name='exercise_update'),
 
     url(r'^exercise/delete/(?P<object_id>\d+)', turan_delete_object, {'model': Exercise, 'login_required': True,},name='exercise_delete'),

@@ -162,7 +162,9 @@ class Route(models.Model):
         lon2, lat2 = self.end_lon, self.end_lat
         if lon1 and lat1 and lat2 and lon2:
             s_distance = 99999999
-            farthest_lon, farthest_lat = self.find_farthest_pos_from_start()
+            farthest = self.find_farthest_pos_from_start()
+            if not farthest: return None # FIXME later why does this happen /garmin_connect_66078400.tcx
+            farthest_lon, farthest_lat = farthest
             f_distance = 99999999
             e_distance = 99999999
             start_town = ''
@@ -506,8 +508,34 @@ class MergeSensorFile(models.Model):
 
         return result
 
+class Segment(models.Model):
+    name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))
+    distance = models.FloatField(help_text=_('in km'), default=0)
+    description = models.TextField(help_text=_('route description'))
+    gpx_file = models.FileField(upload_to='gpx', blank=True, storage=gpxstore)
+
+    ascent = models.IntegerField(blank=True, null=True) # m
+    descent = models.IntegerField(blank=True, null=True) # m
+    max_altitude = models.IntegerField(blank=True, null=True) # m
+    min_altitude = models.IntegerField(blank=True, null=True) # m
+
+    grade = models.FloatField()
+    category = models.IntegerField()
+
+    start_lat = models.FloatField(null=True, blank=True, default=0.0)
+    start_lon = models.FloatField(null=True, blank=True, default=0.0)
+    end_lat = models.FloatField(null=True, blank=True, default=0.0)
+    end_lon = models.FloatField(null=True, blank=True, default=0.0)
+
+    created = models.DateTimeField(editable=False,auto_now_add=True,null=True)
+    tags = TagField()
+
+    def get_slopes(self):
+        return self.slope_set.all().order_by('duration')
+
 class Slope(models.Model):
     exercise = models.ForeignKey(Exercise)
+    segment = models.ForeignKey(Segment, blank=True, null=True)
     start = models.FloatField(help_text=_('in km'), default=0)
     length = models.FloatField(help_text=_('in km'), default=0)
     ascent = models.IntegerField(help_text=_('in m'), default=0)
@@ -520,6 +548,11 @@ class Slope(models.Model):
     vam = models.IntegerField(default=0)
     category = models.IntegerField()
     avg_hr = models.IntegerField(default=0)
+
+    start_lat = models.FloatField(blank=True, null=True, default=0.0)
+    start_lon = models.FloatField(blank=True, null=True, default=0.0)
+    end_lat = models.FloatField(blank=True, null=True, default=0.0)
+    end_lon = models.FloatField(blank=True, null=True, default=0.0)
 
     def save(self, *args, **kwargs):
         ''' Calculate extra values before save '''
