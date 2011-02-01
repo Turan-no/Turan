@@ -599,6 +599,8 @@ class Slope(models.Model):
     end_lat = models.FloatField(blank=True, null=True, default=0.0)
     end_lon = models.FloatField(blank=True, null=True, default=0.0)
 
+    comment = models.TextField(blank=True, null=True)
+
     def save(self, *args, **kwargs):
         ''' Calculate extra values before save '''
 
