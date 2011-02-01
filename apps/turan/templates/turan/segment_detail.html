@@ -50,32 +50,6 @@
 {% autosort object_list %}
 {% autopaginate object_list %}
 {% if object_list %}
-    <h2>{% trans "Average speed" %}</h2>
-    <div id="avgspeeddiv" style="width:420px;height:200px"></div>
-    <script id="source" language="javascript" type="text/javascript">
-    $(function () {
-            var times = [
-            {% for user, series in usertimes.items %}
-            {% if series %}
-                {
-                    label: "{{user}}",
-                    data: [{{series}}],
-                    color: {{ forloop.counter }}
-                },
-            {% endif %}
-            {% endfor %}
-    ];
-    var options = { 
-        xaxis: { mode: "time", timeformat: "%y/%m/%d" }, 
-        yaxis: { min: 0, },
-        legend: {
-            position: "sw",
-            noColumns: 0,
-            },
-        }
-        $.plot($("#avgspeeddiv"), times, options);
-    });
-    </script>
     <h2 style="clear: both">{% trans "Altitude profile" %}</h2>
     <div id="altdiv" style="height: 200px"></div>
 <script id="source" language="javascript" type="text/javascript">
@@ -83,6 +57,10 @@
     var options = { yaxes:[{}, { min: 0, max: {{ alt_max }}, }], };
 $.plot($("#altdiv"), [alt], options);
 </script>
+    <h2 style="clear: both">{% trans "Gradients" %}</h2>
+    <div id="gradientzonediv" style="width: 1000px; height:200px; float: right;"></div>
+    <div id="gradientzonetable" style="width:1px; height: 400px;"></div>
+    {% include "turan/exercise/gradient_tab.html" %}
     <form id="route_form">
     <h2>{% trans "Rides on this segment" %}</h2>
     <input type="submit" value="{% trans "Compare"%}">

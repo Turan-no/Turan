@@ -503,7 +503,7 @@ def parse_sensordata(exercise, callback=None):
         detail.exercise_id = exercise.id
 
         # Figure out which values the parser has
-        for v in ('time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power', 'temp'):
+        for v in ('distance', 'time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power', 'temp'):
             if hasattr(val, v):
                 #if not types.NoneType == type(val[v]):
                 setattr(detail, v, getattr(val, v))

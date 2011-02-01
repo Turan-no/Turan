@@ -243,6 +243,8 @@ def segment_detail(request, object_id):
 #    except UnboundLocalError:
         # no trips found
 #        pass
+        # Todo, maybe calculate and save in db or cache ?
+        gradients, inclinesums = getgradients(tripdetails[start:stop])
     return render_to_response('turan/segment_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):

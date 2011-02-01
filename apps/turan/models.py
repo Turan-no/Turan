@@ -434,6 +434,7 @@ class ExerciseDetail(models.Model):
 
     exercise = models.ForeignKey(Exercise)
     time = models.DateTimeField()
+    distance = models.FloatField(blank=True, null=True)
     speed = models.FloatField(blank=True, null=True)
     hr = models.IntegerField(blank=True, null=True)
     altitude = models.FloatField(blank=True, null=True)
