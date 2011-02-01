@@ -24,10 +24,11 @@ from datetime import datetime
 from durationfield import DurationField
 
 from gpxparser import GPXParser, proj_distance
+from gpxwriter import GPXWriter
 
 from tasks import create_simplified_gpx, create_svg_from_gpx, create_gpx_from_details, \
         merge_sensordata, calculate_ascent_descent_gaussian, calculate_best_efforts, \
-        parse_sensordata
+        parse_sensordata, filldistance
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -381,8 +382,14 @@ class Exercise(models.Model):
 
     def get_simplegpx_url(self):
         ''' Also defined here in addition to in Route because of how Mapper.js is initiated '''
-        if self.route:
-            return self.route.get_simplegpx_url()
+        url = None
+        if self.gpx_file:
+            filename = 'gpx/segment/%s.gpx' %self.id
+            if gpxstore.exists(filename):
+                url = filename
+            else:
+                url = self.gpx_file
+        return url
 
 
     def icon(self):
@@ -531,8 +538,45 @@ class Segment(models.Model):
     created = models.DateTimeField(editable=False,auto_now_add=True,null=True)
     tags = TagField()
 
+    def get_simplegpx_url(self):
+        ''' Also defined here in addition to in Route because of how Mapper.js is initiated '''
+        return self.gpx_file
+
+    def get_absolute_url(self):
+        return reverse('segment', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
+
     def get_slopes(self):
         return self.slope_set.all().order_by('duration')
+
+    def save(self, *args, **kwargs):
+        ''' Calculate extra values before save '''
+
+        # Save first to get id
+        super(Segment, self).save(*args, **kwargs)
+        # Create gpxtrack for this segment
+        if not self.gpx_file:
+            if self.get_slopes():
+                slope = self.get_slopes()[0]
+                trip = slope.exercise
+                tripdetails = trip.get_details().all()
+                if filldistance(tripdetails):
+                    i = 0
+                    start, stop= 0, 0
+                    for d in tripdetails:
+                        if d.distance == slope.start*1000:
+                            start = i
+                        if start:
+                            if d.distance > (slope.start*1000+ slope.length):
+                                stop = i
+                                break
+                        i += 1
+                tripdetails = tripdetails[start:stop]
+                g = GPXWriter(tripdetails)
+                filename = 'gpx/segment/%s.gpx' %self.id
+                self.gpx_file.save(filename, ContentFile(g.xml), save=True)
+
+        super(Segment, self).save(*args, **kwargs)
+
 
 class Slope(models.Model):
     exercise = models.ForeignKey(Exercise)
