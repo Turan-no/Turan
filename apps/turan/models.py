@@ -24,10 +24,11 @@ from datetime import datetime
 from durationfield import DurationField
 
 from gpxparser import GPXParser, proj_distance
+from gpxwriter import GPXWriter
 
 from tasks import create_simplified_gpx, create_svg_from_gpx, create_gpx_from_details, \
         merge_sensordata, calculate_ascent_descent_gaussian, calculate_best_efforts, \
-        parse_sensordata
+        parse_sensordata, filldistance
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -80,14 +81,14 @@ class Route(models.Model):
                         self.start_lat = g.start_lat
                         self.end_lon = g.end_lon
                         self.end_lat = g.end_lat
-                        sell.set_geo_description()
+                        self.set_geo_description()
                     if not self.distance:
                         # distance calculated in meters in parser
                         self.distance = g.distance/1000.0
                     if not self.ascent:
                         self.ascent = g.ascent
                         self.descent = g.descent
-        sell.set_geo_description()
+        self.set_geo_description()
         super(Route, self).save(force_insert, force_update)
         if self.gpx_file:
             # generate svg if it doesn't exist (after save, it uses id for filename)
@@ -162,7 +163,9 @@ class Route(models.Model):
         lon2, lat2 = self.end_lon, self.end_lat
         if lon1 and lat1 and lat2 and lon2:
             s_distance = 99999999
-            farthest_lon, farthest_lat = self.find_farthest_pos_from_start()
+            farthest = self.find_farthest_pos_from_start()
+            if not farthest: return None # FIXME later why does this happen /garmin_connect_66078400.tcx
+            farthest_lon, farthest_lat = farthest
             f_distance = 99999999
             e_distance = 99999999
             start_town = ''
@@ -379,8 +382,14 @@ class Exercise(models.Model):
 
     def get_simplegpx_url(self):
         ''' Also defined here in addition to in Route because of how Mapper.js is initiated '''
-        if self.route:
-            return self.route.get_simplegpx_url()
+        url = None
+        if self.gpx_file:
+            filename = 'gpx/segment/%s.gpx' %self.id
+            if gpxstore.exists(filename):
+                url = filename
+            else:
+                url = self.gpx_file
+        return url
 
 
     def icon(self):
@@ -432,6 +441,7 @@ class ExerciseDetail(models.Model):
 
     exercise = models.ForeignKey(Exercise)
     time = models.DateTimeField()
+    distance = models.FloatField(blank=True, null=True)
     speed = models.FloatField(blank=True, null=True)
     hr = models.IntegerField(blank=True, null=True)
     altitude = models.FloatField(blank=True, null=True)
@@ -506,8 +516,71 @@ class MergeSensorFile(models.Model):
 
         return result
 
+class Segment(models.Model):
+    name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))
+    distance = models.FloatField(help_text=_('in km'), default=0)
+    description = models.TextField(help_text=_('route description'))
+    gpx_file = models.FileField(upload_to='gpx', blank=True, storage=gpxstore)
+
+    ascent = models.IntegerField(blank=True, null=True) # m
+    descent = models.IntegerField(blank=True, null=True) # m
+    max_altitude = models.IntegerField(blank=True, null=True) # m
+    min_altitude = models.IntegerField(blank=True, null=True) # m
+
+    grade = models.FloatField()
+    category = models.IntegerField()
+
+    start_lat = models.FloatField(null=True, blank=True, default=0.0)
+    start_lon = models.FloatField(null=True, blank=True, default=0.0)
+    end_lat = models.FloatField(null=True, blank=True, default=0.0)
+    end_lon = models.FloatField(null=True, blank=True, default=0.0)
+
+    created = models.DateTimeField(editable=False,auto_now_add=True,null=True)
+    tags = TagField()
+
+    def get_simplegpx_url(self):
+        ''' Also defined here in addition to in Route because of how Mapper.js is initiated '''
+        return self.gpx_file
+
+    def get_absolute_url(self):
+        return reverse('segment', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
+
+    def get_slopes(self):
+        return self.slope_set.all().order_by('duration')
+
+    def save(self, *args, **kwargs):
+        ''' Calculate extra values before save '''
+
+        # Save first to get id
+        super(Segment, self).save(*args, **kwargs)
+        # Create gpxtrack for this segment
+        if not self.gpx_file:
+            if self.get_slopes():
+                slope = self.get_slopes()[0]
+                trip = slope.exercise
+                tripdetails = trip.get_details().all()
+                if filldistance(tripdetails):
+                    i = 0
+                    start, stop= 0, 0
+                    for d in tripdetails:
+                        if d.distance == slope.start*1000:
+                            start = i
+                        if start:
+                            if d.distance > (slope.start*1000+ slope.length):
+                                stop = i
+                                break
+                        i += 1
+                tripdetails = tripdetails[start:stop]
+                g = GPXWriter(tripdetails)
+                filename = 'gpx/segment/%s.gpx' %self.id
+                self.gpx_file.save(filename, ContentFile(g.xml), save=True)
+
+        super(Segment, self).save(*args, **kwargs)
+
+
 class Slope(models.Model):
     exercise = models.ForeignKey(Exercise)
+    segment = models.ForeignKey(Segment, blank=True, null=True)
     start = models.FloatField(help_text=_('in km'), default=0)
     length = models.FloatField(help_text=_('in km'), default=0)
     ascent = models.IntegerField(help_text=_('in m'), default=0)
@@ -520,6 +593,13 @@ class Slope(models.Model):
     vam = models.IntegerField(default=0)
     category = models.IntegerField()
     avg_hr = models.IntegerField(default=0)
+
+    start_lat = models.FloatField(blank=True, null=True, default=0.0)
+    start_lon = models.FloatField(blank=True, null=True, default=0.0)
+    end_lat = models.FloatField(blank=True, null=True, default=0.0)
+    end_lon = models.FloatField(blank=True, null=True, default=0.0)
+
+    comment = models.TextField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         ''' Calculate extra values before save '''

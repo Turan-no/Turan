@@ -15,7 +15,7 @@ from collections import deque
 from svg import GPX2SVG
 from gpxwriter import GPXWriter
 from tcxwriter import TCXWriter
-from gpxparser import GPXParser
+from gpxparser import GPXParser, proj_distance
 from hrmparser import HRMParser
 from gmdparser import GMDParser
 from tcxparser import TCXParser
@@ -58,8 +58,9 @@ def filldistance(values):
         values[0].distance = 0
     for i in xrange(1,len(values)):
         delta_t = (values[i].time - values[i-1].time).seconds
-        d += values[i].speed/3.6 * delta_t
-        values[i].distance = d
+        if values[i].speed:
+            d += values[i].speed/3.6 * delta_t
+            values[i].distance = d
     return d
 
 def getavghr(values, start, end):
@@ -155,6 +156,11 @@ def getslopes(values, userweight):
                         slope.est_power = calcpower(userweight, 10, slope.grade, slope.speed/3.6)
                         slope.act_power = getavgpwr(values, cur_start, cur_end)
 
+                        slope.start_lat = values[cur_start].lat
+                        slope.start_lon = values[cur_start].lon
+                        slope.end_lat = values[cur_end].lat
+                        slope.end_lon = values[cur_end].lon
+
                         # Sanity check
                         if not slope.grade > 100:
                             slope.save()
@@ -167,6 +173,20 @@ def getslopes(values, userweight):
             cur_end = i
             inslope = True
     return slopes
+
+def match_slopes():
+    OFFSET_ACCEPTED = 50
+    se = Segment.objects.get(pk=1)
+    slopes = Slope.objects.filter(start_lon__gt=0)
+    for s in slopes:
+        start_distance = proj_distance(se.start_lat, se.start_lon, s.start_lat, s.start_lon)
+        if start_distance and start_distance < OFFSET_ACCEPTED:
+            end_distance = proj_distance(se.end_lat, se.end_lon, s.end_lat, s.end_lon)
+            if end_distance and end_distance < OFFSET_ACCEPTED:
+                print start_distance, end_distance
+                if not s.segment:
+                    s.segment = se
+                    s.save()
 
 @task
 def create_simplified_gpx(gpx_path, filename):
@@ -477,25 +497,16 @@ def parse_sensordata(exercise, callback=None):
     exercise.sensor_file.file.seek(0)
     parser = find_parser(exercise.sensor_file.name)
     parser.parse_uploaded_file(exercise.sensor_file.file)
-    #if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
-    #    gpxvalues = GPXParser(exercise.route.gpx_file.file).entries
 
     for val in parser.entries:
         detail = ExerciseDetail()
         detail.exercise_id = exercise.id
 
         # Figure out which values the parser has
-        for v in ('time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power', 'temp'):
+        for v in ('distance', 'time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power', 'temp'):
             if hasattr(val, v):
                 #if not types.NoneType == type(val[v]):
                 setattr(detail, v, getattr(val, v))
-        #if EXPERIMENTAL_POLAR_GPX_HRM_COMBINER:
-        #    if not d.lat and not d.lon: # try and get from .gpx FIXME yeah...you know why
-        #        try:
-        #            d.lon = gpxvalues[i]['lon']
-        #            d.lat = gpxvalues[i]['lat']
-        #        except IndexError:
-        #            pass # well..it might not match
         detail.save()
 
     exercise.max_hr = parser.max_hr

@@ -1,5 +1,5 @@
 from django import forms
-from models import Route, Exercise
+from models import Route, Exercise, Segment
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
@@ -101,6 +101,9 @@ class RouteForm(forms.ModelForm):
 class FullRouteForm(forms.ModelForm):
     class Meta:
         model = Route
+class FullSegmentForm(forms.ModelForm):
+    class Meta:
+        model = Segment
 
 class FullExerciseForm(forms.ModelForm):
     class Meta:
