@@ -44,7 +44,7 @@ fit_record = {
     'timestamp': 253,
     'lat': 0,
     'lon': 1,
-    'dist': 5,
+    'distance': 5,
     'time_from_course': 11,
     'speed_distance': 8,
     'hr': 3,
@@ -175,7 +175,7 @@ def get_field_value(fields, field_def, field_name):
     return value
 
 class FITEntry(object):
-    def __init__(self, time, hr, speed, cadence, power, temp, altitude, lat, lon):
+    def __init__(self, time, hr, speed, cadence, power, temp, altitude, lat, lon, distance):
         self.time = time
         self.hr = hr
         self.speed = speed
@@ -185,6 +185,7 @@ class FITEntry(object):
         self.altitude = altitude
         self.lon = lon
         self.lat = lat
+        self.distance = distance
 
     def __str__(self):
         return '[%s] hr: %s spd: %s cad: %s pwr: %s temperature: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.temp, self.altitude, self.lat, self.lon)
@@ -306,8 +307,9 @@ class FITParser(object):
                     grade = get_field_value(fields, fit_record, 'grade')
                     temp = get_field_value(fields, fit_record, 'temperature')
                     cad = get_field_value(fields, fit_record, 'cadence')
+                    distance = get_field_value(fields, fit_record, 'distance')/100.
 
-                    self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon))
+                    self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon, distance))
                 elif global_msg_type == 21:
                     '''
                     print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
