@@ -188,7 +188,7 @@ class FITEntry(object):
         self.distance = distance
 
     def __str__(self):
-        return '[%s] hr: %s spd: %s cad: %s pwr: %s temperature: %s alt: %s lat: %s lon: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.temp, self.altitude, self.lat, self.lon)
+        return '[%s] hr: %s spd: %s cad: %s pwr: %s temperature: %s alt: %s lat: %s lon: %s distance: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.temp, self.altitude, self.lat, self.lon, self.distance)
 
 class FITParser(object):
     def __init__(self):
