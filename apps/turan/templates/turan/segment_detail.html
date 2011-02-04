@@ -78,6 +78,7 @@ $.plot($("#altdiv"), [alt], options);
         <th> {% anchortrans est_power "Avg power (est)" %} </th>
         <th> {% anchortrans power_per_kg "Avg power/kg" %} </th>
         <th> {% anchortrans vam "VAM" %} </th>
+        <th>{% trans "Comment" %}</th>
         </tr>
         {% for object in object_list %}
         <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
@@ -107,6 +108,7 @@ $.plot($("#altdiv"), [alt], options);
     <td>{{object.est_power|floatformat}} {% trans "W" %} </td>
     <td>{{object.power_per_kg|floatformat}}</td>
     <td>{% if object.vam %}{{object.vam}}{% endif %}</td>
+    <td>{{ object.comment|slice:"70" }}</td>
         </tr>
         {% endfor %}
     </table>
