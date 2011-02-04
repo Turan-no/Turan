@@ -1506,8 +1506,10 @@ def power_30s_average(details):
                 delta_t = (details[i+j-30].time - details[i+j-31].time).seconds
                 # Break if exerciser is on a break as well
                 if delta_t < 60:
-                    foo += details[i+j-30].power*delta_t
-                    foo_element += 1.0
+                    power = details[i+j-30].power
+                    if power:
+                        foo += power*delta_t
+                        foo_element += 1.0
                 else:
                     foo = 0
                     foo_element = 0.0
