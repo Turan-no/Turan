@@ -262,7 +262,9 @@ class FITParser(object):
                         '''
                         return
                 elif global_msg_type == 18:
-                    self.distance_sum = get_field_value(fields, fit_session, 'distance')/100.
+                    self.distance_sum = get_field_value(fields, fit_session, 'distance')
+                    if self.distance_sum != None:
+                        self.distance_sum = self.distance_sum / 100.
                     self.duration = ('%ss') % (int(round(get_field_value(fields, fit_session, 'timer_time')/1000.)))
                     self.start_lat = get_field_value(fields, fit_session, 'start_lat')
                     self.start_lon = get_field_value(fields, fit_session, 'start_lon')
@@ -307,7 +309,9 @@ class FITParser(object):
                     grade = get_field_value(fields, fit_record, 'grade')
                     temp = get_field_value(fields, fit_record, 'temperature')
                     cad = get_field_value(fields, fit_record, 'cadence')
-                    distance = get_field_value(fields, fit_record, 'distance')/100.
+                    distance = get_field_value(fields, fit_record, 'distance')
+                    if distance != None:
+                        distance = distance / 100.
 
                     self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon, distance))
                 elif global_msg_type == 21:
