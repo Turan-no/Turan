@@ -382,15 +382,8 @@ class Exercise(models.Model):
 
     def get_simplegpx_url(self):
         ''' Also defined here in addition to in Route because of how Mapper.js is initiated '''
-        url = None
-        if self.gpx_file:
-            filename = 'gpx/segment/%s.gpx' %self.id
-            if gpxstore.exists(filename):
-                url = filename
-            else:
-                url = self.gpx_file
-        return url
-
+        if self.route:
+            return self.route.get_simplegpx_url()
 
     def icon(self):
         return self.exercise_type.icon()
@@ -540,7 +533,15 @@ class Segment(models.Model):
 
     def get_simplegpx_url(self):
         ''' Also defined here in addition to in Route because of how Mapper.js is initiated '''
-        return self.gpx_file
+        url = None
+        if self.gpx_file:
+            filename = 'gpx/segment/%s.gpx' %self.id
+            if gpxstore.exists(filename):
+                url = filename
+            else:
+                url = self.gpx_file
+        return url
+
 
     def get_absolute_url(self):
         return reverse('segment', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
