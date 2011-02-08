@@ -435,7 +435,7 @@ def calculate_best_efforts(exercise, callback=None):
     details = exercise.get_details().all()
     if details:
         if filldistance(details):
-            effort_range = [5, 30, 60, 300, 600, 1800, 3600]
+            effort_range = [5, 30, 60, 300, 600, 1200, 1800, 3600]
             for seconds in effort_range:
                 if exercise.avg_power and not exercise.is_smart_sampled():
                     speed, pos, length, speed_ascent, speed_descent, power, power_pos, power_length, power_ascent, power_descent = best_x_sec(details, seconds, power=True)
