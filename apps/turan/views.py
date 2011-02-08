@@ -450,7 +450,7 @@ def bestest(request):
 
     bestest_speed = []
     bestest_power = []
-    intervals = [5, 30, 60, 300, 600, 1800, 3600]
+    intervals = [5, 30, 60, 300, 600, 1200, 1800, 3600]
     for i in intervals:
         userweight_tmp = []
         best_speed_tmp = BestSpeedEffort.objects.filter(exercise__exercise_type__name="Cycling", duration=i).order_by('-speed')[:10]
