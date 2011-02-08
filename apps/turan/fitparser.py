@@ -240,6 +240,7 @@ class FITParser(object):
                 '''
                 return
 
+            last_time = 0
             if msg_type == 0:
                 fields = {}
                 if local_msg_type not in local_msg_types:
@@ -289,9 +290,13 @@ class FITParser(object):
                     pass
                 elif global_msg_type == 20:
                     time = datetime.fromtimestamp(get_field_value(fields, fit_record, 'timestamp'))
-                    if time == None:
-                        '''Samples without timestamp are broken'''
+                    if time == None or time == last_time:
+                        '''
+                        Samples without timestamp are broken
+                        Samples with same timestamp as previous are also broken
+                        '''
                         pass
+                    last_time = time
                     time = time + timestamp_offset
                     hr = get_field_value(fields, fit_record, 'hr')
                     pwr = get_field_value(fields, fit_record, 'power')
