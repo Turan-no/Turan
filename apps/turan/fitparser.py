@@ -227,6 +227,7 @@ class FITParser(object):
         if data_type != '.FIT':
             return
 
+        last_time = 0
         while f.tell() < data_size + hdr_size:
             (hdr,) = struct.unpack('B',f.read(1))
             hdr_type = (hdr >> 7) & 1
@@ -240,7 +241,6 @@ class FITParser(object):
                 '''
                 return
 
-            last_time = 0
             if msg_type == 0:
                 fields = {}
                 if local_msg_type not in local_msg_types:
