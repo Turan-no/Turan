@@ -109,9 +109,9 @@ def exercise_compare(request, exercise1, exercise2):
     return render_to_response('turan/exercise_compare.html', locals(), context_instance=RequestContext(request))
 
 class TripsFeed(Feed):
-    title = "lart.no turan trips"
+    title = "lart.no turan exercises"
     link = "http://turan.no/turan/"
-    description = "Trips from turan.no/turan"
+    description = "Exercises from turan.no/turan"
 
     def items(self):
         return Exercise.objects.order_by('-date')[:20]
@@ -1044,6 +1044,37 @@ def gethrhzones(values):
 
     return filtered_zones
 
+def getfreqs(values, val_type, min=0, max=0, val_cutoff=0):
+    ''' given values, create freqency structure for display in flot '''
+
+    freqs = SortedDict()
+    previous_time = False
+    for d in values:
+        if not previous_time:
+            previous_time = d.time
+            continue
+        time = d.time - previous_time
+        previous_time = d.time
+        if time.seconds > 60: # Skip samples with pause ?
+            continue
+        val = getattr(d, val_type)
+        if val == None: # Drop nonesamples
+            continue
+        val = int(round(val))
+        if not val in freqs:
+            freqs[val] = 0
+        freqs[val] += time.seconds
+
+    for freq, val in freqs.iteritems():
+        if min and freq < min:
+            del freqs[freq]
+        if max and freq > max:
+            del freqs[freq]
+        if val_cutoff and val < val_cutoff:
+            del freqs[freq]
+
+    return freqs
+
 def getgradients(values):
     ''' Iterate over details, return list with tuples with distances and gradients '''
 
@@ -1186,10 +1217,17 @@ def exercise(request, object_id):
 
         zones = getzones(details)
         hrhzones = gethrhzones(details)
+        cadfreqs = []
+        speedfreqs = []
+        if object.avg_cadence:
+            cadfreqs = getfreqs(details, 'cadence', min=1)
+        if object.avg_speed:
+            speedfreqs = getfreqs(details, 'speed', min=1, max=150)
         #inclinesummary = getinclinesummary(details)
 
         if object.avg_power and power_show:
             object.normalized = power_30s_average(details)
+            powerfreqs = getfreqs(details, 'power', min=1, val_cutoff=5)
             #for i in range(0, len(poweravg30s)):
             #    details[i].poweravg30s = poweravg30s[i]
             #object.normalized = normalized_power(poweravg30s)
