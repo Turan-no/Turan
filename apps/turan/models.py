@@ -426,7 +426,7 @@ class Exercise(models.Model):
         ''' Find IF for exercise '''
         userftp = self.user.get_profile().get_ftp(self.date)
         try:
-            return float(self.normalized)/userftp
+            return round(float(self.normalized)/userftp, 3)
         except ZeroDivisionError:
             return 0
 
