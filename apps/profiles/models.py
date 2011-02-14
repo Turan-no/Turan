@@ -17,6 +17,7 @@ class Profile(models.Model):
     height = models.IntegerField(blank=True, default=0, help_text=_('in cm'))
     weight = models.FloatField(blank=True, default=0, help_text=_('in kg'))
     resting_hr = models.IntegerField(blank=True, default=0, help_text=_('beats per minute'))
+    ftp = models.IntegerField(blank=True,null=True, help_text=_('Functional Threshold Power'))
     max_hr = models.IntegerField(blank=True, default=0, help_text=_('beats per minute'))
     motto = models.CharField(max_length=160)
 
@@ -47,21 +48,34 @@ class Profile(models.Model):
                 pass
         return userweight
 
+    def get_ftp(self, date=None):
+        ''' Returns ftp of user, optionally given date, try to find ftp close to date '''
+        userftp = self.ftp
+        if date:
+            try:
+                userftp = self.userprofiledetail_set.filter(ftp__isnull=False).filter(time__lt=date).order_by("-time")[0].ftp
+            except IndexError:
+                # when no ftp is found
+                pass
+        return userftp
+
 class UserProfileDetail(models.Model):
     userprofile = models.ForeignKey(Profile)
     time = models.DateTimeField(help_text=_('2009-08-27 08:00:00, time optional'))
     weight = models.FloatField(blank=True, null=True, help_text=_('in kg'))
     resting_hr = models.IntegerField(blank=True,null=True, help_text=_('beats per minute'))
+    ftp = models.IntegerField(blank=True,null=True, help_text=_('Functional Threshold Power'))
 
     def save(self, force_insert=False, force_update=False):
 
         ''' Overriden to update UserProfile with new data '''
         super(UserProfileDetail, self).save(force_insert, force_update)
         if self.weight:
-            # TODO: maybe round this off?
-            self.userprofile.weight = int(self.weight)
+            self.userprofile.weight = int(round(self.weight))
         if self.resting_hr:
-            self.userprofile.esting_hr = self.resting_hr
+            self.userprofile.resting_hr = self.resting_hr
+        if self.ftp:
+            self.userprofile.ftp = self.ftp
         self.userprofile.save()
 
     def __unicode__(self):

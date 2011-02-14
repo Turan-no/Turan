@@ -399,11 +399,11 @@ if __name__ == '__main__':
     t = FITParser()
     t.parse_uploaded_file(file(sys.argv[1]))
 
-    if t.entries:
-        print t.entries[0]
-        print t.entries[-1]
-    #for e in t.entries:
-    #    print e
+    #if t.entries:
+    #    print t.entries[0]
+    #    print t.entries[-1]
+    for e in t.entries:
+        print e
 
     print 'start: %s %s - duration: %s - distance: %s' % (t.date, t.start_time, t.duration, t.distance_sum)
     print 'start - lat: %s - lon: %s' % (t.start_lat, t.start_lon)

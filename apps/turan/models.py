@@ -422,6 +422,14 @@ class Exercise(models.Model):
                 r.delete()
         super(Exercise, self).delete(*args, **kwargs)
 
+    def get_intensityfactor(self):
+        ''' Find IF for exercise '''
+        userftp = self.user.get_profile().get_ftp(self.date)
+        try:
+            return float(self.normalized)/userftp
+        except ZeroDivisionError:
+            return 0
+
 
 class ExercisePermission(models.Model):
     exercise = models.OneToOneField(Exercise, primary_key=True)
@@ -650,6 +658,7 @@ class Slope(models.Model):
             return self.est_power / userweight
         except ZeroDivisionError:
             return 0
+
 
     def __unicode__(self):
         return u'%s, %s, %s' % (self.exercise, round(self.grade), round(self.length))
