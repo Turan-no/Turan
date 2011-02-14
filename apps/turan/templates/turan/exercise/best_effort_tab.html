@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load turan_extras %}
-<div id="besteffortdiv" class="clearfix" style="width:400px;float: right;"></div>
+<div id="besteffortdiv" class="clearfix" style="width:400px;height:100%;float: right;"></div>
 <div id="bestefforttable" style="width:500px;">
     {% if object.avg_power and power_show %}
     <table class="fullsize">
@@ -127,6 +127,7 @@
 </div>
 
 <script type="text/javascript">
+    $("#besteffortdiv").css("height", $("#besteffortdiv").parent().css("height"));
 {% if object.avg_power %}
     var best_effort_data = [
             {% for effort in object.bestpowereffort_set.all %}
@@ -152,7 +153,6 @@
             {% endif %}
             {% endfor %}
     ];
-    $("#besteffortdiv").css("height", $("#besteffortdiv").parent().css("height"));
     $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: false } });
 {% endif %}
 </script>
