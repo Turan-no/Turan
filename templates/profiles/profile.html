@@ -13,6 +13,7 @@
     <div class="right_panel">
         {% include "profiles/profile_right_panel.html" %}
 
+            {% comment %}
         <div style="float: right">
             {% if other_user.get_profile.image %}
             <img alt="{% trans "User image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.image }}"><br>
@@ -21,6 +22,7 @@
             <img alt="{% trans "Cycle image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.cycle_image }}">
             {% endif %}
         </div>
+            {% endcomment %}
     <h3>{% trans "Cycle trip graph"%}</h2>
     <div id="tripdiv" style="width:300px;height:150px"></div>
     <h3>{% trans "Avg speed trend: cycling"%}</h2>
@@ -31,10 +33,15 @@
     <div id="bmidiv" style="width:300px;height:150px"></div>
     <h3>{% trans "Resting pulse graph"%}</h2>
     <div id="pulsediv" style="width:300px;height:150px"></div>
+    {% if ftpdataseries %}
+    <h3>{% trans "FTP graph"%}</h2>
+    <div id="ftpdiv" style="width:300px;height:150px"></div>
+    {% endif %}
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     var d1 = { color: 2, data: [{{pulsedataseries}}], }
     var d2 = { color: 4, data: [{{bmidataseries}}], }
+    var d3 = { color: 5, data: [{{ftpdataseries}}], }
     var bmiline = { color: 2, data: [{{bmiline}}], }
     var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0} }
 	var hroptions = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 100, max: 200 } }
@@ -60,6 +67,9 @@ $(function () {
             lines: { show: true },
             //label: "km",
         }], hroptions );
+    {% if ftpdataseries %}
+    $.plot($("#ftpdiv"), [d3], options);
+    {% endif %}
 
 });
 </script>

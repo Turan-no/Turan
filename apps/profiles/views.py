@@ -161,6 +161,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     tripdataseries = ""
     avgspeeddataseries = ""
     avghrdataseries = ""
+    ftpdataseries = ''
     height = other_user.get_profile().height
     if height:
         height = float(other_user.get_profile().height)/100
@@ -172,6 +173,10 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     pulseqs = other_user.get_profile().userprofiledetail_set.filter(resting_hr__isnull=False).order_by('time')
     for hrtuple in pulseqs.values_list('time', 'resting_hr'):
         pulsedataseries += '[%s, %s],' % (datetime2jstimestamp(hrtuple[0]), hrtuple[1])
+
+    ftpqs = other_user.get_profile().userprofiledetail_set.filter(ftp__isnull=False).order_by('time')
+    for ftuple in ftpqs.values_list('time', 'ftp'):
+        ftpdataseries += '[%s, %s],' % (datetime2jstimestamp(ftuple[0]), ftuple[1])
 
     exerciseqs = other_user.exercise_set.order_by('date')
     exerciseqs_dataseries = other_user.exercise_set.order_by('date')[:7]
@@ -187,7 +192,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
             break
 
     i = 0
-        
+
     for trip in reversed(exerciseqs):
         if trip.avg_hr:
             avghrdataseries += '[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_hr)
