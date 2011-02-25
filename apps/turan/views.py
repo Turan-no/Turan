@@ -1214,7 +1214,7 @@ def exercise(request, object_id):
 
             # Todo, maybe calculate and save in db or cache ?
             gradients, inclinesums = getgradients(details)
-
+        intervals = object.interval_set.all()
         zones = getzones(details)
         hrhzones = gethrhzones(details)
         cadfreqs = []

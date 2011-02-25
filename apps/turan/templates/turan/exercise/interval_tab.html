@@ -1,84 +1,66 @@
 {% load i18n %}
 {% load turan_extras %}
-    <div id="tabs-5" class="slope_tab">
-        <table class="fullsize">
-            <tr>
-                <th>
-                    {% trans "Zoom" %}
-                </th>
-                <th>
-                    {% trans "Start" %}
-                </th>
-                <th>
-                    {% trans "Length" %}
-                </th>
-                <th>
-                    {% trans "Ascent" %}
-                </th>
-                <th>
-                    {% trans "Gradient" %}
-                </th>
-                <th>
-                    {% trans "Duration" %}
-                </th>
-                <th>
-                    {% trans "Speed" %}
-                </th>
-                {% if object.avg_power %}
-                <th>
-                    {% trans "Avg power (actual)" %}
-                </th>
-                {% endif %}
-                <th>
-                    {% trans "Avg power (est)" %}
-                </th>
-                <th>
-                    {% trans "Avg power/kg" %}
-                </th>
-                <th>
-                    VAM
-                </th>
-                <th>
-                    Category
-                </th>
-                <th>
-                    {% trans "Avg HR" %}
-                </th>
-            </tr>
-        {% for slope in slopes %}
-            <tr>
-                <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select" />
-                    <script type="text/javascript">
-                        $('#zoom{{forloop.counter0}}-link-1').bind("click", 
-                                function (evt) { 
-                                plot.setSelection({ 
-                                    xaxis: { 
-                                        from: {{slope.start}}, to: {{slope.start}}+{{slope.length}}/1000
-                                    }
-                                })
-                                });
-                    </script>
-                </td>
-                <td>{{ slope.start|floatformat }} {% trans "km" %} </td>
-                <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
-                <td>{{slope.ascent}} {% trans "m" %}</td>
-                <td>{{slope.grade|floatformat}} %</td>
-                <td>{{ slope.duration|durationformatshort }} </td>
-                <td>{{slope.speed|floatformat}} {% trans "km/h" %}</td>
-                {% if slope.act_power %}
-                <td>
-                    {{slope.act_power|floatformat}} {% trans "W" %}
-                </td>
-                {% endif %}
-                <td>{{slope.est_power|floatformat}} {% trans "W" %} </td>
-                <td>{{slope.power_per_kg|floatformat}} {% trans "W/kg" %} </td>
-                <td>{% if slope.vam %}{{slope.vam}}{% endif %}</td>
-                <td><div class="slope-categories slope-category-{{slope.category}}"><span>{{slope.category}}</span></div></td>
-                <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}
-                    {% if object.user.get_profile.max_hr %}
-                    ({{ slope.avg_hr|percent:object.user.get_profile.max_hr }})
-                    {% endif %} </td>
-            </tr>
-        {% endfor %}
-        </table>
-    </div>
+<table class="fullsize">
+    <tr>
+        <th>
+            {% trans "Zoom" %}
+        </th>
+        <th>
+            {% trans "Start" %}
+        </th>
+        <th>
+            {% trans "Duration" %}
+        </th>
+        <th>
+            {% trans "Length" %}
+        </th>
+        <th>
+            {% trans "Speed" %}
+        </th>
+        {% if object.avg_power %}
+        <th>
+            {% trans "Avg power" %}
+        </th>
+        <th>
+            {% trans "FTP %"%}
+        </th>
+        <th>
+            {% trans "Avg power/kg" %}
+        </th>
+        <th> {% trans "Max power" %} </th>
+        {% endif %}
+        <th>
+            {% trans "Avg HR" %}
+        </th>
+    </tr>
+{% for interval in intervals %}
+    <tr>
+        <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select" />
+            <script type="text/javascript">
+                $('#zoom{{forloop.counter0}}-link-1').bind("click", 
+                        function (evt) { 
+                        plot.setSelection({ 
+                            xaxis: { 
+                                from: {{interval.start}}, to: {{interval.start}}+{{interval.length}}/1000
+                            }
+                        })
+                        });
+            </script>
+        </td>
+        <td>{{ interval.start_time }} </td>
+        <td>{{interval.duration}} {% trans "s" %}</td>
+        <td>{{ interval.distance|floatformat }} {% trans "m" %} </td>
+        <td>{{interval.avg_speed|floatformat}} {% trans "km/h" %}</td>
+        {% if interval.avg_power %}
+        <td> {{interval.avg_power|floatformat}} {% trans "W" %} </td>
+        <td> {{interval.get_ftp_percentage|floatformat}} {% trans "%" %} </td>
+        <td>{{interval.get_avg_power_per_kg|floatformat}} {% trans "W/kg" %} </td>
+        <td> {{interval.max_power|floatformat}} {% trans "W" %} </td>
+        {% endif %}
+        <td>{{interval.avg_hr|floatformat}} {% trans "BPM" %}
+            {% if object.user.get_profile.max_hr %}
+            ({{ interval.avg_hr|percent:object.user.get_profile.max_hr }})
+            {% endif %} </td>
+    </tr>
+{% endfor %}
+</table>

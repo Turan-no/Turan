@@ -551,6 +551,23 @@ class Interval(models.Model):
     min_cadence = models.IntegerField(blank=True, null=True) # rpm
     min_power = models.IntegerField(blank=True, null=True) # W
 
+    def get_avg_power_per_kg(self):
+        ''' Find weight during exercise and calculate W/kg'''
+        userweight = self.exercise.user.get_profile().get_weight(self.exercise.date)
+        try:
+            if self.avg_power:
+                return self.avg_power/userweight
+        except ZeroDivisionError:
+            return 0
+
+    def get_ftp_percentage(self):
+        userftp = self.exercise.user.get_profile().get_ftp(self.exercise.date)
+        if userftp:
+            return self.avg_power*100/userftp
+
+    class Meta:
+        ordering = ('start_time',)
+
 
 class Segment(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))
