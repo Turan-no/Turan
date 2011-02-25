@@ -200,7 +200,7 @@ class FITLap(object):
         self.start_lat = start_lat
         self.end_lon = end_lon
         self.end_lat = end_lat
-        self.distance_sum = distance
+        self.distance = distance
         self.duration = duration
         self.ascent = ascent
         self.descent = descent
@@ -217,6 +217,8 @@ class FITLap(object):
         self.min_temp = min_temp
         self.temperature = self.avg_temp
         self.kcal_sum = calories
+    def __str__(self):
+        return '[%s] duration: %s distance: %s start_lat: %s start_lon: %s' % (self.time, self.duration, self.distance, self.start_lat, self.start_lon)
 
 class FITParser(object):
     def __init__(self):
@@ -477,6 +479,8 @@ if __name__ == '__main__':
     #    print t.entries[-1]
     for e in t.entries:
         print e
+    for lap in t.laps:
+        print lap
 
     print 'start: %s %s - duration: %s - distance: %s' % (t.date, t.start_time, t.duration, t.distance_sum)
     print 'start - lat: %s - lon: %s' % (t.start_lat, t.start_lon)
@@ -486,4 +490,4 @@ if __name__ == '__main__':
     print 'CADENCE - avg: %s - max: %s - pedal: %s' % (t.avg_cadence, t.max_cadence, t.avg_pedaling_cad)
     print 'POWER - avg: %s - max: %s - pedal: %s' % (t.avg_power, t.max_power, t.avg_pedaling_power)
     print 'TEMP - avg: %s - max: %s - min: %s' % (t.avg_temp, t.max_temp, t.min_temp)
-    print 'LAPS: %s' %(len(t.laps))
+    print 'LAPS: %s ENTRIES: %s' %(len(t.laps), len(t.entries))
