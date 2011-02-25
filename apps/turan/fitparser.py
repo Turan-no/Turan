@@ -328,7 +328,7 @@ class FITParser(object):
                     distance = get_field_value(fields, fit_session, 'distance')
                     if distance != None:
                         distance = distance / 100.
-                    duration = ('%ss') % (int(round(get_field_value(fields, fit_session, 'timer_time')/1000.)))
+                    duration = ('%s') % (int(round(get_field_value(fields, fit_session, 'timer_time')/1000.)))
                     start_lat = get_field_value(fields, fit_session, 'start_lat')
                     start_lon = get_field_value(fields, fit_session, 'start_lon')
                     if start_lat != None and start_lon != None:
