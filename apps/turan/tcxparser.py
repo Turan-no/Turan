@@ -33,6 +33,7 @@ class LapData(object):
         self.max_hr = max_hr
         self.avg_cadence = avg_cadence
         self.kcal_sum = kcal_sum
+        self.kcal = self.kcal_sum # alias
 
 class TCXParser(object):
     def __init__(self, gps_distance=False):

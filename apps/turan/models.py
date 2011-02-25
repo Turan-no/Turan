@@ -522,7 +522,7 @@ class Interval(models.Model):
 
     exercise = models.ForeignKey(Exercise)
 
-    start = models.FloatField(help_text=_('in km'), default=0)
+    start_time = models.DateTimeField()
     duration = models.IntegerField()
     distance = models.FloatField(help_text=_('in km'), default=0)
     ascent = models.IntegerField(blank=True, null=True) # m

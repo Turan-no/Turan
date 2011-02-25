@@ -216,7 +216,7 @@ class FITLap(object):
         self.max_temp = max_temp
         self.min_temp = min_temp
         self.temperature = self.avg_temp
-        self.kcal_sum = calories
+        self.kcal = calories
     def __str__(self):
         return '[%s] duration: %s distance: %s start_lat: %s start_lon: %s' % (self.start_time, self.duration, self.distance, self.start_lat, self.start_lon)
 
