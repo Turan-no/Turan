@@ -190,6 +190,34 @@ class FITEntry(object):
     def __str__(self):
         return '[%s] hr: %s spd: %s cad: %s pwr: %s temperature: %s alt: %s lat: %s lon: %s distance: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.temp, self.altitude, self.lat, self.lon, self.distance)
 
+class FITLap(object):
+    def __init__(self, time, start_lon, start_lat, end_lon, end_lat,
+                 distance, duration, ascent, descent, max_speed, avg_speed,
+                 max_hr, avg_hr, avg_cadence, max_cadence, avg_power,
+                 max_power, avg_temp, max_temp, min_temp, calories):
+        self.time = time
+        self.start_lon = start_lon
+        self.start_lat = start_lat
+        self.end_lon = end_lon
+        self.end_lat = end_lat
+        self.distance_sum = distance
+        self.duration = duration
+        self.ascent = ascent
+        self.descent = descent
+        self.max_speed = max_speed
+        self.avg_speed = avg_speed
+        self.max_hr = max_hr
+        self.avg_hr = avg_hr
+        self.avg_cadence = avg_cadence
+        self.max_cadence = max_cadence
+        self.avg_power = avg_power
+        self.max_power = max_power
+        self.avg_temp = avg_temp
+        self.max_temp = max_temp
+        self.min_temp = min_temp
+        self.temperature = self.avg_temp
+        self.kcal_sum = calories
+
 class FITParser(object):
     def __init__(self):
         self.start_lon = 0.0
@@ -217,6 +245,7 @@ class FITParser(object):
         self.min_temp = 0.0
         self.temperature = 0
         self.kcal_sum = 0
+        self.laps = []
 
     def parse_uploaded_file(self, f):
         local_msg_types = {}
@@ -227,7 +256,7 @@ class FITParser(object):
         if data_type != '.FIT':
             return
 
-        last_time = 0
+        record_last_time = 0
         while f.tell() < data_size + hdr_size:
             (hdr,) = struct.unpack('B',f.read(1))
             hdr_type = (hdr >> 7) & 1
@@ -285,18 +314,62 @@ class FITParser(object):
                     self.max_power = get_field_value(fields, fit_session, 'max_power')
                     self.kcal_sum = get_field_value(fields, fit_session, 'calories')
                 elif global_msg_type == 19:
-                    '''No lap handling'''
-                    #print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
-                    pass
+                    '''
+                    print '%i: %s %s %s' % (global_msg_type, fit_msg_type[global_msg_type],
+                                            get_field_value(fields, fit_lap, 'event'),
+                                            get_field_value(fields, fit_lap, 'event_type'))
+                    '''
+                    time = datetime.fromtimestamp(get_field_value(fields, fit_lap, 'timestamp'))
+                    time = time + timestamp_offset
+                    start_time = datetime.fromtimestamp(get_field_value(fields, fit_lap, 'timestamp'))
+                    start_time = start_time + timestamp_offset
+                    distance = get_field_value(fields, fit_session, 'distance')
+                    if distance != None:
+                        distance = distance / 100.
+                    duration = ('%ss') % (int(round(get_field_value(fields, fit_session, 'timer_time')/1000.)))
+                    start_lat = get_field_value(fields, fit_session, 'start_lat')
+                    start_lon = get_field_value(fields, fit_session, 'start_lon')
+                    if start_lat != None and start_lon != None:
+                        start_lat = start_lat * semicircle_deg
+                        start_lon = start_lon * semicircle_deg
+                    end_lat = get_field_value(fields, fit_session, 'end_lat')
+                    end_lon = get_field_value(fields, fit_session, 'end_lon')
+                    if end_lat != None and end_lon != None:
+                        end_lat = end_lat * semicircle_deg
+                        end_lon = end_lon * semicircle_deg
+                    avg_hr = get_field_value(fields, fit_session, 'avg_hr')
+                    max_hr = get_field_value(fields, fit_session, 'max_hr')
+                    avg_speed = get_field_value(fields, fit_session, 'avg_speed')
+                    max_speed = get_field_value(fields, fit_session, 'max_speed')
+                    if avg_speed != None and max_speed != None:
+                        avg_speed = avg_speed/1000.*3.6
+                        max_speed = max_speed/1000.*3.6
+                    avg_cadence = get_field_value(fields, fit_session, 'avg_cad')
+                    max_cadence = get_field_value(fields, fit_session, 'max_cad')
+                    avg_power = get_field_value(fields, fit_session, 'avg_power')
+                    max_power = get_field_value(fields, fit_session, 'max_power')
+                    calories = get_field_value(fields, fit_session, 'calories')
+                    ascent = get_field_value(fields, fit_session, 'ascent')
+                    descent = get_field_value(fields, fit_session, 'descent')
+                    avg_temp = get_field_value(fields, fit_session, 'avg_temp')
+                    max_temp = get_field_value(fields, fit_session, 'max_temp')
+                    min_temp = get_field_value(fields, fit_session, 'min_temp')
+
+                    self.laps.append(FITLap(start_time, start_lon, start_lat,
+                                            end_lon, end_lat, distance, duration, ascent,
+                                            descent, max_speed, avg_speed, max_hr,
+                                            avg_hr, avg_cadence, max_cadence,
+                                            avg_power, max_power, avg_temp, max_temp,
+                                            min_temp, calories))
                 elif global_msg_type == 20:
                     time = datetime.fromtimestamp(get_field_value(fields, fit_record, 'timestamp'))
-                    if time == None or time == last_time:
+                    if time == None or time == record_last_time:
                         '''
                         Samples without timestamp are broken
                         Samples with same timestamp as previous are also broken
                         '''
                         pass
-                    last_time = time
+                    record_last_time = time
                     time = time + timestamp_offset
                     hr = get_field_value(fields, fit_record, 'hr')
                     pwr = get_field_value(fields, fit_record, 'power')
@@ -413,3 +486,4 @@ if __name__ == '__main__':
     print 'CADENCE - avg: %s - max: %s - pedal: %s' % (t.avg_cadence, t.max_cadence, t.avg_pedaling_cad)
     print 'POWER - avg: %s - max: %s - pedal: %s' % (t.avg_power, t.max_power, t.avg_pedaling_power)
     print 'TEMP - avg: %s - max: %s - min: %s' % (t.avg_temp, t.max_temp, t.min_temp)
+    print 'LAPS: %s' %(len(t.laps))
