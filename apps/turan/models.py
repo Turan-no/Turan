@@ -517,6 +517,41 @@ class MergeSensorFile(models.Model):
 
         return result
 
+class Interval(models.Model):
+    ''' Interval / Lap model '''
+
+    exercise = models.ForeignKey(Exercise)
+
+    start = models.FloatField(help_text=_('in km'), default=0)
+    duration = models.IntegerField()
+    distance = models.FloatField(help_text=_('in km'), default=0)
+    ascent = models.IntegerField(blank=True, null=True) # m
+    descent = models.IntegerField(blank=True, null=True) # m
+
+    avg_temp = models.FloatField(blank=True, null=True)
+    kcal = models.IntegerField(blank=True, null=True)
+
+    start_lat = models.FloatField(null=True, blank=True, default=0.0)
+    start_lon = models.FloatField(null=True, blank=True, default=0.0)
+    end_lat = models.FloatField(null=True, blank=True, default=0.0)
+    end_lon = models.FloatField(null=True, blank=True, default=0.0)
+
+    avg_hr = models.IntegerField(default=0)
+    avg_speed = models.FloatField(blank=True, null=True) #kmt
+    avg_cadence = models.IntegerField(blank=True, null=True) # rpm
+    avg_power = models.IntegerField(blank=True, null=True) # W
+
+    max_hr = models.IntegerField(blank=True, null=True) # bpm 
+    max_speed = models.FloatField(blank=True, null=True) #kmt
+    max_cadence = models.IntegerField(blank=True, null=True) # rpm
+    max_power = models.IntegerField(blank=True, null=True) # W
+
+    min_hr = models.IntegerField(blank=True, null=True) # bpm 
+    min_speed = models.FloatField(blank=True, null=True) #kmt
+    min_cadence = models.IntegerField(blank=True, null=True) # rpm
+    min_power = models.IntegerField(blank=True, null=True) # W
+
+
 class Segment(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))
     distance = models.FloatField(help_text=_('in km'), default=0)
