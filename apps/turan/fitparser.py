@@ -195,7 +195,7 @@ class FITLap(object):
                  distance, duration, ascent, descent, max_speed, avg_speed,
                  max_hr, avg_hr, avg_cadence, max_cadence, avg_power,
                  max_power, avg_temp, max_temp, min_temp, calories):
-        self.time = time
+        self.start_time = time
         self.start_lon = start_lon
         self.start_lat = start_lat
         self.end_lon = end_lon
@@ -218,7 +218,7 @@ class FITLap(object):
         self.temperature = self.avg_temp
         self.kcal_sum = calories
     def __str__(self):
-        return '[%s] duration: %s distance: %s start_lat: %s start_lon: %s' % (self.time, self.duration, self.distance, self.start_lat, self.start_lon)
+        return '[%s] duration: %s distance: %s start_lat: %s start_lon: %s' % (self.start_time, self.duration, self.distance, self.start_lat, self.start_lon)
 
 class FITParser(object):
     def __init__(self):

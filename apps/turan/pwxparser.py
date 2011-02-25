@@ -41,6 +41,7 @@ class PWXParser(object):
         self.end_lon = 0.0
         self.end_lat = 0.0
         self.entries = []
+        self.laps = []
         self.distance_sum = 0.0
         self.ascent = 0.0
         self.descent = 0.0

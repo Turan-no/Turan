@@ -17,6 +17,7 @@ class HRMParser(object):
 
     def __init__(self):
         self.entries = []
+        self.laps = []
 
         self.start_time = 0
         self.date = 0

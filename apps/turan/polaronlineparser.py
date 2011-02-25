@@ -26,6 +26,7 @@ class POLParser(object):
         self.end_lat = 0.0
 
         self.entries = []
+        self.laps = []
         self.distance = 0.0
         self.ascent = 0.0
         self.descent = 0.0

@@ -23,6 +23,7 @@ class CSVEntry(object):
 
 class CSVParser(object):
     entries = []
+    laps = []
     duration = 0
     start_time = time(0,0,0)
     now = datetime.now()
