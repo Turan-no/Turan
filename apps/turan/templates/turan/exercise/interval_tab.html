@@ -11,12 +11,14 @@
         <th>
             {% trans "Duration" %}
         </th>
+        {% if object.avg_speed %}
         <th>
             {% trans "Length" %}
         </th>
         <th>
             {% trans "Speed" %}
         </th>
+        {% endif %}
         {% if object.avg_power %}
         <th>
             {% trans "Avg power" %}
@@ -49,17 +51,21 @@
         </td>
         <td>{{ interval.start_time }} </td>
         <td>{{interval.duration}} {% trans "s" %}</td>
+        {% if object.avg_speed %}
         <td>{{ interval.distance|floatformat }} {% trans "m" %} </td>
         <td>{{interval.avg_speed|floatformat}} {% trans "km/h" %}</td>
+        {% endif %}
         {% if interval.avg_power %}
         <td> {{interval.avg_power|floatformat}} {% trans "W" %} </td>
         <td> {{interval.get_ftp_percentage|floatformat}} {% trans "%" %} </td>
         <td>{{interval.get_avg_power_per_kg|floatformat}} {% trans "W/kg" %} </td>
         <td> {{interval.max_power|floatformat}} {% trans "W" %} </td>
         {% endif %}
-        <td>{{interval.avg_hr|floatformat}} {% trans "BPM" %}
+        <td>
             {% if object.user.get_profile.max_hr %}
-            ({{ interval.avg_hr|percent:object.user.get_profile.max_hr }})
+            {{ interval.avg_hr|percent:object.user.get_profile.max_hr }}
+            {% else %}
+            {{interval.avg_hr|floatformat}} {% trans "BPM" %}
             {% endif %} </td>
     </tr>
 {% endfor %}

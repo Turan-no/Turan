@@ -27,7 +27,9 @@
     <ul>
         <li class="selected" id="tabs-select-1">{% trans "Graph" %}</li>
         <li id="tabs-select-2">{% trans "Comments" %}</li>
+        {% if intervals %}
         <li id="tabs-select-3">{% trans "Intervals" %}</li>
+        {% endif %}
         <li id="tabs-select-4">{% trans "Zones" %}</li>
         <li id="tabs-select-5">{% trans "Freqs" %}</li>
     {% ifequal object.exercise_type.slopes 1 %}
@@ -45,9 +47,11 @@
     <div id="tabs-2">
             {% include "turan/commentform.html" %}
     </div>
+    {% if intervals %}
     <div id="tabs-3" class="interval_tab">
         {% include "turan/exercise/interval_tab.html" %}
     </div>
+    {% endif %}
     <div id="tabs-4" class="zone_tab">
         {% include "turan/exercise/zone_tab.html" %}
     </div>

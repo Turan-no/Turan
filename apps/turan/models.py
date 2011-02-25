@@ -524,7 +524,7 @@ class Interval(models.Model):
 
     start_time = models.DateTimeField()
     duration = models.IntegerField()
-    distance = models.FloatField(help_text=_('in km'), default=0)
+    distance = models.FloatField(help_text=_('in km'), null=True, blank=True, default=0)
     ascent = models.IntegerField(blank=True, null=True) # m
     descent = models.IntegerField(blank=True, null=True) # m
 
@@ -536,7 +536,7 @@ class Interval(models.Model):
     end_lat = models.FloatField(null=True, blank=True, default=0.0)
     end_lon = models.FloatField(null=True, blank=True, default=0.0)
 
-    avg_hr = models.IntegerField(default=0)
+    avg_hr = models.IntegerField(blank=True, null=True, default=0)
     avg_speed = models.FloatField(blank=True, null=True) #kmt
     avg_cadence = models.IntegerField(blank=True, null=True) # rpm
     avg_power = models.IntegerField(blank=True, null=True) # W
