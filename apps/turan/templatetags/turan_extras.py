@@ -192,7 +192,8 @@ def durationformat(value, longFormat=True):
 @register.filter
 def percent(value, arg):
     "Divides the value by the arg * 100"
-    return floatformat(float(value) * 100 / float(arg)) + u'%'
+    if value and arg:
+        return floatformat(float(value) * 100 / float(arg)) + u'%'
 percent.is_safe = False
 
 @register.filter
