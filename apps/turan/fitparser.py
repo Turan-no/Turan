@@ -218,7 +218,7 @@ class FITLap(object):
         self.temperature = self.avg_temp
         self.kcal = calories
     def __str__(self):
-        return '[%s] duration: %s distance: %s start_lat: %s start_lon: %s' % (self.start_time, self.duration, self.distance, self.start_lat, self.start_lon)
+        return '[%s] duration: %s distance: %s power: %s start_lat: %s start_lon: %s' % (self.start_time, self.duration, self.distance, self.avg_power,self.start_lat, self.start_lon)
 
 class FITParser(object):
     def __init__(self):
@@ -325,37 +325,37 @@ class FITParser(object):
                     time = time + timestamp_offset
                     start_time = datetime.fromtimestamp(get_field_value(fields, fit_lap, 'timestamp'))
                     start_time = start_time + timestamp_offset
-                    distance = get_field_value(fields, fit_session, 'distance')
+                    distance = get_field_value(fields, fit_lap, 'distance')
                     if distance != None:
                         distance = distance / 100.
-                    duration = ('%s') % (int(round(get_field_value(fields, fit_session, 'timer_time')/1000.)))
-                    start_lat = get_field_value(fields, fit_session, 'start_lat')
-                    start_lon = get_field_value(fields, fit_session, 'start_lon')
+                    duration = ('%s') % (int(round(get_field_value(fields, fit_lap, 'timer_time')/1000.)))
+                    start_lat = get_field_value(fields, fit_lap, 'start_lat')
+                    start_lon = get_field_value(fields, fit_lap, 'start_lon')
                     if start_lat != None and start_lon != None:
                         start_lat = start_lat * semicircle_deg
                         start_lon = start_lon * semicircle_deg
-                    end_lat = get_field_value(fields, fit_session, 'end_lat')
-                    end_lon = get_field_value(fields, fit_session, 'end_lon')
+                    end_lat = get_field_value(fields, fit_lap, 'end_lat')
+                    end_lon = get_field_value(fields, fit_lap, 'end_lon')
                     if end_lat != None and end_lon != None:
                         end_lat = end_lat * semicircle_deg
                         end_lon = end_lon * semicircle_deg
-                    avg_hr = get_field_value(fields, fit_session, 'avg_hr')
-                    max_hr = get_field_value(fields, fit_session, 'max_hr')
-                    avg_speed = get_field_value(fields, fit_session, 'avg_speed')
-                    max_speed = get_field_value(fields, fit_session, 'max_speed')
+                    avg_hr = get_field_value(fields, fit_lap, 'avg_hr')
+                    max_hr = get_field_value(fields, fit_lap, 'max_hr')
+                    avg_speed = get_field_value(fields, fit_lap, 'avg_speed')
+                    max_speed = get_field_value(fields, fit_lap, 'max_speed')
                     if avg_speed != None and max_speed != None:
                         avg_speed = avg_speed/1000.*3.6
                         max_speed = max_speed/1000.*3.6
-                    avg_cadence = get_field_value(fields, fit_session, 'avg_cad')
-                    max_cadence = get_field_value(fields, fit_session, 'max_cad')
-                    avg_power = get_field_value(fields, fit_session, 'avg_power')
-                    max_power = get_field_value(fields, fit_session, 'max_power')
-                    calories = get_field_value(fields, fit_session, 'calories')
-                    ascent = get_field_value(fields, fit_session, 'ascent')
-                    descent = get_field_value(fields, fit_session, 'descent')
-                    avg_temp = get_field_value(fields, fit_session, 'avg_temp')
-                    max_temp = get_field_value(fields, fit_session, 'max_temp')
-                    min_temp = get_field_value(fields, fit_session, 'min_temp')
+                    avg_cadence = get_field_value(fields, fit_lap, 'avg_cad')
+                    max_cadence = get_field_value(fields, fit_lap, 'max_cad')
+                    avg_power = get_field_value(fields, fit_lap, 'avg_power')
+                    max_power = get_field_value(fields, fit_lap, 'max_power')
+                    calories = get_field_value(fields, fit_lap, 'calories')
+                    ascent = get_field_value(fields, fit_lap, 'ascent')
+                    descent = get_field_value(fields, fit_lap, 'descent')
+                    avg_temp = get_field_value(fields, fit_lap, 'avg_temp')
+                    max_temp = get_field_value(fields, fit_lap, 'max_temp')
+                    min_temp = get_field_value(fields, fit_lap, 'min_temp')
 
                     self.laps.append(FITLap(start_time, start_lon, start_lat,
                                             end_lon, end_lat, distance, duration, ascent,
