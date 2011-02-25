@@ -469,25 +469,6 @@ def bestest(request):
     return render_to_response('turan/bestest.html', locals(), context_instance=RequestContext(request))
 
 
-def hr2zone(hr_percent):
-    ''' Given a HR percentage return sport zone based on Olympiatoppen zones'''
-
-    zone = 0
-
-    if hr_percent > 97:
-        zone = 6
-    elif hr_percent > 92:
-        zone = 5
-    elif hr_percent > 87:
-        zone = 4
-    elif hr_percent > 82:
-        zone = 3
-    elif hr_percent > 72:
-        zone = 2
-    elif hr_percent > 60:
-        zone = 1
-
-    return zone
 
 def generate_tshirt(request):
     import Image

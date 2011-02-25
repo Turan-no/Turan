@@ -36,18 +36,22 @@
         </th>
     </tr>
 {% for interval in intervals %}
-    <tr>
+<tr id="row{{forloop.counter0}}">
         <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select" />
-            <script type="text/javascript">
-                $('#zoom{{forloop.counter0}}-link-1').bind("click", 
-                        function (evt) { 
-                        plot.setSelection({ 
-                            xaxis: { 
-                                from: {{interval.start}}, to: {{interval.start}}+{{interval.length}}/1000
-                            }
-                        })
-                        });
-            </script>
+<script type="text/javascript">
+$('#zoom{{forloop.counter0}}-link-1').bind("click", 
+        function (evt) { 
+        plot.setSelection({ 
+            xaxis: { 
+                from: {{interval.distance}}, to: {{interval.distance}}+{{interval.distance}}/1000
+            }
+        })
+        });
+
+$('#row{{forloop.counter0}}').css('background-Color', colors[{{interval.get_zone}}]);
+
+
+</script>
         </td>
         <td>{{ interval.start_time }} </td>
         <td>{{interval.duration}} {% trans "s" %}</td>

@@ -568,6 +568,18 @@ class Interval(models.Model):
     class Meta:
         ordering = ('start_time',)
 
+    def get_zone(self):
+        ' Return coggan watt zone for interval if power is available, else return hr OLT zone '
+
+        watt_p = self.get_ftp_percentage()
+        if watt_p:
+            return watt2zone(watt_p)
+        elif self.avg_hr:
+            max_hr = self.exercise.user.get_profile().max_hr
+            hr_percent = float(self.avg_hr)*100/max_hr
+            return hr2zone(hr_percent)
+        return 0
+
 
 class Segment(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))
@@ -809,3 +821,49 @@ def new_comment(sender, instance, **kwargs):
             notification.send([exercise.user], "exercise_comment",
                 {"user": instance.user, "exercise": exercise, "comment": instance})
 models.signals.post_save.connect(new_comment, sender=ThreadedComment)
+
+def hr2zone(hr_percent):
+    ''' Given a HR percentage return sport zone based on Olympiatoppen zones'''
+
+    zone = 0
+
+    if hr_percent > 97:
+        zone = 6
+    elif hr_percent > 92:
+        zone = 5
+    elif hr_percent > 87:
+        zone = 4
+    elif hr_percent > 82:
+        zone = 3
+    elif hr_percent > 72:
+        zone = 2
+    elif hr_percent > 60:
+        zone = 1
+
+    return zone
+def watt2zone(watt_percentage):
+    ''' Given watt_percentage in relation to FTP, return coggan zone 
+
+1   Active Recovery <55%    165w      Taking your bike for a walk!
+2   Endurance   >75%    225w      All day pace.
+3   Tempo   >90%    270w      Chain Gang pace.
+4   Lactate Threshold   >105%   315w      At or around 25m TT pace
+5   VO2max  >120%   360w      3-8 minute interval pace
+6   Anaerobic   121%+   360w+     Flamme Rouge SHITS intervals
+7   Neuromuscular       >1000w?   Jump Intervals '''
+    zone = 0
+    if watt_percentage > 150:
+        zone = 7
+    elif watt_percentage > 121:
+        zone = 6
+    elif watt_percentage > 105:
+        zone = 5
+    elif watt_percentage > 90:
+        zone = 4
+    elif watt_percentage > 75:
+        zone = 3
+    elif watt_percentage > 54:
+        zone = 2
+    elif watt_percentage < 55:
+        zone = 1
+    return zone
