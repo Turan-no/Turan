@@ -321,6 +321,14 @@ class FITParser(object):
                                             get_field_value(fields, fit_lap, 'event'),
                                             get_field_value(fields, fit_lap, 'event_type'))
                     '''
+
+                    if (int(round(get_field_value(fields, fit_lap, 'timer_time')/1000.)) <= 1):
+                        '''
+                        Lets not bother with intervals of 1s or less. They tend to have
+                        no sensible values anyways.
+                        '''
+                        pass
+                    
                     time = datetime.fromtimestamp(get_field_value(fields, fit_lap, 'timestamp'))
                     time = time + timestamp_offset
                     start_time = datetime.fromtimestamp(get_field_value(fields, fit_lap, 'timestamp'))
