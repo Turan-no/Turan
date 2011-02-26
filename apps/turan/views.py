@@ -1049,9 +1049,9 @@ def getfreqs(values, val_type, min=0, max=0, val_cutoff=0):
     for freq, val in freqs.iteritems():
         if min and freq < min:
             del freqs[freq]
-        if max and freq > max:
+        elif max and freq > max:
             del freqs[freq]
-        if val_cutoff and val < val_cutoff:
+        elif val_cutoff and val < val_cutoff:
             del freqs[freq]
 
     return freqs
