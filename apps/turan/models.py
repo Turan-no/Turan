@@ -395,6 +395,9 @@ class Exercise(models.Model):
             delta_t = (exercise_details[1].time - exercise_details[0].time).seconds
             if delta_t > 1:
                 return True
+        elif filename.lower().endswith('.fit'):
+            if not self.avg_power: # Edges smart sample if no power meter
+                return True
         return False
 
     class Meta:
