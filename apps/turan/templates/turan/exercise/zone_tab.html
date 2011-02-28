@@ -1,14 +1,67 @@
 {% load i18n %}
 {% load turan_extras %}
-<div id="zonediv" style="width:400px;height:400px; float: right;"></div>
-<div id="zonetable" style="width:500px; height: 400px;">
+{% if wzones %}
+
+<div id="wzonediv" style="width:400px;height:400px; float: right;"></div>
+    <h3>{% trans "Time in watt zones" %}</h3>
+<div id="wzonetable" style="width:500px; height: 400px;">
         <table class="fullsize">
             <tr>
                 <th>
                     {% trans "Zone" %}
                 </th>
                 <th>
-                    {% trans "Length" %}
+                    {% trans "Duration" %}
+                </th>
+                <th>
+                    {% trans "%" %}
+                </th>
+            </tr>
+            {% for zone, length in wzones.items %}
+            {% if length %}
+            <tr>
+                <td>
+                    {{ zone }}
+                </td>
+                <td>
+                    {{ length|durationformat }}
+                </td>
+                <td>
+                    {% if object.duration %}
+                        {{ length|percent:object.duration.seconds }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+<script type="text/javascript">
+    var wzonedata = [
+        {% for zone, length in wzones.items %}
+            {
+            {% if length %}
+                data: [[{{ zone|slice:":1" }}, {{ length }}]],
+                bars: { show: true},
+                color: colors[{{ forloop.counter0 }}]
+            {% endif %}
+            }
+{% if not forloop.last %},{%endif%}
+        {% endfor %}
+    ];
+    $.plot($("#wzonediv"),wzonedata, { grid: { show: false } });
+</script>
+{% endif %}
+<div id="zonediv" style="width:400px;height:400px; float: right;"></div>
+<div id="zonetable" style="width:500px; height: 400px;">
+    <h3>{% trans "Time in HR zones" %}</h3>
+        <table class="fullsize">
+            <tr>
+                <th>
+                    {% trans "Zone" %}
+                </th>
+                <th>
+                    {% trans "Duration" %}
                 </th>
                 <th>
                     {% trans "%" %}

@@ -851,7 +851,7 @@ def watt2zone(watt_percentage):
 5   VO2max  >120%   360w      3-8 minute interval pace
 6   Anaerobic   121%+   360w+     Flamme Rouge SHITS intervals
 7   Neuromuscular       >1000w?   Jump Intervals '''
-    zone = 0
+    zone = 1
     if watt_percentage > 150:
         zone = 7
     elif watt_percentage > 121:
