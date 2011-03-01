@@ -43,7 +43,7 @@ $('#zoom{{forloop.counter0}}-link-1').bind("click",
         function (evt) { 
         plot.setSelection({ 
             xaxis: { 
-                from: {{interval.distance}}, to: {{interval.distance}}+{{interval.distance}}/1000
+                from: {{interval.start}}/1000, to: ({{interval.start}}+{{interval.distance}})/1000
             }
         })
         });
@@ -54,7 +54,7 @@ $('#row{{forloop.counter0}}').css('background-Color', colors[{{interval.get_zone
 </script>
         </td>
         <td>{{ interval.start_time }} </td>
-        <td>{{interval.duration}} {% trans "s" %}</td>
+        <td>{{interval.duration|durationformatshort}}</td>
         {% if object.avg_speed %}
         <td>{{ interval.distance|floatformat }} {% trans "m" %} </td>
         <td>{{interval.avg_speed|floatformat}} {% trans "km/h" %}</td>

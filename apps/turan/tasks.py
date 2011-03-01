@@ -526,7 +526,7 @@ def parse_sensordata(exercise, callback=None):
         interval.exercise_id = exercise.id
 
         # Figure out which values the parser has
-        for v in ('start_time', 'duration', 'distance', 'ascent', 'descent',
+        for v in ('start', 'start_time', 'duration', 'distance', 'ascent', 'descent',
                 'avg_temp', 'kcal', 'start_lat', 'start_lon', 'end_lat', 'end_lon',
                 'avg_hr', 'avg_speed', 'avg_cadence', 'avg_power',
                 'max_hr', 'max_speed', 'max_cadence', 'max_power',

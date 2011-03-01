@@ -526,6 +526,7 @@ class Interval(models.Model):
     exercise = models.ForeignKey(Exercise)
 
     start_time = models.DateTimeField()
+    start = models.FloatField(help_text=_('in km'), blank=True, null=True)
     duration = models.IntegerField()
     distance = models.FloatField(help_text=_('in km'), null=True, blank=True, default=0)
     ascent = models.IntegerField(blank=True, null=True) # m
@@ -583,6 +584,17 @@ class Interval(models.Model):
             return hr2zone(hr_percent)
         return 0
 
+
+    def save(self, *args, **kwargs):
+        ''' Calculate extra values before save '''
+
+        if not self.start:
+            startd = self.exercise.exercisedetail_set.filter(time=self.start_time)
+            if startd:
+                if startd[0].distance:
+                    self.start = startd[0].distance
+
+        super(Interval, self).save(*args, **kwargs)
 
 class Segment(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))

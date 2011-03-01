@@ -662,6 +662,7 @@ def powerjson(request, object_id):
         ret['duration'] = duration
         ret['distance'] = distance
         ret['gradient'] = gradient*100
+        ret['power__normalized'] = power_30s_average(details)
     for a, b in ret.items():
         # Do not return empty values
         if not b:
