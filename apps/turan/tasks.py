@@ -322,8 +322,9 @@ def best_x_sec(details, length, power):
     best_length_power = 0.0
 
     q_speed.appendleft(details[0].speed)
-    if power:
-        q_power.appendleft(details[0].power)
+    j = 1
+    if power and details[j].power:
+        q_power.appendleft(details[j].power)
     j = 2
     len_i = len(details)
     for i in xrange(2, len_i):
@@ -336,11 +337,14 @@ def best_x_sec(details, length, power):
                 q_speed = deque()
                 q_speed.appendleft(details[i].speed)
             if power:
-                if delta_t < 60:
+                if delta_t < 60 and details[i].power:
                     q_power.appendleft(details[i].power * delta_t)
+                elif delta_t < 60 and not details[i].power:
+                    q_power.appendleft(0)
                 else:
                     q_power = deque()
-                    q_power.appendleft(details[i].power)
+                    if details[i].power:
+                        q_power.appendleft(details[i].power)
             delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
             if delta_t_total >= length:
                 break
@@ -388,8 +392,10 @@ def best_x_sec(details, length, power):
             else:
                 q_speed = deque()
             if power:
-                if delta_t < 60:
+                if delta_t < 60 and details[i].power:
                     q_power.appendleft(details[i].power*delta_t)
+                elif delta_t < 60 and not details[i].power:
+                    q_power.appendleft(0)
                 else:
                     q_power = deque()
             while ((details[i].time - details[i-len(q_speed)].time).seconds) > length:
