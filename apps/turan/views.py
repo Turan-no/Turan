@@ -1,6 +1,6 @@
 from models import *
 from tasks import smoothListGaussian, calcpower
-from itertools import groupby
+from itertools import groupby, islice
 from forms import ExerciseForm
 from profiles.models import Profile
 from django.shortcuts import render_to_response, get_object_or_404
@@ -55,6 +55,10 @@ from turancalendar import WorkoutCalendar
 from feeds import ExerciseCalendar
 
 import simplejson
+#from simplejson import encoder
+#encoder.c_make_encoder = None
+#encoder.FLOAT_REPR = lambda o: format(o, '.4f')
+
 from profiler import profile
 
 from celery.result import AsyncResult
@@ -798,9 +802,10 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
             js += '[%.4f,%s],' % (distance, dval)
     return js
 
-def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, use_constraints=True):
+def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, use_constraints=True, smooth=0):
     ''' Generate javascript to be used directly in flot code
-    Argument use_constraints can be used to disable flot constraints for HR, used for compare feature '''
+    Argument use_constraints can be used to disable flot constraints for HR, used for compare feature
+    Argument smooth to reduce number of elements by averaging by the number given in smooth'''
 
     if not details:
         return
@@ -861,6 +866,8 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
     if not has_temperature:
         del js_strings['temp']
 
+#    running_sums = js_strings.copy()
+
     for i, d in enumerate(details):
         if start and start < i:
             continue
@@ -878,17 +885,27 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
         for val in js_strings.keys():
             try:
                 dval = getattr(d, val)
-                if dval > 0: # skip zero values (makes prettier graph)
-                    js_strings[val] += '[%.4f,%s],' % (x, dval)
+                if dval != 0: # skip zero values (makes prettier graph)
+                    if dval != None:
+                        js_strings[val].append((x, dval))
             except AttributeError: # not all formats support all values
                 pass
 
     # Convert lists into strings
     for val in js_strings.keys():
-        js_strings[val] = ''.join(js_strings[val]).rstrip(',')
+        thevals = js_strings[val]
+        if smooth:
+            vals = js_strings[val]
+            dists = islice([d[0] for d in vals], None,None, smooth)
+            vals = [v[1] for v in vals]
+            thevals = [sum(vals[i*smooth:(i+1)*smooth])/smooth for i in xrange(len(vals)/smooth)]
+            thevals = zip(dists, thevals)
+        js_strings[val] =  simplejson.dumps(thevals, separators=(',',':'))
+#''.join(js_strings[val]).rstrip(',')
+
+    js_strings['use_constraints'] = use_constraints
 
     t = loader.get_template('turan/js_datasets.js')
-    js_strings['use_constraints'] = use_constraints
     c = Context(js_strings)
     js = t.render(c)
 
@@ -1237,12 +1254,19 @@ def exercise(request, object_id):
     details = object.exercisedetail_set.all()
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
+    smooth = 0
     if details:
         if filldistance(details): # Only do this if we actually have distance
             # xaxis by distance if we have distance in details unless user requested time !
             req_t = request.GET.get('xaxis', '')
             if not req_t == 'time':
                 time_xaxis = False
+            req_s = request.GET.get('smooth', '')
+            if req_s:
+                try:
+                    smooth = int(req_s)
+                except:
+                    smooth = 0
             userweight = object.user.get_profile().get_weight(object.date)
             slopes = object.slope_set.all().order_by('start')
             #lonlats = []
@@ -1270,7 +1294,7 @@ def exercise(request, object_id):
             #    details[i].poweravg30s = poweravg30s[i]
             #object.normalized = normalized_power(poweravg30s)
 
-    datasets = js_trip_series(request, details, time_xaxis=time_xaxis)
+    datasets = js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth)
 
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
 
