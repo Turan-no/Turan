@@ -78,8 +78,8 @@ class WorkoutCalendar(LocaleHTMLCalendar):
                 except TypeError:
                     pass # fukken durationfield is sometimes decimal
             week_sums[week] = w_sums
-            if not self.current_week:
-                self.current_week = week
+        if not self.current_week:
+            self.current_week = sorted(self.workouts_by_week.keys())[0]
 
         return week_sums
 
@@ -87,6 +87,7 @@ class WorkoutCalendar(LocaleHTMLCalendar):
         """
         Return a complete week as a table row.
         """
+
 
         s = ''.join(self.formatday(d, wd) for (d, wd) in theweek)
         week = { 'days': s }

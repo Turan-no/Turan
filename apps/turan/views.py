@@ -593,7 +593,6 @@ def calendar_month(request, year, month):
 
     e_by_week = [(week, list(items)) for week, items in groupby(exercices, lambda workout: int(workout.date.strftime('%W')))]
 
-
     return render_to_response('turan/calendar.html',
             {'calendar': mark_safe(cal),
              'months': months,
