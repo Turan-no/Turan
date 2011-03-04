@@ -580,8 +580,9 @@ class Interval(models.Model):
             return watt2zone(watt_p)
         elif self.avg_hr:
             max_hr = self.exercise.user.get_profile().max_hr
-            hr_percent = float(self.avg_hr)*100/max_hr
-            return hr2zone(hr_percent)
+            if max_hr:
+                hr_percent = float(self.avg_hr)*100/max_hr
+                return hr2zone(hr_percent)
         return 0
 
 
