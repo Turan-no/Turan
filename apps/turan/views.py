@@ -866,8 +866,6 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
     if not has_temperature:
         del js_strings['temp']
 
-#    running_sums = js_strings.copy()
-
     for i, d in enumerate(details):
         if start and start < i:
             continue
@@ -900,7 +898,8 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
             vals = [v[1] for v in vals]
             thevals = [sum(vals[i*smooth:(i+1)*smooth])/smooth for i in xrange(len(vals)/smooth)]
             thevals = zip(dists, thevals)
-        js_strings[val] =  simplejson.dumps(thevals, separators=(',',':'))
+        if len(thevals):
+            js_strings[val] =  simplejson.dumps(thevals, separators=(',',':'))
 #''.join(js_strings[val]).rstrip(',')
 
     js_strings['use_constraints'] = use_constraints
