@@ -876,7 +876,7 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
         time = d.time - previous_time
         previous_time = d.time
         if not time_xaxis:
-            if d.speed:
+            if d.speed != None:
                 x += ((d.speed/3.6) * time.seconds)/1000
         else:
             x += float(time.seconds)/60
