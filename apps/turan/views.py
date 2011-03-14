@@ -1259,7 +1259,7 @@ def exercise(request, object_id):
         if filldistance(details): # Only do this if we actually have distance
             # xaxis by distance if we have distance in details unless user requested time !
             req_t = request.GET.get('xaxis', '')
-            if not req_t == 'time':
+            if not (req_t == 'time' or str(object.exercise_type) == 'Rollers'): # TODO make exercise_type matrix for xaxis, like for altitude
                 time_xaxis = False
             req_s = request.GET.get('smooth', '')
             if req_s:
