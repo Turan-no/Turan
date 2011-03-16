@@ -51,7 +51,7 @@ $('#zoom{{forloop.counter0}}-link-1').bind("click",
         })
         });
 
-$('#row{{forloop.counter0}}').css('background-Color', colors[{{interval.get_zone}}]);
+$('#row{{forloop.counter0}}').css('background-color', colors[{{interval.get_zone}}].replace("rgb", "rgba").replace(")", ", 0.5)"));
 
 
 </script>
