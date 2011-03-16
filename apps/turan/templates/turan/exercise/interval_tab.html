@@ -56,7 +56,7 @@ $('#row{{forloop.counter0}}').css('background-Color', colors[{{interval.get_zone
 
 </script>
         </td>
-        <td>{{ interval.start_time }} </td>
+        <td>{{ interval.start_time|time:"H:i" }} </td>
         <td>{{interval.duration|durationformatshort}}</td>
         {% if object.avg_speed %}
         <td>{{ interval.distance|floatformat }} {% trans "m" %} </td>
