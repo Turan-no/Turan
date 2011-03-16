@@ -16,6 +16,9 @@
             {% trans "Length" %}
         </th>
         <th>
+            {% trans "Elevation" %}
+        </th>
+        <th>
             {% trans "Speed" %}
         </th>
         {% endif %}
@@ -57,6 +60,7 @@ $('#row{{forloop.counter0}}').css('background-Color', colors[{{interval.get_zone
         <td>{{interval.duration|durationformatshort}}</td>
         {% if object.avg_speed %}
         <td>{{ interval.distance|floatformat }} {% trans "m" %} </td>
+        <td>+{{ interval.ascent}}/-{{ interval.descent }} {% trans "m" %} </td>
         <td>{{interval.avg_speed|floatformat}} {% trans "km/h" %}</td>
         {% endif %}
         {% if interval.avg_power %}
