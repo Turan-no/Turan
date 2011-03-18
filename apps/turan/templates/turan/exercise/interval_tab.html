@@ -22,7 +22,7 @@
             {% trans "Speed" %}
         </th>
         {% endif %}
-        {% if object.avg_power %}
+        {% if object.avg_power and power_show%}
         <th>
             {% trans "Avg power" %}
         </th>
@@ -63,7 +63,7 @@ $('#row{{forloop.counter0}}').css('background-color', colors[{{interval.get_zone
         <td>+{{ interval.ascent}}/-{{ interval.descent }} {% trans "m" %} </td>
         <td>{{interval.avg_speed|floatformat}} {% trans "km/h" %}</td>
         {% endif %}
-        {% if interval.avg_power %}
+        {% if interval.avg_power and power_show %}
         <td> {{interval.avg_power|floatformat}} {% trans "W" %} </td>
         <td> {{interval.get_ftp_percentage|floatformat}} {% trans "%" %} </td>
         <td>{{interval.get_avg_power_per_kg|floatformat}} {% trans "W/kg" %} </td>
