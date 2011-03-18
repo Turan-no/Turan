@@ -163,8 +163,15 @@ var GraphPlotter = {
                 '">' + val.label + '</label></input>');
         });
         $("#reset_zoom").bind("click", function(evt) {
-                evt.preventDefault();
-                that.plotAccordingToChoices({}); 
+            evt.preventDefault();
+            $("#scrollhacks").css("overflow", "hidden");
+            $("#tripdiv").width( $("#tripdiv").width(980));
+            that.plotAccordingToChoices({}); 
+        });
+        $("#enlarge").bind("click", function(evt) {
+            evt.preventDefault();
+            $("#scrollhacks").css("overflow", "scroll");
+            $("#tripdiv").width( $("#tripdiv").width()*4);
         });
         this.choiceContainer.find("input").bind("click", function(evt) {
                 that.plotAccordingToChoices({}); 
