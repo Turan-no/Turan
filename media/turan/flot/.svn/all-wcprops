@@ -1,13 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 23
-/svn/!svn/ver/263/trunk
+/svn/!svn/ver/323/trunk
 END
 jquery.flot.selection.js
 K 25
 svn:wc:ra_dav:version-url
 V 48
-/svn/!svn/ver/251/trunk/jquery.flot.selection.js
+/svn/!svn/ver/317/trunk/jquery.flot.selection.js
 END
 excanvas.js
 K 25
@@ -25,7 +25,7 @@ API.txt
 K 25
 svn:wc:ra_dav:version-url
 V 31
-/svn/!svn/ver/263/trunk/API.txt
+/svn/!svn/ver/317/trunk/API.txt
 END
 jquery.flot.threshold.js
 K 25
@@ -37,31 +37,31 @@ jquery.flot.crosshair.js
 K 25
 svn:wc:ra_dav:version-url
 V 48
-/svn/!svn/ver/255/trunk/jquery.flot.crosshair.js
-END
-jquery.flot.navigate.js
-K 25
-svn:wc:ra_dav:version-url
-V 47
-/svn/!svn/ver/251/trunk/jquery.flot.navigate.js
-END
-jquery.js
-K 25
-svn:wc:ra_dav:version-url
-V 33
-/svn/!svn/ver/180/trunk/jquery.js
-END
-NEWS.txt
-K 25
-svn:wc:ra_dav:version-url
-V 32
-/svn/!svn/ver/263/trunk/NEWS.txt
+/svn/!svn/ver/317/trunk/jquery.flot.crosshair.js
 END
 jquery.colorhelpers.js
 K 25
 svn:wc:ra_dav:version-url
 V 46
-/svn/!svn/ver/219/trunk/jquery.colorhelpers.js
+/svn/!svn/ver/321/trunk/jquery.colorhelpers.js
+END
+NEWS.txt
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/323/trunk/NEWS.txt
+END
+jquery.js
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/317/trunk/jquery.js
+END
+jquery.flot.navigate.js
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/317/trunk/jquery.flot.navigate.js
 END
 jquery.flot.fillbetween.js
 K 25
@@ -73,13 +73,19 @@ jquery.flot.js
 K 25
 svn:wc:ra_dav:version-url
 V 38
-/svn/!svn/ver/263/trunk/jquery.flot.js
+/svn/!svn/ver/323/trunk/jquery.flot.js
+END
+jquery.flot.resize.js
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/318/trunk/jquery.flot.resize.js
 END
 PLUGINS.txt
 K 25
 svn:wc:ra_dav:version-url
 V 35
-/svn/!svn/ver/184/trunk/PLUGINS.txt
+/svn/!svn/ver/317/trunk/PLUGINS.txt
 END
 LICENSE.txt
 K 25
@@ -109,13 +115,13 @@ jquery.flot.pie.js
 K 25
 svn:wc:ra_dav:version-url
 V 42
-/svn/!svn/ver/228/trunk/jquery.flot.pie.js
+/svn/!svn/ver/286/trunk/jquery.flot.pie.js
 END
 README.txt
 K 25
 svn:wc:ra_dav:version-url
 V 34
-/svn/!svn/ver/222/trunk/README.txt
+/svn/!svn/ver/293/trunk/README.txt
 END
 Makefile
 K 25
