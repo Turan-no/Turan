@@ -41,8 +41,7 @@
         <li id="tabs-select-6">{% trans "Slopes" %}</li>
     {% endifequal %}
     {% ifequal object.exercise_type.altitude 1 %}
-        <li id="tabs-select-7">{% trans "Inclinesums" %}</li>
-        <li id="tabs-select-8">{% trans "Gradients" %}</li>
+        <li id="tabs-select-7">{% trans "Inclinedata" %}</li>
     {% endifequal %}
     <li id="tabs-select-9">{% trans "Best Efforts" %}</li>
     </ul>
@@ -68,12 +67,10 @@
     {% endifequal %}
     {% ifequal object.exercise_type.altitude 1 %}
     <div id="tabs-7">
-        {% include "turan/exercise/incline_tab.html" %}
-    </div>
-    <div id="tabs-8" class="gradient_tab">
         <div id="gradientzonediv" style="width:900px;height:400px; float: right;"></div>
         <div id="gradientzonetable" style="width:1px; height: 400px;"></div>
         {% include "turan/exercise/gradient_tab.html" %}
+        {% include "turan/exercise/incline_tab.html" %}
     </div>
     {% endifequal %}
     <div id="tabs-9">

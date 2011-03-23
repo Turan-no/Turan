@@ -41,6 +41,6 @@
                 }{% if not forloop.last%},{%endif%}
             {% endfor %}
     ];
-    $("#inclinediv").css("height", $("#inclinediv").parent().css("height"));
+    $("#inclinediv").css("height", $("#incline").css("height"));
     $.plot($("#inclinediv"), inclinedata, { grid: { show: true } });
 </script>
