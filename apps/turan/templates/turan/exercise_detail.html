@@ -38,7 +38,9 @@
         <li id="tabs-select-4">{% trans "Zones" %}</li>
         <li id="tabs-select-5">{% trans "Freqs" %}</li>
     {% ifequal object.exercise_type.slopes 1 %}
+    {% if slopes %}
         <li id="tabs-select-6">{% trans "Slopes" %}</li>
+    {% endif %}
     {% endifequal %}
     {% ifequal object.exercise_type.altitude 1 %}
         <li id="tabs-select-7">{% trans "Inclinedata" %}</li>
@@ -63,7 +65,9 @@
         {% include "turan/exercise/hrhzone_tab.html" %}
     </div>
     {% ifequal object.exercise_type.slopes 1 %}
+    {% if slopes %}
         {% include "turan/exercise/slope_tab.html" %}
+    {% endif %}
     {% endifequal %}
     {% ifequal object.exercise_type.altitude 1 %}
     <div id="tabs-7">
