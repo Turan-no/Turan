@@ -40,9 +40,9 @@
     </tr>
 {% for interval in intervals %}
 <tr id="row{{forloop.counter0}}">
-        <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select" />
+        <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="izoom{{forloop.counter0}}-link-1" class="zoom-select" />
 <script type="text/javascript">
-$('#zoom{{forloop.counter0}}-link-1').bind("click", 
+$('#izoom{{forloop.counter0}}-link-1').bind("click", 
         function (evt) { 
         plot.setSelection({ 
             xaxis: { 
