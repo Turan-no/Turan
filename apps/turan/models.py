@@ -603,6 +603,11 @@ class Interval(models.Model):
 
         super(Interval, self).save(*args, **kwargs)
 
+    def get_relative_time_in_minutes(self):
+        seconds = (self.start_time - self.exercise.get_full_start_time()).seconds
+        if seconds:
+            return seconds/60
+
 class Segment(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))
     distance = models.FloatField(help_text=_('in km'), default=0)

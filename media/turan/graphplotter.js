@@ -8,6 +8,7 @@ var GraphPlotter = {
     datasets: null,
     backendUrl: null,
     max_hr: 200,
+    markings: [],
     formatters: {
             speed: function(val, axis) {
                 return (val).toFixed(axis.tickDecimals) + ' km/h';
@@ -95,6 +96,7 @@ var GraphPlotter = {
                 grid: { 
                     hoverable: true, 
                     clickable: true,
+                    markings: this.markings,
                 },
                 selection: { mode: "x" }
             });
@@ -145,6 +147,7 @@ var GraphPlotter = {
         this.datasets = args.datasets;
         var backendUrl = args.backendUrl;
         this.max_hr = args.max_hr;
+        this.markings = args.markings;
         this.xaxisformatter = this.formatters[args.xaxisformatter];
 
         var that = this;
