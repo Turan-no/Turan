@@ -85,7 +85,9 @@
 {% if time_xaxis %}
     markings.push( { xaxis: { from: {{interval.get_relative_time_in_minutes}}, to: {{interval.get_relative_time_in_minutes}} }, color:  "#cccccc" });
 {% else %}
+{% if interval.start %}
     markings.push( { xaxis: { from: {{interval.start}}/1000, to: {{interval.start}}/1000 }, color:  "#cccccc" });
+{% endif %}
 {% endif %}
     {% endif %}
 {% endfor %}
