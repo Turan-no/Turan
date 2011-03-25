@@ -46,7 +46,11 @@ $('#izoom{{forloop.counter0}}-link-1').bind("click",
         function (evt) { 
         plot.setSelection({ 
             xaxis: { 
+            {% if time_xaxis %}
+                from: {{interval.get_relative_time_in_minutes}}, to: {{ interval.get_relative_time_in_minutes}} +  {{interval.duration}} / 60
+            {% else %}
                 from: {{interval.start}}/1000, to: ({{interval.start}}+{{interval.distance}})/1000
+            {% endif %}
             }
         })
         });
