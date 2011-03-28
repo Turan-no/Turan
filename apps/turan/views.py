@@ -694,12 +694,13 @@ def wikijson(request, slug, rev_id=None):
 
 #@decorator_from_middleware(GZipMiddleware)
 #@cache_page(86400*7)
+#@profile("geojson")
 def geojson(request, object_id):
     ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
     give each line a zone property so it can be styled differently'''
 
-    qs = ExerciseDetail.objects.filter(exercise=object_id)
-    qs = list(qs.exclude(lon=0).exclude(lat=0))
+    qs = ExerciseDetail.objects.filter(exercise=object_id).values('hr','lon','lat')
+    #qs = list(qs.exclude(lon=0).exclude(lat=0))
 
     start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
     if start and stop:
@@ -710,7 +711,7 @@ def geojson(request, object_id):
     if len(qs) == 0:
         return HttpResponse('{}')
 
-    max_hr = qs[0].exercise.user.get_profile().max_hr
+    max_hr = Exercise.objects.get(pk=object_id).user.get_profile().max_hr
 
     class Feature(object):
 
@@ -744,26 +745,26 @@ def geojson(request, object_id):
     for d in qs:
         if previous_lon and previous_lat:
             hr_percent = 0
-            if d.hr: # To prevent zerodivision
-                hr_percent = float(d.hr)*100/max_hr
+            if d['hr']: # To prevent zerodivision
+                hr_percent = float(d['hr'])*100/max_hr
             zone = hr2zone(hr_percent)
             #if zone == 0: # Stylemap does not support zone 0. FIXME
             #    zone = 1
 
             if previous_zone == zone:
-                previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
+                previous_feature.addLine(previous_lon, previous_lat, d['lon'], d['lat'])
             else:
                 if previous_feature:
                     features.append(previous_feature)
                 previous_feature = Feature(zone)
 
             previous_zone = zone
-        previous_lon = d.lon
-        previous_lat = d.lat
+        previous_lon = d['lon']
+        previous_lat = d['lat']
 
     # add last segment
     if previous_zone == zone:
-        previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
+        previous_feature.addLine(previous_lon, previous_lat, d['lon'], d['lat'])
     features.append(previous_feature)
 
 
