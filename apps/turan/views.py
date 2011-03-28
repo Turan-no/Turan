@@ -699,7 +699,7 @@ def geojson(request, object_id):
     ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
     give each line a zone property so it can be styled differently'''
 
-    qs = ExerciseDetail.objects.filter(exercise=object_id).values('hr','lon','lat')
+    qs = ExerciseDetail.objects.filter(exercise=object_id).exclude(lon=0).exclude(lat=0).values('hr','lon','lat')
     #qs = list(qs.exclude(lon=0).exclude(lat=0))
 
     start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
