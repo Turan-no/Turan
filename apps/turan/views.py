@@ -877,8 +877,11 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
         time = d.time - previous_time
         previous_time = d.time
         if not time_xaxis:
-            if d.speed != None:
-                x += ((d.speed/3.6) * time.seconds)/1000
+            #if d.speed != None:
+            if d.distance:
+                x = d.distance/1000
+            #else:
+            #    x = += ((d.speed/3.6) * time.seconds)/1000
         else:
             x += float(time.seconds)/60
 
@@ -1190,12 +1193,15 @@ def getgradients(values):
 def filldistance(values):
     d = 0
     if values:
+        d_check = values[len(values)-1].distance
+        if d_check > 0:
+            return d_check
         values[0].distance = 0
-    for i in xrange(1,len(values)):
-        delta_t = (values[i].time - values[i-1].time).seconds
-        if values[i].speed:
-            d += values[i].speed/3.6 * delta_t
-        values[i].distance = d
+        for i in xrange(1,len(values)):
+            delta_t = (values[i].time - values[i-1].time).seconds
+            if values[i].speed:
+                d += values[i].speed/3.6 * delta_t
+            values[i].distance = d
     return d
 
 

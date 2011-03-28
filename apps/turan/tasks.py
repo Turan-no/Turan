@@ -56,13 +56,16 @@ def filldistance(values):
     d = 0
     if values:
         values[0].distance = 0
-    for i in xrange(1,len(values)):
-        delta_t = (values[i].time - values[i-1].time).seconds
-        if values[i].speed:
-            d += values[i].speed/3.6 * delta_t
-            values[i].distance = d
-        else:
-            values[i].distance = values[i-1].distance
+        d_check = values[len(values)-1].distance
+        if d_check > 0:
+            return d_check
+        for i in xrange(1,len(values)):
+            delta_t = (values[i].time - values[i-1].time).seconds
+            if values[i].speed:
+                d += values[i].speed/3.6 * delta_t
+                values[i].distance = d
+            else:
+                values[i].distance = values[i-1].distance
     return d
 
 def getavghr(values, start, end):
