@@ -22,6 +22,19 @@
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/social_project.css" />
     <link rel="icon" type="image/vnd.microsoft.icon" href="{{MEDIA_URL}}favicon.ico" />
     <script type="text/javascript" extsrc="{{ MEDIA_URL }}pinax/js/topics.js"></script>
+<script type="text/javascript"> 
+   function load() {
+      var display = new Garmin.DeviceDisplay("garminDisplay", { 
+         pathKeyPairsArray: ["http://turan.no/",
+                             "a8119696e2db6f2ee0406639a44ef158"],
+         autoFindDevices: true, //start searching for devices
+         showStatusElement: true, //basic feedback provided
+         showReadDataElement: false, //don't offer to read data
+         //add other options per the documentation  
+      });
+   }    
+</script>   
+
     {% block extra_head %}{% endblock %}
 {% endblock %}
 

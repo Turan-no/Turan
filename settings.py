@@ -314,6 +314,8 @@ BROKER_PASSWORD = "tur4n"
 BROKER_VHOST = "turan"
 CELERYD_CONCURRENCY = 1
 CELERYD_LOG_FILE = 'celeryd.log'
+CELERY_ALWAYS_EAGER = True
+
 
 
 # local_settings.py can be used to override environment-specific settings
