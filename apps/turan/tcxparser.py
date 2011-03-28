@@ -8,7 +8,7 @@ from math import hypot
 garmin_ns = '{http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2}'
 
 class TCXEntry(object):
-    def __init__(self, time, hr, speed, cadence, altitude, lon, lat, power):
+    def __init__(self, time, hr, speed, cadence, altitude, lon, lat, power, distance):
         self.time = time
         self.hr = hr
         self.speed = speed
@@ -17,6 +17,7 @@ class TCXEntry(object):
         self.lon = lon
         self.lat = lat
         self.power = power
+        self.distance = distance
     def __unicode__(self):
         return '[%s] hr: %s, speed: %s, cadence: %s, alt: %s, lon %s, lat: %s, power: %s' % (self.time, self.hr, self.speed, self.cadence, self.altitude, self.lon, self.lat, self.power)
 
@@ -228,7 +229,7 @@ class TCXParser(object):
                     self.pedaling_cad += cadence*timedelta
                     pedaling_cad_seconds += timedelta
 
-            t = TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power)
+            t = TCXEntry(time, hr, speed, cadence, altitude, lon, lat, power, distance)
             self.entries.append(t)
             self.cur_time = time
 
@@ -273,7 +274,7 @@ if __name__ == '__main__':
 
     print "Time, Speed, Altitude, Hr, Cadence"
     for x in t.entries:
-        print x.time, x.speed, x.altitude, x.hr, x.cadence
+        print x.time, x.speed, x.altitude, x.hr, x.cadence, x.distance
 
     print t.avg_hr, t.avg_speed, t.avg_cadence
     print t.max_hr, t.max_speed, t.max_cadence
