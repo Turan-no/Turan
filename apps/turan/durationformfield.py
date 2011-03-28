@@ -20,7 +20,7 @@ class TimeDelta(datetime.timedelta):
     ))
     
     def from_string(cls, value):
-        if value == '0':
+        if value == '0' or value == '0.000000':
             return datetime.timedelta.__new__(TimeDelta)
         
         pairs = []
