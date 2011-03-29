@@ -81,10 +81,10 @@ var GraphPlotter = {
         if (data.length > 0) {
             plot = $.plot($("#tripdiv"), data, {
                 yaxes: [
-                    { tickFormatter: this.formatters['speed']},
+                    { tickFormatter: this.formatters['speed'], max: 100},
                     { position: "right", min: 80, max: this.max_hr, tickFormatter: this.formatters['hr'] }, 
                     { position: "right", tickFormatter: this.formatters['power']},
-                    { tickFormatter: this.formatters['altitude']},
+                    { tickFormatter: this.formatters['altitude']} ,
                     { tickFormatter: this.formatters['temp']},
                     
                     ],
@@ -159,6 +159,8 @@ var GraphPlotter = {
             if (key == 'cadence') 
                 checked = ''
             if (key == 'temp') 
+                checked = ''
+            if (key == 'power') 
                 checked = ''
 
             that.choiceContainer.append('<input type="checkbox" name="' + key +
