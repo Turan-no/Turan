@@ -332,8 +332,10 @@ class FITParser(object):
                     
                     time = datetime.fromtimestamp(get_field_value(fields, fit_lap, 'timestamp'))
                     time = time + timestamp_offset
-                    start_time = datetime.fromtimestamp(get_field_value(fields, fit_lap, 'start_time'))
-                    start_time = start_time + timestamp_offset
+                    start_time = get_field_value(fields, fit_lap, 'start_time')
+                    if start_time != None:
+                        start_time = datetime.fromtimestamp(start_time)
+                        start_time = start_time + timestamp_offset
                     distance = get_field_value(fields, fit_lap, 'distance')
                     if distance != None:
                         distance = distance / 100.
