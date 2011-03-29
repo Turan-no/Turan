@@ -368,7 +368,8 @@ class FITParser(object):
                     max_temp = get_field_value(fields, fit_lap, 'max_temp')
                     min_temp = get_field_value(fields, fit_lap, 'min_temp')
 
-                    self.laps.append(FITLap(start_time, start_lon, start_lat,
+                    if start_time != None: # Do not add invalid intervals
+                        self.laps.append(FITLap(start_time, start_lon, start_lat,
                                             end_lon, end_lat, distance, duration, ascent,
                                             descent, max_speed, avg_speed, max_hr,
                                             avg_hr, avg_cadence, max_cadence,
