@@ -612,7 +612,10 @@ def powerjson(request, object_id):
     object = get_object_or_404(Exercise, pk=object_id)
 
     start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
-    start, stop = int(start), int(stop)
+    try:
+        start, stop = int(start), int(stop)
+    except ValueError:
+        return {}
     all_details = object.get_details()
 
     details = list(all_details.all()[start:stop])
@@ -1592,8 +1595,11 @@ def import_data(request):
 
 def power_30s_average(details):
 
-    datasetlen = len(details)
+    if not details[0].exercise.avg_power:
+        # Do not generate for exercise without power
+        return 0
 
+    datasetlen = len(details)
 
     # TODO implement for non 1 sec sample, for now return blank
     sample_len = (details[datasetlen/2].time - details[(datasetlen/2)-1].time).seconds
