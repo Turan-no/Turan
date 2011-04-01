@@ -288,11 +288,11 @@ def statistics(request, year=None, month=None, day=None, week=None):
         '%s__gte' % date_field: first_day,
         '%s__lt' % date_field: last_day,
     }
-    
+
     # Only bother to check current date if the month isn't in the past and future objects are requested.
     if last_day >= now.date() and not allow_future:
         lookup_kwargs['%s__lte' % date_field] = now
-    
+
     # Calculate the next month, if applicable.
     if allow_future:
         next_month = last_day
@@ -335,17 +335,16 @@ def statistics(request, year=None, month=None, day=None, week=None):
 
     exercisename = request.GET.get('exercise')
 
+    tfilter = {}
     if exercisename:
         exercise = get_object_or_404(ExerciseType, name=exercisename)
-    else:
-        exercise = get_object_or_404(ExerciseType, name='Cycling')
-
-    exercisefilter = { "user__exercise__exercise_type": exercise }
-    datefilter["user__exercise__exercise_type"] = exercise
-
-    tfilter = {}
-    tfilter.update(exercisefilter)
+        exercisefilter = { "user__exercise__exercise_type": exercise }
+        datefilter["user__exercise__exercise_type"] = exercise
+        tfilter.update(exercisefilter)
     tfilter.update(datefilter)
+    #else:
+    #    exercise = get_object_or_404(ExerciseType, name='Cycling')
+
     stats_dict = Exercise.objects.filter(**tfilter).aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
     total_duration = stats_dict['duration__sum']
     total_distance = stats_dict['route__distance__sum']
