@@ -835,6 +835,7 @@ def json_trip_series(request, object_id):
         details = exercise.exercisedetail_set.all()
         if exercise.avg_power:
             generate_30s_power = power_30s_average(details)
+        d = filldistance(details)
         js = js_trip_series(request, details, time_xaxis=time_xaxis, use_constraints = False)
         cache.set(cache_key, js, 86400)
     return HttpResponse(js, mimetype='text/javascript')
