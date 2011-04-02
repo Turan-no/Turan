@@ -90,6 +90,7 @@ $(function () {
             <a href="{% url calendar-index %}?username={{ other_user }}">{% trans "Show" %} {{ other_user }}{% trans "'s calendar" %}</a>
             <div class="box spacer">
                 {% if other_user.get_profile.name %}<h2><span class="fn">{{ other_user.get_profile.name }}</span></h2>{% endif %}
+                {% if other_user.date_joined%}<p><b>{% trans "Date joined" %}</b>: {{other_user.date_joined|naturalday:_("F j, Y")|capfirst }}</p>{% endif %}
                 {% if other_user.get_profile.about %}<p><b>{% trans "About" %}</b>: {{ other_user.get_profile.about }}</p>{% endif %}
                 {% if other_user.get_profile.location%}<p><b>{% trans "Location" %}</b>: {{ other_user.get_profile.location }}</p>{% endif %}
                 {% if other_user.get_profile.website %}<p><b>{% trans "Website" %}</b>: <a class="url" href="{{ other_user.get_profile.website }}">{{ other_user.get_profile.website }}</a></p>{% endif %}
