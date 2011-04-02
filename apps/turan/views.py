@@ -948,6 +948,8 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
     t = loader.get_template('turan/js_datasets.js')
     c = Context(js_strings)
     js = t.render(c)
+    # Remove last comma for nazi json parsing
+    js = js.rstrip(', \n') + '}'
 
     return js
 
