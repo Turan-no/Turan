@@ -79,7 +79,8 @@ class WorkoutCalendar(LocaleHTMLCalendar):
                     pass # fukken durationfield is sometimes decimal
             week_sums[week] = w_sums
         if not self.current_week:
-            self.current_week = sorted(self.workouts_by_week.keys())[0]
+            if self.workouts_by_week.keys():
+                self.current_week = sorted(self.workouts_by_week.keys())[0]
 
         return week_sums
 
