@@ -310,6 +310,7 @@ class Exercise(models.Model):
     avg_pedaling_cad = models.IntegerField(blank=True, null=True) # rpm
     avg_power = models.IntegerField(blank=True, null=True) # W
     avg_pedaling_power = models.IntegerField(blank=True, null=True) # W
+    normalized_power = models.IntegerField(blank=True, null=True) # W 
 
     max_speed = models.FloatField(blank=True, null=True) #kmt
     max_cadence = models.IntegerField(blank=True, null=True) # rpm
@@ -319,7 +320,6 @@ class Exercise(models.Model):
     max_hr = models.IntegerField(blank=True, null=True) # bpm 
 
     kcal = models.IntegerField(blank=True, default=0, help_text=_('Only needed for Polar products'))
-
     temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     min_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     max_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
@@ -429,7 +429,7 @@ class Exercise(models.Model):
         ''' Find IF for exercise '''
         userftp = self.user.get_profile().get_ftp(self.date)
         try:
-            return round(float(self.normalized)/userftp, 3)
+            return round(float(self.normalized_power)/userftp, 3)
         except ZeroDivisionError:
             return 0
 

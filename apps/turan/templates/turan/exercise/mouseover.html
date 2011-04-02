@@ -32,8 +32,8 @@
     {% if object.avg_pedaling_power %}
     <li class="power"><span class="label">{% trans "Avg Pedaling Power" %}:</span><div style="text-align: right; float: right"> {{ object.avg_pedaling_power }} {% trans "W" %}</div></li>
     {% endif %}
-    {% if object.normalized %}
-    <li class="power"><span class="label">{% trans "Normalized Power(tm)" %}:</span><div style="text-align: right; float: right"> {{ object.normalized }} {% trans "W" %}</div></li>
+    {% if object.normalized_power %}
+    <li class="power"><span class="label">{% trans "Normalized Power" %}:</span><div style="text-align: right; float: right"> {{ object.normalized_power }} {% trans "W" %}</div></li>
     {% endif %}
     {% if object.kcal %}
     <li class="kcal" ><span class="label">{% trans "Used kcal" %}:</span><div style="text-align: right; float: right"> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})</div></li>

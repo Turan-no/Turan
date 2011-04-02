@@ -49,8 +49,8 @@
     {% if object.avg_pedaling_power %}
     <li class="power"><span class="label">{% trans "Avg Pedaling Power" %}:</span> {{ object.avg_pedaling_power }} {% trans "W" %}</li>
     {% endif %}
-    {% if object.normalized %}
-    <li class="power"><span class="label">{% trans "Normalized Power(tm)" %}:</span> {{ object.normalized }} {% trans "W" %}</li>
+    {% if object.normalized_power %}
+    <li class="power"><span class="label">{% trans "Normalized Power" %}:</span> {{ object.normalized_power }} {% trans "W" %}</li>
     {% if object.get_intensityfactor %}
     <li class="intensity"><span class="label">{% trans "Intensity Factor" %}:</span> {{ object.get_intensityfactor }}</li>
     {% endif %}

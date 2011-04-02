@@ -1,5 +1,5 @@
 from models import *
-from tasks import smoothListGaussian, calcpower
+from tasks import smoothListGaussian, calcpower, power_30s_average
 from itertools import groupby, islice
 from forms import ExerciseForm
 from profiles.models import Profile
@@ -713,6 +713,14 @@ def geojson(request, object_id):
     if len(qs) == 0:
         return HttpResponse('{}')
 
+    cache_key = 'geojson_%s' %object_id
+    # Try and get the most common value from cache
+    if not start and not stop:
+        gjstr = cache.get(cache_key)
+        if gjstr:
+            return HttpResponse(gjstr, mimetype='text/javascript')
+
+
     max_hr = Exercise.objects.get(pk=object_id).user.get_profile().max_hr
 
     class Feature(object):
@@ -775,6 +783,10 @@ def geojson(request, object_id):
         "features": ['''
     gjstr = '%s%s]}' % (gjhead, ','.join(filter(lambda x: x, [f.json for f in features])))
 
+    # save to cache if no start and stop
+    if not start and not stop:
+        cache.set(cache_key, gjstr, 86400)
+
     return HttpResponse(gjstr, mimetype='text/javascript')
 
 def tripdetail_js(event_type, object_id, val, start=False, stop=False):
@@ -804,6 +816,28 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
         if dval > 0: # skip zero values (makes prettier graph)
             js += '[%.4f,%s],' % (distance, dval)
     return js
+
+def json_trip_series(request, object_id):
+    ''' Generate a json file to be retrieved by web browsers and renderend in flot '''
+    exercise = get_object_or_404(Exercise, pk=object_id)
+
+    time_xaxis = True
+    req_t = request.GET.get('xaxis', '')
+    if exercise.avg_speed:
+        if not (req_t == 'time' or str(exercise.exercise_type) == 'Rollers'): # TODO make exercise_type matrix for xaxis, like for altitude
+            time_xaxis = False
+
+    power_show = exercise_permission_checks(request, exercise)
+
+    cache_key = 'json_trip_series_%s_%dtime_xaxis_%dpower' %(object_id, time_xaxis, power_show)
+    js = cache.get(cache_key)
+    if not js:
+        details = exercise.exercisedetail_set.all()
+        if exercise.avg_power:
+            generate_30s_power = power_30s_average(details)
+        js = js_trip_series(request, details, time_xaxis=time_xaxis, use_constraints = False)
+        cache.set(cache_key, js, 86400)
+    return HttpResponse(js, mimetype='text/javascript')
 
 def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, use_constraints=True, smooth=0):
     ''' Generate javascript to be used directly in flot code
@@ -917,16 +951,16 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
 
     return js
 
-def json_tripdetail(request, event_type, object_id, val, start=False, stop=False):
+#def json_tripdetail(request, event_type, object_id, val, start=False, stop=False):
 
     #response = HttpResponse()
     #serializers.serialize('json', qs, fields=('id', val), indent=4, stream=response)
-    js = tripdetail_js(event_type, object_id, val, start, stop)
-    return HttpResponse(js)
+#    js = tripdetail_js(event_type, object_id, val, start, stop)
+#    return HttpResponse(js)
 
 def getinclinesummary(values):
     inclines = SortedDict({
-        -1: 0,
+       -1: 0,
         0: 0,
         1: 0,
         })
@@ -1207,29 +1241,26 @@ def filldistance(values):
     return d
 
 
-#@profile("exercise_detail")
-def exercise(request, object_id):
-    ''' View for exercise detail '''
-
-    object = get_object_or_404(Exercise, pk=object_id)
-
+def exercise_permission_checks(request, exercise):
+    '''Given a request object and a exercise object, return a tuple with
+    boolean for permissions or not '''
     # Permission checks
     power_show = True
     poweravg30_show = True
-    if not object.user == request.user:  # Allow self
+    if not exercise.user == request.user:  # Allow self
         is_friend = False
         if request.user.is_authenticated():
-            is_friend = Friendship.objects.are_friends(request.user, object.user)
-        if object.exercise_permission == 'N':
+            is_friend = Friendship.objects.are_friends(request.user, exercise.user)
+        if exercise.exercise_permission == 'N':
             return redirect_to_login(request.path)
-        elif object.exercise_permission == 'F':
+        elif exercise.exercise_permission == 'F':
             if not is_friend:
                 return redirect_to_login(request.path)
 
         # Check for permission to display attributes
         try:
             # Try to find permission object for this exercise
-            permission = object.exercisepermission
+            permission = exercise.exercisepermission
 
             if hasattr(permission, "power"):
                 permission_val = getattr(permission, "power")
@@ -1239,7 +1270,7 @@ def exercise(request, object_id):
                     power_show = True
                 else: #'N' or not friends
                     power_show = False
-            if hasattr(permission, "poweravg30s"):
+            if hasattr(permission, "poweravg30s"): # FIXME by tor: why was this created, doesn't seem to be used??
                 permission_val = getattr(permission, "poweravg30s")
                 if permission_val == 'A':
                     poweravg30_show = True
@@ -1251,6 +1282,16 @@ def exercise(request, object_id):
             # No permissionobject found
             # Allowed to see.
             pass
+    return power_show
+
+
+#@profile("exercise_detail")
+def exercise(request, object_id):
+    ''' View for exercise detail '''
+
+    object = get_object_or_404(Exercise, pk=object_id)
+
+    power_show = exercise_permission_checks(request, object)
 
     # Provide template string for maximum yaxis value for HR, for easier comparison
     maxhr_js = ''
@@ -1297,13 +1338,12 @@ def exercise(request, object_id):
         #inclinesummary = getinclinesummary(details)
 
         if object.avg_power and power_show:
-            object.normalized = power_30s_average(details)
+            #object.normalized = power_30s_average(details)
             powerfreqs = getfreqs(details, 'power', min=1, val_cutoff=5)
             #for i in range(0, len(poweravg30s)):
             #    details[i].poweravg30s = poweravg30s[i]
-            #object.normalized = normalized_power(poweravg30s)
 
-    datasets = js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth)
+    #datasets = js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth)
 
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
 
@@ -1592,49 +1632,6 @@ def import_data(request):
 
     return render_to_response("turan/import.html", {'form': form}, context_instance=RequestContext(request))
 
-def power_30s_average(details):
-
-    if not details[0].exercise.avg_power:
-        # Do not generate for exercise without power
-        return 0
-
-    datasetlen = len(details)
-
-    # TODO implement for non 1 sec sample, for now return blank
-    sample_len = (details[datasetlen/2].time - details[(datasetlen/2)-1].time).seconds
-    if sample_len > 1:
-        return 0
-
-    normalized = 0.0
-    fourth = 0.0
-    power_avg_count = 0
-
-    #ASSUMING 1 SEC SAMPLE INTERVAL!
-    for i in xrange(0, datasetlen):
-        foo = 0.0
-        foo_element = 0.0
-        for j in xrange(0,30):
-            if (i+j-30) > 0 and (i+j-30) < datasetlen:
-                delta_t = (details[i+j-30].time - details[i+j-31].time).seconds
-                # Break if exerciser is on a break as well
-                if delta_t < 60:
-                    power = details[i+j-30].power
-                    if power:
-                        foo += power*delta_t
-                        foo_element += 1.0
-                else:
-                    foo = 0
-                    foo_element = 0.0
-                    break
-        if foo_element:
-            poweravg30s = foo/foo_element
-            details[i].poweravg30s = poweravg30s
-            fourth += pow(poweravg30s, 4)
-            power_avg_count += 1
-
-
-    normalized = int(round(pow((fourth/power_avg_count), (0.25))))
-    return normalized
 
 def slopes(request, queryset):
     ''' Slope list view, based on turan_object_list. Changed a bit for search

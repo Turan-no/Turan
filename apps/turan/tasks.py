@@ -587,6 +587,11 @@ def parse_sensordata(exercise, callback=None):
         if parser.comment: # comment isn't always set
             exercise.comment = parser.comment
 
+
+    # Generate normalized power
+    if exercise.avg_power:
+        exercise.normalized_power = power_30s_average(exercise.get_details().all())
+
     # Normalize altitude, that is, if it's below zero scale every value up
     normalize_altitude(exercise)
 
@@ -680,3 +685,53 @@ def calculate_ascent_descent(event):
 
         previous = a
     return round(ascent), round(descent)
+
+def power_30s_average(details):
+    ''' Populate every detail in a detail set with power 30s average and also return the
+    normalized power for the exercise'''
+
+    if not details:
+        return 0
+
+    if not details[0].exercise.avg_power:
+        # Do not generate for exercise without power
+        return 0
+
+    datasetlen = len(details)
+
+    # TODO implement for non 1 sec sample, for now return blank
+    sample_len = (details[datasetlen/2].time - details[(datasetlen/2)-1].time).seconds
+    if sample_len > 1:
+        return 0
+
+    normalized = 0.0
+    fourth = 0.0
+    power_avg_count = 0
+
+    #ASSUMING 1 SEC SAMPLE INTERVAL!
+    for i in xrange(0, datasetlen):
+        foo = 0.0
+        foo_element = 0.0
+        for j in xrange(0,30):
+            if (i+j-30) > 0 and (i+j-30) < datasetlen:
+                delta_t = (details[i+j-30].time - details[i+j-31].time).seconds
+                # Break if exerciser is on a break as well
+                if delta_t < 60:
+                    power = details[i+j-30].power
+                    if power:
+                        foo += power*delta_t
+                        foo_element += 1.0
+                else:
+                    foo = 0
+                    foo_element = 0.0
+                    break
+        if foo_element:
+            poweravg30s = foo/foo_element
+            details[i].poweravg30s = poweravg30s
+            fourth += pow(poweravg30s, 4)
+            power_avg_count += 1
+
+    if not fourth or not power_avg_count:
+        return 0
+    normalized = int(round(pow((fourth/power_avg_count), (0.25))))
+    return normalized

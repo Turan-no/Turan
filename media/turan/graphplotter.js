@@ -74,8 +74,11 @@ var GraphPlotter = {
         }
         $("#choices").find("input:checked").each(function () {
             var key = $(this).attr("name");
-            if (key && that.datasets[key])
+            if (key && that.datasets[key]) {
+                if (key == 'hr')
+                    that.datasets[key]['constraints'] = [that.constraint0, that.constraint1, that.constraint2, that.constraint3, that.constraint4, that.constraint5];
                 data.push(that.datasets[key]);
+            }
         });
 
         if (data.length > 0) {
@@ -149,6 +152,39 @@ var GraphPlotter = {
         this.max_hr = args.max_hr;
         this.markings = args.markings;
         this.xaxisformatter = this.formatters[args.xaxisformatter];
+        function evaluate(y,threshold) { 
+            return y < threshold;
+        }
+        this.constraint0 = {
+            threshold: this.max_hr*0.6,
+            color: "rgb(240,240,240)",
+            evaluate : evaluate
+        }
+        this.constraint1 = {
+            threshold: this.max_hr*0.72,
+            color: "rgb(204,204,204)",
+            evaluate : evaluate
+        }
+        this.constraint2 = {
+            threshold: this.max_hr*0.82,
+            color: "rgb(51,102,255)",
+            evaluate : evaluate
+        }
+        this.constraint3 = {
+            threshold: this.max_hr*0.87,
+            color: "rgb(102,204,0)",
+            evaluate : evaluate
+        }
+        this.constraint4 = {
+            threshold: this.max_hr*0.92,
+            color: "rgb(255,153,0)",
+            evaluate : evaluate
+        }
+        this.constraint5 = {
+            threshold: this.max_hr*0.97,
+            color: "rgb(255,0,0)",
+            evaluate : evaluate
+        }
 
         var that = this;
         this.backendUrl = backendUrl;

@@ -8,7 +8,13 @@
 <div id="tripdiv_legend" style="float:right; margin-right: 40px"></div>
 <hr class="clear" />
 <div id="scrollhacks">
-<div id="tripdiv" style="width:980px;height:500px; background: white;"></div>
+    <div id="tripdiv" style="width:980px;height:500px; background: white;">
+        <div align="center">
+            <h2>{% trans "Loading graph" %}...</h2>
+            <br>
+            <img alt="spinner" src="{{MEDIA_URL}}turan/cyclist.gif">
+        </div>
+    </div>
 </div>
 <div class="averages" id="averages">
     <ul>
@@ -42,39 +48,6 @@
 </div>
 <script id="source" type="text/javascript" src="{{ MEDIA_URL }}turan/graphplotter.js"></script>
 <script type="text/javascript">
-    function evaluate(y,threshold) { 
-        return y < threshold;
-    }
-    var constraint0 = {
-        threshold: {{ max_hr }}*0.6,
-        color: "rgb(240,240,240)",
-        evaluate : evaluate
-    }
-    var constraint1 = {
-        threshold: {{ max_hr }}*0.72,
-        color: "rgb(204,204,204)",
-        evaluate : evaluate
-    }
-    var constraint2 = {
-        threshold: {{ max_hr }}*0.82,
-        color: "rgb(51,102,255)",
-        evaluate : evaluate
-    }
-    var constraint3 = {
-        threshold: {{ max_hr }}*0.87,
-        color: "rgb(102,204,0)",
-        evaluate : evaluate
-    }
-    var constraint4 = {
-        threshold: {{ max_hr }}*0.92,
-        color: "rgb(255,153,0)",
-        evaluate : evaluate
-    }
-    var constraint5 = {
-        threshold: {{ max_hr }}*0.97,
-        color: "rgb(255,0,0)",
-        evaluate : evaluate
-    }
     /*var route_coordinates = [{% for lonlat in lonlats %}{% if lonlat.0 %}[{{lonlat.0}},{{lonlat.1}}]{% if forloop.last%}{%else%},{%endif%} {%endif%}{% endfor %}];
     var route_points = [];*/
 
@@ -93,13 +66,17 @@
 {% endfor %}
 {% endif %}
 
-    datasets = {{ datasets }};
-    GraphPlotter.init({
-        datasets: datasets, 
+$(document).ready(function () {
+    // Get datasets from json
+    $.getJSON("{% url json_trip_series object.id %}", function (data) {
+        GraphPlotter.init({
+        datasets: data,
         backendUrl: "{% url powerjson object.id %}",
         max_hr: {{ max_hr }},
         markings: markings,
         xaxisformatter: {% if time_xaxis %}"time"{%else%}"length"{%endif%}
     });
+    });
+});
 </script>
 
