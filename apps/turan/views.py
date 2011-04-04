@@ -1635,6 +1635,7 @@ def import_data(request):
                     if route:
                         exercise.route = route
                     exercise.save()
+                    exercise.parse()
 
                 return render_to_response("turan/import_stage2.html", {'route': route, 'exercise': exercise}, context_instance=RequestContext(request))
     else:
