@@ -822,21 +822,28 @@ def json_trip_series(request, object_id):
     exercise = get_object_or_404(Exercise, pk=object_id)
 
     time_xaxis = True
+    smooth = 0
     req_t = request.GET.get('xaxis', '')
     if exercise.avg_speed:
         if not (req_t == 'time' or str(exercise.exercise_type) == 'Rollers'): # TODO make exercise_type matrix for xaxis, like for altitude
             time_xaxis = False
+    req_s = request.GET.get('smooth', '')
+    if req_s:
+        try:
+            smooth = int(req_s)
+        except:
+            smooth = 0
 
     power_show = exercise_permission_checks(request, exercise)
 
-    cache_key = 'json_trip_series_%s_%dtime_xaxis_%dpower' %(object_id, time_xaxis, power_show)
+    cache_key = 'json_trip_series_%s_%dtime_xaxis_%dpower_%dsmooth' %(object_id, time_xaxis, smooth, power_show)
     js = cache.get(cache_key)
     if not js:
         details = exercise.exercisedetail_set.all()
         if exercise.avg_power:
             generate_30s_power = power_30s_average(details)
         d = filldistance(details)
-        js = js_trip_series(request, details, time_xaxis=time_xaxis, use_constraints = False)
+        js = js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
         cache.set(cache_key, js, 86400)
     return HttpResponse(js, mimetype='text/javascript')
 

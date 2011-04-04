@@ -68,9 +68,9 @@
 
 $(document).ready(function () {
     // Get datasets from json
-    $.getJSON("{% url json_trip_series object.id %}", function (data) {
+    $.getJSON("{% url json_trip_series object.id %}?smooth={{smooth}}", function (datasets) {
         GraphPlotter.init({
-        datasets: data,
+        datasets: datasets,
         backendUrl: "{% url powerjson object.id %}",
         max_hr: {{ max_hr }},
         markings: markings,
