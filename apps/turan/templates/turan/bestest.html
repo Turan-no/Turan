@@ -1,0 +1,47 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% load turan_extras %}
+{% block title %}
+{% endblock %}
+{% block searchenginemeta %}
+<meta name="description" content="{% trans "Lists of the bestest exercisers" %}" />
+{% endblock %}
+{% block content %}
+<table>
+{% for i, best in bestest_speed %}
+    {% for b, userweight in best %}
+    {% if forloop.first %}
+        <tr><th>{{i|durationformat}}</th></tr>
+    {% endif %}
+    <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{b.exercise.date}}</td>
+        <td>{{b.exercise.user.username}}</td>
+        <td>{{b.exercise.route}}</td>
+        <td>{{b.speed|floatformat}} {% trans "km/h" %}</td>
+        <td>{{b.speed|divide:userweight|floatformat}} {% trans "km/h / kg" %} (:</td>
+    </tr>
+    {% endfor %}
+{% endfor %}
+</table>
+
+<table>
+{% for i, best in bestest_power %}
+    {% for b, userweight in best %}
+    {% if forloop.first %}
+        <tr><th>{{i|durationformat}}</th></tr>
+    {% endif %}
+    <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{b.exercise.date}}</td>
+        <td>{{b.exercise.user.username}}</td>
+        <td>{{b.exercise.route}}</td>
+        <td>{{b.power}} {% trans "W" %}</td>
+        <td>{{b.power|divide:userweight|floatformat}} {% trans "W/kg" %}</td>
+    </tr>
+    {% endfor %}
+{% endfor %}
+</table>
+
+{% endblock content %}
