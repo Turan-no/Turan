@@ -344,7 +344,7 @@ class Exercise(models.Model):
     def save(self, *args, **kwargs):
         super(Exercise, self).save(*args, **kwargs)
         if self.sensor_file:
-            if not self.route and str(self.exercise_type) == "Cycling":
+            if not self.route and (str(self.exercise_type) == "Cycling" or str(self.exercise_type) == "Running" or str(self.exercise_type) == "Hike"):
                 r = Route()
                 r.name = str(self.user) + " " + datetime.now().strftime('%d%m%y')
                 r.description = AUTOROUTE_DESCRIPTION
