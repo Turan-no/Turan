@@ -121,6 +121,7 @@ var GraphPlotter = {
                             var val = Math.round(avgs[key] * 10) / 10;
                             e.text(val);
                             e.parents(".hidden").removeClass("hidden");
+                            e.attr('title', key.replace(/_/g, ' '))
                         }
                     }
                 });
