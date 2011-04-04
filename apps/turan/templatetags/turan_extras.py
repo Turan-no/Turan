@@ -198,7 +198,10 @@ percent.is_safe = False
 
 @register.filter
 def divide(value, arg):
-    return floatformat(float(value) / float(arg))
+    try:
+        return floatformat(float(value) / float(arg))
+    except ValueError:
+        return 0
 percent.is_safe = False
 
 @register.filter

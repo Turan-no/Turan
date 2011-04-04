@@ -407,7 +407,19 @@ def statistics(request, year=None, month=None, day=None, week=None):
     lengthstats = sorted(climbstats, key=lambda x: -x.avglen)
 
 
-    powerbesteffortstats = statsprofiles.filter(**tfilter).filter(user__exercise__bestpowereffort__duration=1200).annotate(power = Max('user__exercise__bestpowereffort__power')).filter(power__gt=0).order_by('-power')
+    bestest_power = []
+    intervals = [5, 30, 60, 300, 600, 1200, 1800, 3600]
+    for i in intervals:
+        userweight_tmp = []
+        #.filter(user__exercise__bestpowereffort__duration=i)\
+        best_power_tmp = statsprofiles.filter(**tfilter)\
+        .extra(where=['turan_bestpowereffort.duration = %s' %i])\
+        .annotate( max_power = Max('user__exercise__bestpowereffort__power'))\
+        .order_by('-max_power')
+        for a in best_power_tmp:
+            userweight_tmp.append(a.max_power/a.get_weight())#(a.exercise.date))
+        bestest_power.append(zip(best_power_tmp, userweight_tmp))
+    bestest_power = zip(intervals, bestest_power)
 
     team_list = Tribe.objects.all()
 

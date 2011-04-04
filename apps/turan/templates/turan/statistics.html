@@ -231,12 +231,21 @@
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avgclimbperhour|floatformat }} {% trans "m" %}/{% trans "hour" %} </li>
         {% endfor %}
     </ol>
-    <h3> {% trans "Top Power Best Efforts" %} </h3>
+{% for i, best in bestest_power %}
+    {% for b, power_per_kg in best %}
+    {% if forloop.first %}
+    <h3> {% trans "Top Power Best Efforts for "%}
+        {{i|durationformat}}
+    </h3>
     <ol>
-        {% for u in powerbesteffortstats %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.power }} W </li>
-        {% endfor %}
+    {% endif %}
+        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ b }}:</span>   
+        {{b.max_power}} {% trans "W" %},
+        {{power_per_kg|floatformat}} {% trans "W/kg" %}</td>
+    </li>
+    {% endfor %}
     </ol>
+{% endfor %}
 </div>
 <script type="text/javascript">
 	var labels = $('ol span.label');
