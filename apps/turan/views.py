@@ -266,7 +266,7 @@ def week(request, week, user_id='all'):
 
 def statistics(request, year=None, month=None, day=None, week=None):
 
-    month_format = '%m' 
+    month_format = '%m'
     date_field = 'date'
     now = datetime.now()
     if not year:
@@ -363,19 +363,21 @@ def statistics(request, year=None, month=None, day=None, week=None):
             sum_distance = Sum('user__exercise__route__distance'), \
             sum_duration = Sum('user__exercise__duration'), \
             sum_energy = Sum('user__exercise__kcal'), \
+            avg_normalized_power = Avg('user__exercise__normalized_power'), \
             sum_ascent = Sum('user__exercise__route__ascent'), \
-            avg_avg_hr = Avg('user__exercise__avg_hr') \
+            avg_avg_hr = Avg('user__exercise__avg_hr'), \
             )
 
     maxavgspeeds = userstats.filter(max_avg_speed__gt=0.0).order_by('max_avg_speed').reverse()
     maxspeeds = userstats.filter(max_speed__gt=0.0).order_by('max_speed').reverse()
-    avgspeeds = userstats.filter(avg_avg_speed__gt=0.0).order_by('avg_avg_speed').reverse()
+    avgspeeds = userstats.filter(avg_avg_speed__gt=0.0).order_by('-avg_avg_speed')
     numtrips = userstats.filter(num_trips__gt=0).order_by('num_trips').reverse()
     distsums = userstats.filter(sum_distance__gt=0).order_by('sum_distance').reverse()
     dursums = userstats.filter(sum_duration__gt=0).order_by('sum_duration').reverse()
     energysums = userstats.filter(sum_energy__gt=0).order_by('sum_energy').reverse()
     ascentsums = userstats.filter(sum_ascent__gt=0).order_by('sum_ascent').reverse()
     avgavghrs = userstats.filter(avg_avg_hr__gt=0).filter(max_hr__gt=0)
+    avgnormalizedpower =  userstats.filter(avg_normalized_power__gt=0).order_by('-avg_normalized_power')
 
     for u in avgavghrs:
         u_avg_avg_hr = u.avg_avg_hr
@@ -404,46 +406,8 @@ def statistics(request, year=None, month=None, day=None, week=None):
     climbstatsbytime = sorted(climbstats, key=lambda x:-x.avgclimbperhour)
     lengthstats = sorted(climbstats, key=lambda x: -x.avglen)
 
-#    hikestats = statsprofiles.filter(**hikefilter).annotate( \
-#            hike_avg_avg_speed = Avg('user__hike__avg_speed'), \
-#            hike_max_avg_speed = Max('user__hike__avg_speed'), \
-#            hike_max_speed = Max('user__hike__max_speed'), \
-#            hike_num_trips = Count('user__hike'), \
-#            hike_sum_distance = Sum('user__hike__route__distance'), \
-#            hike_sum_duration = Sum('user__hike__duration'), \
-#            hike_sum_energy = Sum('user__hike__kcal'), \
-#            hike_sum_ascent = Sum('user__hike__route__ascent'), \
-#            hike_avg_avg_hr = Avg('user__hike__avg_hr') \
-#            )
 
-#    hike_maxavgspeeds = hikestats.filter(hike_max_avg_speed__gt=0.0).order_by('hike_max_avg_speed').reverse()
-#    hike_maxspeeds = hikestats.filter(hike_max_speed__gt=0.0).order_by('hike_max_speed').reverse()
-#    hike_avgspeeds = hikestats.filter(hike_avg_avg_speed__gt=0.0).order_by('hike_avg_avg_speed').reverse()
-#    hike_numtrips = hikestats.filter(hike_num_trips__gt=0).order_by('hike_num_trips').reverse()
-#    hike_distsums = hikestats.filter(hike_sum_distance__gt=0).order_by('hike_sum_distance').reverse()
-#    hike_dursums = hikestats.filter(hike_sum_duration__gt=0).order_by('hike_sum_duration').reverse()
-#    hike_energysums = hikestats.filter(hike_sum_energy__gt=0).order_by('hike_sum_energy').reverse()
-#    hike_ascentsums = hikestats.filter(hike_sum_ascent__gt=0).order_by('hike_sum_ascent').reverse()
-#    hike_avgavghrs = hikestats.filter(hike_avg_avg_hr__gt=0).filter(max_hr__gt=0)
-
-#    for u in hike_avgavghrs:
-#        u.avgavghrpercent = float(u.hike_avg_avg_hr)/u.max_hr*100
-#    hike_avgavghrs = sorted(hike_avgavghrs, key=lambda x:-x.avgavghrpercent)
-#
-#    hike_climbstats = statsprofiles.filter(**hikefilter).filter(user__hike__route__in=validroutes).annotate( \
-#            distance = Sum('user__hike__route__distance'), \
-#            height = Sum('user__hike__route__ascent'), \
-#            duration = Sum('user__hike__duration'), \
-#            hikes = Count('user__hike') \
-#            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0).filter(hikes__gt=0)
-
-#    for u in hike_climbstats:
-#        u.avgclimb = u.height/u.distance
-#        u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
-#        u.avglen = float(u.distance)/u.hikes
-#    hike_climbstats = sorted(hike_climbstats, key=lambda x: -x.avgclimb)
-#    hike_climbstatsbytime = sorted(hike_climbstats, key=lambda x:-x.avgclimbperhour)
-#    hike_lengthstats = sorted(hike_climbstats, key=lambda x: -x.avglen)
+    powerbesteffortstats = statsprofiles.filter(**tfilter).filter(user__exercise__bestpowereffort__duration=1200).annotate(power = Max('user__exercise__bestpowereffort__power')).filter(power__gt=0).order_by('-power')
 
     team_list = Tribe.objects.all()
 

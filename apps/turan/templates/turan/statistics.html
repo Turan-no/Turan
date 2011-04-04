@@ -205,6 +205,12 @@
         {% endfor %}
     </ol>
 
+    <h3> {% trans "Highest average Normalized Power" %} </h3>
+    <ol>
+        {% for u in avgnormalizedpower %}
+        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span>{{ u.avg_normalized_power|floatformat }} W</li>
+        {% endfor %}
+    </ol>
     <h3> {% trans "Top climbers" %} </h3>
     <ol>
         {% for u in ascentsums %}
@@ -223,6 +229,12 @@
     <ol>
         {% for u in climbstatsbytime %}
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avgclimbperhour|floatformat }} {% trans "m" %}/{% trans "hour" %} </li>
+        {% endfor %}
+    </ol>
+    <h3> {% trans "Top Power Best Efforts" %} </h3>
+    <ol>
+        {% for u in powerbesteffortstats %}
+        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.power }} W </li>
         {% endfor %}
     </ol>
 </div>
