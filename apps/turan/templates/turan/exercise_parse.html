@@ -3,7 +3,8 @@
 
 {% block content %}
 <div id="result">
-    <h1>Parsing exercise {{ exercise }}</h1>
+    <h1>{% trans "Parsing exercise" %} {{ exercise }}</h1>
+    <img alt="spinner" src="{{MEDIA_URL}}turan/cyclist.gif">
 <div id="progress"></div>
 </div>
 
@@ -25,12 +26,12 @@ $(document).ready(function() {
                 $('#progress').html($('#progress').html() + '.');
                 }
               else if (status == 'FAILURE') {
-              $('#result').html('<h1> Parse failed </h1>' + data['task']['result']);
+              $('#result').html('<h1> {% trans "Parse failed" %} </h1>' + data['task']['result']);
                 clearInterval(interval);
                 }
               else if (status == 'SUCCESS') {
                 clearInterval(interval);
-                $('#result').html('<h1> Parse completed </h1> Redirecting ...');
+                $('#result').html('<h1> {% trans "Parse completed" %} </h1> {% trans "Redirecting" %} ...');
                 setTimeout(reDirect, 100);
                 }
               
