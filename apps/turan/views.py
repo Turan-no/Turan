@@ -1243,7 +1243,8 @@ def exercise_permission_checks(request, exercise):
             return redirect_to_login(request.path)
         elif exercise.exercise_permission == 'F':
             if not is_friend:
-                return redirect_to_login(request.path)
+                #return redirect_to_login(request.path)
+                return False
 
         # Check for permission to display attributes
         try:
