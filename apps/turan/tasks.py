@@ -268,6 +268,7 @@ def merge_sensordata(exercise, callback=None):
 #    create_gpx_from_details.delay(exercise)
 
 def smoothListGaussian(list,degree=5):
+    list = [x if x else 0 for x in list] # Change None into 0
     list = [list[0]]*(degree-1) + list + [list[-1]]*degree
     window=degree*2-1
     weight=numpy.array([1.0]*window)
