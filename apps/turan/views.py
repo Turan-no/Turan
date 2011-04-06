@@ -812,6 +812,15 @@ def json_trip_series(request, object_id):
         except:
             smooth = 0
 
+    if not exercise.user == request.user:  # Allow self
+        is_friend = False
+        if request.user.is_authenticated():
+            is_friend = Friendship.objects.are_friends(request.user, exercise.user)
+        if exercise.exercise_permission == 'N':
+            return redirect_to_login(request.path)
+        elif exercise.exercise_permission == 'F':
+            if not is_friend:
+                return redirect_to_login(request.path)
     power_show = exercise_permission_checks(request, exercise)
 
     cache_key = 'json_trip_series_%s_%dtime_xaxis_%dpower_%dsmooth' %(object_id, time_xaxis, smooth, power_show)
@@ -1235,42 +1244,32 @@ def exercise_permission_checks(request, exercise):
     # Permission checks
     power_show = True
     poweravg30_show = True
-    if not exercise.user == request.user:  # Allow self
-        is_friend = False
-        if request.user.is_authenticated():
-            is_friend = Friendship.objects.are_friends(request.user, exercise.user)
-        if exercise.exercise_permission == 'N':
-            return redirect_to_login(request.path)
-        elif exercise.exercise_permission == 'F':
-            if not is_friend:
-                #return redirect_to_login(request.path)
-                return False
 
-        # Check for permission to display attributes
-        try:
-            # Try to find permission object for this exercise
-            permission = exercise.exercisepermission
+    # Check for permission to display attributes
+    try:
+        # Try to find permission object for this exercise
+        permission = exercise.exercisepermission
 
-            if hasattr(permission, "power"):
-                permission_val = getattr(permission, "power")
-                if permission_val == 'A':
-                    power_show = True
-                elif permission_val == 'F' and is_friend:
-                    power_show = True
-                else: #'N' or not friends
-                    power_show = False
-            if hasattr(permission, "poweravg30s"): # FIXME by tor: why was this created, doesn't seem to be used??
-                permission_val = getattr(permission, "poweravg30s")
-                if permission_val == 'A':
-                    poweravg30_show = True
-                elif permission_val == 'F' and is_friend:
-                    poweravg30_show = True
-                else: #'N' or not friends
-                    poweravg30_show = False
-        except ExercisePermission.DoesNotExist:
-            # No permissionobject found
-            # Allowed to see.
-            pass
+        if hasattr(permission, "power"):
+            permission_val = getattr(permission, "power")
+            if permission_val == 'A':
+                power_show = True
+            elif permission_val == 'F' and is_friend:
+                power_show = True
+            else: #'N' or not friends
+                power_show = False
+        if hasattr(permission, "poweravg30s"): # FIXME by tor: why was this created, doesn't seem to be used??
+            permission_val = getattr(permission, "poweravg30s")
+            if permission_val == 'A':
+                poweravg30_show = True
+            elif permission_val == 'F' and is_friend:
+                poweravg30_show = True
+            else: #'N' or not friends
+                poweravg30_show = False
+    except ExercisePermission.DoesNotExist:
+        # No permissionobject found
+        # Allowed to see.
+        pass
     return power_show
 
 
@@ -1280,6 +1279,15 @@ def exercise(request, object_id):
 
     object = get_object_or_404(Exercise, pk=object_id)
 
+    if not object.user == request.user:  # Allow self
+        is_friend = False
+        if request.user.is_authenticated():
+            is_friend = Friendship.objects.are_friends(request.user, object.user)
+        if object.exercise_permission == 'N':
+            return redirect_to_login(request.path)
+        elif object.exercise_permission == 'F':
+            if not is_friend:
+                return redirect_to_login(request.path)
     power_show = exercise_permission_checks(request, object)
 
     # Provide template string for maximum yaxis value for HR, for easier comparison
