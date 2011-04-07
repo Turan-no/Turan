@@ -189,6 +189,10 @@ class TCXParser(object):
             # Quickfix to skip empty trackpoints found at least in Garmin Edge 500 tcx-files
             if lat == 0.0 and lon == 0.0 and distance == 0 and hr == 0:
                 continue
+            # Check for silly 310XT only pos values
+            # as in trackpoints with only lon, lat and altitude, but no other values
+            if lat and lon and altitude and not (distance or hr or power or cadence):
+                continue
 
             time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
 
