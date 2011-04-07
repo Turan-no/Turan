@@ -222,14 +222,12 @@ var GraphPlotter = {
         var previousPoint = null;
         $("#tripdiv").bind("plothover", function (event, pos, item) {
             if (item) {
-            /* FIXME
                 // Move marker to current pos
                 if (typeof(Mapper) != "undefined") {
                     var x = route_points[item.dataIndex].x;
                     var y = route_points[item.dataIndex].y;
                     Mapper.updatePosMarker(x, y);
                 }
-            */
 
                 if (previousPoint != item.datapoint) {
                     previousPoint = item.datapoint;

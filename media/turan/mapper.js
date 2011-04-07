@@ -72,24 +72,29 @@ var Mapper = {
 
         if (start) {
 
-            var size = new OpenLayers.Size(20,25);
+            var size = new OpenLayers.Size(16,16);
             var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
             var startlonlat = new OpenLayers.LonLat(start[0],start[1]).transform(this.projection, this.map.getProjectionObject());
             var endlonlat = new OpenLayers.LonLat(end[0],end[1]).transform(this.projection, this.map.getProjectionObject());
 
-            var icon = new OpenLayers.Icon('http://www.openstreetmap.org/openlayers/img/marker.png',size,offset);
+            var stop_icon = new OpenLayers.Icon('http://turan.no/site_media/pinax/images/silk/icons/flag_red.png',size,offset);
+            var start_icon = new OpenLayers.Icon('http://turan.no/site_media/pinax/images/silk/icons/flag_green.png',size,offset);
+            var pos_icon = new OpenLayers.Icon('http://turan.no/site_media/pinax/images/silk/icons/flag_yellow.png',size,offset);
             layerMarkers = new OpenLayers.Layer.Markers("Markers");
             this.layerMarkers = layerMarkers;
             this.map.addLayer(layerMarkers);
-            this.icon = icon;
+            this.start_icon = start_icon;
+            this.stop_icon = stop_icon;
+            this.pos_icon = pos_icon;
 
 
 
-            this.startMarker = new OpenLayers.Marker(startlonlat, icon);
+            this.startMarker = new OpenLayers.Marker(startlonlat, start_icon);
+            this.stopMarker = new OpenLayers.Marker(endlonlat, stop_icon);
             this.posMarker = null;
 
             layerMarkers.addMarker(this.startMarker);
-            layerMarkers.addMarker(new OpenLayers.Marker(endlonlat, icon.clone()));
+            layerMarkers.addMarker(this.stopMarker);
         } 
         this.geojson_url = geojson_url;
         if (geojson_url) {
@@ -125,17 +130,18 @@ var Mapper = {
                         )
                 }),
                 projection: this.projection,
-                styleMap: this.styles
+                styleMap: this.styles,
+
             });
             this.map.addLayer(this.vectors);
         }
-        /*if (route_coordinates != undefined) {
+        if (route_coordinates != undefined) {
             for (var i = 0; i < route_coordinates.length; i++) {
                 var p = route_coordinates[i];
                 route_points.push(new OpenLayers.Geometry.Point(p[0], p[1]));
             
             }
-        }*/
+        }
         
         this.map.render("map");
         return this.map;
@@ -147,7 +153,7 @@ var Mapper = {
             //this.posMarker = this.startMarker.clone()
             //this.startMarker.erase();
             var lonlat = new OpenLayers.LonLat(x, y).transform(this.projection, this.map.getProjectionObject());
-            this.posMarker = new OpenLayers.Marker(lonlat, this.icon.clone());
+            this.posMarker = new OpenLayers.Marker(lonlat, this.pos_icon.clone());
             this.layerMarkers.addMarker(this.posMarker);
             //        this.layerMarkers.redraw();
         }
