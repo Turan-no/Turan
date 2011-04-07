@@ -1316,10 +1316,8 @@ def exercise(request, object_id):
                     smooth = 0
             userweight = object.user.get_profile().get_weight(object.date)
             slopes = object.slope_set.all().order_by('start')
-            lonlats = [(d.lon, d.lat) for d in details]
-            #for d in details:
-            #    lonlats.append((d.lon, d.lat))
-
+            # TODO: maybe put this in json details for cache etc
+            lonlats = simplejson.dumps([(d.lon, d.lat) for d in details if d.lon and d.lat])
             # Todo, maybe calculate and save in db or cache ?
             gradients, inclinesums = getgradients(details)
         intervals = object.interval_set.select_related().all()
