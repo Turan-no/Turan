@@ -146,13 +146,26 @@ var Mapper = {
         this.map.render("map");
         return this.map;
     },
+    deleteMarkers: function() {
+        var i=0;
+        var myMarkers = this.layerMarkers.markers;
+        while (i<myMarkers.length) {
+            var myMarker = myMarkers[i];
+            if (myMarker != this.startMarker && myMarker != this.stopMarker) {
+                this.layerMarkers.removeMarker(myMarker);
+            } else {
+                    i=i+1;
+           }
+        }
+    },
     updatePosMarker: function(x, y) {
         if (x != undefined && y != undefined ) {
-            if ( this.posMarker != null )
-                this.posMarker.erase();
+            //if ( this.posMarker != null )
+            //    this.posMarker.erase();
+            this.deleteMarkers();
             //this.posMarker = this.startMarker.clone()
             //this.startMarker.erase();
-            var lonlat = new OpenLayers.LonLat(x, y).transform(this.projection, this.map.getProjectionObject());
+            lonlat = new OpenLayers.LonLat(x, y).transform(this.projection, this.map.getProjectionObject());
             this.posMarker = new OpenLayers.Marker(lonlat, this.pos_icon.clone());
             this.layerMarkers.addMarker(this.posMarker);
             //        this.layerMarkers.redraw();
