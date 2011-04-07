@@ -292,6 +292,9 @@ def calculate_ascent_descent_gaussian(details):
         altvals.append(a.altitude)
 
     altvals = smoothListGaussian(altvals)
+    return altvals_to_ascent_descent(altvals)
+
+def altvals_to_ascent_descent(altvals):
 
     ascent = 0
     descent = 0
@@ -309,7 +312,7 @@ def calculate_ascent_descent_gaussian(details):
         previous = a
     return round(ascent), round(descent)
 
-def best_x_sec(details, length, power):
+def best_x_sec(details, length, altvals, speed=True, power=False):
 
     best_speed = 0.0
     best_power = 0.0
@@ -325,21 +328,24 @@ def best_x_sec(details, length, power):
     best_length_speed = 0.0
     best_length_power = 0.0
 
-    q_speed.appendleft(details[0].speed)
+    if speed:
+        q_speed.appendleft(details[0].speed)
     j = 1
     if power and details[j].power:
         q_power.appendleft(details[j].power)
     j = 2
     len_i = len(details)
     for i in xrange(2, len_i):
-        try:
+        #try:
             delta_t = (details[i].time - details[i-1].time).seconds
-            # Break if exerciser is on a break as well
-            if delta_t < 60:
-                q_speed.appendleft(details[i].speed * delta_t)
-            else:
-                q_speed = deque()
-                q_speed.appendleft(details[i].speed)
+            if speed:
+                # Break if exerciser is on a break as well
+                if delta_t < 60:
+                    q_speed.appendleft(details[i].speed * delta_t)
+                else:
+                    q_speed = deque()
+                    q_speed.appendleft(details[i].speed)
+                delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
             if power:
                 if delta_t < 60 and details[i].power:
                     q_power.appendleft(details[i].power * delta_t)
@@ -349,29 +355,31 @@ def best_x_sec(details, length, power):
                     q_power = deque()
                     if details[i].power:
                         q_power.appendleft(details[i].power)
-            delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
+                if not speed:
+                    delta_t_total = (details[i].time - details[i-len(q_power)].time).seconds
             if delta_t_total >= length:
                 break
             j += 1
-        except Exception as e:
-            #print "%s %s %s %s %s" % (e, i, j, delta_t, len(q_speed))
-            #j += 1
-            continue
+        #except Exception as e:
+        #    #print "%s %s %s %s %s" % (e, i, j, delta_t, len(q_speed))
+        #    #j += 1
+        #    continue
     j += 1
 
     for i in xrange(j, len(details)):
 
         try:
-            if len(q_speed) != 0:
-                sum_q_speed_tmp = sum(q_speed)
-                delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
+            if len(q_speed):
+                if speed:
+                    sum_q_speed_tmp = sum(q_speed)
+                    delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
 
-                if delta_t_total != 0 and delta_t_total == length:
-                    sum_q_speed = sum_q_speed_tmp / (details[i].time - details[i-len(q_speed)].time).seconds
-                else:
-                    # What can one do?
-                    sum_q_speed = 0
-            if len(q_power) != 0:
+                    if delta_t_total != 0 and delta_t_total == length:
+                        sum_q_speed = sum_q_speed_tmp / (details[i].time - details[i-len(q_speed)].time).seconds
+                    else:
+                        # What can one do?
+                        sum_q_speed = 0
+            if len(q_power):
                 if power:
                     sum_q_power_tmp = sum(q_power)
                     delta_t_total_power = (details[i].time - details[i-len(q_power)].time).seconds
@@ -391,10 +399,11 @@ def best_x_sec(details, length, power):
                 best_length_power = (details[i].distance) - best_start_km_power * 1000
 
             delta_t = (details[i].time - details[i-1].time).seconds
-            if delta_t < 60:
-                q_speed.appendleft(details[i].speed*delta_t)
-            else:
-                q_speed = deque()
+            if speed:
+                if delta_t < 60:
+                    q_speed.appendleft(details[i].speed*delta_t)
+                else:
+                    q_speed = deque()
             if power:
                 if delta_t < 60 and details[i].power:
                     q_power.appendleft(details[i].power*delta_t)
@@ -411,30 +420,38 @@ def best_x_sec(details, length, power):
             #raise
             continue
 
-
-    if power:
+    if power and speed:
         best_speed_ascent = 0
         best_speed_descent = 0
         best_power_ascent = 0
         best_power_descent = 0
         if best_speed_start_end:
             c, d = best_speed_start_end
-            best_speed_ascent, best_speed_descent = calculate_ascent_descent_gaussian(details[d:c])
+            best_speed_ascent, best_speed_descent = altvals_to_ascent_descent(altvals[d:c])
         if best_power_start_end:
             a, b = best_power_start_end
-            best_power_ascent, best_power_descent = calculate_ascent_descent_gaussian(details[b:a])
+            best_power_ascent, best_power_descent = altvals_to_ascent_descent(altvals[b:a])
 
         return best_speed, best_start_km_speed, best_length_speed, best_speed_ascent, best_speed_descent, best_power, best_start_km_power, best_length_power, best_power_ascent, best_power_descent
-    else:
+    elif speed and not power:
         best_speed_ascent = 0
         best_speed_descent = 0
         if best_speed_start_end:
             a, b = best_speed_start_end
-            best_speed_ascent, best_speed_descent = calculate_ascent_descent_gaussian(details[b:a])
+            best_speed_ascent, best_speed_descent = altvals_to_ascent_descent(altvals[b:a])
         return best_speed, best_start_km_speed, best_length_speed, best_speed_ascent, best_speed_descent
+    elif power and not speed:
+        best_power_ascent = 0
+        best_power_descent = 0
+        if best_power_start_end:
+            a, b = best_power_start_end
+            best_power_ascent, best_power_descent = altvals_to_ascent_descent(altvals[b:a])
+
+        return best_power, best_start_km_power, best_length_power, best_power_ascent, best_power_descent
+
 
 @task
-def calculate_best_efforts(exercise, callback=None):
+def calculate_best_efforts(exercise, effort_range=[5, 30, 60, 300, 600, 1200, 1800, 3600], calc_only_power=True, callback=None):
     ''' Iterate over details for different effort ranges finding best
     speed and power efforts '''
 
@@ -445,19 +462,28 @@ def calculate_best_efforts(exercise, callback=None):
     BestPowerEffort = get_model('turan', 'BestPowerEffort')
 
     details = exercise.get_details().all()
+    calc_power = exercise.avg_power and not exercise.is_smart_sampled()
+
     if details:
         if filldistance(details):
-            effort_range = [5, 30, 60, 300, 600, 1200, 1800, 3600]
+            altvals = []
+            for a in details:
+                altvals.append(a.altitude)
+
+            altvals = smoothListGaussian(altvals)
             for seconds in effort_range:
-                if exercise.avg_power and not exercise.is_smart_sampled():
-                    speed, pos, length, speed_ascent, speed_descent, power, power_pos, power_length, power_ascent, power_descent = best_x_sec(details, seconds, power=True)
-                    if power:
-                        be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds, ascent=power_ascent, descent=power_descent)
-                        be.save()
-                else:
-                    speed, pos, length, speed_ascent, speed_descent = best_x_sec(details, seconds, power=False)
-                if speed:
+                if calc_power and not calc_only_power:
+                    speed, pos, length, speed_ascent, speed_descent, power, power_pos, power_length, power_ascent, power_descent = best_x_sec(details, seconds, altvals, power=True)
+                    be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds, ascent=power_ascent, descent=power_descent)
                     be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds, ascent=speed_ascent, descent=speed_descent)
+                    be.save()
+                elif not calc_power:
+                    speed, pos, length, speed_ascent, speed_descent = best_x_sec(details, seconds, altvals, power=False)
+                    be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds, ascent=speed_ascent, descent=speed_descent)
+                    be.save()
+                elif calc_power and calc_only_power:
+                    power, power_pos, power_length, power_ascent, power_descent = best_x_sec(details, seconds, altvals, power=True, speed=False)
+                    be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds, ascent=power_ascent, descent=power_descent)
                     be.save()
     if not callback is None:
         subtask(callback).delay(exercise)
