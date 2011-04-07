@@ -542,12 +542,12 @@ def calendar_month(request, year, month):
 
 
     # Do explicit select_related on route since it can be null, and then select_related does not work by default
-    exercices = Exercise.objects.select_related('route', 'exercise_type', 'user').order_by('date').filter(**lookup_kwargs)
+    exercises = Exercise.objects.select_related('route', 'exercise_type', 'user').order_by('date').filter(**lookup_kwargs)
     # Filter by username
     username = request.GET.get('username', '')
     if username:
         user = get_object_or_404(User, username=username)
-        exercices = exercices.filter(user=user)
+        exercises = exercises.filter(user=user)
 
     # Calculate the next month, if applicable.
     if allow_future:
@@ -570,9 +570,9 @@ def calendar_month(request, year, month):
    # FIXME django locale
     # stupid calendar needs int
     year, month = int(year), int(month)
-    cal = WorkoutCalendar(exercices, locale.getdefaultlocale()).formatmonth(year, month)
+    cal = WorkoutCalendar(exercises, locale.getdefaultlocale()).formatmonth(year, month)
 
-    e_by_week = [(week, list(items)) for week, items in groupby(exercices, lambda workout: int(workout.date.strftime('%W')))]
+    e_by_week = [(week, list(items)) for week, items in groupby(exercises, lambda workout: int(workout.date.strftime('%W')))]
 
     return render_to_response('turan/calendar.html',
             {'calendar': mark_safe(cal),
