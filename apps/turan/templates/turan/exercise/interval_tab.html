@@ -42,6 +42,7 @@
 <tr id="row{{forloop.counter0}}">
         <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="izoom{{forloop.counter0}}-link-1" class="zoom-select" />
 <script type="text/javascript">
+$(function () {
 $('#izoom{{forloop.counter0}}-link-1').bind("click", 
         function (evt) { 
         plot.setSelection({ 
@@ -56,6 +57,7 @@ $('#izoom{{forloop.counter0}}-link-1').bind("click",
         });
 
 $('#row{{forloop.counter0}}').css('background-color', colors[{{interval.get_zone}}].replace("rgb", "rgba").replace(")", ", 0.5)"));
+});
 
 
 </script>
