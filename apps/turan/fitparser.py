@@ -394,9 +394,7 @@ class FITParser(object):
                         '''
                         if (self.entries[-1].time - self.entries[-2].time).seconds != 1:
                             self.entries[-1].time = self.entries[-1].time - timedelta(seconds=1)
-                            print 'fixed: %s, %s, %s' % (self.entries[-1].time,self.entries[-2].time,time+timestamp_offset)
                         else:
-                            print 'discarded: %s' % self.entries[-1].time
                             continue
 
                     record_last_time = time
