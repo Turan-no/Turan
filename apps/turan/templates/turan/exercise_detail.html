@@ -23,11 +23,6 @@
 {% endblock%}
 {% block graph %}
 {% ifnotequal object.exercisedetail_set.count 0 %}
-<script type="text/javascript">
-    /* Colors in use for lots of zone related stuffs */
-    var colors = ["rgb(240,240,240)", "rgb(204,204,204)", "rgb(51,102,255)", "rgb(102,204,0)", 
-        "rgb(255,153,0)", "rgb(255,0,0)", "rgb(255,0,0)", "rgb(255,0,0)"];
-</script>
 <div id="tabs">
     <ul>
         <li class="selected" id="tabs-select-1">{% trans "Graph" %}</li>

@@ -8,6 +8,10 @@
 {% block searchenginemeta %}
 <meta name="description" content="{% trans "Exercise calendar" %}" />
 {% endblock %}
+{% block extra_head %}
+{{ block.super }}
+    <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.stack.js"></script>
+{% endblock %}
 {% block content %}
 
 <h1>
@@ -28,24 +32,126 @@
 <div class="right">
 </div>
 {{ calendar }}
- {% comment %}
- WIP
-<h3>{% trans "Weekstats graph"%}</h3>
+{% if z_by_week %}
+<h3>{% trans "Time in HR zones by week"%}</h3>
 <div id="weeks" style="width:900px;height:700px"></div>
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
-        var weekbars = { color: 1, 
-                bars: { show: true},
-        data: [
-        {% for week, exercises in e_by_week %}
-            [ {{ week }}, 2],
-        {% endfor %}
-        ], };
-    var weekoptions = { yaxis: { max: 600 }, hoverable: true, clickable: true };
-    $.plot($("#weeks"), weekbars, weekoptions);
-});
+function weekxf(val, axis) {
+    return "{% trans "Week" %} " + parseInt((val).toFixed(axis.tickDecimals));
+}
+function houryf(val, axis) {
+    return parseInt(val/60/60) + " {% trans "hours" %} " 
+}
+    var stack = true, bars = true, lines = false, steps = false;
+    var z_by_week = [
+{% for week, zonevals in z_by_week.items %}
+{% for zoneval in zonevals%}
+{
+    label: "{% trans "zone" %} {{forloop.counter0}}",
+    data: [[{{week}},{{zoneval}}]],
+    color: colors[{{forloop.counter0}}]
+}
+{% if not forloop.last%},{%endif%}
+{% endfor %}
+{% if not forloop.last%},{%endif%}
+{% endfor %}
+];
 
+function duration(time) {
+    //var time = date_object.getTime();
+
+    var days    = parseInt((time / (60*60*24)));
+    var hours   = parseInt((time % (60*60*24)) / (60*60));
+    var minutes = parseInt((time % (60*60)) / (60));
+
+    var result = [];
+
+    if (days > 0) {
+        result.push(days + ' {%trans "days"%}');
+    }
+    if (hours > 0) {
+        result.push(hours + ' {% trans "hours" %}');
+    }
+    if (minutes > 0) {
+        result.push(minutes + ' {% trans "minutes" %}');
+    }
+
+    if (result.length == 0) {
+        return "0 {% trans "minutes" %}"
+    }
+    if (result.length == 1) {
+        return result[0];
+    }
+    return result.slice(0, result.length-1).join(", ") + " " + result[result.length-1];
+}
+    function showTooltip (x, y, contents) {
+        $('<div class="tooltip" id="tooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            padding: '2px',
+            opacity: 0.80
+        }).appendTo("body").fadeIn(200);
+    }
+    var weekoptions = { 
+        series: {
+            stack: stack,
+            lines: { show: lines, fill: true, steps: steps }, 
+            bars: { show: bars, barWidth: 1, align: 'center' },
+            shadowSize: 1
+        },
+        grid: { 
+            show: true,
+            clickable: true,
+            hoverable: true
+        },
+        legend: {
+            show: false,
+        },
+        xaxis: { 
+            tickSize: 1,
+            tickFormatter: weekxf
+       },
+        yaxis: { 
+            tickFormatter: houryf
+       }
+    };
+    var p = $.plot($("#weeks"), z_by_week , weekoptions);
+        var previousPoint = null;
+        $("#weeks").bind("plothover", function (event, pos, item) {
+            if (item) {
+                if (previousPoint != item.datapoint) {
+                    previousPoint = item.datapoint;
+                    
+                    $("#tooltip").remove();
+                    var week = item.datapoint[0],
+                        y = item.datapoint[1] - item.datapoint[2],
+                        zone = item.series.label ;
+                    
+                    
+                        showTooltip(item.pageX, item.pageY, "{% trans "Week" %} "+ week + " " + zone + " : "+ duration(y));
+
+                }
+            }
+            else {
+                $("#tooltip").remove();
+                previousPoint = null;            
+            }
+        });
+/*$.each(p.getData()[0].data, function(i, el){
+          var o = p.pointOffset({x: el[0], y: el[1]});
+            $('<div class="data-point-label">' + el[1] + '</div>').css( {
+                    position: 'absolute',
+                        left: o.left + 4,
+                            top: o.top - 43,
+                                display: 'none'
+                                  }).appendTo(p.getPlaceholder()).fadeIn('slow');
+            });
+*/
+});
 </script>
-{% endcomment %}
+{% endif %}
 {% endblock content %}
 

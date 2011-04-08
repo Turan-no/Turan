@@ -574,6 +574,25 @@ def calendar_month(request, year, month):
 
     e_by_week = [(week, list(items)) for week, items in groupby(exercises, lambda workout: int(workout.date.strftime('%W')))]
 
+    z_by_week = {}
+
+    if username: # Only give zone week graph for individuals
+        for week, es in e_by_week:
+            zones =[0,0,0,0,0,0,0]
+            for e in es:
+                eds = e.get_details().all()
+                if eds:
+                    zonevals = getzones(eds)
+                    i = 0
+                    for zone_legend, zone_value in zonevals.items():
+                        zones[i] += zone_value
+                        i += 1
+                else:
+                    if e.duration:
+                        zones[0] += e.duration.seconds
+            # Convert seconds to hours
+            z_by_week[week] = zones#[float(zone)/60/60 for zone in zones if zone]
+
     return render_to_response('turan/calendar.html',
             {'calendar': mark_safe(cal),
              'months': months,
@@ -581,6 +600,7 @@ def calendar_month(request, year, month):
              'previous_month': previous_month,
              'next_month': next_month,
              'e_by_week': e_by_week,
+             'z_by_week': z_by_week,
              },
             context_instance=RequestContext(request))
 
