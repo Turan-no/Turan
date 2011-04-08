@@ -260,6 +260,7 @@ class FITParser(object):
             return
 
         record_last_time = 0
+        records = 0
         while f.tell() < data_size + hdr_size:
             (hdr,) = struct.unpack('B',f.read(1))
             hdr_type = (hdr >> 7) & 1
@@ -392,7 +393,7 @@ class FITParser(object):
                         gap somewhere earlier, but as of now we just give up
                         and drop the current sample if that is the case.
                         '''
-                        if (self.entries[-1].time - self.entries[-2].time).seconds != 1:
+                        if (len(self.entries) == 1 or (self.entries[-1].time - self.entries[-2].time).seconds != 1):
                             self.entries[-1].time = self.entries[-1].time - timedelta(seconds=1)
                         else:
                             continue
