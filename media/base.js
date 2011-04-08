@@ -1,3 +1,8 @@
+/* Colors in use for lots of zone related stuffs */
+var colors = ["rgb(240,240,240)", "rgb(204,204,204)", "rgb(51,102,255)", "rgb(102,204,0)", 
+        "rgb(255,153,0)", "rgb(255,0,0)", "rgb(255,0,0)", "rgb(255,0,0)"];
+
+
 jQuery.fn.autoscroll = function() {
     $('html,body').animate({scrollTop: this.offset().top}, 500);
 }
