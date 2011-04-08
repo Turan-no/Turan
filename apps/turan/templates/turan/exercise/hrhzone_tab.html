@@ -19,6 +19,7 @@
 <div id="speedfreqtable" style="width:1px; height: 400px;"></div>
 {% endif %}
 <script type="text/javascript">
+$(function () {
     var hrhzonedata = [
             {% for zone in hrhzones%}
                 {
@@ -93,4 +94,5 @@ $.plot($("#cadfreqdiv"), cadfreqdata, options);
 {% if speedfreqs %}
 $.plot($("#speedfreqdiv"), speedfreqdata, options);
 {% endif %}
+});
 </script>
