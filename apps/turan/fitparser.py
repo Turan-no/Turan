@@ -328,7 +328,7 @@ class FITParser(object):
                         Lets not bother with intervals of 1s or less. They tend to have
                         no sensible values anyways.
                         '''
-                        pass
+                        continue
                     
                     time = datetime.fromtimestamp(get_field_value(fields, fit_lap, 'timestamp'))
                     time = time + timestamp_offset
@@ -382,7 +382,7 @@ class FITParser(object):
                         Samples without timestamp are broken
                         Samples with same timestamp as previous are also broken
                         '''
-                        pass
+                        continue
                     record_last_time = time
                     time = time + timestamp_offset
                     hr = get_field_value(fields, fit_record, 'hr')
