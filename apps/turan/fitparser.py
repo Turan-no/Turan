@@ -377,12 +377,28 @@ class FITParser(object):
                                             min_temp, calories))
                 elif global_msg_type == 20:
                     time = datetime.fromtimestamp(get_field_value(fields, fit_record, 'timestamp'))
-                    if time == None or time == record_last_time:
+                    if time == None:
                         '''
                         Samples without timestamp are broken
-                        Samples with same timestamp as previous are also broken
                         '''
                         continue
+                    if time == record_last_time:
+                        '''
+                        Samples with duplicate timestamps are equally broken.
+                        We make a crude attempt at fixing this by bumping the
+                        previous sample 1s back.
+                        If there is already a sample at 1s back, this usually
+                        has the wrong time as well and there will be a larger
+                        gap somewhere earlier, but as of now we just give up
+                        and drop the current sample if that is the case.
+                        '''
+                        if (self.entries[-1].time - self.entries[-2].time).seconds != 1:
+                            self.entries[-1].time = self.entries[-1].time - timedelta(seconds=1)
+                            print 'fixed: %s, %s, %s' % (self.entries[-1].time,self.entries[-2].time,time+timestamp_offset)
+                        else:
+                            print 'discarded: %s' % self.entries[-1].time
+                            continue
+
                     record_last_time = time
                     time = time + timestamp_offset
                     hr = get_field_value(fields, fit_record, 'hr')
