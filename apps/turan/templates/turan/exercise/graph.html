@@ -48,7 +48,12 @@
 </div>
 <script id="source" type="text/javascript" src="{{ MEDIA_URL }}turan/graphplotter.js"></script>
 <script type="text/javascript">
+    
+    {% if lonlats %}
     var route_coordinates = {{lonlats}};
+    {% else %}
+    var route_coordinates = [];
+    {% endif %}
     var route_points = [];
 
     var markings = [];
