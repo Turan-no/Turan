@@ -86,8 +86,27 @@ $(function () {
                 <a href="{% url avatar_change %}" id="avatar_replace">(replace)</a>
                 {% endif %}
             </div>
+    <ul class="buttons spacer">
+        <li style="float: left">
+            <a href="{% url calendar-index %}?username={{ other_user }}">
+            <img alt="calendar" src="{{MEDIA_URL}}/pinax/images/silk/icons/calendar.png">
+            {% trans "Show" %} {{ other_user }}{% trans "'s calendar" %}</a>
+        </li>
+        {% if user.is_authenticated %}
+            {% if is_me %}
+        <li style="float: left">
+            <a href="{% url exercise_create %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
+                {% trans "Add an exercise" %}
+            </a>
+        </li>
+            <li style="float: left">
+<a href="{% url what_next %}">{% trans "What next?" %}</a>
+            </li>
+                {% endif %}
+        {% endif %}
+    </ul>
 
-            <a href="{% url calendar-index %}?username={{ other_user }}">{% trans "Show" %} {{ other_user }}{% trans "'s calendar" %}</a>
             <div class="box spacer">
                 {% if other_user.get_profile.name %}<h2><span class="fn">{{ other_user.get_profile.name }}</span></h2>{% endif %}
                 {% if other_user.date_joined%}<p><b>{% trans "Date joined" %}</b>: {{other_user.date_joined|naturalday:_("F j, Y")|capfirst }}</p>{% endif %}

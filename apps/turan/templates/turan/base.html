@@ -19,7 +19,9 @@
         <li id="tab_tribes"><a href="{% url tribe_list %}">{% trans "Teams" %}</a></li>
     {% if user.is_authenticated %}
             <li><a href="{% url what_next %}">{% trans "What next?" %}</a></li>
+            {% comment %}
             <li id="tab_profile"><a href="{% url profile_detail user %}">{% trans "Profile" %}</a></li>
+            {% endcomment %}
     {% else %}
             <li id="tab_profile"><a href="{% url profile_list %}">{% trans "Exercisers" %}</a></li>
     {% endif %}
