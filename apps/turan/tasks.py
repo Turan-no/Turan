@@ -589,6 +589,8 @@ def parse_sensordata(exercise, callback=None):
 
     if hasattr(parser, 'avg_power'): # only some parsers
         exercise.avg_power = parser.avg_power
+        # Generate normalized power
+        exercise.normalized_power = power_30s_average(exercise.get_details().all())
     if hasattr(parser, 'max_power'): # only some parsers
         exercise.max_power = parser.max_power
     if hasattr(parser, 'avg_pedaling_power'):
@@ -620,9 +622,6 @@ def parse_sensordata(exercise, callback=None):
             exercise.comment = parser.comment
 
 
-    # Generate normalized power
-    if exercise.avg_power:
-        exercise.normalized_power = power_30s_average(exercise.get_details().all())
 
     # Normalize altitude, that is, if it's below zero scale every value up
     normalize_altitude(exercise)
@@ -695,7 +694,7 @@ def calculate_ascent_descent(event):
             altitude += details[i-2].altitude
             altitude += details[i+1].altitude
             altitude += details[i+2].altitude
-            altitude = float(altitude) / 5 
+            altitude = float(altitude) / 5
 
         else: # Don't worry about averages at start or end
             altitude = d.altitude
@@ -725,9 +724,9 @@ def power_30s_average(details):
     if not details:
         return 0
 
-    if not details[0].exercise.avg_power:
-        # Do not generate for exercise without power
-        return 0
+    #if not details[0].exercise.avg_power:
+    #    # Do not generate for exercise without power
+    #    return 0
 
     datasetlen = len(details)
 
