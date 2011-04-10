@@ -569,7 +569,10 @@ def parse_sensordata(exercise, callback=None):
            ):
             if hasattr(val, v):
                 setattr(interval, v, getattr(val, v))
-        interval.save()
+        try:
+            interval.save()
+        except:
+            pass
 
     exercise.max_hr = parser.max_hr
     exercise.max_speed = parser.max_speed
@@ -663,6 +666,7 @@ def parse_sensordata(exercise, callback=None):
     if hasattr(route, 'ascent') and route.ascent > 0:
         getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date))
 
+
 @task
 def create_tcx_from_details(event):
     # Check if the details have lon, some parsers doesn't provide position
@@ -739,15 +743,15 @@ def power_30s_average(details):
     fourth = 0.0
     power_avg_count = 0
 
-    #ASSUMING 1 SEC SAMPLE INTERVAL!
+    #FORCING 1 SEC SAMPLE INTERVAL!
     for i in xrange(0, datasetlen):
         foo = 0.0
         foo_element = 0.0
         for j in xrange(0,30):
             if (i+j-30) > 0 and (i+j-30) < datasetlen:
                 delta_t = (details[i+j-30].time - details[i+j-31].time).seconds
-                # Break if exerciser is on a break as well
-                if delta_t < 60:
+                # Break if sample is not 1 sek...
+                if delta_t == 1:
                     power = details[i+j-30].power
                     if power:
                         foo += power*delta_t
