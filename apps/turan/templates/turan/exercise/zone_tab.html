@@ -39,6 +39,7 @@
         </table>
     </div>
 <script type="text/javascript">
+$(function () {
     var wzonedata = [
         {% for zone, length in wzones.items %}
             {
@@ -52,6 +53,7 @@
         {% endfor %}
     ];
     $.plot($("#wzonediv"),wzonedata, { grid: { show: false } });
+});
 </script>
 {% endif %}
 <div id="zonediv" style="width:400px;height:400px; float: right;"></div>
@@ -91,6 +93,7 @@
         </table>
     </div>
 <script type="text/javascript">
+$(function () {
     var zonedata = [
         {% for zone, length in zones.items %}
             {
@@ -104,4 +107,5 @@
         {% endfor %}
     ];
     $.plot($("#zonediv"),zonedata, { grid: { show: false } });
+});
 </script>
