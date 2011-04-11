@@ -101,6 +101,7 @@ var GraphPlotter = {
                     clickable: true,
                     markings: this.markings,
                 },
+                crosshair: { mode: "x" },
                 selection: { mode: "x" }
             });
         }
@@ -224,9 +225,12 @@ var GraphPlotter = {
             if (item) {
                 // Move marker to current pos
                 if (typeof(Mapper) != "undefined") {
-                    var x = route_points[item.dataIndex].x;
-                    var y = route_points[item.dataIndex].y;
-                    Mapper.updatePosMarker(x, y);
+                    if (route_points.length >= item.dataIndex) {
+
+                        var x = route_points[item.dataIndex].x;
+                        var y = route_points[item.dataIndex].y;
+                        Mapper.updatePosMarker(x, y);
+                    }
                 }
 
                 if (previousPoint != item.datapoint) {
