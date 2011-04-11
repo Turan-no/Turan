@@ -135,7 +135,7 @@ var Mapper = {
             });
             this.map.addLayer(this.vectors);
         }
-        if (route_coordinates != undefined) {
+        if (typeof(route_coordinates) != "undefined") {
             for (var i = 0; i < route_coordinates.length; i++) {
                 var p = route_coordinates[i];
                 route_points.push(new OpenLayers.Geometry.Point(p[0], p[1]));
