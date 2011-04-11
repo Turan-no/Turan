@@ -136,17 +136,46 @@ var GraphPlotter = {
         }
 
     },
+    updateLegend: function(pos) {
+        this.updateLegendTimeout = null;
+       // var pos = this.latestPosition; 
+        var axes = plot.getAxes(); 
+        if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max || 
+            pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) 
+            return; 
+
+        var i, j, dataset = plot.getData(); 
+        for (i = 0; i < dataset.length; ++i) { 
+            var series = dataset[i]; 
+
+            // find the nearest points, x-wise 
+            for (j = 0; j < series.data.length; ++j) 
+                if (series.data[j][0] > pos.x) 
+                    break; 
+
+            // now interpolate 
+            var y, p1 = series.data[j - 1], p2 = series.data[j];
+
+
+            if (p1 == null) 
+                y = p2[1]; 
+            else if (p2 == null) 
+                y = p1[1]; 
+            else 
+                y = p1[1] + (p2[1] - p1[1]) * (pos.x - p1[0]) / (p2[0] - p1[0]); 
+
+            this.legends.eq(i).text(series.label.replace(/=.*/, "= " + y.toFixed(2))); 
+        } 
+    },
     showTooltip: function (x, y, contents) {
-        $('<div id="tooltip">' + contents + '</div>').css( {
+        $('<div class="tooltip" id="gtooltip">' + contents + '</div>').css( {
             position: 'absolute',
             display: 'none',
             top: y + 5,
             left: x + 5,
-            border: '1px solid #fdd',
             padding: '2px',
-            'background-color': '#fee',
             opacity: 0.80
-        }).appendTo("body").fadeIn(200);
+        }).appendTo("body").fadeIn(100);
     },
     init: function(args) {
         this.datasets = args.datasets;
@@ -220,8 +249,19 @@ var GraphPlotter = {
                 that.plotAccordingToChoices({}); 
         });
         this.plotAccordingToChoices({});
+        this.legends = $("#tripdiv .legendLabel"); 
+        this.legends.each(function () { 
+        // fix the widths so they don't jump around
+            $(this).css('width', $(this).width());
+        });
+
         var previousPoint = null;
+        this.updateLegendTimeout = null;
+        this.latestPosition = null;
         $("#tripdiv").bind("plothover", function (event, pos, item) {
+//            that.latestPosition = pos; 
+  //          if (!that.updateLegendTimeout) that.updateLegendTimeout = setTimeout(that.updateLegend, 50); 
+//            that.updateLegend(pos);
             if (item) {
                 // Move marker to current pos
                 if (typeof(Mapper) != "undefined") {
@@ -236,7 +276,7 @@ var GraphPlotter = {
                 if (previousPoint != item.datapoint) {
                     previousPoint = item.datapoint;
                     
-                    $("#tooltip").remove();
+                    $("#gtooltip").remove();
                     var x = item.datapoint[0].toFixed(2),
                         y = item.datapoint[1].toFixed(2);
                     
@@ -246,10 +286,11 @@ var GraphPlotter = {
                 }
             }
             else {
-                $("#tooltip").remove();
+                $("#gtooltip").remove();
                 previousPoint = null;            
             }
         });
+
 
         $("#tripdiv").bind("plotclick", function (event, pos, item) {
             if (item) {
