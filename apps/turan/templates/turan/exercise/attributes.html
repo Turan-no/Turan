@@ -15,7 +15,7 @@
         <a href="{{ object.user.get_profile.get_absolute_url }}">{{ object.user }}</a> 
     </li>
     {% if object.route %}
-    <li class="route"><span class="label">{% trans "Route" %}:</span>{% ifequal object.route.single_serving 0%} <a href="{{ object.route.get_absolute_url }}">{{ object.route }}</a> {% endifequal %}
+    <li class="route"><span class="label">{% trans "Route" %}:</span><a href="{{ object.route.get_absolute_url }}">{{ object.route }}</a>
     {% endif %}
     {% with object.route as object %}
         {% include "turan/route/attributes.html" %}

@@ -5,6 +5,10 @@
 {{block.super}}
 {{ object }}, {{ object.date }}
 {% endblock %}
+{% block extra_head %}
+{{ block.super }}
+    <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.crosshair.js"></script>
+{% endblock %}
 {% block extramenu %}
 {{ block.super }}
 {% ifequal user object.user %}

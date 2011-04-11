@@ -126,8 +126,8 @@ class Route(models.Model):
         return url
 
     def get_absolute_url(self):
-        if not self.single_serving:
-            return reverse('route', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
+        #if not self.single_serving:
+        return reverse('route', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
 
     def get_svg_url(self):
         if self.gpx_file:
