@@ -408,6 +408,17 @@ def statistics(request, year=None, month=None, day=None, week=None):
     climbstatsbytime = sorted(climbstats, key=lambda x:-x.avgclimbperhour)
     lengthstats = sorted(climbstats, key=lambda x: -x.avglen)
 
+    hrzonestats = []
+    hrzones = range(0,7)
+    for i in hrzones:
+        hrzonestats.append(statsprofiles.filter(**tfilter)\
+        .extra(where=['turan_hrzonesummary.zone = %s' %i])\
+        .annotate(\
+            duration = Sum('user__exercise__hrzonesummary__duration')
+            )\
+        .order_by('-duration'))
+    hrzonestats = zip(hrzones, hrzonestats)
+
 
     bestest_power = []
     intervals = [5, 30, 60, 300, 600, 1200, 1800, 3600]
