@@ -1,5 +1,5 @@
 from models import *
-from tasks import smoothListGaussian, calcpower, power_30s_average
+from tasks import smoothListGaussian, calcpower, power_30s_average, hr2zone
 from itertools import groupby, islice
 from forms import ExerciseForm
 from profiles.models import Profile
@@ -408,6 +408,17 @@ def statistics(request, year=None, month=None, day=None, week=None):
     climbstatsbytime = sorted(climbstats, key=lambda x:-x.avgclimbperhour)
     lengthstats = sorted(climbstats, key=lambda x: -x.avglen)
 
+    hrzonestats = []
+    hrzones = range(0,7)
+    for i in hrzones:
+        hrzonestats.append(statsprofiles.filter(**tfilter)\
+        .extra(where=['turan_hrzonesummary.zone = %s' %i])\
+        .annotate(\
+            duration = Sum('user__exercise__hrzonesummary__duration')
+            )\
+        .order_by('-duration'))
+    hrzonestats = zip(hrzones, hrzonestats)
+
 
     bestest_power = []
     intervals = [5, 30, 60, 300, 600, 1200, 1800, 3600]
@@ -580,17 +591,10 @@ def calendar_month(request, year, month):
         for week, es in e_by_week:
             zones =[0,0,0,0,0,0,0]
             for e in es:
-                eds = e.get_details().all()
-                if eds:
-                    zonevals = getzones(eds)
-                    i = 0
-                    for zone_legend, zone_value in zonevals.items():
-                        zones[i] += zone_value
-                        i += 1
-                else:
-                    if e.duration:
-                        zones[0] += e.duration.seconds
-            # Convert seconds to hours
+                dbzones = e.hrzonesummary_set.all()
+                for dbzone in dbzones:
+                    zones[dbzone.zone] += dbzone.duration
+                #zones = e.hrzonesummary_set.all()
             z_by_week[week] = zones#[float(zone)/60/60 for zone in zones if zone]
 
     return render_to_response('turan/calendar.html',
@@ -975,6 +979,28 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
 #    js = tripdetail_js(event_type, object_id, val, start, stop)
 #    return HttpResponse(js)
 
+def getzones_with_legend(exercise):
+
+    zones = exercise.hrzonesummary_set.all()
+    zones_with_legend = SortedDict()
+
+    for zone in zones:
+        if zone.zone == 0:
+            zones_with_legend['0 (0% - 60%)'] = zone.duration
+        elif zone.zone == 1:
+            zones_with_legend['1 (60% - 72%)'] = zone.duration
+        elif zone.zone == 2:
+            zones_with_legend['2 (72% - 82%)'] = zone.duration
+        elif zone.zone == 3:
+            zones_with_legend['3 (82% - 87%)'] = zone.duration
+        elif zone.zone == 4:
+            zones_with_legend['4 (87% - 92%)'] = zone.duration
+        elif zone.zone == 5:
+            zones_with_legend['5 (92% - 97%)'] = zone.duration
+        elif zone.zone == 6:
+            zones_with_legend['6 (97% - 100%'] = zone.duration
+    return zones_with_legend
+
 def getinclinesummary(values):
     inclines = SortedDict({
        -1: 0,
@@ -1061,56 +1087,6 @@ def getwzones(values):
 
     return zones_with_legend
 
-def getzones(values):
-    ''' Calculate time in different sport zones given trip details '''
-
-    max_hr = values[0].exercise.user.get_profile().max_hr
-    if not max_hr:
-        return []
-
-    zones = SortedDict({
-            0: 0,
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-        })
-    previous_time = False
-    for i, d in enumerate(values):
-        if not previous_time:
-            previous_time = d.time
-            continue
-        time = d.time - previous_time
-        previous_time = d.time
-        if time.seconds > 60:
-            continue
-        hr_percent = 0
-        if d.hr:
-            hr_percent = float(d.hr)*100/max_hr
-        zone = hr2zone(hr_percent)
-        zones[zone] += time.seconds
-
-    zones_with_legend = SortedDict()
-
-    for zone, val in zones.items():
-        if zone == 0:
-            zones_with_legend['0 (0% - 60%)'] = val
-        elif zone == 1:
-            zones_with_legend['1 (60% - 72%)'] = val
-        elif zone == 2:
-            zones_with_legend['2 (72% - 82%)'] = val
-        elif zone == 3:
-            zones_with_legend['3 (82% - 87%)'] = val
-        elif zone == 4:
-            zones_with_legend['4 (87% - 92%)'] = val
-        elif zone == 5:
-            zones_with_legend['5 (92% - 97%)'] = val
-        elif zone == 6:
-            zones_with_legend['6 (97% - 100%'] = val
-
-    return zones_with_legend
 
 def gethrhzones(values):
     ''' Calculate time in different sport zones given trip details '''
@@ -1341,7 +1317,7 @@ def exercise(request, object_id):
             # Todo, maybe calculate and save in db or cache ?
             gradients, inclinesums = getgradients(details)
         intervals = object.interval_set.select_related().all()
-        zones = getzones(details)
+        zones = getzones_with_legend(object)
         wzones = getwzones(details)
         hrhzones = gethrhzones(details)
         cadfreqs = []
