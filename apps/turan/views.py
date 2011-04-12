@@ -1173,7 +1173,10 @@ def getgradients(values):
     for d in values:
         altitudes.append(d.altitude)
         # Distances is used in the graph, so divide by 1000 to get graph xasis in km
-        distances.append(d.distance/1000)
+        if d.distance:
+            distances.append(d.distance/1000)
+        else:
+            distances.append(0)
 
     # Smooth 10 Wide!
     altitudes = smoothListGaussian(altitudes, 10)
