@@ -8,6 +8,7 @@ from django.conf import settings
 from django.db.models import get_model
 from django.db import connection, transaction
 from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
+from django.utils.datastructures import SortedDict
 
 import numpy
 from collections import deque
@@ -449,6 +450,59 @@ def best_x_sec(details, length, altvals, speed=True, power=False):
 
         return best_power, best_start_km_power, best_length_power, best_power_ascent, best_power_descent
 
+@task
+def calculate_time_in_zones(exercise, callback=None):
+
+    # First: Delete any existing in case of reparse
+    exercise.hrzonesummary_set.all().delete()
+
+    HRZoneSummary = get_model('turan', 'HRZoneSummary')
+
+    zones = getzones(exercise)
+    for zone, val in zones.items():
+        hrz = HRZoneSummary()
+        hrz.exercise_id = exercise.id
+        hrz.zone = zone
+        hrz.duration = val
+        hrz.save()
+
+def getzones(exercise):
+    ''' Calculate time in different sport zones given trip details '''
+
+    values = exercise.get_details().all()
+    max_hr = exercise.user.get_profile().max_hr
+    if not max_hr:
+        max_hr = 200 # FIXME warning to user etc
+
+    zones = SortedDict({
+            0: 0,
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            6: 0,
+        })
+    previous_time = False
+    if values:
+        for d in values:
+            if not previous_time:
+                previous_time = d.time
+                continue
+            time = d.time - previous_time
+            previous_time = d.time
+            if time.seconds > 60:
+                continue
+            hr_percent = 0
+            if d.hr:
+                hr_percent = float(d.hr)*100/max_hr
+            zone = hr2zone(hr_percent)
+            zones[zone] += time.seconds
+    else:
+        if exercise.duration:
+            zones[0] = exercise.duration.seconds
+
+    return zones
 
 @task
 def calculate_best_efforts(exercise, effort_range=[5, 30, 60, 300, 600, 1200, 1800, 3600], calc_only_power=True, callback=None):
@@ -663,6 +717,7 @@ def parse_sensordata(exercise, callback=None):
     merge_sensordata(exercise)
     create_gpx_from_details(exercise)
     calculate_best_efforts(exercise)
+    calculate_time_in_zones(exercise)
     if hasattr(route, 'ascent') and route.ascent > 0:
         getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date))
 
@@ -770,3 +825,23 @@ def power_30s_average(details):
         return 0
     normalized = int(round(pow((fourth/power_avg_count), (0.25))))
     return normalized
+
+def hr2zone(hr_percent):
+    ''' Given a HR percentage return sport zone based on Olympiatoppen zones'''
+
+    zone = 0
+
+    if hr_percent > 97:
+        zone = 6
+    elif hr_percent > 92:
+        zone = 5
+    elif hr_percent > 87:
+        zone = 4
+    elif hr_percent > 82:
+        zone = 3
+    elif hr_percent > 72:
+        zone = 2
+    elif hr_percent > 60:
+        zone = 1
+
+    return zone

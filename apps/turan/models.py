@@ -28,7 +28,7 @@ from gpxwriter import GPXWriter
 
 from tasks import create_simplified_gpx, create_svg_from_gpx, create_gpx_from_details, \
         merge_sensordata, calculate_ascent_descent_gaussian, calculate_best_efforts, \
-        parse_sensordata, filldistance
+        parse_sensordata, filldistance, hr2zone
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -481,6 +481,14 @@ class BestPowerEffort(models.Model):
     class Meta:
         ordering = ('duration',)
 
+class HRZoneSummary(models.Model):
+    exercise = models.ForeignKey(Exercise)
+    zone = models.IntegerField()
+    duration = models.IntegerField()
+
+    class Meta:
+        ordering = ('zone',)
+
 class BestSpeedEffort(models.Model):
     exercise = models.ForeignKey(Exercise)
     pos = models.FloatField()
@@ -849,25 +857,6 @@ def new_comment(sender, instance, **kwargs):
                 {"user": instance.user, "exercise": exercise, "comment": instance})
 models.signals.post_save.connect(new_comment, sender=ThreadedComment)
 
-def hr2zone(hr_percent):
-    ''' Given a HR percentage return sport zone based on Olympiatoppen zones'''
-
-    zone = 0
-
-    if hr_percent > 97:
-        zone = 6
-    elif hr_percent > 92:
-        zone = 5
-    elif hr_percent > 87:
-        zone = 4
-    elif hr_percent > 82:
-        zone = 3
-    elif hr_percent > 72:
-        zone = 2
-    elif hr_percent > 60:
-        zone = 1
-
-    return zone
 def watt2zone(watt_percentage):
     ''' Given watt_percentage in relation to FTP, return coggan zone 
 

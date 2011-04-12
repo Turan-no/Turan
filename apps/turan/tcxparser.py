@@ -164,6 +164,8 @@ class TCXParser(object):
             except AttributeError:
                 ## TODO figure out why elements lack distance, make this smarter ?
                 #distance = self.cur_distance
+# 310 XT maybe fix??
+                continue
                 distance = 0
 
             try:
@@ -187,20 +189,23 @@ class TCXParser(object):
                 power = 0
 
             # Quickfix to skip empty trackpoints found at least in Garmin Edge 500 tcx-files
-            if lat == 0.0 and lon == 0.0 and distance == 0 and hr == 0:
-                continue
+            #if lat == 0.0 and lon == 0.0 and distance == 0 and hr == 0:
+            #    print "watness"
+            #    continue
             # Check for silly 310XT only pos values
             # as in trackpoints with only lon, lat and altitude, but no other values
             if lat and lon and altitude and not (distance or hr or power or cadence):
                 continue
 
+
             time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
 
             timedelta = (time - self.cur_time).seconds
             distdelta = 0
-            if self.gps_distance or (distance == 0 and lon and lat):
+            if self.gps_distance or (not distance and lon and lat):
                  # Didn't find DistanceMeterElement..but we have lon/lat, so calculate
                 if self.entries:
+                    #assert False, (timedelta, distance, lon, lat, altitude, power, hr, cadence)
                     o = self.entries[-1]
                     if o.lon and o.lat:
                         try:
