@@ -631,10 +631,10 @@ div.mapcontainer {
 
 #tabs h3 {
     margin: 0 8px 5px 0;
+    padding-left: 5px;
 }
-#tabs p {
-    padding: 5px;
-    margin: 0;
+#tabs>ul>li>p {
+    padding-left: 8px;
 }
 
 li {

@@ -29,23 +29,23 @@
 {% ifnotequal object.exercisedetail_set.count 0 %}
 <div id="tabs">
     <ul>
-        <li class="selected" id="tabs-select-1"><img alt="Graph" src="{{MEDIA_URL}}pinax/images/silk/icons/chart_curve.png">{% trans "Graph" %}</li>
-        <li id="tabs-select-2">{% trans "Comments" %}</li>
+        <li class="selected" id="tabs-select-1"><p><img alt="Graph" src="{{MEDIA_URL}}pinax/images/silk/icons/chart_curve.png">{% trans "Graph" %}</p></li>
+        <li id="tabs-select-2"><p>{% trans "Comments" %}</p></li>
         {% if intervals %}
-        <li id="tabs-select-3">{% trans "Intervals" %}</li>
+        <li id="tabs-select-3"><p>{% trans "Intervals" %}</p></li>
         {% endif %}
-        <li id="tabs-select-4">{% trans "Zones" %}</li>
-        <li id="tabs-select-5">{% trans "Freqs" %}</li>
-    {% ifequal object.exercise_type.slopes 1 %}
-    {% if slopes %}
-        <li id="tabs-select-6">{% trans "Slopes" %}</li>
-    {% endif %}
-    {% endifequal %}
-    {% ifequal object.exercise_type.altitude 1 %}
-        <li id="tabs-select-7">{% trans "Inclinedata" %}</li>
-    {% endifequal %}
-    <li id="tabs-select-9">{% trans "Best Efforts" %}</li>
-    </ul>
+        <li id="tabs-select-4"><p>{% trans "Zones" %}</p></li>
+        <li id="tabs-select-5"><p>{% trans "Freqs" %}</p></li>
+        {% ifequal object.exercise_type.slopes 1 %}
+            {% if slopes %}
+        <li id="tabs-select-6"><p>{% trans "Slopes" %}</p></li>
+            {% endif %}
+        {% endifequal %}
+        {% ifequal object.exercise_type.altitude 1 %}
+        <li id="tabs-select-7"><p>{% trans "Inclinedata" %}</p></li>
+        {% endifequal %}
+        <li id="tabs-select-9"><p>{% trans "Best Efforts" %}</p></li>
+        </ul>
     <div id="tabs-1" class="graph visible">
         {% include "turan/exercise/graph.html" %}
     </div>
@@ -87,7 +87,7 @@
 </div>
 <script type="text/javascript">
     function selectTab(evt) {
-        var id = evt.target.id;
+        var id = evt.target.id ? evt.target.id : evt.target.parentNode.id;
         id = "tabs-" + id.split('-')[2];
         $('#tabs div.visible').removeClass('visible');
         $('#tabs div#' + id).addClass('visible');
@@ -101,7 +101,10 @@
         $(this).bind("click", selectTab);
     });
 var commentcount = $('.bulk').size();
-$('#tabs-select-2').text('{% trans "Comments" %} (' + commentcount + ')');
+{% if object.comment %}
+commentcount += 1;
+{% endif %}
+$('#tabs-select-2').html('<p>{% trans "Comments" %} (' + commentcount + ')</p>');
 
 
 </script>
