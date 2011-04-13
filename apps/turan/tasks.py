@@ -505,12 +505,13 @@ def getzones(exercise):
     return zones
 
 @task
-def calculate_best_efforts(exercise, effort_range=[5, 30, 60, 300, 600, 1200, 1800, 3600], calc_only_power=True, callback=None):
+def calculate_best_efforts(exercise, effort_range=[5, 10, 30, 60, 240, 300, 600, 1200, 1800, 3600], calc_only_power=True, callback=None):
     ''' Iterate over details for different effort ranges finding best
     speed and power efforts '''
 
     # First: Delete any existing best efforts
-    exercise.bestspeedeffort_set.all().delete()
+    if not calc_only_power:
+        exercise.bestspeedeffort_set.all().delete()
     exercise.bestpowereffort_set.all().delete()
     BestSpeedEffort = get_model('turan', 'BestSpeedEffort')
     BestPowerEffort = get_model('turan', 'BestPowerEffort')
@@ -528,17 +529,22 @@ def calculate_best_efforts(exercise, effort_range=[5, 30, 60, 300, 600, 1200, 18
             for seconds in effort_range:
                 if calc_power and not calc_only_power:
                     speed, pos, length, speed_ascent, speed_descent, power, power_pos, power_length, power_ascent, power_descent = best_x_sec(details, seconds, altvals, power=True)
-                    be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds, ascent=power_ascent, descent=power_descent)
-                    be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds, ascent=speed_ascent, descent=speed_descent)
-                    be.save()
+                    if power:
+                        be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds, ascent=power_ascent, descent=power_descent)
+                        be.save()
+                    if speed:
+                        be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds, ascent=speed_ascent, descent=speed_descent)
+                        be.save()
                 elif not calc_power:
                     speed, pos, length, speed_ascent, speed_descent = best_x_sec(details, seconds, altvals, power=False)
-                    be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds, ascent=speed_ascent, descent=speed_descent)
-                    be.save()
+                    if speed:
+                        be = BestSpeedEffort(exercise=exercise, speed=speed, pos=pos, length=length, duration=seconds, ascent=speed_ascent, descent=speed_descent)
+                        be.save()
                 elif calc_power and calc_only_power:
                     power, power_pos, power_length, power_ascent, power_descent = best_x_sec(details, seconds, altvals, power=True, speed=False)
-                    be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds, ascent=power_ascent, descent=power_descent)
-                    be.save()
+                    if power:
+                        be = BestPowerEffort(exercise=exercise, power=power, pos=power_pos, length=power_length, duration=seconds, ascent=power_ascent, descent=power_descent)
+                        be.save()
     if not callback is None:
         subtask(callback).delay(exercise)
 
