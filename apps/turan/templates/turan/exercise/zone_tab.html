@@ -45,14 +45,22 @@ $(function () {
             {
             {% if length %}
                 data: [[{{ zone|slice:":1" }}, {{ length }}]],
-                bars: { show: true},
+                label: "{{zone|slice:":1"}}",
                 color: colors[{{ forloop.counter0 }}]
             {% endif %}
             }
 {% if not forloop.last %},{%endif%}
         {% endfor %}
     ];
-    $.plot($("#wzonediv"),wzonedata, { grid: { show: false } });
+    $.plot($("#wzonediv"),wzonedata, { 
+        grid: { show: false },
+        series: {
+            pie: {
+                show: true,
+                showLabel: true
+            }
+        }
+    });
 });
 </script>
 {% endif %}
@@ -99,13 +107,20 @@ $(function () {
             {
             {% if length %}
                 data: [[{{ zone|slice:":1" }}, {{ length }}]],
-                bars: { show: true},
+                label: "{{zone|slice:":1"}}",
                 color: colors[{{ forloop.counter0 }}]
             {% endif %}
             }
 {% if not forloop.last %},{%endif%}
         {% endfor %}
     ];
-    $.plot($("#zonediv"),zonedata, { grid: { show: false } });
+    $.plot($("#zonediv"),zonedata, { grid: { show: false },
+        series: {
+            pie: {
+                show: true,
+                showLabel: true
+            }
+        }
+        });
 });
 </script>
