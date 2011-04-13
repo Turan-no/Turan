@@ -1,16 +1,22 @@
 {% load i18n %}
 {% load turan_extras %}
+{% load avatar_tags %}
 <div class="box spacer" style="width: 458px">
-    <div style="float: right"><img alt="Exerciselogo" src="{{object.icon}}" /></div>
+    <img class="floatright" alt="Exerciselogo" src="{{object.icon}}" />
+    <a class="floatright" href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user %}</a>
 <h1>
     {{ object.route.name }}
+    {% ifequal object.exercise_permission "N" %}
+    <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{MEDIA_URL}}pinax/images/silk/icons/lock.png">
+    {% else %}
+    {% ifequal object.exercise_permission "F" %}
+    <img title="{% trans "Exercise visible to friends"%}" alt="{% trans "Exercise visible to friends"%}" src="{{MEDIA_URL}}pinax/images/silk/icons/lock_go.png">
+    {% endifequal %}
+    {% endifequal %}
 </h1>
 <div style="clear: left"></div>
 <ul class="iconlist">
     <li class="person">
-        {% if object.user.get_profile.image %}
-        <img width="70" src="{{MEDIA_URL}}{{ object.user.get_profile.image }}" alt="{% trans "Photo" %}" />
-        {% endif %}
         <span class="label">{% trans "Exerciser" %}:</span> 
         <a href="{{ object.user.get_profile.get_absolute_url }}">{{ object.user }}</a> 
     </li>
