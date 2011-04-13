@@ -585,7 +585,7 @@ div.mapcontainer {
 	border: 2px solid silver;
     position: relative;
     padding: 10px;
-    top: -1px;
+    top: -2px;
     left: 0px;
     -webkit-box-shadow: 3px 3px 10px rgb(80, 80, 80);
     box-shadow: 3px 3px 10px rgb(80, 80, 80);
@@ -596,45 +596,37 @@ div.mapcontainer {
 }
 #tabs>ul {
     overflow: hidden;
-    margin: 5px 0 0 0;
+    margin: 0 0 0 0;
     position: relative;
     z-index: 1;
+    height: 27px;
 }
 #tabs>ul>li {
     float: left;
-    width: 108px;
-    height: 20px;
     list-style-type: none;
-    margin: 2px 4px 0 0;
-    padding: 5px 0 0 5px;
-    background-color: #eee;
     cursor: pointer;
-    color: #444; /* unselected tab text colour */
-    font-weight: bold;
     text-decoration: none;
-	border-top: 1px solid #ccc;
-	border-left: 1px solid #ccc;
-	border-right: 1px solid #ccc;
-    border-radius: 0.5em 0.5em 0 0;
-    -webkit-border-radius: 0.5em 0.5em 0 0;
-    -moz-border-radius: 0.5em 0.5em 0 0;
+    background:url('/site_media/turan/tabs.gif') no-repeat left top; 
+    width: 110px;
+    color: #fff; 
+    text-decoration: none; 
+    cursor:hand; 
+    text-shadow: 0 0 0 #000;      
+    padding: 6px 0 6px 0;
+    margin: 0 5px 0 0;
 }
 #tabs>ul>li:hover {
-    background: #ddd;
+    color:#272B2F; 
+    font-weight:bold; 
+    background-position: 0 -28px; color:#FFF;             
 }
 #tabs>ul>li.selected:hover {
     color: #000;
 }
 #tabs>ul>li.selected {
-    background-color: #FFF;
-    font-weight: bold;
-    height: 22px;
-    border-top: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    -moz-box-shadow: 3px 3px 7px #555555;
-    -webkit-box-shadow: 3px 3px 7px rgb(80, 80, 80);
-    box-shadow: 3px 3px 7px rgb(80, 80, 80);
+    background-position:0 -56px; 
+    color:#272B2F; 
+    font-weight:bold; 
 }
 
 #tabs h3 {
