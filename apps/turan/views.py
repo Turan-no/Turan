@@ -1324,6 +1324,12 @@ def exercise(request, object_id):
         wzones = getwzones(details)
         hrhzones = gethrhzones(details)
         cadfreqs = []
+        bestpowerefforts = object.bestpowereffort_set.all()
+        # fetch the all time best for comparison
+        bestbestpowerefforts = []
+        for bpe in bestpowerefforts:
+            bbpes = BestPowerEffort.objects.filter(exercise__user=object.user,duration=bpe.duration).order_by('-power')[0]
+            bestbestpowerefforts.append(bbpes)
         speedfreqs = []
         if object.avg_cadence:
             cadfreqs = getfreqs(details, 'cadence', min=1)

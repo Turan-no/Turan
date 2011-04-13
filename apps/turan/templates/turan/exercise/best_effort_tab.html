@@ -29,7 +29,7 @@
             </th>
             {% endif %}
         </tr>
-            {% for effort in object.bestpowereffort_set.all %}
+            {% for effort in bestpowerefforts %}
             <tr>
                     <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
                         <script type="text/javascript">
@@ -44,7 +44,7 @@
                         </script>
                     </td>
                 <td> 
-                    {{ effort.duration|durationformatshort }} 
+                    {{ effort.duration|durationformat}} 
                 </td>
                 <td>
                     {{ effort.power }} {% trans "W" %}
@@ -90,7 +90,7 @@
             </th>
             {% endif %}
         </tr>
-        {% for effort in object.bestspeedeffort_set.all %}
+        {% for effort in bestpowerefforts %}
         <tr>
              <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="szoom{{forloop.counter0}}-link-1" class="zoom-select" />
                     <script type="text/javascript">
@@ -131,16 +131,28 @@
 {% if object.avg_power and power_show %}
     var best_effort_data = [
                 {
+                    label: '{% trans "This exercise" %}',
                     data: [
-            {% for effort in object.bestpowereffort_set.all %}
+            {% for effort in bestpowerefforts %}
             {% if effort.length %}
           [{{ effort.length }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
             {% endif %}
             {% endfor %}
     ],
                     color: 3,
+                },
+                {
+                    label: '{% trans "All time best" %}',
+                    data: [
+            {% for effort in bestbestpowerefforts %}
+            {% if effort.length %}
+          [{{ effort.length }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
+            {% endif %}
+            {% endfor %}
+    ],
+                    color: 4,
                 }];
-    $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: true } });
+    $.plot($("#besteffortdiv"), best_effort_data, { legend: {show: true}, grid: { show: true } });
 {% else %}
     var best_effort_data = [
             {% for effort in object.bestspeedeffort_set.all %}
