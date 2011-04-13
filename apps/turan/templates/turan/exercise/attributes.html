@@ -85,10 +85,5 @@
     {% if object.max_temperature %}
     <li class="temperature" ><span class="label">{% trans "Max Temperature" %}:</span> {{ object.max_temperature|floatformat }} {% trans "℃" %}</li>
     {% endif %}
-    {% if object.comment %}
-    <li class="comment">{{ object.user }} {% trans "writes" %}:
-        <p>{{ object.comment|linebreaks }}</p>
-    </li>
-    {% endif %}
 </ul>
 </div>
