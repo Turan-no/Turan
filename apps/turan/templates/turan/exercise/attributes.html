@@ -15,6 +15,8 @@
     {% endifequal %}
     {% endifequal %}
 
+{% endifequal %}
+{% ifequal user object.user %}
     <a href="{% url exercise_update object.id %}"><img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"></a>
 {% endifequal %}
 </h1>

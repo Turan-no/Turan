@@ -28,7 +28,9 @@
 {% else %}
 {% if user.is_superuser %}
         {% if object.sensor_file %}
-            <li class="modify"><a href="{% url exercise_parse object.id %}">{% trans "Reparse" %}</a></li>
+            <li class="modify"><a href="{% url exercise_parse object.id %}">
+            <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}">
+             {% trans "Reparse" %}</a></li>
         {% endif %}
 {% endif %}
 {% endifequal %}
