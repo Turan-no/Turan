@@ -217,29 +217,32 @@ def segment_detail(request, object_id):
     #            pass # stupid decimal value in trip duration!
     #
     done_altitude_profile = False
-    slope = object.slope_set.all()[0]
-    trip = slope.exercise
-    if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
+    slopecount = object.slope_set.count()
+    if slopecount:
+        slope = object.slope_set.all()[0]
+        trip = slope.exercise
+        if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
 
-        tripdetails = trip.get_details().all()
-        if filldistance(tripdetails):
-            i = 0
-            start, stop= 0, 0
-            for d in tripdetails:
-                if d.distance >= slope.start*1000 and not start:
-                    start = i
-                elif start:
-                    #assert False, (d.distance,  slope.start*1000, slope.start*1000+slope.length)
-                    if d.distance > (slope.start*1000+ slope.length):
-                        stop = i
-                        break
-                i += 1
-        #assert False, (start, stop)
-        #start =  trip.get_details().filter(lon=slope.start_lon).filter(lat=slope.start_lat)[0].id
-        #stop =  trip.get_details().filter(lon=slope.end_lon).filter(lat=slope.end_lat)[0].id
-        alt = tripdetail_js(None, trip.id, 'altitude', start=start, stop=stop)
-        alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
-        done_altitude_profile = True
+            tripdetails = trip.get_details().all()
+            if filldistance(tripdetails):
+                i = 0
+                start, stop= 0, 0
+                for d in tripdetails:
+                    if d.distance >= slope.start*1000 and not start:
+                        start = i
+                    elif start:
+                        #assert False, (d.distance,  slope.start*1000, slope.start*1000+slope.length)
+                        if d.distance > (slope.start*1000+ slope.length):
+                            stop = i
+                            break
+                    i += 1
+            #assert False, (start, stop)
+            #start =  trip.get_details().filter(lon=slope.start_lon).filter(lat=slope.start_lat)[0].id
+            #stop =  trip.get_details().filter(lon=slope.end_lon).filter(lat=slope.end_lat)[0].id
+            alt = tripdetail_js(None, trip.id, 'altitude', start=start, stop=stop)
+            alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
+            done_altitude_profile = True
+        gradients, inclinesums = getgradients(tripdetails[start:stop])
 #
 #    except TypeError:
 #        # bug for trips without date
@@ -248,7 +251,6 @@ def segment_detail(request, object_id):
         # no trips found
 #        pass
         # Todo, maybe calculate and save in db or cache ?
-        gradients, inclinesums = getgradients(tripdetails[start:stop])
     return render_to_response('turan/segment_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):

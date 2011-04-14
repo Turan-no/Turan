@@ -2,7 +2,7 @@
 {% load turan_extras %}
 <ul class="iconlist">
     {% if object.distance %}
-    <li class="distance"><span class="label">{% trans "Distance" %}:</span> {{ object.distance|floatformat }} {% trans "m" %}</li>
+    <li class="distance"><span class="label">{% trans "Distance" %}:</span> {{ object.distance|floatformat }} {% trans "km" %}</li>
     {% endif %}
     <li class="description">
         <span class="label">{% trans "Description" %}:</span> 
@@ -25,7 +25,7 @@
     <li class="altitude"><span class="label">{% trans "Max altitude" %}:</span> {{ object.max_altitude }} {% trans "m" %}</li>
     {% endif %}
     {% if object.grade %}
-    <li class="grade"><span class="label">{% trans "Grade" %}:</span> {{ object.grade }} %</li>
+    <li class="grade"><span class="label">{% trans "Grade" %}:</span> {{ object.grade|floatformat }} %</li>
     {% endif %}
     {% if object.category %}
     <li class="category"><span class="label">{% trans "Category" %}:</span> {{ object.category }}</li>

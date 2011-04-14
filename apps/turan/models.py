@@ -647,8 +647,8 @@ class Segment(models.Model):
     max_altitude = models.IntegerField(blank=True, null=True) # m
     min_altitude = models.IntegerField(blank=True, null=True) # m
 
-    grade = models.FloatField()
-    category = models.IntegerField()
+    grade = models.FloatField(blank=True,default=0,null=True,)
+    category = models.IntegerField(blank=True,default=0, null=True)
 
     start_lat = models.FloatField(null=True, blank=True, default=0.0)
     start_lon = models.FloatField(null=True, blank=True, default=0.0)
@@ -682,25 +682,39 @@ class Segment(models.Model):
         super(Segment, self).save(*args, **kwargs)
         # Create gpxtrack for this segment
         if not self.gpx_file:
-            if self.get_slopes():
-                slope = self.get_slopes()[0]
-                trip = slope.exercise
-                tripdetails = trip.get_details().all()
-                if filldistance(tripdetails):
-                    i = 0
-                    start, stop= 0, 0
-                    for d in tripdetails:
-                        if d.distance == slope.start*1000:
-                            start = i
-                        if start:
-                            if d.distance > (slope.start*1000+ slope.length):
-                                stop = i
-                                break
-                        i += 1
-                tripdetails = tripdetails[start:stop]
-                g = GPXWriter(tripdetails)
-                filename = 'gpx/segment/%s.gpx' %self.id
-                self.gpx_file.save(filename, ContentFile(g.xml), save=True)
+            for slope in self.get_slopes():
+                if slope.exercise.route and slope.exercise.route.gpx_file:
+                    trip = slope.exercise
+                    tripdetails = trip.get_details().all()
+                    if filldistance(tripdetails):
+                        i = 0
+                        start, stop= 0, 0
+                        for d in tripdetails:
+                            if d.distance == slope.start*1000:
+                                start = i
+                            if start:
+                                if d.distance > (slope.start*1000+ slope.length):
+                                    stop = i
+                                    break
+                            i += 1
+                    tripdetails = tripdetails[start:stop]
+                    g = GPXWriter(tripdetails)
+                    if g.points: # don't write gpx if not lon/lat-trip
+                        filename = 'gpx/segment/%s.gpx' %self.id
+                        self.gpx_file.save(filename, ContentFile(g.xml), save=True)
+                        break
+
+        for attr in ('category', 'ascent', 'grade', 'length', 'start_lon', 'start_lat', 'end_lon', 'end_lat'):
+            for slope in self.get_slopes():
+                slopeattr = attr
+                if attr == 'length': # omg
+                    slopeattr = 'distance' # so silly
+                if not getattr(self, slopeattr):
+                    slopeval = getattr(slope, attr)
+                    if slopeval:
+                        if slopeattr == 'distance': # this design is so silly, why vary between m and km?
+                            slopeval = slopeval/1000
+                        setattr(self, slopeattr, slopeval)
 
         super(Segment, self).save(*args, **kwargs)
 
@@ -785,6 +799,10 @@ class Slope(models.Model):
 
     class Meta:
         ordering = ('-exercise__date',)
+
+    def get_absolute_url(self):
+        if self.segment:
+            self.segment.get_absolute_url()
 
 
 
