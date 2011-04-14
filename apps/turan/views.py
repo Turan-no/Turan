@@ -205,17 +205,12 @@ def route_detail(request, object_id):
 def segment_detail(request, object_id):
     object = get_object_or_404(Segment, pk=object_id)
     usertimes = {}
- #   try:
-    #    for trip in sorted(object., key=lambda x:x.date):
-    #        if not trip.user in usertimes:
-    #            usertimes[trip.user] = ''
-    #        try:
-    #            time = trip.duration.seconds/60
-    #            if trip.avg_speed: # Or else graph bugs with None-values
-    #                usertimes[trip.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed))
-    #        except AttributeError:
-    #            pass # stupid decimal value in trip duration!
-    #
+    for slope in sorted(object.get_slopes(), key=lambda x:x.exercise.date):
+        if not slope.exercise.user in usertimes:
+            usertimes[slope.exercise.user] = ''
+        time = slope.duration/60
+        usertimes[slope.exercise.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(slope.exercise.date), slope.duration))
+
     done_altitude_profile = False
     slopecount = object.slope_set.count()
     if slopecount:

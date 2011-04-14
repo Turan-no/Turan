@@ -690,9 +690,9 @@ class Segment(models.Model):
                         i = 0
                         start, stop= 0, 0
                         for d in tripdetails:
-                            if d.distance == slope.start*1000:
+                            if not start and d.distance >= slope.start*1000:
                                 start = i
-                            if start:
+                            elif start:
                                 if d.distance > (slope.start*1000+ slope.length):
                                     stop = i
                                     break
