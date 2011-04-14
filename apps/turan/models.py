@@ -704,6 +704,8 @@ class Segment(models.Model):
 
         super(Segment, self).save(*args, **kwargs)
 
+    def __unicode__(self):
+        return u'%s' % (self.name)
 
 class Slope(models.Model):
     exercise = models.ForeignKey(Exercise)

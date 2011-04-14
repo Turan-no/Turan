@@ -7,6 +7,9 @@
                     {% trans "Zoom" %}
                 </th>
                 <th>
+                    {% trans "Name" %}
+                </th>
+                <th>
                     {% trans "Start" %}
                 </th>
                 <th>
@@ -16,7 +19,7 @@
                     {% trans "Ascent" %}
                 </th>
                 <th>
-                    {% trans "Gradient" %}
+                    {% trans "%" %}
                 </th>
                 <th>
                     {% trans "Duration" %}
@@ -26,14 +29,14 @@
                 </th>
                 {% if object.avg_power %}
                 <th>
-                    {% trans "Avg power (actual)" %}
+                    {% trans "Avg power" %}
                 </th>
                 {% endif %}
                 <th>
-                    {% trans "Avg power (est)" %}
+                    {% trans "Est power" %}
                 </th>
                 <th>
-                    {% trans "Avg power/kg" %}
+                    {% trans "W/kg" %}
                 </th>
                 <th>
                     VAM
@@ -59,8 +62,15 @@
                                 });
                     </script>
                 </td>
+                <td>
+                {% if slope.segment %}
+                    <a href="{{slope.segment.get_absolute_url}}">
+                    {{ slope.segment.name }}
+                    </a>
+                {% endif%}
+                </td>
                 <td>{{ slope.start|floatformat }} {% trans "km" %} </td>
-                <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
+                <td>{{ slope.length|divide:"1000" }} {% trans "km" %} </td>
                 <td>{{slope.ascent}} {% trans "m" %}</td>
                 <td>{{slope.grade|floatformat}} %</td>
                 <td>{{ slope.duration|durationformatshort }} </td>
@@ -74,10 +84,12 @@
                 <td>{{slope.power_per_kg|floatformat}} {% trans "W/kg" %} </td>
                 <td>{% if slope.vam %}{{slope.vam}}{% endif %}</td>
                 <td><div class="slope-categories slope-category-{{slope.category}}"><span>{{slope.category}}</span></div></td>
-                <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}
+                <td>
                     {% if object.user.get_profile.max_hr %}
-                    ({{ slope.avg_hr|percent:object.user.get_profile.max_hr }})
-                    {% endif %} </td>
+                    {{ slope.avg_hr|percent:object.user.get_profile.max_hr }}
+                    {% endif %} 
+                </td>
+
             </tr>
         {% endfor %}
         </table>

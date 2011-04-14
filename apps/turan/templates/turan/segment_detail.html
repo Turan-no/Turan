@@ -59,7 +59,7 @@ $.plot($("#altdiv"), [alt], options);
 </script>
     <h2 style="clear: both">{% trans "Gradients" %}</h2>
     <div id="gradientzonediv" style="width: 1000px; height:200px; float: right;"></div>
-    <div id="gradientzonetable" style="width:1px; height: 400px;"></div>
+    <div id="gradientzonetable" style="width:1px; height: 200px;"></div>
     {% include "turan/exercise/gradient_tab.html" %}
     <form id="route_form">
     <h2>{% trans "Rides on this segment" %}</h2>
@@ -108,7 +108,11 @@ $.plot($("#altdiv"), [alt], options);
     <td>{{object.est_power|floatformat}} {% trans "W" %} </td>
     <td>{{object.power_per_kg|floatformat}}</td>
     <td>{% if object.vam %}{{object.vam}}{% endif %}</td>
-    <td>{{ object.comment|slice:"70" }}</td>
+    <td>
+        {% if object.comment %}
+        {{ object.comment|slice:"70" }}
+        {% endif %}
+    </td>
         </tr>
         {% endfor %}
     </table>
