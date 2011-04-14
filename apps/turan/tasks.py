@@ -180,15 +180,14 @@ def getslopes(values, userweight):
             inslope = True
     return slopes
 
-def match_slopes():
-    OFFSET_ACCEPTED = 50
-    se = Segment.objects.get(pk=1)
+def match_slopes(se, offset=70):
+    Slope = get_model('turan', 'Slope')
     slopes = Slope.objects.filter(start_lon__gt=0)
     for s in slopes:
         start_distance = proj_distance(se.start_lat, se.start_lon, s.start_lat, s.start_lon)
-        if start_distance and start_distance < OFFSET_ACCEPTED:
+        if start_distance and start_distance < offset:
             end_distance = proj_distance(se.end_lat, se.end_lon, s.end_lat, s.end_lon)
-            if end_distance and end_distance < OFFSET_ACCEPTED:
+            if end_distance and end_distance < offset:
                 print start_distance, end_distance
                 if not s.segment:
                     s.segment = se
