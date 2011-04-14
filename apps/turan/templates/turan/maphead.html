@@ -1,6 +1,6 @@
 {% load i18n %}
 {% if gpx_file %}
-    <script type="text/javascript" src="http://openlayers.org/api/2.10/OpenLayers.js"></script>
+    <script type="text/javascript" src="http://openlayers.org/api/2.8/OpenLayers.js"></script>
     <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}turan/mapper.js"></script>
 
@@ -9,9 +9,13 @@
         $(document).ready(function(evt) {
             map = Mapper.init(
                 "{{ MEDIA_URL }}turan/{{ object.get_simplegpx_url }}", 
+                {% if object.get_geojson_url %}
                 "{{ object.get_geojson_url }}",
-                [{{object.route.start_lon}}, {{object.route.start_lat}}], 
-                [{{object.route.end_lon}}, {{object.route.end_lat}}]
+                {% else %}
+                    false,
+                {% endif %}
+                [{{object.start_lon}}, {{object.start_lat}}], 
+                [{{object.end_lon}}, {{object.end_lat}}]
             );
         });
     </script>
