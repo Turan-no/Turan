@@ -439,6 +439,26 @@ class Exercise(models.Model):
         start_time = datetime(self.date.year, self.date.month, self.date.day, self.time.hour, self.time.minute, self.time.second)
         return start_time
 
+    @property
+    def start_lon(self):
+        if self.route and self.route.start_lon:
+            return self.route.start_lon
+
+    @property
+    def start_lat(self):
+        if self.route and self.route.start_lat:
+            return self.route.start_lat
+
+    @property
+    def end_lat(self):
+        if self.route and self.route.end_lat:
+            return self.route.end_lat
+
+    @property
+    def end_lon(self):
+        if self.route and self.route.end_lon:
+            return self.route.end_lon
+
 
 class ExercisePermission(models.Model):
     exercise = models.OneToOneField(Exercise, primary_key=True)
@@ -648,7 +668,6 @@ class Segment(models.Model):
             else:
                 url = self.gpx_file
         return url
-
 
     def get_absolute_url(self):
         return reverse('segment', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
