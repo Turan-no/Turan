@@ -13,11 +13,10 @@ var Mapper = {
         var lgpx = new OpenLayers.Layer.GML("Route", gpx_file, {
             format: OpenLayers.Format.GPX,
             style: {strokeColor: "purple", strokeWidth: 5, strokeOpacity: 0.5, label: "Start"},
-            projection: this.projection,
-            
+            projection: this.projection
         });
-
         lgpx.events.register("loadend", this, this.resizeMapToLayerExtents);
+
 
         this.map = new OpenLayers.Map ({
             controls:[
@@ -38,6 +37,7 @@ var Mapper = {
             //projection: this.projection,
             displayProjection: this.projection
         });
+                
 
          var FKB = new OpenLayers.Layer.WMS(
             'Topo Norge (N50,FKB)',
@@ -173,6 +173,7 @@ var Mapper = {
     },
     loadGeoJSON: function(minIndex, maxIndex) {
         if (this.map != null) {
+        if (this.geojson_url) {
             this.map.removeLayer(this.map.getLayersByName('HR Line')[0]);
             var selection_vectors = new OpenLayers.Layer.Vector("HR Line", {
                     strategies: [new OpenLayers.Strategy.Fixed()],                
@@ -185,5 +186,7 @@ var Mapper = {
                 });
                 this.map.addLayer(selection_vectors);
                 selection_vectors.events.register("loadend", this, this.resizeMapToLayerExtents);
-    }}
+        }
+        }
+     } 
 };
