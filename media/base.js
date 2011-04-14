@@ -2,6 +2,32 @@
 var colors = ["rgb(240,240,240)", "rgb(204,204,204)", "rgb(51,102,255)", "rgb(102,204,0)", 
         "rgb(255,153,0)", "rgb(255,0,0)", "rgb(166,0,0)", "rgb(119,0,119)"];
 
+function durationFormatter(time, axis) {
+    //var time = date_object.getTime();
+
+    var days    = parseInt((time / (60*60*24)));
+    var hours   = parseInt((time % (60*60*24)) / (60*60));
+    var minutes = parseInt((time % (60*60)) / (60));
+
+    var result = [];
+
+    if (days > 0) {
+        result.push(days + "d");
+    }
+    if (hours > 0) {
+        result.push(hours + "h");
+    }
+    if (minutes > 0) {
+        result.push(minutes + "m");
+    }
+    if (result.length == 0) {
+        return "0 m" 
+    }
+    if (result.length == 1) {
+        return result[0];
+    }
+    return result.slice(0, result.length-1).join(", ") + " " + result[result.length-1];
+}
 
 jQuery.fn.autoscroll = function() {
     $('html,body').animate({scrollTop: this.offset().top}, 500);
