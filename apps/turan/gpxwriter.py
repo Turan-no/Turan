@@ -23,13 +23,19 @@ xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/
 <trk>
 <trkseg>'''
 
+    
+
 
     def __init__(self, objects):
+
+        self.points = 0
+
 
         def point2xmlblock(time, lon, lat, alt):
             if not lon or not lat:
                 # Some devices (Garmin!) likes to save 0-points. Skip those.
-                return 
+                return
+            self.points += 1
             xmlp = '<trkpt lat="%s" lon="%s">\n' %(lat, lon)
             xmlp+= ' <ele>%.1f</ele>\n' %alt
             xmlp+= ' <time>%s</time>\n' %time.strftime('%Y-%m-%dT%H:%M:%SZ')

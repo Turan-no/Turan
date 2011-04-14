@@ -4,7 +4,6 @@
         <table class="fullsize">
             <tr>
                 <th>
-                    {% trans "Zoom" %}
                 </th>
                 <th>
                     {% trans "Name" %}
@@ -49,7 +48,7 @@
                 </th>
             </tr>
         {% for slope in slopes %}
-            <tr>
+            <tr class="{% cycle "odd" "even" %}">
                 <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select" />
                     <script type="text/javascript">
                         $('#zoom{{forloop.counter0}}-link-1').bind("click", 
@@ -61,6 +60,18 @@
                                 })
                                 });
                     </script>
+
+                    {% ifequal object.user request.user %}
+                    <a href="{% url slope_update slope.id %}">
+                    <img title="{% trans "Modify slope"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
+                    </a>
+                    {% else %}
+                    {% if user.is_superuser %}
+                    <a href="{% url slope_update slope.id %}">
+                    <img title="{% trans "Modify slope"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
+                    </a>
+                    {% endif%}
+                    {% endifequal %}
                 </td>
                 <td>
                 {% if slope.segment %}
