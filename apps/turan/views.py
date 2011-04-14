@@ -226,9 +226,9 @@ def segment_detail(request, object_id):
             i = 0
             start, stop= 0, 0
             for d in tripdetails:
-                if d.distance == slope.start*1000:
+                if d.distance >= slope.start*1000 and not start:
                     start = i
-                if start:
+                elif start:
                     #assert False, (d.distance,  slope.start*1000, slope.start*1000+slope.length)
                     if d.distance > (slope.start*1000+ slope.length):
                         stop = i

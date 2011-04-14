@@ -10,9 +10,15 @@
     <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{MEDIA_URL}}pinax/images/silk/icons/lock.png">
     {% else %}
     {% ifequal object.exercise_permission "F" %}
+{% ifequal user object.user %}
     <img title="{% trans "Exercise visible to friends"%}" alt="{% trans "Exercise visible to friends"%}" src="{{MEDIA_URL}}pinax/images/silk/icons/lock_go.png">
     {% endifequal %}
     {% endifequal %}
+
+{% endifequal %}
+{% ifequal user object.user %}
+    <a href="{% url exercise_update object.id %}"><img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"></a>
+{% endifequal %}
 </h1>
 <div style="clear: left"></div>
 <ul class="iconlist">
@@ -21,7 +27,15 @@
         <a href="{{ object.user.get_profile.get_absolute_url }}">{{ object.user }}</a> 
     </li>
     {% if object.route %}
-    <li class="route"><span class="label">{% trans "Route" %}:</span><a href="{{ object.route.get_absolute_url }}">{{ object.route }}</a>
+        <li class="route"><span class="label">{% trans "Route" %}:</span>
+        {% ifequal object.route.single_serving 1 %}
+            {% ifequal object.user request.user %}
+            <a href="{% url route_update object.route.id %}">{{ object.route }} <img alt="modify" src="{{ "wrench"|silk_icon }}"></a>
+            {% else %}
+            {% endifequal %}
+        {% else %}
+            <a href="{{ object.route.get_absolute_url }}">{{ object.route }}</a>
+    {% endifequal %}
     {% endif %}
     {% with object.route as object %}
         {% include "turan/route/attributes.html" %}

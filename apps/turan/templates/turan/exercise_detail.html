@@ -13,14 +13,24 @@
 {{ block.super }}
 {% ifequal user object.user %}
         {% if object.sensor_file %}
-        <li class="modify"><a href="{% url exercise_parse object.id %}">{% trans "Reparse" %}</a></li>
+        <li class="modify"><a href="{% url exercise_parse object.id %}">
+        <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}">
+         {% trans "Reparse" %}</a></li>
         {% endif %}
-        <li class="modify"><a href="{% url exercise_update object.id %}">{% trans "Modify" %}</a></li>
-        <li class="modify delete"><a href="{% url exercise_delete object.id %}">{% trans "Delete" %}</a></li>
+        <li class="modify">
+        <a href="{% url exercise_update object.id %}">
+        <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"> {% trans "Modify" %}
+        </a>
+        </li>
+        <li class="modify delete"><a href="{% url exercise_delete object.id %}">
+        <img alt="delete" title="{% trans "Delete exercise" %}" src="{{ "cross"|silk_icon }}"> {% trans "Delete" %}
+        </a></li>
 {% else %}
 {% if user.is_superuser %}
         {% if object.sensor_file %}
-            <li class="modify"><a href="{% url exercise_parse object.id %}">{% trans "Reparse" %}</a></li>
+            <li class="modify"><a href="{% url exercise_parse object.id %}">
+            <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}">
+             {% trans "Reparse" %}</a></li>
         {% endif %}
 {% endif %}
 {% endifequal %}
