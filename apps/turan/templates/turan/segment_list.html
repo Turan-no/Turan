@@ -57,17 +57,21 @@
             {% anchortrans grade "Grade" %}
         </th>
         <th>
-            {% anchortrans category %}
+            {% anchortrans category "Category" %}
+        </th>
+        <th>
+            {% anchortrans tcount "Trip count" %}
         </th>
     </tr>
 {% for object in object_list %}
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
     <td><a href="{% url segment object.id %}">{{object.name}}</a></td>
     <td>{{object.description}}</td>
-    <td>{{ object.distance|divide:"1000"|floatformat }} {% trans "km" %} </td>
+    <td>{{ object.distance|floatformat }} {% trans "km" %} </td>
     <td>{{object.ascent}} {% trans "m" %}</td>
     <td>{{object.grade|floatformat}} %</td>
     <td><div class="slope-categories slope-category-{{object.category}}"><span>{{object.category}}</span></div></td> 
+    <td>{{object.tcount}}</td>
 </tr>
 {%endfor %}
 </table>
