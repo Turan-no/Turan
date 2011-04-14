@@ -1,4 +1,5 @@
 from django import template
+from django.conf import settings
 #from django.template import render_to_string #Context, loader
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
@@ -235,3 +236,7 @@ def exercise_mouseover(obj):
 @register.filter
 def profile_hover(obj):
     return render_to_string('profile_hover.html', {'object': obj})
+
+@register.filter
+def silk_icon(name):
+    return settings.MEDIA_URL + 'pinax/images/silk/icons/%s.png' %name
