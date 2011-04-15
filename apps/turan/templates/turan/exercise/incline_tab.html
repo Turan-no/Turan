@@ -3,7 +3,7 @@
 <div id="inclinediv" style="width:700px;height:100%; float: right;"></div>
 <div id="incline" style="width:200px">
         <table class="fullsize" cellspacing="0" cellpadding="0">
-            <tr>
+        <tr class="{% cycle odd,even %}">
                 <th>
                     {% trans "Type" %}
                 </th>
@@ -15,7 +15,7 @@
                 </th>
             </tr>
             {% for item in inclinesums %}
-            <tr>
+        <tr class="{% cycle odd,even %}">
                 <td>
                     {{ item.0 }} %
                 </td>

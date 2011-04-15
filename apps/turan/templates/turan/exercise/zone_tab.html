@@ -20,7 +20,7 @@
             </tr>
             {% for zone, length in wzones.items %}
             {% if length %}
-            <tr>
+            <tr class="{% cycle odd,even %}">
                 <td>
                     <img alt="power" src="{{MEDIA_URL}}/pinax/img/silk/icons/lightbulb.png">
                     {{ zone }}
@@ -82,7 +82,7 @@ $(function () {
             </tr>
             {% for zone, length in zones.items %}
             {% if length %}
-            <tr>
+            <tr class="{% cycle odd,even %}">
                 <td>
                     <img alt="hr" src="{{MEDIA_URL}}/pinax/img/silk/icons/heart.png">
                     {{ zone }}

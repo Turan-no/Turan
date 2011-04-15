@@ -103,6 +103,7 @@
         $('#tabs div#' + id).addClass('visible');
         $('#tabs>ul>li').removeClass('selected');
         $(this).addClass('selected');
+        window.location.hash = $(this).attr("id");
     }
     $('#tabs>ul>li').each(function () {
         $(this).bind("click", selectTab);
@@ -110,11 +111,16 @@
     $('.zoom-select').each(function () {
         $(this).bind("click", selectTab);
     });
-var commentcount = $('.bulk').size();
-{% if object.comment %}
-commentcount += 1;
-{% endif %}
-$('#tabs-select-2').html('<p>{% trans "Comments" %} (' + commentcount + ')</p>');
+    $(window).bind("hashchange", function (evt) {
+        $(window.location.hash).trigger("click");
+    });
+    $(window).trigger("hashchange");
+
+    var commentcount = $('.bulk').size();
+    {% if object.comment %}
+    commentcount += 1;
+    {% endif %}
+    $('#tabs-select-2').html('<p>{% trans "Comments" %} (' + commentcount + ')</p>');
 
 
 </script>

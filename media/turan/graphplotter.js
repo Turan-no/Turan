@@ -114,6 +114,8 @@ var GraphPlotter = {
             segment_link.attr('href' , segment_link.attr('href')+ '&start=' + minIndex + '&stop=' + maxIndex);
             $("#segment_add").removeClass("hidden");
 
+            window.location.hash = 'graph-zoom-' + minIndex + '-' + maxIndex;
+
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
                 var items = $("#averages ul .data");
                 $("#averages h4").removeClass("hidden");

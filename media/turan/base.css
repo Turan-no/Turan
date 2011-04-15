@@ -39,18 +39,19 @@ h4 {
 
 /* Tables */
 table.fullsize {
-	margin: 0.5em 0;
+	margin: 0.3em 0;
 	width: 100%;
 }
 table.fullsize tr th {
-    background: #ddd;
+    background: #4F96CA; 
+    color: white;
 }
 table.fullsize tr.even {
 	border-top: 1px solid #fcfcfc;
 	border-bottom: 1px solid #eee;
 }
 table.fullsize tr.even {
-    background: #f8f8f8;
+    background-color: #f8f8f8;
 }
 table.fullsize th, 
 table.fullsize td {
