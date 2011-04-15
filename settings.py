@@ -203,7 +203,7 @@ INSTALLED_APPS = (
 # TUUURAN
     'turan',
 #    'rosetta',
-    'south',
+#    'south',
 #    'debug_toolbar',
     
     # internal (for now)
