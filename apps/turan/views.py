@@ -605,22 +605,14 @@ def calendar_month(request, year, month):
              },
             context_instance=RequestContext(request))
 
-def powerjson(request, object_id):
+def detailslice_info(details):
+    ''' Given details, return as much info as possible for them '''
 
-    object = get_object_or_404(Exercise, pk=object_id)
-
-    start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
-    try:
-        start, stop = int(start), int(stop)
-    except ValueError:
+    detailcount = len(details)
+    if not detailcount:
         return {}
-    all_details = object.get_details()
-
-    details = list(all_details.all()[start:stop])
+    exercise = details[0].exercise
     ascent, descent = calculate_ascent_descent_gaussian(details)
-
-    #ret = object.get_details().all()[start:stop].aggregate( Avg('speed'), Avg('hr'), Avg('cadence'), Avg('power'), Min('speed'), Min('hr'), Min('cadence'), Min('power'), Max('speed'), Max('hr'), Max('cadence'), Max('power'))
-
     val_types = ('speed', 'hr', 'cadence', 'power', 'temp')
     ret = {
             'speed__min': 9999,
@@ -651,15 +643,13 @@ def powerjson(request, object_id):
     ret['ascent'] = ascent
     ret['descent'] = descent
 
-    details = list(details)
-
     if filldistance(details):
         #Shit that only works for distance, like power
-        distance = details[-1].distance - details[0].distance
+        distance = details[detailcount-1].distance - details[0].distance
         gradient = ascent/distance
-        duration = (details[-1].time - details[0].time).seconds
+        duration = (details[detailcount-1].time - details[0].time).seconds
         speed = ret['speed__avg']
-        userweight = object.user.get_profile().get_weight(object.date)
+        userweight = exercise.user.get_profile().get_weight(exercise.date)
 
         # EQweight hard coded to 10! 
         ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
@@ -667,10 +657,27 @@ def powerjson(request, object_id):
         ret['distance'] = distance
         ret['gradient'] = gradient*100
         ret['power__normalized'] = power_30s_average(details)
-    for a, b in ret.items():
+    #for a, b in ret.items():
         # Do not return empty values
-        if not b:
-            del ret[a]
+    #    if not b:
+    #        del ret[a]
+    return ret
+
+def powerjson(request, object_id):
+
+    object = get_object_or_404(Exercise, pk=object_id)
+
+    start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
+    try:
+        start, stop = int(start), int(stop)
+    except ValueError:
+        return {}
+    all_details = object.get_details()
+
+    details = all_details.all()[start:stop]
+
+    ret = detailslice_info(details)
+
     return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
 def wikijson(request, slug, rev_id=None):
