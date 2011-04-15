@@ -448,7 +448,7 @@ ul.comments li {
 
 .modify {
     float: right;
-    list-style-image: url('/site_media/pinax/images/silk/icons/wrench.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/wrench.png');
 }
 .third {
     width: 33.3%;
@@ -460,14 +460,14 @@ ul.comments li {
 }
 
 li.duration {
-    list-style-image: url('/site_media/pinax/images/silk/icons/clock.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/clock.png');
 }
 li.hr, 
 li.heart {
-    list-style-image: url('/site_media/pinax/images/silk/icons/heart.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/heart.png');
 }
 li.comment {
-    list-style-image: url('/site_media/pinax/images/silk/icons/comment.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/comment.png');
 }
 li.description p,
 li.comment p {
@@ -476,53 +476,53 @@ li.comment p {
 }
 li.gear,
 li.cadence {
-    list-style-image: url('/site_media/pinax/images/silk/icons/cog.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/cog.png');
 }
 li.url {
-    list-style-image: url('/site_media/pinax/images/silk/icons/link.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/link.png');
 }
 li.date {
-    list-style-image: url('/site_media/pinax/images/silk/icons/date.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/date.png');
 }
 li.time {
-    list-style-image: url('/site_media/pinax/images/silk/icons/time_go.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/time_go.png');
 }
 li.speed {
-    list-style-image: url('/site_media/pinax/images/silk/icons/lightning_go.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/lightning_go.png');
 }
 li.person {
-    list-style-image: url('/site_media/pinax/images/silk/icons/user_suit.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/user_suit.png');
 }
 li.person img {
     float: right;
     margin: -1px 0 0 8px;
 }
 li.route {
-    list-style-image: url('/site_media/pinax/images/silk/icons/map.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/map.png');
 }
 li.count {
-    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_rotate_clockwise.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/arrow_rotate_clockwise.png');
 }
 li.distance {
-    list-style-image: url('/site_media/pinax/images/silk/icons/sum.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/sum.png');
 }
 li.description {
-    list-style-image: url('/site_media/pinax/images/silk/icons/textfield.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/textfield.png');
 }
 li.altitude,
 li.height,
 li.ascent {
-    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_up.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/arrow_up.png');
 }
 li.descent {
-    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_down.png')
+    list-style-image: url('/site_media/pinax/img/silk/icons/arrow_down.png')
 }
 li.weight,
 li.kcal {
-    list-style-image: url('/site_media/pinax/images/silk/icons/cake.png')
+    list-style-image: url('/site_media/pinax/img/silk/icons/cake.png')
 }
 li.power {
-    list-style-image: url('/site_media/pinax/images/silk/icons/lightbulb.png')
+    list-style-image: url('/site_media/pinax/img/silk/icons/lightbulb.png')
 }
 
 .hlist li {
@@ -537,7 +537,7 @@ li.power {
     float: left;
 }
 
-.pinax/images/silk/icons {
+.pinax/img/silk/icons {
 	border: none;
 	padding-right: 8px;
 }
@@ -565,15 +565,15 @@ div.mapcontainer {
 }
 
 .toplist ol li.first {
-    list-style-image: url(/site_media/pinax/images/silk/icons/medal_gold_3.png);
+    list-style-image: url(/site_media/pinax/img/silk/icons/medal_gold_3.png);
     font-size: 1.2em;
 }
 .toplist ol li.second {
-    list-style-image: url(/site_media/pinax/images/silk/icons/medal_silver_2.png);
+    list-style-image: url(/site_media/pinax/img/silk/icons/medal_silver_2.png);
     font-size: 1.15em;
 }
 .toplist ol li.third {
-    list-style-image: url(/site_media/pinax/images/silk/icons/medal_bronze_1.png);
+    list-style-image: url(/site_media/pinax/img/silk/icons/medal_bronze_1.png);
     font-size: 1.1em;
 }
 #tabs>div {
@@ -711,46 +711,46 @@ li.tag {
 .sludd,
 .regnskur,
 .regn {
-    list-style-image: url('/site_media/pinax/images/silk/icons/weather_rain.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/weather_rain.png');
 }
 .overskyet,
 .overskya {
-    list-style-image: url('/site_media/pinax/images/silk/icons/weather_clouds.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/weather_clouds.png');
 }
 .bris,
 .vind {
-    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_right.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/arrow_right.png');
 }
 .delskya,
 .delskyet,
 .lettskya {
-    list-style-image: url('/site_media/pinax/images/silk/icons/weather_cloudy.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/weather_cloudy.png');
 }
 .snjo {
-    list-style-image: url('/site_media/pinax/images/silk/icons/weather_snow.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/weather_snow.png');
 }
 .kveldssol,
 .sol {
-    list-style-image: url('/site_media/pinax/images/silk/icons/weather_sun.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/weather_sun.png');
 }
 .duo {
-    list-style-image: url('/site_media/pinax/images/silk/icons/group_link.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/group_link.png');
 }
 .bakkedrag,
 .bakke {
-    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_up.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/arrow_up.png');
 }
 .fjell {
-    list-style-image: url('/site_media/pinax/images/silk/icons/arrow_turn_right.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/arrow_turn_right.png');
 }
 .godkjent {
-    list-style-image: url('/site_media/pinax/images/silk/icons/accept.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/accept.png');
 }
 .bra {
-    list-style-image: url('/site_media/pinax/images/silk/icons/thumb_up.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/thumb_up.png');
 }
 .insekt {
-    list-style-image: url('/site_media/pinax/images/silk/icons/bug.png');
+    list-style-image: url('/site_media/pinax/img/silk/icons/bug.png');
 }
 
 div.averages {

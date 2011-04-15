@@ -3,7 +3,6 @@
 {% load i18n %}
 {% load openid_tags %}
 {% load ifsetting_tag %}
-{% load svn_app_version %}
 
 {% block head_title %}{% block title %}{%endblock%}{%endblock%}
 {% block extra_head_base %}
@@ -40,7 +39,7 @@
 
 {% block login %}
     {% if user.is_authenticated %}
-        {% openid_icon openid user %}<img alt="profile" src="{{MEDIA_URL}}/pinax/images/silk/icons/user_suit.png"><a href="{{user.get_profile.get_absolute_url }}"><b> {{ user }}</b></a> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
+        <img alt="profile" src="{{MEDIA_URL}}/pinax/img/silk/icons/user_suit.png"><a href="{{user.get_profile.get_absolute_url }}"><b> {{ user }}</b></a> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
     {% else %}
         <a href="{% url acct_login %}">{% trans "Login" %}</a> {% ifsetting ACCOUNT_OPEN_SIGNUP %}{% trans "or" %} <a href="{% url acct_signup %}"><b>{% trans "Sign up" %}</b></a>{% endifsetting %}
     {% endif %}

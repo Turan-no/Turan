@@ -5,6 +5,8 @@ from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from uni_form.helpers import FormHelper, Submit, Reset
+from uni_form.helpers import Layout, Fieldset, Row, HTML
 #from views import autocomplete_route
 
 class ForeignKeySearchInput(forms.HiddenInput):
@@ -92,6 +94,7 @@ class ExerciseForm(forms.ModelForm):
             return None
         data = Route.objects.get(pk=data)
         return data
+
 
 class RouteForm(forms.ModelForm):
     class Meta:

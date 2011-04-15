@@ -2,7 +2,7 @@
 
 {% load i18n %}
 {% load avatar_tags %}
-{% load uni_form %}
+{% load uni_form_tags %}
 {% load microblogging_tags %}
 {% load turan_extras %}
 {% load humanize %}
@@ -89,14 +89,14 @@ $(function () {
     <ul class="buttons spacer">
         <li style="float: left">
             <a href="{% url calendar-index %}?username={{ other_user }}">
-            <img alt="calendar" src="{{MEDIA_URL}}/pinax/images/silk/icons/calendar.png">
+            <img alt="calendar" src="{{MEDIA_URL}}/pinax/img/silk/icons/calendar.png">
             {% trans "Show" %} {{ other_user }}{% trans "'s calendar" %}</a>
         </li>
         {% if user.is_authenticated %}
             {% if is_me %}
         <li style="float: left">
             <a href="{% url exercise_create %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
                 {% trans "Add an exercise" %}
             </a>
         </li>

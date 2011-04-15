@@ -47,7 +47,7 @@
 <ul class="buttons">
     <li>
     <a href="{% url trip_create %}">
-        <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add trip"%}" />
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add trip"%}" />
         {% trans "Add trip" %}
     </a>
     </li>
@@ -113,7 +113,7 @@ $.plot($("#altdiv"), [alt], options);
             <td>
                 {{ object|exercise_mouseover }}
                 <a href="{{ object.get_absolute_url }}">
-                    <img src="/site_media/pinax/images/silk/icons/zoom.png" />
+                    <img src="/site_media/pinax/img/silk/icons/zoom.png" />
                 </a>
             </td>
             <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
