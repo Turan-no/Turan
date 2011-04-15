@@ -443,21 +443,25 @@ class Exercise(models.Model):
     def start_lon(self):
         if self.route and self.route.start_lon:
             return self.route.start_lon
+        return 0.0
 
     @property
     def start_lat(self):
         if self.route and self.route.start_lat:
             return self.route.start_lat
+        return 0.0
 
     @property
     def end_lat(self):
         if self.route and self.route.end_lat:
             return self.route.end_lat
+        return 0.0
 
     @property
     def end_lon(self):
         if self.route and self.route.end_lon:
             return self.route.end_lon
+        return 0.0
 
 
 class ExercisePermission(models.Model):
