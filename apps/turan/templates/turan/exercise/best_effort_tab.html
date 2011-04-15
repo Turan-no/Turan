@@ -30,7 +30,7 @@
             {% endif %}
         </tr>
             {% for effort in bestpowerefforts %}
-            <tr>
+        <tr class="{% cycle odd,even %}">
                     <td><img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
                         <script type="text/javascript">
                             $('#pzoom{{forloop.counter0}}-link-1').bind("click", 
@@ -91,7 +91,7 @@
             {% endif %}
         </tr>
         {% for effort in bestpowerefforts %}
-        <tr>
+        <tr class="{% cycle odd,even %}">
              <td><img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="Zoom" id="szoom{{forloop.counter0}}-link-1" class="zoom-select" />
                     <script type="text/javascript">
                         $('#szoom{{forloop.counter0}}-link-1').bind("click", 
