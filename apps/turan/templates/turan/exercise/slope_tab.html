@@ -60,7 +60,7 @@
                                 })
                                 });
                     </script>
-
+                    {% comment %}
                     {% ifequal object.user request.user %}
                     <a href="{% url slope_update slope.id %}">
                     <img title="{% trans "Modify slope"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
@@ -72,6 +72,7 @@
                     </a>
                     {% endif%}
                     {% endifequal %}
+                    {% endcomment %}
                 </td>
                 <td>
                 {% if slope.segment %}

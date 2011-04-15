@@ -212,9 +212,9 @@ def segment_detail(request, object_id):
         usertimes[slope.exercise.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(slope.exercise.date), slope.duration))
 
     done_altitude_profile = False
-    slopecount = object.slope_set.count()
+    slopecount = object.get_slopes().count()
     if slopecount:
-        slope = object.slope_set.all()[0]
+        slope = object.get_slopes()[0]
         trip = slope.exercise
         if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
 
@@ -392,14 +392,14 @@ def statistics(request, year=None, month=None, day=None, week=None):
     tfilter["user__exercise__route__in"] = validroutes
     climbstats = statsprofiles.filter(**tfilter).annotate( \
             distance = Sum('user__exercise__route__distance'), \
-            height = Sum('user__exercise__route__ascent'),  \
+            height_sum = Sum('user__exercise__route__ascent'),  \
             duration = Sum('user__exercise__duration'), \
             trips = Count('user__exercise') \
-            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0).filter(trips__gt=0)
+            ).filter(duration__gt=0).filter(distance__gt=0).filter(height_sum__gt=0).filter(trips__gt=0)
 
     for u in climbstats:
-        u.avgclimb = u.height/u.distance
-        u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
+        u.avgclimb = u.height_sum/u.distance
+        u.avgclimbperhour = u.height_sum/(float(u.duration)/10**6/3600)
         u.avglen = float(u.distance)/u.trips
     climbstats = sorted(climbstats, key=lambda x: -x.avgclimb)
     climbstatsbytime = sorted(climbstats, key=lambda x:-x.avgclimbperhour)
@@ -630,6 +630,10 @@ def detailslice_info(details):
             'cadence__avg': 0,
             'power__avg': 0,
             'temp__avg': 0,
+            'start_lon': 0.0,
+            'start_lat': 0.0,
+            'end_lon': 0.0,
+            'end_lat': 0.0,
     }
     for d in details:
         for val in val_types:
@@ -645,6 +649,11 @@ def detailslice_info(details):
 
     if filldistance(details):
         #Shit that only works for distance, like power
+        ret['start_lat'] = details[0].lat
+        ret['start_lon'] = details[0].lon
+        ret['end_lon'] = details[detailcount-1].lat
+        ret['end_lat'] = details[detailcount-1].lon
+        ret['start'] = details[0].distance
         distance = details[detailcount-1].distance - details[0].distance
         gradient = ascent/distance
         duration = (details[detailcount-1].time - details[0].time).seconds
@@ -657,11 +666,37 @@ def detailslice_info(details):
         ret['distance'] = distance
         ret['gradient'] = gradient*100
         ret['power__normalized'] = power_30s_average(details)
+        ret['vam'] = int(round((float(ascent)/duration)*3600))
+
+        if ret['power__avg']:
+            power = ret['power__avg']
+        else:
+            power = ret['power__avg_est']
+
+        ret['power_per_kg'] = power/userweight
     #for a, b in ret.items():
         # Do not return empty values
     #    if not b:
     #        del ret[a]
     return ret
+
+def graphslice_to_segmentdetail(request, object_id):
+    ''' Convert a zoomed area to a segment detail '''
+    object = get_object_or_404(Exercise, pk=object_id)
+
+    start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
+    try:
+        start, stop = int(start), int(stop)
+    except ValueError:
+        return {}
+    details = all_details.all()[start:stop]
+    ret = detailslice_info(details)
+    s = SegmentDetail(\
+            exercise_id = object_id,
+            )
+    s.save()
+
+    return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
 def powerjson(request, object_id):
 
@@ -1433,7 +1468,38 @@ def create_object(request, model=None, template_name=None,
                 request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": model._meta.verbose_name})
             return redirect(post_save_redirect, new_object)
     else:
-        form = form_class()
+        if model == SegmentDetail: # prefill variables
+            exercise = request.GET.get('exercise', '')
+            start = request.GET.get('start', '')
+            stop = request.GET.get('stop', '')
+            try:
+                exercise = int(exercise)
+                start = int(start)
+                stop = int(stop)
+            except ValueError:
+                return HttpResponseForbidden('Invalid request')
+            exercise = Exercise.objects.get(pk=exercise)
+            ret = detailslice_info(exercise.get_details().all()[start:stop])
+            data = {}
+            data['exercise'] = exercise
+            data['start'] = ret['start']
+            data['length'] = ret['distance']
+            data['ascent'] = int(ret['ascent'])
+            data['grade'] = ret['gradient']
+            data['duration'] = ret['duration']
+            data['speed'] = ret['speed__avg']
+            data['est_power'] = ret['power__avg_est']
+            data['act_power'] = ret['power__avg']
+            data['vam'] = ret['vam']
+            data['avg_hr'] = ret['hr__avg']
+            data['start_lon'] = ret['start_lon']
+            data['start_lat'] = ret['start_lat']
+            data['end_lon'] = ret['end_lon']
+            data['end_lat'] = ret['end_lat']
+            data['power_per_kg'] = ret['power_per_kg']
+            form = form_class(initial=data)
+        else:
+            form = form_class()
 
     # Create the template, context, response
     if not template_name:

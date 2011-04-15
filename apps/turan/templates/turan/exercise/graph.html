@@ -1,9 +1,12 @@
 {% load i18n %}
 <a href="#" title="{% trans "Zoom out" %}" id="reset_zoom" >
-    <img style="float: right" src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_out.png" />
+    <img style="float: right" src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_out.png" /> 
 </a>
 <a href="#" title="{% trans "Enlarge" %}" id="enlarge" >
-    <img style="float: right" src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_in.png" />
+    <img style="float: right" src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_in.png" /> 
+</a>
+<a href="{% url segmentdetail_create %}?exercise={{object.id }}" title="{% trans "Add segment for this selection" %}" class="hidden" id="segment_add" >
+    <img id="segment_add_img" style="float: right" src="{{ MEDIA_URL }}pinax/img/silk/icons/world_add.png" /> 
 </a>
 <div id="tripdiv_legend" style="float:right; margin-right: 40px"></div>
 <hr class="clear" />
@@ -27,6 +30,7 @@
         <li class="hidden hr"><span class="data hr__max"></span>  {% trans "BPM" %}</li>
         <li class="hidden hr"><span class="data hr__avg"></span>  {% trans "BPM" %}</li>
         <li class="hidden gradient"><span class="data gradient"></span> deg</li>
+        <li class="hidden vam"><span class="data vam"></span> VAM</li>
         <li class="hidden speed"><span class="data speed__min"></span> {% trans "km/h" %}</li>
         <li class="hidden speed"><span class="data speed__max"></span> {% trans "km/h" %}</li>
         <li class="hidden speed"><span class="data speed__avg"></span> {% trans "km/h" %}</li>

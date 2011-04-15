@@ -109,6 +109,11 @@ var GraphPlotter = {
         if (minIndex != null && maxIndex != null) {
             if (typeof(Mapper) != "undefined")
                 Mapper.loadGeoJSON(minIndex, maxIndex);
+
+            var segment_link = $("#segment_add");
+            segment_link.attr('href' , segment_link.attr('href')+ '&start=' + minIndex + '&stop=' + maxIndex);
+            $("#segment_add").removeClass("hidden");
+
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
                 var items = $("#averages ul .data");
                 $("#averages h4").removeClass("hidden");
@@ -248,6 +253,8 @@ var GraphPlotter = {
             $("#scrollhacks").css("overflow", "scroll");
             $("#tripdiv").width( $("#tripdiv").width()*4);
         });
+        //$("#segment_add").bind("click", function(evt) {
+        //});
         this.choiceContainer.find("input").bind("click", function(evt) {
                 that.plotAccordingToChoices({}); 
         });

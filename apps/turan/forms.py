@@ -1,5 +1,5 @@
 from django import forms
-from models import Route, Exercise, Segment, Slope
+from models import Route, Exercise, Segment, Slope, SegmentDetail
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
@@ -117,6 +117,9 @@ class SegmentForm(forms.ModelForm):
     class Meta:
         model = Segment
         exclude = ('gpx_file', 'category', 'start_lat', 'start_lon', 'end_lat', 'end_lon')
+class SegmentDetailForm(forms.ModelForm):
+    class Meta:
+        model = SegmentDetail
 
 class FullSlopeForm(forms.ModelForm):
     class Meta:

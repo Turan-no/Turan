@@ -6,7 +6,9 @@
 
 {% block head_title %}{% block title %}{%endblock%}{%endblock%}
 {% block extra_head_base %}
+{% comment %}
     <script type="text/javascript" src="{{MEDIA_URL}}extsrc.js"></script>
+{% endcomment %}
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.pie.js"></script>
@@ -107,6 +109,7 @@ $(document).ready(function(){
       } catch(err) {}
 });});
 </script>
+{% comment %}
 <script type="text/javascript">
     var pkBaseURL = (("https:" == document.location.protocol) ? "https://statistikk.idrift.no/" : "http://statistikk.idrift.no/");
     document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
@@ -117,5 +120,6 @@ $(document).ready(function(){
         piwikTracker.enableLinkTracking();
     } catch( err ) {}
 </script><noscript><p><img src="http://statistikk.idrift.no/piwik.php?idsite=102" style="border:0" alt="" /></p></noscript>
+{% endcomment %}
     {% block extra_body %}{% endblock %}
 {% endblock %}
