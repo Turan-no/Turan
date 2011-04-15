@@ -126,8 +126,9 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
                 'to_user': username,
                 'message': ugettext("Let's be friends!"),
             })
-    previous_invitations_to = FriendshipInvitation.objects.filter(to_user=other_user, from_user=request.user).exclude(status=8).exclude(status=6)
-    previous_invitations_from = FriendshipInvitation.objects.filter(to_user=request.user, from_user=other_user).exclude(status=8).exclude(status=6)
+    if request.user.is_authenticated():
+        previous_invitations_to = FriendshipInvitation.objects.filter(to_user=other_user, from_user=request.user).exclude(status=8).exclude(status=6)
+        previous_invitations_from = FriendshipInvitation.objects.filter(to_user=request.user, from_user=other_user).exclude(status=8).exclude(status=6)
     
     if is_me:
         if request.method == "POST":
