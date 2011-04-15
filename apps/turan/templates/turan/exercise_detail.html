@@ -103,6 +103,7 @@
         $('#tabs div#' + id).addClass('visible');
         $('#tabs>ul>li').removeClass('selected');
         $(this).addClass('selected');
+        window.location.hash = $(this).attr("id");
     }
     $('#tabs>ul>li').each(function () {
         $(this).bind("click", selectTab);
