@@ -818,6 +818,12 @@ class SegmentDetail(models.Model):
     def get_absolute_url(self):
         return self.segment.get_absolute_url()
 
+    def save(self, *args, **kwargs):
+        ''' Save parent also to populate shit '''
+
+        super(SegmentDetail, self).save(*args, **kwargs)
+        self.segment.save()
+
 
 
 #class UserProfile(models.Model):

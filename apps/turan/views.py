@@ -653,7 +653,7 @@ def detailslice_info(details):
         ret['start_lon'] = details[0].lon
         ret['end_lon'] = details[detailcount-1].lat
         ret['end_lat'] = details[detailcount-1].lon
-        ret['start'] = details[0].distance
+        ret['start'] = details[0].distance/1000
         distance = details[detailcount-1].distance - details[0].distance
         gradient = ascent/distance
         duration = (details[detailcount-1].time - details[0].time).seconds
@@ -1598,8 +1598,12 @@ def turan_delete_object(request, model=None, post_delete_redirect='/turan/', obj
 
 
     obj = lookup_object(model, object_id, slug, slug_field)
-    if not obj.user == request.user:
-        return HttpResponseForbidden('Wat?')
+    if model == SegmentDetail:
+        if not obj.exercise.user == request.user:
+            return HttpResponseForbidden('Wat?')
+    else:
+        if not obj.user == request.user:
+            return HttpResponseForbidden('Wat?')
 
     # Check if exercise has singelserving route, if so, delete it
     #if model == Exercise:
