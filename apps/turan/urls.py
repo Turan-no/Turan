@@ -70,7 +70,7 @@ urlpatterns = patterns('',
 urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^route/?$', turan_object_list, { 'queryset': Route.objects.select_related().filter(distance__gt=0).extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }) }, name='routes'),
     url(r'^slope/?$', slopes, { 'queryset': Slope.objects.select_related()}, name='slopes'),
-    url(r'^segment/?$', segments, { 'queryset': Segment.objects.select_related().extra( select= {'tcount': 'SELECT COUNT(*) FROM turan_slope WHERE turan_slope.segment_id = turan_segment.id' }) }, name='segments'),
+    url(r'^segment/?$', segments, { 'queryset': Segment.objects.select_related().extra( select= {'tcount': 'SELECT COUNT(*) FROM turan_segmentdetail WHERE turan_segmentdetail.segment_id = turan_segment.id' }) }, name='segments'),
 
     url(r'^exercise/?$', turan_object_list, { 'queryset': Exercise.objects.select_related().order_by('-date') }, name='exercises'),
     url(r'^exercise/(?P<object_id>\d+)', exercise, name='exercise'),
@@ -87,14 +87,17 @@ urlpatterns += patterns('django.views.generic.create_update',
     url(r'^exercise/create/$', create_object, {'login_required': True, 'form_class': ExerciseForm, 'user_required':True}, name='exercise_create'),
     url(r'^exercise/r/create/$', create_exercise_with_route,  name='exercise_route_create'),
     url(r'^segment/create/$', create_object, {'login_required': True, 'form_class': SegmentForm},name='segment_create'),
+    url(r'^segmentdetail/create/', create_object, {'login_required': True, 'form_class': SegmentDetailForm},name='segmentdetail_create'),
 
 
     url(r'^route/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': FullRouteForm},name='route_update'),
     url(r'^slope/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': FullSlopeForm},name='slope_update'),
     url(r'^segment/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': FullSegmentForm},name='segment_update'),
     url(r'^exercise/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': FullExerciseForm},name='exercise_update'),
+    url(r'^segmentdetail/update/(?P<object_id>\d+)/?$', 'update_object', {'login_required': True, 'form_class': SegmentDetailForm},name='segmentdetail_update'),
 
     url(r'^exercise/delete/(?P<object_id>\d+)', turan_delete_object, {'model': Exercise, 'login_required': True,},name='exercise_delete'),
+    url(r'^segmentdetail/delete/(?P<object_id>\d+)', turan_delete_object, {'model': SegmentDetail, 'login_required': True,},name='segmentdetail_delete'),
 
 # Detail deletes
 #    url(r'^exercise/detail_delete/(?P<object_id>\d+)/(?P<value>\w+)/', turan_delete_detailset_value, {'model': Exercise, },name='exercise_detail_delete'),

@@ -677,7 +677,7 @@ class Segment(models.Model):
         return reverse('segment', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
 
     def get_slopes(self):
-        return self.slope_set.all().order_by('duration')
+        return self.segmentdetail_set.all().order_by('duration')
 
     def save(self, *args, **kwargs):
         ''' Calculate extra values before save '''
@@ -708,7 +708,7 @@ class Segment(models.Model):
                         self.gpx_file.save(filename, ContentFile(g.xml), save=True)
                         break
 
-        for attr in ('category', 'ascent', 'grade', 'length', 'start_lon', 'start_lat', 'end_lon', 'end_lat'):
+        for attr in ('ascent', 'grade', 'length', 'start_lon', 'start_lat', 'end_lon', 'end_lat'):
             for slope in self.get_slopes():
                 slopeattr = attr
                 if attr == 'length': # omg
@@ -719,6 +719,7 @@ class Segment(models.Model):
                         if slopeattr == 'distance': # this design is so silly, why vary between m and km?
                             slopeval = slopeval/1000
                         setattr(self, slopeattr, slopeval)
+        self.category = get_category(self.grade, self.distance)
 
         super(Segment, self).save(*args, **kwargs)
 
@@ -757,26 +758,6 @@ class Slope(models.Model):
 
         super(Slope, self).save(*args, **kwargs)
 
-    def get_category(self):
-        ''' The categories are the same as in the Tour De France or other bike race
-        What we do is take the grade of the climb and the distance and multiply them. So, for example, a 2
-        kilometer climb at 4% grade = 8000, and 8000 to 16000 is a category 4 climb. 16 to 32 is a category
-        3 etc.
-        Our categorization is based on the official UCI but with some modification.
-        '''
-        grade = self.grade * self.length
-        if grade < 8000:
-            return 5
-        elif grade < 16000:
-            return 4
-        elif grade < 32000:
-            return 3
-        elif grade < 64000:
-            return 2
-        elif grade < 128000:
-            return 1
-        else:
-            return 0 # HC ?
 
     def get_vam(self):
         ''' Return Vertical Ascended Meters / Hour,
@@ -786,6 +767,9 @@ class Slope(models.Model):
         if self.get_category() < 4:
             ret = int(round((float(self.ascent)/self.duration)*3600))
         return ret
+
+    def get_category(grade, length):
+        return get_category(self.grade, self.length)
 
     def get_avg_power_kg(self):
         ''' Find weight during exercise and calculate W/kg'''
@@ -806,9 +790,39 @@ class Slope(models.Model):
 
     def get_absolute_url(self):
         if self.segment:
-            self.segment.get_absolute_url()
+            return self.segment.get_absolute_url()
 
+class SegmentDetail(models.Model):
 
+    exercise = models.ForeignKey(Exercise)
+    segment = models.ForeignKey(Segment)
+    start = models.FloatField(help_text=_('in km'), default=0)
+    length = models.FloatField(help_text=_('in km'), default=0)
+    ascent = models.IntegerField(help_text=_('in m'), default=0)
+    grade = models.FloatField()
+    duration = models.IntegerField()
+    speed = models.FloatField()
+    est_power = models.FloatField()
+    act_power = models.FloatField(default=0)
+    power_per_kg = models.FloatField()
+    vam = models.IntegerField(default=0)
+    avg_hr = models.IntegerField(default=0)
+
+    start_lat = models.FloatField(blank=True, null=True, default=0.0)
+    start_lon = models.FloatField(blank=True, null=True, default=0.0)
+    end_lat = models.FloatField(blank=True, null=True, default=0.0)
+    end_lon = models.FloatField(blank=True, null=True, default=0.0)
+
+    comment = models.TextField(blank=True, null=True)
+
+    def get_absolute_url(self):
+        return self.segment.get_absolute_url()
+
+    def save(self, *args, **kwargs):
+        ''' Save parent also to populate shit '''
+
+        super(SegmentDetail, self).save(*args, **kwargs)
+        self.segment.save()
 
 
 
@@ -926,3 +940,24 @@ def watt2zone(watt_percentage):
     elif watt_percentage < 55:
         zone = 1
     return zone
+
+def get_category(grade, length):
+    ''' The categories are the same as in the Tour De France or other bike race
+    What we do is take the grade of the climb and the distance and multiply them. So, for example, a 2
+    kilometer climb at 4% grade = 8000, and 8000 to 16000 is a category 4 climb. 16 to 32 is a category
+    3 etc.
+    Our categorization is based on the official UCI but with some modification.
+    '''
+    grade = grade * length
+    if grade < 8000:
+        return 5
+    elif grade < 16000:
+        return 4
+    elif grade < 32000:
+        return 3
+    elif grade < 64000:
+        return 2
+    elif grade < 128000:
+        return 1
+    else:
+        return 0 # HC ?

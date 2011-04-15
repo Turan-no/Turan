@@ -239,4 +239,4 @@ def profile_hover(obj):
 
 @register.filter
 def silk_icon(name):
-    return settings.MEDIA_URL + 'pinax/images/silk/icons/%s.png' %name
+    return settings.MEDIA_URL + 'pinax/img/silk/icons/%s.png' %name

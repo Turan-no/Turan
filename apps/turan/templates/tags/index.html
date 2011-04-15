@@ -77,7 +77,7 @@
                     <div class="gallery-photo-thumb">
                         <a href="/photos/details/{{ photo.id }}/"><img src="{{ photo.get_thumbnail_url }}" alt="{{ photo.title }}"/></a><br />
                         from <a href="{% url profile_detail photo.member.username %}">{{ photo.member.username }}</a><br />
-                        <img alt="Comment" src="{{ MEDIA_URL }}pinax/images/silk/icons/comment.png" class="noborder" align="absmiddle" /><a href="/photos/details/{{ photo.id }}/">{% get_comment_count for photo as commentcount %} {{ commentcount }} Comments</a>
+                        <img alt="Comment" src="{{ MEDIA_URL }}pinax/img/silk/icons/comment.png" class="noborder" align="absmiddle" /><a href="/photos/details/{{ photo.id }}/">{% get_comment_count for photo as commentcount %} {{ commentcount }} Comments</a>
                         <br />
                         Viewed {{ photo.view_count }} Times
                     </div>

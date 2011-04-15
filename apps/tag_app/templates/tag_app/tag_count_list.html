@@ -1,5 +1,6 @@
+{% load turan_extras %}
 {% if tag_counts %}
-    <img alt="Tag" src="{{ MEDIA_URL }}pinax/images/silk/icons/tag_blue.png" border="0" class="noborder" />
+<img alt="Tag" src="{{ "tag_blue"|silk_icon }}" border="0" class="noborder" />
     {% for tag in tag_counts %}
         <a href="/tags/{{ tag.name }}">{{ tag.name }}</a> ({{ tag.count }})
     {% endfor %}

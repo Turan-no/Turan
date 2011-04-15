@@ -104,7 +104,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_openid.consumer.SessionConsumer',
-    'account.middleware.LocaleMiddleware',
+    "pinax.apps.account.middleware.LocaleMiddleware",
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'django_sorting.middleware.SortingMiddleware',
@@ -129,6 +129,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
+#    "staticfiles.context_processors.static_url",
 
 #"pinax.core.context_processors.contact_email",
 #"pinax.core.context_processors.site_name",
@@ -136,8 +138,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
-    "account.context_processors.openid",
-    "account.context_processors.account",
+    "pinax.apps.account.context_processors.account",
+    #"account.context_processors.openid",
+    #"account.context_processors.account",
     "messages.context_processors.inbox",
     "friends_app.context_processors.invitations",
     "turansite.context_processors.combined_inbox_count",
@@ -173,12 +176,12 @@ INSTALLED_APPS = (
     'messages',
     'announcements',
     'oembed',
-    'djangodblog',
+    #'djangodblog',
     'pagination',
 #    'gravatar',
     'threadedcomments',
     'threadedcomments_extras',
-    'wiki',
+#    'wiki',
 #    'swaps',
     'timezones',
 #    'app_plugins',
@@ -199,20 +202,31 @@ INSTALLED_APPS = (
 
 # TUUURAN
     'turan',
-    'rosetta',
-#    'south',
+#    'rosetta',
+    'south',
 #    'debug_toolbar',
     
     # internal (for now)
-    'analytics',
+    #
+
+    "pinax.apps.account",
+    "pinax.apps.signup_codes",
+    "pinax.apps.analytics",
+    #"pinax.apps.profiles",
+    #"pinax.apps.blog",
+    #"pinax.apps.tribes",
+    "pinax.apps.photos",
+    "pinax.apps.topics",
+    "pinax.apps.threadedcomments_extras",
+  #  'analytics',
     'profiles',
     'staticfiles',
-    'account',
+  #  'account',
 #    'signup_codes',
     'tribes',
-    'photos',
+   # 'photos',
     'tag_app',
-    'topics',
+   # 'topics',
     'groups',
 
     'djcelery',
@@ -264,12 +278,10 @@ INTERNAL_IPS = (
     '10.2.4.100',
 )
 
-ugettext = lambda s: s
 LANGUAGES = (
     ('nn', 'Nynorsk'),
     ('no', u'Bokmål'),
     ('en', 'English'),
-
 )
 
 URCHIN_ID = "UA-7885298-3"

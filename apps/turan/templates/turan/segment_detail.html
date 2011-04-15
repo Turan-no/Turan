@@ -95,6 +95,7 @@ $.plot($("#altdiv"), [alt], options);
     <input type="submit" value="{% trans "Compare"%}">
     <table class="fullsize">
         <tr>
+            <th></th>
             <th>{% trans "CMP" %}</th>
             <th>{% trans "Trip" %}</th>
             <th>{% anchortrans object.exercise.user Exerciser %}</th>
@@ -111,11 +112,31 @@ $.plot($("#altdiv"), [alt], options);
         </tr>
         {% for object in object_list %}
         <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
-            <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
+            <td>
+                    {% ifequal object.exercise.user request.user %}
+                    <a href="{% url segmentdetail_update slope.id %}">
+                    <img title="{% trans "Modify segment entry"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
+                    </a>
+                    <a href="{% url segmentdetail_delete slope.id %}">
+                    <img title="{% trans "Delete segment entry"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
+                    </a>
+                    {% else %}
+                    {% if user.is_superuser %}
+                    <a href="{% url segmentdetail_update slope.id %}">
+                    <img title="{% trans "Modify segment entry"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
+                    </a>
+                    <a href="{% url segmentdetail_delete slope.id %}">
+                    <img title="{% trans "Delete segment entry"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
+                    </a>
+                    {% endif%}
+                    {% endifequal %}
+            </td>
+            <td>
+                <input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
             <td>
                 <a href="{{ object.exercise.get_absolute_url }}">
                 {{ object.exercise.route }}
-                    <img src="/site_media/pinax/images/silk/icons/zoom.png" />
+                    <img src="/site_media/pinax/img/silk/icons/zoom.png" />
                 </a>
             </td>
             <td>

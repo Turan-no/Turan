@@ -7,11 +7,11 @@
 <h1>
     {{ object.route.name }}
     {% ifequal object.exercise_permission "N" %}
-    <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{MEDIA_URL}}pinax/images/silk/icons/lock.png">
+    <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock.png">
     {% else %}
     {% ifequal object.exercise_permission "F" %}
 {% ifequal user object.user %}
-    <img title="{% trans "Exercise visible to friends"%}" alt="{% trans "Exercise visible to friends"%}" src="{{MEDIA_URL}}pinax/images/silk/icons/lock_go.png">
+    <img title="{% trans "Exercise visible to friends"%}" alt="{% trans "Exercise visible to friends"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock_go.png">
     {% endifequal %}
     {% endifequal %}
 

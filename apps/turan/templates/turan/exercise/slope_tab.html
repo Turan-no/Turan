@@ -49,7 +49,7 @@
             </tr>
         {% for slope in slopes %}
             <tr class="{% cycle "odd" "even" %}">
-                <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select" />
+                <td><img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select" />
                     <script type="text/javascript">
                         $('#zoom{{forloop.counter0}}-link-1').bind("click", 
                                 function (evt) { 
@@ -60,7 +60,7 @@
                                 })
                                 });
                     </script>
-
+                    {% comment %}
                     {% ifequal object.user request.user %}
                     <a href="{% url slope_update slope.id %}">
                     <img title="{% trans "Modify slope"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
@@ -72,6 +72,7 @@
                     </a>
                     {% endif%}
                     {% endifequal %}
+                    {% endcomment %}
                 </td>
                 <td>
                 {% if slope.segment %}

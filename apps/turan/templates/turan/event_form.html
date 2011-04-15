@@ -1,5 +1,6 @@
 {% extends "turan/base.html" %}
 {% load i18n %}
+{% load uni_form_tags %}
 
 {% block extra_head %}
 {{ form.media }}
@@ -16,10 +17,12 @@
     {% endblock %}
     <form id="form" enctype="multipart/form-data" method="post">
     <table class="fullsize">
-    {{ form }}
-    </table>
+    {{ form}}
+    {% comment %}
     <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
-    <input id="submit_btn" type="submit" value="{% trans "Submit" %}" />
+    {% endcomment%}
+</table>
+    <input id="submit_btn" type="submit" value="{% trans "Save exercise" %}" />
     </form>
 </div>
 <script type="text/javascript">

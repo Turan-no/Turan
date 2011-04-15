@@ -3,11 +3,12 @@
 {% load i18n %}
 {% load openid_tags %}
 {% load ifsetting_tag %}
-{% load svn_app_version %}
 
 {% block head_title %}{% block title %}{%endblock%}{%endblock%}
 {% block extra_head_base %}
+{% comment %}
     <script type="text/javascript" src="{{MEDIA_URL}}extsrc.js"></script>
+{% endcomment %}
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.pie.js"></script>
@@ -40,7 +41,7 @@
 
 {% block login %}
     {% if user.is_authenticated %}
-        {% openid_icon openid user %}<img alt="profile" src="{{MEDIA_URL}}/pinax/images/silk/icons/user_suit.png"><a href="{{user.get_profile.get_absolute_url }}"><b> {{ user }}</b></a> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
+        <img alt="profile" src="{{MEDIA_URL}}/pinax/img/silk/icons/user_suit.png"><a href="{{user.get_profile.get_absolute_url }}"><b> {{ user }}</b></a> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
     {% else %}
         <a href="{% url acct_login %}">{% trans "Login" %}</a> {% ifsetting ACCOUNT_OPEN_SIGNUP %}{% trans "or" %} <a href="{% url acct_signup %}"><b>{% trans "Sign up" %}</b></a>{% endifsetting %}
     {% endif %}
@@ -108,6 +109,7 @@ $(document).ready(function(){
       } catch(err) {}
 });});
 </script>
+{% comment %}
 <script type="text/javascript">
     var pkBaseURL = (("https:" == document.location.protocol) ? "https://statistikk.idrift.no/" : "http://statistikk.idrift.no/");
     document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
@@ -118,5 +120,6 @@ $(document).ready(function(){
         piwikTracker.enableLinkTracking();
     } catch( err ) {}
 </script><noscript><p><img src="http://statistikk.idrift.no/piwik.php?idsite=102" style="border:0" alt="" /></p></noscript>
+{% endcomment %}
     {% block extra_body %}{% endblock %}
 {% endblock %}

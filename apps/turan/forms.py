@@ -1,10 +1,12 @@
 from django import forms
-from models import Route, Exercise, Segment, Slope
+from models import Route, Exercise, Segment, Slope, SegmentDetail
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from uni_form.helpers import FormHelper, Submit, Reset
+from uni_form.helpers import Layout, Fieldset, Row, HTML
 #from views import autocomplete_route
 
 class ForeignKeySearchInput(forms.HiddenInput):
@@ -93,6 +95,7 @@ class ExerciseForm(forms.ModelForm):
         data = Route.objects.get(pk=data)
         return data
 
+
 class RouteForm(forms.ModelForm):
     class Meta:
         model = Route
@@ -114,6 +117,9 @@ class SegmentForm(forms.ModelForm):
     class Meta:
         model = Segment
         exclude = ('gpx_file', 'category', 'start_lat', 'start_lon', 'end_lat', 'end_lon')
+class SegmentDetailForm(forms.ModelForm):
+    class Meta:
+        model = SegmentDetail
 
 class FullSlopeForm(forms.ModelForm):
     class Meta:
