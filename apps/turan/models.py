@@ -768,7 +768,7 @@ class Slope(models.Model):
             ret = int(round((float(self.ascent)/self.duration)*3600))
         return ret
 
-    def get_category(grade, length):
+    def get_category(self):
         return get_category(self.grade, self.length)
 
     def get_avg_power_kg(self):
