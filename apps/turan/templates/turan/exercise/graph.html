@@ -85,7 +85,19 @@ $(document).ready(function () {
         markings: markings,
         xaxisformatter: {% if time_xaxis %}"time"{%else%}"length"{%endif%}
     });
-    });
+    var orly = window.location.hash.split('-')
+    if (orly) {
+        if (orly[0] == "#graph") {
+            var x = orly[2];
+            var x2 = orly[3];
+            GraphPlotter.plotAccordingToChoices({});
+            GraphPlotter.plotAccordingToChoices({ xaxis: { from: x, to: x2 }});
+        }
+        else {
+            GraphPlotter.plotAccordingToChoices({});
+        }
+    }
+});
 });
 </script>
 

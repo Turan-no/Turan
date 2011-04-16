@@ -114,7 +114,7 @@ var GraphPlotter = {
             segment_link.attr('href' , segment_link.attr('href')+ '&start=' + minIndex + '&stop=' + maxIndex);
             $("#segment_add").removeClass("hidden");
 
-            window.location.hash = 'graph-zoom-' + minIndex + '-' + maxIndex;
+            window.location.hash = 'graph-zoom-' + Math.round(min*10)/10 + '-' + Math.round(max*10)/10;
 
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
                 var items = $("#averages ul .data");
@@ -260,7 +260,6 @@ var GraphPlotter = {
         this.choiceContainer.find("input").bind("click", function(evt) {
                 that.plotAccordingToChoices({}); 
         });
-        this.plotAccordingToChoices({});
         this.legends = $("#tripdiv .legendLabel"); 
         this.legends.each(function () { 
         // fix the widths so they don't jump around
