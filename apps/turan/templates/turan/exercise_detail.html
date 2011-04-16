@@ -103,7 +103,9 @@
         $('#tabs div#' + id).addClass('visible');
         $('#tabs>ul>li').removeClass('selected');
         $(this).addClass('selected');
-        window.location.hash = $(this).attr("id");
+        if ($(this).attr("id").split('-')[0] == "tabs") {
+            window.location.hash = $(this).attr("id");
+        }
     }
     $('#tabs>ul>li').each(function () {
         $(this).bind("click", selectTab);
@@ -112,9 +114,24 @@
         $(this).bind("click", selectTab);
     });
     $(window).bind("hashchange", function (evt) {
-        $(window.location.hash).trigger("click");
+        var orly = window.location.hash.split('-')
+        if (orly) {
+            if (orly[0] == "#graph") {
+                var x = orly[2];
+                var x2 = orly[3];
+                GraphPlotter.plotAccordingToChoices({ xaxis: { from: x, to: x2 }});
+            }
+            else if (orly[0] == "#tabs") {
+                $(window.location.hash).trigger("click");
+            }
+        }
     });
-    $(window).trigger("hashchange");
+    var orly = window.location.hash.split('-')
+    if (orly) {
+        if (orly[0] == "#tabs")
+            $(window).trigger("hashchange");
+            //$(window.location.hash).trigger("click");
+    }
 
     var commentcount = $('.bulk').size();
     {% if object.comment %}
