@@ -11,6 +11,43 @@
 
 {% block body %}
     <div class="right_panel">
+<div class="box ">
+    <h2>{% trans "What Next?" %}</h2>
+    <ul class="buttons spacer">
+        <li>
+            <a href="{% url calendar-index %}?username={{ other_user }}">
+            <img alt="calendar" src="{{MEDIA_URL}}/pinax/img/silk/icons/calendar.png">
+            {% trans "Show" %} {{ other_user }}{% trans "'s calendar" %}</a>
+        </li>
+            <br />
+        {% if user.is_authenticated %}
+            {% if is_me %}
+        <li>
+            <a href="{% url exercise_create %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
+                {% trans "Add an exercise" %}
+            </a>
+        </li>
+            <br />
+            <li><a href="{% url route_create %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add route" %}" />
+                {% trans "Add a route"%}</a></li>
+            <br />
+            <li><a href="{% url import_data %}">{% trans "import data from another site"%}</a></li>
+            <br />
+            <li><a href="{% url userprofiledetail_create %}">{% trans "lost weight?"%}</a></li>
+            <br />
+            <li><a href="{% url acct_email %}">{% trans "verify an email address"%}</a></li>
+            <br />
+            <li><a href="{% url avatar_change %}">{% trans "add an avatar"%}</a></li>
+            <br />
+            <li><a href="{% url invitations %}">{% trans "invite more people to the site"%}</a></li>
+            <br />
+
+                {% endif %}
+        {% endif %}
+    </ul>
+</div>
         {% include "profiles/profile_right_panel.html" %}
 
             {% comment %}
@@ -77,38 +114,18 @@ $(function () {
     
     <div class="left_panel">
         <div class="vcard">
+                {% if other_user.get_profile.name %}<h1><span class="fn">{{ other_user.get_profile.name }}</span></h1>{% endif %}
         {% if other_user.get_profile.motto %}
             <span class="motto">«{{ other_user.get_profile.motto }}»</span>
         {% endif %}
+
+            <div class="box spacer">
             <div id="profile_avatar">
-                <div><img src="{% avatar_url other_user 80 %}" alt="Photo of {{ other_user }}" class="photo" /></div>
+                <div><img src="{% avatar_url other_user 120 %}" alt="Photo of {{ other_user }}" class="photo" /></div>
                 {% if is_me %}
                 <a href="{% url avatar_change %}" id="avatar_replace">(replace)</a>
                 {% endif %}
             </div>
-    <ul class="buttons spacer">
-        <li style="float: left">
-            <a href="{% url calendar-index %}?username={{ other_user }}">
-            <img alt="calendar" src="{{MEDIA_URL}}/pinax/img/silk/icons/calendar.png">
-            {% trans "Show" %} {{ other_user }}{% trans "'s calendar" %}</a>
-        </li>
-        {% if user.is_authenticated %}
-            {% if is_me %}
-        <li style="float: left">
-            <a href="{% url exercise_create %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
-                {% trans "Add an exercise" %}
-            </a>
-        </li>
-            <li style="float: left">
-<a href="{% url what_next %}">{% trans "What next?" %}</a>
-            </li>
-                {% endif %}
-        {% endif %}
-    </ul>
-
-            <div class="box spacer">
-                {% if other_user.get_profile.name %}<h2><span class="fn">{{ other_user.get_profile.name }}</span></h2>{% endif %}
                 {% if other_user.date_joined%}<p><b>{% trans "Date joined" %}</b>: {{other_user.date_joined|naturalday:_("F j, Y")|capfirst }}</p>{% endif %}
                 {% if other_user.get_profile.about %}<p><b>{% trans "About" %}</b>: {{ other_user.get_profile.about }}</p>{% endif %}
                 {% if other_user.get_profile.location%}<p><b>{% trans "Location" %}</b>: {{ other_user.get_profile.location }}</p>{% endif %}

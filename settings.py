@@ -272,7 +272,7 @@ EMAIL_DEBUG = DEBUG
 CONTACT_EMAIL = "turan@turan.no"
 SITE_NAME = "Turan"
 LOGIN_URL = "/account/login/"
-LOGIN_REDIRECT_URLNAME = "what_next"
+LOGIN_REDIRECT_URLNAME = "profile_redirect"
 
 INTERNAL_IPS = (
     '10.2.4.100',
