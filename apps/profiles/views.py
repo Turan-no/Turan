@@ -1,13 +1,14 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.conf import settings
 from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
 
 from time import mktime, strptime
 from datetime import timedelta, datetime, date as datetimedate
@@ -57,6 +58,13 @@ def profiles(request, template_name="profiles/profiles.html", extra_context=None
         'order': order,
         'search_terms': search_terms,
     }, **extra_context), context_instance=RequestContext(request))
+
+def profile_redirect(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('profile_detail', kwargs = { 'username': request.user.username }))
+
+    return HttpResponseRedirect(reverse('turanindex'))
+
 
 def profile(request, username, template_name="profiles/profile.html", extra_context=None):
     if extra_context is None:
