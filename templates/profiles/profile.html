@@ -30,18 +30,28 @@
         </li>
             <br />
             <li><a href="{% url route_create %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add route" %}" />
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="menu_button" />
                 {% trans "Add a route"%}</a></li>
             <br />
-            <li><a href="{% url import_data %}">{% trans "import data from another site"%}</a></li>
+            <li><a href="{% url import_data %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="menu_button" />
+                {% trans "import data from another site"%}</a></li>
             <br />
-            <li><a href="{% url userprofiledetail_create %}">{% trans "lost weight?"%}</a></li>
+            <li><a href="{% url userprofiledetail_create %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/cake.png" alt="menu_button" />
+                {% trans "lost weight?"%}</a></li>
             <br />
-            <li><a href="{% url acct_email %}">{% trans "verify an email address"%}</a></li>
+            <li><a href="{% url acct_email %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/email_go.png" alt="menu_button" />
+                {% trans "verify an email address"%}</a></li>
             <br />
-            <li><a href="{% url avatar_change %}">{% trans "add an avatar"%}</a></li>
+            <li><a href="{% url avatar_change %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/photo.png" alt="menu_button" />
+                {% trans "add an avatar"%}</a></li>
             <br />
-            <li><a href="{% url invitations %}">{% trans "invite more people to the site"%}</a></li>
+            <li><a href="{% url invitations %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/user_go.png" alt="menu_button" />
+                {% trans "invite more people to the site"%}</a></li>
             <br />
 
                 {% endif %}
