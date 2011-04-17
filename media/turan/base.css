@@ -45,6 +45,9 @@ table.fullsize tr th {
     background: #4F96CA; 
     color: white;
 }
+table.fullsize tr th>a {
+    color: white;
+}
 table.fullsize tr.even {
 	border-top: 1px solid #fcfcfc;
 	border-bottom: 1px solid #eee;
