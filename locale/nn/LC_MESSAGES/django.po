@@ -2116,7 +2116,7 @@ msgstr "Gj. effekt utan trilling"
 #: apps/turan/templates/turan/exercise/attributes.html:73
 #: apps/turan/templates/turan/exercise/mouseover.html:36
 msgid "Normalized Power"
-msgstr "Normalisert efekt"
+msgstr "Normalisert effekt"
 
 #: apps/turan/templates/turan/exercise/attributes.html:75
 msgid "Intensity Factor"
