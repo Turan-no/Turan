@@ -45,6 +45,9 @@ table.fullsize tr th {
     background: #4F96CA; 
     color: white;
 }
+table.fullsize tr th>a {
+    color: white;
+}
 table.fullsize tr.even {
 	border-top: 1px solid #fcfcfc;
 	border-bottom: 1px solid #eee;
@@ -408,6 +411,19 @@ h1 a
 
 .buttons {
     overflow: auto;
+}
+.pagination .disabled {
+    padding: 5px;
+    color: #999;
+    border: 1px solid #CCC;
+    margin: 0 5px 0 0;
+}
+.pagination .current {
+    color: #FFF;
+    padding: 5px;
+    border: 1px solid #9BC;
+    background: #4F96CA;
+    margin: 0 5px 0 0;
 }
 ul {
     padding: 0;
