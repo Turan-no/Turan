@@ -1716,7 +1716,7 @@ msgstr "Kart"
 
 #: apps/turan/templates/turan/index.html:126
 msgid "Log"
-msgstr "Logo"
+msgstr "Logg"
 
 #: apps/turan/templates/turan/index.html:130
 msgid ""
