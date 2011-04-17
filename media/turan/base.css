@@ -601,6 +601,7 @@ div.mapcontainer {
     border-radius: 0 1em 1em 1em;
     -webkit-border-radius: 0 1em 1em 1em;
     -moz-border-radius: 0 1em 1em 1em;
+    overflow: auto;
 }
 #tabs>ul {
     overflow: hidden;
