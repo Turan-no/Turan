@@ -952,4 +952,7 @@ div.slope-category-0 {
 p#choices input {
     margin-left: 12px;
 }
-
+p.description {
+    font-size: 8pt;
+    color: #888;
+}
