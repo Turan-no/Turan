@@ -1360,7 +1360,15 @@ def exercise(request, object_id):
             userweight = object.user.get_profile().get_weight(object.date)
             slopes = object.slope_set.all().order_by('start')
             # TODO: maybe put this in json details for cache etc
-            lonlats = simplejson.dumps([(d.lon, d.lat) for d in details if d.lon and d.lat])
+            lonlats = []
+            for d in details:
+                if d.lon == None:
+                    d.lon = 0.0
+                if d.lat == None:
+                    d.lat = 0.0
+                lonlats.append((d.lon, d.lat))
+            #    [(d.lon, d.lat) for d in details if d.lon and d.lat])
+            lonlats = simplejson.dumps(lonlats)
             # Todo, maybe calculate and save in db or cache ?
             gradients, inclinesums = getgradients(details)
         intervals = object.interval_set.select_related().all()
