@@ -4,7 +4,6 @@ html {
 body {
 	text-align: left;
     padding: 0;
-    background: #fff;
     margin: 0;
 }
 
@@ -584,7 +583,9 @@ div.mapcontainer {
     font-size: 1.1em;
 }
 #tabs>div {
+    /* HACK: Flot fails at display: none */
     position: absolute;
+    top: -10000px;
     left: -10000px;
 }
 #tabs>div.visible {
