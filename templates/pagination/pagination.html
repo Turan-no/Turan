@@ -1,0 +1,34 @@
+{% if is_paginated %}
+{% load i18n %}
+<div style:"width=500px" class="floatright buttons">
+<ul class="buttons spacer pagination">
+    {% if page_obj.has_previous %}
+    <li class="floatleft">
+        <a href="?page={{ page_obj.previous_page_number }}{{ getvars }}" class="prev">&lsaquo;&lsaquo; {% trans "previous" %}</a>
+    </li>
+    {% else %}
+        <li class="floatleft disabled prev">&lsaquo;&lsaquo; {% trans "previous" %}</li>
+    {% endif %}
+    {% for page in pages %}
+        {% if page %}
+            {% ifequal page page_obj.number %}
+            <li class="floatleft current">{{ page }}</li>
+            {% else %}
+            <li class="floatleft">
+                <a href="?page={{ page }}{{ getvars }}" class="page">{{ page }}</a>
+            </li>
+            {% endifequal %}
+        {% else %}
+        <li class="floatleft">...</li>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li class="floatleft">
+        <a href="?page={{ page_obj.next_page_number }}{{ getvars }}" class="next">{% trans "next" %} &rsaquo;&rsaquo;</a>
+    </li>
+    {% else %}
+        <li class="floatleft disabled next">{% trans "next" %} &rsaquo;&rsaquo;</li>
+    {% endif %}
+</ul>
+</div>
+{% endif %}

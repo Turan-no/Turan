@@ -409,6 +409,19 @@ h1 a
 .buttons {
     overflow: auto;
 }
+.pagination .disabled {
+    padding: 5px;
+    color: #999;
+    border: 1px solid #CCC;
+    margin: 0 5px 0 0;
+}
+.pagination .current {
+    color: #FFF;
+    padding: 5px;
+    border: 1px solid #9BC;
+    background: #4F96CA;
+    margin: 0 5px 0 0;
+}
 ul {
     padding: 0;
     margin: 0;
