@@ -62,8 +62,9 @@ var GraphPlotter = {
                 series = this.datasets[dataset]['data']
 
                 for (k in series) {
-                    if (min >= series[k][0])
+                    if (min >= series[k][0]) {
                         minIndex = k;
+                    }
                     if (max <= series[k][0]) {
                         maxIndex = k;
                         break;
@@ -114,7 +115,8 @@ var GraphPlotter = {
             segment_link.attr('href' , segment_link.attr('href')+ '&start=' + minIndex + '&stop=' + maxIndex);
             $("#segment_add").removeClass("hidden");
 
-            window.location.hash = 'graph-zoom-' + Math.round(min*10)/10 + '-' + Math.round(max*10)/10;
+            //window.location.hash = 'graph-zoom-' + Math.round(min*10)/10 + '-' + Math.round(max*10)/10;
+            window.location.hash = 'graph-zoom-' + min + '-' + max;
 
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
                 var items = $("#averages ul .data");
@@ -257,10 +259,14 @@ var GraphPlotter = {
         });
         //$("#segment_add").bind("click", function(evt) {
         //});
-        this.choiceContainer.find("input").bind("click", function(evt) {
+        this.choiceContainer.find("input").bind("change", function(evt) {
                 that.plotAccordingToChoices({}); 
         });
-        this.legends = $("#tripdiv .legendLabel"); 
+        $('.legendColorBox > div').each(function(i){
+            $(this).clone().prependTo(that.choiceContainer.find("li").eq(i));
+        });
+
+        this.legends = $(".legendLabel"); 
         this.legends.each(function () { 
         // fix the widths so they don't jump around
             $(this).css('width', $(this).width());

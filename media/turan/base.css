@@ -4,7 +4,6 @@ html {
 body {
 	text-align: left;
     padding: 0;
-    background: #fff;
     margin: 0;
 }
 
@@ -308,7 +307,6 @@ h1 a
 /* Buttons
  * from http://particletree.com/features/rediscovering-the-button-element/ */
 .buttons a, .buttons button {
-	margin: 0 5px 0 0;
 	background-color: #f5f5f5;
 	border: 1px solid #dedede;
 	border-top: 1px solid #eee;
@@ -319,7 +317,10 @@ h1 a
 	font-weight: bold;
 	color: #565656;
 	cursor: pointer;
+	margin: 0 5px 0 0;
 	padding: 4px 5px 4px 5px; /* Links */
+    display: block;
+    float: left;
 }
 .buttons button {
 	width: auto;
@@ -403,6 +404,10 @@ h1 a
     list-style-type: none;
     margin: 0;
     padding: 0;
+}
+
+.buttons {
+    overflow: auto;
 }
 ul {
     padding: 0;
@@ -578,7 +583,9 @@ div.mapcontainer {
     font-size: 1.1em;
 }
 #tabs>div {
+    /* HACK: Flot fails at display: none */
     position: absolute;
+    top: -10000px;
     left: -10000px;
 }
 #tabs>div.visible {
@@ -594,6 +601,7 @@ div.mapcontainer {
     border-radius: 0 1em 1em 1em;
     -webkit-border-radius: 0 1em 1em 1em;
     -moz-border-radius: 0 1em 1em 1em;
+    overflow: auto;
 }
 #tabs>ul {
     overflow: hidden;
@@ -944,3 +952,4 @@ div.slope-category-0 {
 p#choices input {
     margin-left: 12px;
 }
+

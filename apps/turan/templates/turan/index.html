@@ -125,16 +125,17 @@
             <p>
             {% blocktrans %}
             <b>T</b>uran is a hobby project created by a few exercise enthusiasts for logging and analyzing exercise data from heart rate monitors / cycle computers. It supports a variety of devices.
-            </p><p>
+            </p>
+            <p>
             <b>T</b>uran is currently an invite only site. Contact a member you know for an invite.
-            </p><p>
+            </p>
+            <p>
             Garmin products are supported with file formats .tcx and .fit. FIT-format reccommended.
             Polar from polar online (.xml) or from devices that exports .hrm
             GPX-files can be used but are often suboptimal.
             PWX and CSV also supported, but some features missing.
             {% endblocktrans %}
             </p>
-            <hr class="clearleft" />
             <p>
             {% blocktrans %}
             <b>T</b>uran is currently categorized into different exercise types to provide statistics and information for each type separately. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.
@@ -142,22 +143,20 @@
             </p>
         </div>
         <div id="tabs-2" class="">
-            <img class="floatright" src="{{MEDIA_URL}}turan/graf-utsnitt.png" alt="Graph" />
+            <img class="floatright" style="padding-left: 8px" src="{{MEDIA_URL}}turan/graf-utsnitt.png" alt="Graph" />
             <p>
             {% blocktrans %}
             Provided you have one of the supported devices you can analyze your training, kilometre by kilometre, or minute by minute if distance isn't relevant. You can, again provided your device supports it, graph everything the device records. Speed, altitude, cadence, heart rate, power, the whole <a href="http://www.urbandictionary.com/define.php?term=shebang">shebang</a>. Obviously, analyzing means breaking down a complex issue into smaller parts, so zooming in on any part of any lenght is supported. Just click and mark an interesting part of the graph and drool on the immense depth of the data <strong>you</strong> have produced.
             {% endblocktrans %}
             </p>
-            <hr class="clearright" />
         </div>
         <div id="tabs-3" class="">
-            <img class="floatleft" src="{{MEDIA_URL}}turan/mapexample.png" alt="Graph" />
+            <img class="floatleft" style="padding-right: 8px" src="{{MEDIA_URL}}turan/mapexample.png" alt="Graph" />
             <p>
             {% blocktrans %}
             The map serves two purposes. First and foremost the function of showing where you've been. That one's easy. The second is the killer: intensities during the exercises are embedded in the trace of the trip. The intensity of your exercise is indicated by the color, showing where which parts of your trip was relatively speaking the hardest. The levels are also relative to the user's own max-pulse, so make sure yours is correct.
             {% endblocktrans %}
             </p>
-            <hr class="clearleft" />
         </div>
         <div id="tabs-4" class="">
             <p>

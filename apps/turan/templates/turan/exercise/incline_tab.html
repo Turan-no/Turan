@@ -1,8 +1,9 @@
 {% load i18n %}
 {% load turan_extras %}
 <div id="inclinediv" style="width:700px;height:100%; float: right;"></div>
+
 <div id="incline" style="width:200px">
-        <table class="fullsize" cellspacing="0" cellpadding="0">
+    <table class="fullsize" cellspacing="0" cellpadding="0">
         <tr class="{% cycle odd,even %}">
                 <th>
                     {% trans "Type" %}
@@ -13,34 +14,36 @@
                 <th>
                     {% trans "%" %}
                 </th>
-            </tr>
-            {% for item in inclinesums %}
+        </tr>
+
+        {% for item in inclinesums %}
         <tr class="{% cycle odd,even %}">
-                <td>
-                    {{ item.0 }} %
-                </td>
-                <td>
-                    {{ item.1}} km
-                </td>
-                <td>
-                    {% if object.route.distance %}
-                        {{ item.1|percent:object.route.distance }}
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+            <td>
+                {{ item.0 }} %
+            </td>
+            <td>
+                {{ item.1}} km
+            </td>
+            <td>
+                {% if object.route.distance %}
+                    {{ item.1|percent:object.route.distance }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 <script type="text/javascript">
     var inclinedata = [
-            {% for item in inclinesums %}
-                {
-                    data: [[{{ item.0 }}, {{ item.1 }}]],
-                    bars: { show: true},
-                    color: {{ forloop.counter }}
-                }{% if not forloop.last%},{%endif%}
-            {% endfor %}
+        {% for item in inclinesums %}
+        {
+            data: [[{{ item.0 }}, {{ item.1 }}]],
+            bars: { show: true},
+            color: {{ forloop.counter }}
+        }{% if not forloop.last%},{%endif%}
+        {% endfor %}
     ];
     $("#inclinediv").css("height", $("#incline").css("height"));
+
     $.plot($("#inclinediv"), inclinedata, { grid: { show: true } });
 </script>

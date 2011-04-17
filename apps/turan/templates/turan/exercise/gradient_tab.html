@@ -1,37 +1,46 @@
 {% load i18n %}
 {% load turan_extras %}
 <div id="gradientinfo"></div>
+
 <div id="gradientinfo2"></div>
+
 <script type="text/javascript">
     var options = {
         selection: { mode: "x" },
         grid: { 
-                    hoverable: true, 
-                    clickable: true,
-                }
+            hoverable: true, 
+            clickable: true,
+        }
     };
 
     var gradientzonedata = [
-                {
-    color: 3,
-   lines: { fill: 0.6, },
-data: [{% for km, gradient in gradients %}[{{ km }},{{ gradient }}],{% endfor %}], }, 
-{
-}
+        {
+            color: 3,
+            lines: { fill: 0.6, },
+            data: [
+            {% for km, gradient in gradients %}[{{ km }},{{ gradient }}],{% endfor %}
+            ]
+        }, 
+        {
+        }
     ];
 
     $.plot($("#gradientzonediv"), gradientzonedata, options);
 
     $("#gradientzonediv").bind("plotselected", function (event, ranges) {            
-            plot = $.plot($("#gradientzonediv"), gradientzonedata, $.extend(true, {}, options, { xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
-          }));
-            $("#gradientinfo").text(ranges.xaxis.from.toFixed(1) + " {% trans "to" %} " + ranges.xaxis.to.toFixed(1));
-            $("#gradientinfo2").text( "{% trans "Click graph to reset selection" %}");
+        plot = $.plot(
+            $("#gradientzonediv"), 
+            gradientzonedata, 
+            $.extend(true, {}, options, { 
+                xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
+            })
+        );
+        $("#gradientinfo").text(ranges.xaxis.from.toFixed(1) + " {% trans "to" %} " + ranges.xaxis.to.toFixed(1));
+        $("#gradientinfo2").text( "{% trans "Click graph to reset selection" %}");
     });                                                                      
-   $("#gradientzonediv").bind("plotclick", function (event, pos, item) {
-            plot = $.plot($("#gradientzonediv"), gradientzonedata, options);
-            $("#gradientinfo").text("");
-            $("#gradientinfo2").text("");
+    $("#gradientzonediv").bind("plotclick", function (event, pos, item) {
+        plot = $.plot($("#gradientzonediv"), gradientzonedata, options);
+        $("#gradientinfo").text("");
+        $("#gradientinfo2").text("");
     });
-
 </script>
