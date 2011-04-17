@@ -41,6 +41,9 @@
         <th>
             {% anchortrans avg_hr "Avg HR" %}
         </th>
+        <th>
+            {% anchortrans normalized_power "xPower" %}
+        </th>
         <th style="width: 32px">
         </th>
     </tr>
@@ -90,6 +93,11 @@
     <td>
         {% if object.avg_hr %}
             {{ object.avg_hr}}  {% trans "BPM" %}
+        {% endif %}
+    </td>
+    <td>
+        {% if object.normalized_power %}
+            {{ object.normalized_power}}  {% trans "W" %}
         {% endif %}
     </td>
     <td>
