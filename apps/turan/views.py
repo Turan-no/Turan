@@ -647,56 +647,38 @@ def detailslice_info(details):
     ret['ascent'] = ascent
     ret['descent'] = descent
 
-    if filldistance(details):
-        #Shit that only works for distance, like power
-        ret['start_lat'] = details[0].lat
-        ret['start_lon'] = details[0].lon
-        ret['end_lon'] = details[detailcount-1].lat
-        ret['end_lat'] = details[detailcount-1].lon
-        ret['start'] = details[0].distance/1000
-        distance = details[detailcount-1].distance - details[0].distance
-        gradient = ascent/distance
-        duration = (details[detailcount-1].time - details[0].time).seconds
-        speed = ret['speed__avg']
-        userweight = exercise.user.get_profile().get_weight(exercise.date)
+    details = list(details) # needs to be list for filldistance?
 
-        # EQweight hard coded to 10! 
-        ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
-        ret['duration'] = duration
-        ret['distance'] = distance
-        ret['gradient'] = gradient*100
-        ret['power__normalized'] = power_30s_average(details)
-        ret['vam'] = int(round((float(ascent)/duration)*3600))
+    ret['start_lat'] = details[0].lat
+    ret['start_lon'] = details[0].lon
+    ret['end_lon'] = details[detailcount-1].lat
+    ret['end_lat'] = details[detailcount-1].lon
+    ret['start'] = details[0].distance/1000
+    distance = details[detailcount-1].distance - details[0].distance
+    gradient = ascent/distance
+    duration = (details[detailcount-1].time - details[0].time).seconds
+    speed = ret['speed__avg']
+    userweight = exercise.user.get_profile().get_weight(exercise.date)
 
-        if ret['power__avg']:
-            power = ret['power__avg']
-        else:
-            power = ret['power__avg_est']
+    # EQweight hard coded to 10! 
+    ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
+    ret['duration'] = duration
+    ret['distance'] = distance
+    ret['gradient'] = gradient*100
+    ret['power__normalized'] = power_30s_average(details)
+    ret['vam'] = int(round((float(ascent)/duration)*3600))
 
-        ret['power_per_kg'] = power/userweight
+    if ret['power__avg']:
+        power = ret['power__avg']
+    else:
+        power = ret['power__avg_est']
+
+    ret['power_per_kg'] = power/userweight
     #for a, b in ret.items():
         # Do not return empty values
     #    if not b:
     #        del ret[a]
     return ret
-
-def graphslice_to_segmentdetail(request, object_id):
-    ''' Convert a zoomed area to a segment detail '''
-    object = get_object_or_404(Exercise, pk=object_id)
-
-    start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
-    try:
-        start, stop = int(start), int(stop)
-    except ValueError:
-        return {}
-    details = all_details.all()[start:stop]
-    ret = detailslice_info(details)
-    s = SegmentDetail(\
-            exercise_id = object_id,
-            )
-    s.save()
-
-    return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
 def powerjson(request, object_id):
 
@@ -710,6 +692,7 @@ def powerjson(request, object_id):
     all_details = object.get_details()
 
     details = all_details.all()[start:stop]
+    d = filldistance(details) # FIXME
 
     ret = detailslice_info(details)
 
@@ -1492,7 +1475,12 @@ def create_object(request, model=None, template_name=None,
             except ValueError:
                 return HttpResponseForbidden('Invalid request')
             exercise = Exercise.objects.get(pk=exercise)
-            ret = detailslice_info(exercise.get_details().all()[start:stop])
+            details = exercise.get_details().all()
+            # Run filldistance on all dtails because filldistance doesn't support detail slices yet
+            # this is a TODO
+            details = details[0:stop+1]
+            d = filldistance(details)
+            ret = detailslice_info(details[start:stop])
             data = {}
             data['exercise'] = exercise
             data['start'] = ret['start']
