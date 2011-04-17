@@ -1734,6 +1734,7 @@ def slopes(request, queryset):
         )
         queryset = queryset.filter(qset).distinct()
 
+
     latitude = request.GET.get('lat', '')
     longitude = request.GET.get('lon', '')
 
@@ -1743,6 +1744,8 @@ def slopes(request, queryset):
         queryset = queryset.filter(start_lat__lt=float(latitude) + 0.5)
         queryset = queryset.filter(start_lon__gt=float(longitude) - 1.0)
         queryset = queryset.filter(start_lon__lt=float(longitude) + 1.0)
+
+    queryset = queryset.filter(vam__lt=1800) # humans.
 
     username = request.GET.get('username', '')
     if username:
