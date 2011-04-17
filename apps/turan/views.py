@@ -982,9 +982,14 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
         for val in js_strings.keys():
             try:
                 dval = getattr(d, val)
-                if dval != 0: # skip zero values (makes prettier graph)
-                    if dval != None:
-                        js_strings[val].append((x, dval))
+                #if dval != 0: # skip zero values (makes prettier graph)
+                #    if dval != None:
+                #
+
+                ### Export every single item to graph, this because indexes are used in zooming, etc
+                if dval == None:
+                    dval = 0
+                js_strings[val].append((x, dval))
             except AttributeError: # not all formats support all values
                 pass
 
