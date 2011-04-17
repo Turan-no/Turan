@@ -40,6 +40,7 @@ td {
     width: 1000px;
     border-left: 2px solid silver;
     background: white;
+    overflow: auto;
 }
 #footer {
     color: #999; /* footer text colour */
