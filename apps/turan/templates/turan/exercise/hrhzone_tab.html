@@ -1,79 +1,80 @@
 {% load i18n %}
 {% load turan_extras %}
+
 <h3>Percentage of time spent in different HR, colored by zones</h3>
 <div id="hrhzonediv" style="width:900px;height:400px; float: right;"></div>
 <div id="hrhzonetable" style="width:1px; height: 400px;"></div>
+
 {% if powerfreqs %}
 <h3>Watts by seconds</h3>
 <div id="powerfreqdiv" style="width:900px;height:400px; float: right;"></div>
 <div id="powerfreqtable" style="width:1px; height: 400px;"></div>
 {% endif %}
+
 {% if cadfreqs %}
 <h3>Cadence by seconds</h3>
 <div id="cadfreqdiv" style="width:900px;height:400px; float: right;"></div>
 <div id="cadfreqtable" style="width:1px; height: 400px;"></div>
 {% endif %}
+
 {% if speedfreqs %}
 <h3>Speed by seconds</h3>
 <div id="speedfreqdiv" style="width:900px;height:400px; float: right;"></div>
 <div id="speedfreqtable" style="width:1px; height: 400px;"></div>
 {% endif %}
+
 <script type="text/javascript">
-$(function () {
-    var hrhzonedata = [
+    $(function () {
+        var hrhzonedata = [
             {% for zone in hrhzones%}
-                {
+            {
             {% if zone.items %}
-                    data: [{% for hr, percent in zone.items %}[{{ hr }},{{ percent }}],{% endfor %} ],
-                    bars: { show: true},
-                    color: colors[{{ forloop.counter0 }}]
+                data: [{% for hr, percent in zone.items %}[{{ hr }},{{ percent }}],{% endfor %} ],
+                bars: { show: true},
+                color: colors[{{ forloop.counter0 }}]
             {% endif %}
-                }
-{% if not forloop.last%},{%endif%}
+            }
+            {% if not forloop.last%},{%endif%}
             {% endfor %}
-    ];
+        ];
 
-{% if powerfreqs %}
-    var powerfreqdata = [
-                {
-data: [
-      {% for val in powerfreqs.items%}
-      [{{val.0}},{{val.1}}]{% if not forloop.last%},{%endif%}{% endfor %}
-      ],
-                    bars: { show: true},
-                    color: 5,
-                }
-    ];
-{% endif %}
-{% if cadfreqs %}
-    var cadfreqdata = [
-                {
-data: [
-      {% for val in cadfreqs.items%}
-      [{{val.0}},{{val.1}}]{% if not forloop.last%},{%endif%}{% endfor %}
-      ],
-                    bars: { show: true},
-                    color: 1,
-                }
-    ];
-{% endif %}
-{% if speedfreqs %}
-    var speedfreqdata = [
-                {
-data: [
-      {% for val in speedfreqs.items%}
-      [{{val.0}},{{val.1}}]{% if not forloop.last%},{%endif%}{% endfor %}
-      ],
-                    bars: { show: true},
-                    color: 0,
-                }
-    ];
-{% endif %}
+        {% if powerfreqs %}
+        var powerfreqdata = [
+            {
+                data: [
+                    {% for val in powerfreqs.items%}[{{val.0}},{{val.1}}]{% if not forloop.last%},{%endif%}{% endfor %}
+                ],
+                bars: { show: true},
+                color: 5
+            }
+        ];
+        {% endif %}
 
-var options = { 
-grid: {
-markings:  [] 
+        {% if cadfreqs %}
+        var cadfreqdata = [
+            {
+                data: [{% for val in cadfreqs.items%}[{{val.0}},{{val.1}}]{% if not forloop.last%},{%endif%}{% endfor %}],
+                bars: { show: true},
+                color: 1
+            }
+        ];
+        {% endif %}
+
+        {% if speedfreqs %}
+        var speedfreqdata = [
+            {
+                data: [{% for val in speedfreqs.items%}[{{val.0}},{{val.1}}]{% if not forloop.last%},{%endif%}{% endfor %}],
+                bars: { show: true },
+                color: 0
+            }
+        ];
+        {% endif %}
+
+        var options = { 
+            grid: {
+                markings:  [] 
 /*
+    [
     { xaxis: { from: 50, to: 50 }, color: "#000000" },  
     { xaxis: { from: 60, to: 60 }, color: "#000000" },  
     { xaxis: { from: 72, to: 72 }, color: "#000000" },  
@@ -83,16 +84,21 @@ markings:  []
     { xaxis: { from: 97, to: 97 }, color: "#000000" },  
     ]
 */
-      }};
-$.plot($("#hrhzonediv"), hrhzonedata, options);
-{% if powerfreqs %}
-$.plot($("#powerfreqdiv"), powerfreqdata, options);
-{% endif %}
-{% if cadfreqs %}
-$.plot($("#cadfreqdiv"), cadfreqdata, options);
-{% endif %}
-{% if speedfreqs %}
-$.plot($("#speedfreqdiv"), speedfreqdata, options);
-{% endif %}
-});
+            }
+        };
+
+        $.plot($("#hrhzonediv"), hrhzonedata, options);
+
+        {% if powerfreqs %}
+        $.plot($("#powerfreqdiv"), powerfreqdata, options);
+        {% endif %}
+
+        {% if cadfreqs %}
+        $.plot($("#cadfreqdiv"), cadfreqdata, options);
+        {% endif %}
+
+        {% if speedfreqs %}
+        $.plot($("#speedfreqdiv"), speedfreqdata, options);
+        {% endif %}
+    });
 </script>

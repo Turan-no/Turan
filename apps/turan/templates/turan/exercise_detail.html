@@ -38,88 +38,110 @@
 {% block graph %}
 {% ifnotequal object.exercisedetail_set.count 0 %}
 <div id="tabs">
+    <!-- Tab selectors -->
     <ul>
         <li class="selected" id="tabs-select-1">
-        <p>
-        <img alt="Graph" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_curve.png">{% trans "Graph" %}
-        </p>
+            <p>
+                <img alt="Graph" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_curve.png">{% trans "Graph" %}
+            </p>
         </li>
-        <li id="tabs-select-2"><p>{% trans "Comments" %}</p></li>
+        <li id="tabs-select-2">
+            <p>{% trans "Comments" %}</p>
+        </li>
         {% if intervals %}
         <li id="tabs-select-3">
-        <p>
-        <img alt="Intervals" src="{{MEDIA_URL}}pinax/img/silk/icons/timeline_marker.png">
-        {% trans "Intervals" %}
-        </p>
+            <p>
+                <img alt="Intervals" src="{{MEDIA_URL}}pinax/img/silk/icons/timeline_marker.png">
+                {% trans "Intervals" %}
+            </p>
         </li>
         {% endif %}
         <li id="tabs-select-4">
-        <p>
-        <img alt="Zones" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_pie.png">
-        {% trans "Zones" %}
-        </p>
+            <p>
+                <img alt="Zones" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_pie.png">
+                {% trans "Zones" %}
+            </p>
         </li>
         <li id="tabs-select-5">
-        <p>
-        <img alt="Freqs" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_bar.png">
-        {% trans "Freqs" %}
-        </p>
+            <p>
+                <img alt="Freqs" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_bar.png">
+                {% trans "Freqs" %}
+            </p>
         </li>
         {% ifequal object.exercise_type.slopes 1 %}
         {% if slopes %}
         <li id="tabs-select-6">
-        <p>
-        <img alt="Slopes" src="{{MEDIA_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
-        {% trans "Slopes" %}</p></li>
+            <p>
+                <img alt="Slopes" src="{{MEDIA_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
+                {% trans "Slopes" %}
+            </p>
+        </li>
         {% endif %}
         {% endifequal %}
         {% ifequal object.exercise_type.altitude 1 %}
         <li id="tabs-select-7">
-        <p>
-        <img alt="Inclinedata" src="{{MEDIA_URL}}pinax/img/silk/icons/sum.png">
-        {% trans "Inclinedata" %}</p></li>
+            <p>
+                <img alt="Inclinedata" src="{{MEDIA_URL}}pinax/img/silk/icons/sum.png">
+                {% trans "Inclinedata" %}
+            </p>
+        </li>
         {% endifequal %}
         <li id="tabs-select-9">
-        <p>
-        <img alt="Zones" src="{{MEDIA_URL}}pinax/img/silk/icons/table_lightning.png">
-        {% trans "Best Efforts" %}</p></li>
-        </p>
-        </ul>
+            <p>
+                <img alt="Zones" src="{{MEDIA_URL}}pinax/img/silk/icons/table_lightning.png">
+                {% trans "Best Efforts" %}
+            </p>
+        </li>
+    </ul>
+
+    <!-- Tab content -->
     <div id="tabs-1" class="graph visible">
         {% include "turan/exercise/graph.html" %}
     </div>
+
     <div id="tabs-2">
         {% if object.comment %}
-        <li class="comment">{{ object.user }} {% trans "writes" %}:
-            <p>{{ object.comment|linebreaks }}</p>
-        </li>
-    {% endif %}
-            {% include "turan/commentform.html" %}
+        <ul>
+            <li class="comment">
+                {{ object.user }} {% trans "writes" %}:
+                <p>{{ object.comment|linebreaks }}</p>
+            </li>
+        </ul>
+        {% endif %}
+        {% include "turan/commentform.html" %}
     </div>
+
     {% if intervals %}
     <div id="tabs-3" class="interval_tab">
         {% include "turan/exercise/interval_tab.html" %}
     </div>
     {% endif %}
+
     <div id="tabs-4" class="zone_tab">
         {% include "turan/exercise/zone_tab.html" %}
     </div>
+
     <div id="tabs-5" class="hrhzone_tab">
         {% include "turan/exercise/hrhzone_tab.html" %}
     </div>
+
     {% ifequal object.exercise_type.slopes 1 %}
     {% if slopes %}
         {% include "turan/exercise/slope_tab.html" %}
     {% endif %}
     {% endifequal %}
+
     {% ifequal object.exercise_type.altitude 1 %}
     <div id="tabs-7">
-        <div id="gradientzonediv" style="width:900px;height:400px; float: right;"></div>
-        <div id="gradientzonetable" style="width:1px; height: 400px;"></div>
+        <div id="gradientzonediv" style="width:900px;height:400px; float: right;">
+        </div>
+        <div id="gradientzonetable" style="width:1px; height: 400px;">
+        </div>
         {% include "turan/exercise/gradient_tab.html" %}
         {% include "turan/exercise/incline_tab.html" %}
     </div>
     {% endifequal %}
+
     <div id="tabs-9">
         {% include "turan/exercise/best_effort_tab.html" %}
     </div>

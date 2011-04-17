@@ -10,11 +10,12 @@
 </a>
 <div id="tripdiv_legend" style="float:right; margin-right: 40px"></div>
 <hr class="clear" />
+
 <div id="scrollhacks">
     <div id="tripdiv" style="width:980px;height:500px; background: white;">
         <div align="center">
             <h2>{% trans "Loading graph" %}...</h2>
-            <br>
+            <br />
             <img alt="spinner" src="{{MEDIA_URL}}turan/cyclist.gif">
         </div>
     </div>
@@ -52,52 +53,52 @@
 </div>
 <script id="source" type="text/javascript" src="{{ MEDIA_URL }}turan/graphplotter.js"></script>
 <script type="text/javascript">
-    
     {% if lonlats %}
     var route_coordinates = {{lonlats}};
     {% else %}
     var route_coordinates = [];
     {% endif %}
+
     var route_points = [];
 
     var markings = [];
-{% if intervals %}
-{% for interval in intervals %}
-    {% if forloop.counter0 %}
-{% if time_xaxis %}
-    markings.push( { xaxis: { from: {{interval.get_relative_time_in_minutes}}, to: {{interval.get_relative_time_in_minutes}} }, color:  "#cccccc" });
-{% else %}
-{% if interval.start %}
-    markings.push( { xaxis: { from: {{interval.start}}/1000, to: {{interval.start}}/1000 }, color:  "#cccccc" });
-{% endif %}
-{% endif %}
+
+    {% if intervals %}
+    {% for interval in intervals %}
+        {% if forloop.counter0 %}
+        {% if time_xaxis %}
+        markings.push( { xaxis: { from: {{interval.get_relative_time_in_minutes}}, to: {{interval.get_relative_time_in_minutes}} }, color:  "#cccccc" });
+        {% else %}
+        {% if interval.start %}
+        markings.push( { xaxis: { from: {{interval.start}}/1000, to: {{interval.start}}/1000 }, color:  "#cccccc" });
+        {% endif %}
+        {% endif %}
+        {% endif %}
+    {% endfor %}
     {% endif %}
-{% endfor %}
-{% endif %}
 
-$(document).ready(function () {
-    // Get datasets from json
-    $.getJSON("{% url json_trip_series object.id %}?smooth={{smooth}}", function (datasets) {
-        GraphPlotter.init({
-        datasets: datasets,
-        backendUrl: "{% url powerjson object.id %}",
-        max_hr: {{ max_hr }},
-        markings: markings,
-        xaxisformatter: {% if time_xaxis %}"time"{%else%}"length"{%endif%}
+    $(document).ready(function () {
+        // Get datasets from json
+        $.getJSON("{% url json_trip_series object.id %}?smooth={{smooth}}", function (datasets) {
+            GraphPlotter.init({
+                datasets: datasets,
+                backendUrl: "{% url powerjson object.id %}",
+                max_hr: {{ max_hr }},
+                markings: markings,
+                xaxisformatter: {% if time_xaxis %}"time"{%else%}"length"{%endif%}
+            });
+            var orly = window.location.hash.split('-')
+            if (orly) {
+                if (orly[0] == "#graph") {
+                    var x = orly[2];
+                    var x2 = orly[3];
+                    GraphPlotter.plotAccordingToChoices({});
+                    GraphPlotter.plotAccordingToChoices({ xaxis: { from: x, to: x2 }});
+                }
+                else {
+                    GraphPlotter.plotAccordingToChoices({});
+                }
+            }
+        });
     });
-    var orly = window.location.hash.split('-')
-    if (orly) {
-        if (orly[0] == "#graph") {
-            var x = orly[2];
-            var x2 = orly[3];
-            GraphPlotter.plotAccordingToChoices({});
-            GraphPlotter.plotAccordingToChoices({ xaxis: { from: x, to: x2 }});
-        }
-        else {
-            GraphPlotter.plotAccordingToChoices({});
-        }
-    }
-});
-});
 </script>
-
