@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
 <div id="besteffortdiv" class="clearfix" style="width:900px;height:500px">
 </div>
@@ -39,7 +40,7 @@
                     $('#pzoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
                         plot.setSelection({ 
                             xaxis: { 
-                                from: {{effort.pos}}, to: {{effort.pos}}+{{effort.length}}/1000
+                                from: {{effort.pos|unlocalize}}, to: {{effort.pos|unlocalize}}+{{effort.length|unlocalize}}/1000
                             }
                         })
                     });
@@ -99,7 +100,7 @@
                 <script type="text/javascript">
                     $('#szoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
                         plot.setSelection({ 
-                            xaxis: { from: {{effort.pos}}, to: {{effort.pos}}+{{effort.length}}/1000 }
+                            xaxis: { from: {{effort.pos|unlocalize}}, to: {{effort.pos|unlocalize}}+{{effort.length|unlocalize}}/1000 }
                         })
                     });
                 </script>

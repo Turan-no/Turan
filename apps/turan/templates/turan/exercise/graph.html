@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load l10n %}
 <a href="#" title="{% trans "Zoom out" %}" id="reset_zoom" >
     <img style="float: right" src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_out.png" /> 
 </a>
@@ -64,6 +65,7 @@
     var markings = [];
 
     {% if intervals %}
+    {% localize off %}
     {% for interval in intervals %}
         {% if forloop.counter0 %}
         {% if time_xaxis %}
@@ -75,6 +77,8 @@
         {% endif %}
         {% endif %}
     {% endfor %}
+    {% endlocalize %}
+
     {% endif %}
 
     $(document).ready(function () {
