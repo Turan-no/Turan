@@ -939,10 +939,19 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
 
 # Check if we should export temperature to graph
     has_temperature = False
-    if details[0].exercise.max_temperature:
+    if exercise.max_temperature:
         has_temperature = True
     if not has_temperature:
         del js_strings['temp']
+    if not exercise.avg_power:
+        del js_strings['power']
+        del js_strings['poweravg30s']
+    if not exercise.avg_hr:
+        del js_strings['hr']
+    if not exercise.avg_cadence:
+        del js_strings['cadence']
+
+
 
     for i, d in enumerate(details):
         if start and start < i:
