@@ -1,10 +1,12 @@
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
 <div id="gradientinfo"></div>
 
 <div id="gradientinfo2"></div>
 
 <script type="text/javascript">
+{% localize off %}
     var options = {
         selection: { mode: "x" },
         grid: { 
@@ -43,4 +45,5 @@
         $("#gradientinfo").text("");
         $("#gradientinfo2").text("");
     });
+{% endlocalize %}
 </script>

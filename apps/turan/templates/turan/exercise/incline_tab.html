@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
 <div id="inclinediv" style="width:700px;height:100%; float: right;"></div>
 
@@ -34,6 +35,7 @@
     </table>
 </div>
 <script type="text/javascript">
+{% localize off %}
     var inclinedata = [
         {% for item in inclinesums %}
         {
@@ -46,4 +48,5 @@
     $("#inclinediv").css("height", $("#incline").css("height"));
 
     $.plot($("#inclinediv"), inclinedata, { grid: { show: true } });
+{% endlocalize %}
 </script>
