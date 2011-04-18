@@ -564,15 +564,6 @@ li.power {
 	padding-right: 8px;
 }
 
-.mon,.tue,.wed,.thu,.fri,.sat,.sun {
-    background: #eee;
-}
-.filled {
-    background: #ddd;
-}
-table.month .today div.day {
-    background-color: #7e7;
-}
 
 div.map {
     width: 500px;
@@ -679,6 +670,22 @@ ul.iconlist li {
 }
 
 /* Calendar */
+table.month th.sat,
+table.month th.sun {
+    background: #e22;
+}
+table.month .filled {
+    background-color: #cec;
+}
+table.month .today div.day {
+    background-color: #7e7;
+}
+table.month td.noday {
+    background: #e0e0e0;
+}
+table.month {
+    margin-top: 10px;
+}
 table.month td,
 table.month th {
 	vertical-align: top;
@@ -686,15 +693,24 @@ table.month th {
     padding: 2px;
     width: 120px;
 }
+table.month th.month {
+    background-color: white;
+    color: black;
+    border: none;
+    font-size: 14pt;
+}
 table.month th {
     padding: 4px;
+    background-color: black;
+    color: white;
 }
 
 table.month td>ul li {
     list-style-type: none;
-    padding: 2px 1px 8px 1px;
+    padding: 2px 2px 4px 4px;
     margin: 2px 2px 2px 1px;
-    background-color: #eee;
+    background-color: #4c3;
+    border-radius: 3px;
 }
 table.month img {
     float: left;
@@ -704,6 +720,7 @@ table.month img {
 }
 table.month a {
     font-size: 11px;
+    color: black;
 }
 table.month p {
     margin: 0;
@@ -712,11 +729,11 @@ table.month p {
 table.month div.day {
     text-align: center;
     margin: -2px 0 5px -2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 0 0 6px 0;
     background-color: #eee;
-    width: 20px;
-    height: 20px;
-    border-right: 1px solid silver;
-    border-bottom: 1px solid silver;
+    font-size: 7pt;
 }
 
 .toplist ol span.selected {
@@ -729,8 +746,8 @@ li.tag {
     margin-right: 0.5em;
 }
 
-.fade {
-    color: #999;
+table.month .fade {
+    color: #eee;
 }
 
 .sludd,
