@@ -1,4 +1,5 @@
 {% extends "turan/base.html" %}
+{% load uni_form_tags %}
 {% load i18n %}
 {% block title %}
 {{ block.super }}
@@ -13,12 +14,12 @@
 {% endblock %}
 {% block content %}
 <h1>{% trans "Add new profile detail" %}</h1>
-<form enctype="multipart/form-data" method="post">
-<table>
-{{ form }}
-</table>
+<form class="uniForm" enctype="multipart/form-data" method="post">
+{{ form|as_uni_form }}
 <input id="id_user" type="hidden" name="user" value="{{user.id}}">
+{% comment %}
 <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
+{% endcomment %}
 <input type="submit" value="{% trans "Submit" %}" />
 </form>
 <script type="text/javascript">
