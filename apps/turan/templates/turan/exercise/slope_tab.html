@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
 <div id="tabs-6" class="slope_tab">
     <table class="fullsize">
@@ -57,7 +58,7 @@
                     $('#zoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
                         plot.setSelection({ 
                             xaxis: { 
-                                from: {{slope.start}}, to: {{slope.start}}+{{slope.length}}/1000
+                                from: {{slope.start|unlocalize}}, to: {{slope.start|unlocalize}}+{{slope.length|unlocalize}}/1000
                             }
                         });
                     });
