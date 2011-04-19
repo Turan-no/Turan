@@ -105,7 +105,7 @@
             </a>
         </li>
     </ul>
-    <div id="exercisers" class="spacer drop-shadow raised">
+    <div id="exercisers" class="spacer">
     <h2>{% trans "Top exercisers" %}</h2>
         {% for exerciser in user_list %}
         {% if exerciser.exercise_set.count %}
@@ -114,7 +114,6 @@
         {% endif %}
         {% endfor %}
     </div>
-    <hr class="clearleft" />
     <div id="tabs">
         <ul>
             <li class="tab selected" id="tabs-select-1"><h3>{% trans "Turan?" %}</h3></li>
