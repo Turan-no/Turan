@@ -1,6 +1,8 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
+{% load avatar_tags %}
+{% load turan_extras %}
 {% block title %}
 {{ block.super }}
 {% trans "Calendar" %}
@@ -13,24 +15,26 @@
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.stack.js"></script>
 {% endblock %}
 {% block content %}
-
-<h1>
-    {% trans "Calendar" %}
-</h1>
-<ul class="buttons">
+{% if username %}
+    <a class="profilehoverpoint" id="user_{{user.id}}" title="{{user.username}}" href="{{user.get_profile.get_absolute_url }}">{% avatar user 60 %}</a>
+    {{ user|profile_hover }}
+{% endif %}
+<ul class="buttons floatright">
     <li>
     <a href="{% url calendar previous_month.year previous_month.month %}{% if username %}/?username={{username}}{% endif %}">
-        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_previous.png" alt="{% trans "Previous"%}" />
-        {% trans "Previous" %}
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_previous.png" alt="{% trans "Previous month"%}" />
+        {% trans "Previous month" %}
     </a>
     <a href="{% url calendar next_month.year next_month.month %}{% if username %}/?username={{username}}{% endif %}">
-        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_next.png" alt="{% trans "Next"%}" />
-        {% trans "Next" %}
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_next.png" alt="{% trans "Next month"%}" />
+        {% trans "Next month" %}
     </a>
     </li>
 </ul>
-<div class="right">
-</div>
+<h1 class="floatright">
+    {% trans "Calendar" %} 
+    {{ year }} - {{ month }}
+</h1>
 {{ calendar }}
 {% if z_by_week %}
 <h3>{% trans "Time in HR zones by week"%}</h3>

@@ -19,6 +19,10 @@ class WorkoutCalendar(LocaleHTMLCalendar):
         self.workouts_by_week = self.group_by_week(workouts)
         self.week_sums = self.get_week_sums()
 
+    def formatmonthname(self, *args, **kwargs):
+        ''' We do not want monthname displayed on top '''
+        return ''
+
     def formatday(self, day, weekday):
         # Day outside month are 0
         #week = int(working_date.strftime('%W'))+1

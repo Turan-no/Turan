@@ -556,6 +556,8 @@ def calendar_month(request, year, month):
     if username:
         user = get_object_or_404(User, username=username)
         exercises = exercises.filter(user=user)
+    else:
+        user = ''
 
     # Calculate the next month, if applicable.
     if allow_future:
@@ -602,6 +604,9 @@ def calendar_month(request, year, month):
              'next_month': next_month,
              'e_by_week': e_by_week,
              'z_by_week': z_by_week,
+             'user': user,
+             'year': year,
+             'month': month,
              },
             context_instance=RequestContext(request))
 
