@@ -564,9 +564,6 @@ li.power {
 div.map {
     width: 500px;
     height: 500px;
-    -webkit-box-shadow: 1px 1px 7px rgb(150, 150, 150);
-    box-shadow: 1px 1px 7px rgb(150, 150, 150);
-    -moz-box-shadow: 1px 1px 7px rgb(150, 150, 150);
 }
 div.mapcontainer {
     padding-top: 1px; /* Adjust for misalignment mirage */
