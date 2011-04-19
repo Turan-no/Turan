@@ -105,8 +105,8 @@
             </a>
         </li>
     </ul>
+    <div id="exercisers" class="spacer drop-shadow raised">
     <h2>{% trans "Top exercisers" %}</h2>
-    <div id="exercisers" class="spacer">
         {% for exerciser in user_list %}
         {% if exerciser.exercise_set.count %}
         <a class="profilehoverpoint" id="user_{{exerciser.id}}" title="{{exerciser.username}}" href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 60 %}</a>
@@ -114,6 +114,7 @@
         {% endif %}
         {% endfor %}
     </div>
+    <hr class="clearleft" />
     <div id="tabs">
         <ul>
             <li class="tab selected" id="tabs-select-1"><h3>{% trans "Turan?" %}</h3></li>
@@ -199,7 +200,7 @@
 {% endblock content %}
 
 {% block cloud %}
-<div class="cloud">
+<div class="spacer cloud drop-shadow lifted">
     <ul>
 {% for tag in tag_list %}
     {% ifnotequal tag.count 1 %}
