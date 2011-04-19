@@ -110,13 +110,14 @@ var Mapper = {
         
             // add rules from the above lookup table
             this.styles.addUniqueValueRules("default", "ZONE", {
-                0: {strokeColor: "#CCCCCC", strokeWidth: 4},
-                1: {strokeColor: "#3366FF", strokeWidth: 4},
-                2: {strokeColor: "#66CC00", strokeWidth: 4},
-                3: {strokeColor: "#FF00FF", strokeWidth: 4},
-                4: {strokeColor: "#FF9900", strokeWidth: 4},
-                5: {strokeColor: "#FF99FF", strokeWidth: 4},
-                6: {strokeColor: "#FF99FF", strokeWidth: 4},
+                0: {strokeColor: colorToHex(colors[0]), strokeWidth: 4},
+                1: {strokeColor: colorToHex(colors[1]), strokeWidth: 4},
+                2: {strokeColor: colorToHex(colors[2]), strokeWidth: 4},
+                3: {strokeColor: colorToHex(colors[3]), strokeWidth: 4},
+                4: {strokeColor: colorToHex(colors[4]), strokeWidth: 4},
+                5: {strokeColor: colorToHex(colors[5]), strokeWidth: 4},
+                6: {strokeColor: colorToHex(colors[6]), strokeWidth: 4},
+                7: {strokeColor: colorToHex(colors[7]), strokeWidth: 4}
             });
 
             this.vectors = new OpenLayers.Layer.Vector("HR Line", {
