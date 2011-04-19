@@ -1,16 +1,33 @@
-{% extends "turan/event_detail.html" %}
+{% extends "turan/base.html" %}
 {% load i18n %}
 {% load turan_extras %}
+{% load humanize %}
+{% load i18n %}
+{% load tagging_tags %}
 {% block title %}
 {{block.super}}
 {{ object }}, {{ object.date }}
 {% endblock %}
+{% block searchenginemeta %}
+{% tags_for_object object as tag_list %}
+<meta name="keywords" content="{% if tag_list %}{{ tag_list|join:","|escape }},{% endif %}sykkel,tur,trening,exercise" />
+<meta name="description" content="{% if object.comment %}{{ object.comment|truncatewords:20|escape }}{% else %}{{object.route.description}}{% endif %}" />
+{% endblock %}
 {% block extra_head %}
 {{ block.super }}
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.crosshair.js"></script>
+{% with object.route.gpx_file as gpx_file %}
+    {% include "turan/maphead.html" %}
+{% endwith %}
 {% endblock %}
 {% block extramenu %}
 {{ block.super }}
+<li>
+    <div class="modify">
+        {% url exercise object.id as exercise_url %}
+        <a title="Post exercise on Twitter" href="http://twitter.com/home?status={{ object.exercise_type }}{% if object.route %} at {{ object.route }}{% endif %} - http://turan.no{{ exercise_url|urlencode }}"><img src="http://twitter-badges.s3.amazonaws.com/t_mini-a.png" alt="Twitter icon"/></a>
+    </div>
+</li>
 {% ifequal user object.user %}
         {% if object.sensor_file %}
         <li class="modify"><a href="{% url exercise_parse object.id %}">
@@ -35,6 +52,15 @@
 {% endif %}
 {% endifequal %}
 {% endblock%}
+{% block content %}
+{% if object.route.gpx_file %}
+<div class="mapcontainer"><div class="map" id="map"></div>
+    <a href="{{MEDIA_URL}}turan/{{ object.route.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
+</div>
+{% endif %}
+{% include "turan/exercise/attributes.html" %}
+{% include "turan/tags.html" %}
+<hr class="clear" />
 {% block graph %}
 {% ifnotequal object.exercisedetail_set.count 0 %}
 <div id="tabs">
@@ -193,4 +219,8 @@
 
 </script>
 {% endifnotequal %}
+{% ifequal object.exercisedetail_set.count 0 %}
+{% include "turan/commentform.html" %}
+{% endifequal %}
 {% endblock %}
+{% endblock content %}

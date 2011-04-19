@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 23
-/svn/!svn/ver/323/trunk
+/svn/!svn/ver/330/trunk
 END
 jquery.flot.selection.js
 K 25
@@ -19,19 +19,19 @@ FAQ.txt
 K 25
 svn:wc:ra_dav:version-url
 V 31
-/svn/!svn/ver/234/trunk/FAQ.txt
+/svn/!svn/ver/328/trunk/FAQ.txt
 END
 API.txt
 K 25
 svn:wc:ra_dav:version-url
 V 31
-/svn/!svn/ver/317/trunk/API.txt
+/svn/!svn/ver/328/trunk/API.txt
 END
 jquery.flot.threshold.js
 K 25
 svn:wc:ra_dav:version-url
 V 48
-/svn/!svn/ver/157/trunk/jquery.flot.threshold.js
+/svn/!svn/ver/327/trunk/jquery.flot.threshold.js
 END
 jquery.flot.crosshair.js
 K 25
@@ -39,17 +39,11 @@ svn:wc:ra_dav:version-url
 V 48
 /svn/!svn/ver/317/trunk/jquery.flot.crosshair.js
 END
-jquery.colorhelpers.js
+jquery.flot.navigate.js
 K 25
 svn:wc:ra_dav:version-url
-V 46
-/svn/!svn/ver/321/trunk/jquery.colorhelpers.js
-END
-NEWS.txt
-K 25
-svn:wc:ra_dav:version-url
-V 32
-/svn/!svn/ver/323/trunk/NEWS.txt
+V 47
+/svn/!svn/ver/317/trunk/jquery.flot.navigate.js
 END
 jquery.js
 K 25
@@ -57,11 +51,17 @@ svn:wc:ra_dav:version-url
 V 33
 /svn/!svn/ver/317/trunk/jquery.js
 END
-jquery.flot.navigate.js
+NEWS.txt
 K 25
 svn:wc:ra_dav:version-url
-V 47
-/svn/!svn/ver/317/trunk/jquery.flot.navigate.js
+V 32
+/svn/!svn/ver/328/trunk/NEWS.txt
+END
+jquery.colorhelpers.js
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/321/trunk/jquery.colorhelpers.js
 END
 jquery.flot.fillbetween.js
 K 25
@@ -69,17 +69,17 @@ svn:wc:ra_dav:version-url
 V 50
 /svn/!svn/ver/229/trunk/jquery.flot.fillbetween.js
 END
-jquery.flot.js
-K 25
-svn:wc:ra_dav:version-url
-V 38
-/svn/!svn/ver/323/trunk/jquery.flot.js
-END
 jquery.flot.resize.js
 K 25
 svn:wc:ra_dav:version-url
 V 45
 /svn/!svn/ver/318/trunk/jquery.flot.resize.js
+END
+jquery.flot.js
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/330/trunk/jquery.flot.js
 END
 PLUGINS.txt
 K 25
@@ -111,11 +111,17 @@ svn:wc:ra_dav:version-url
 V 39
 /svn/!svn/ver/223/trunk/excanvas.min.js
 END
+.gitignore
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/329/trunk/.gitignore
+END
 jquery.flot.pie.js
 K 25
 svn:wc:ra_dav:version-url
 V 42
-/svn/!svn/ver/286/trunk/jquery.flot.pie.js
+/svn/!svn/ver/330/trunk/jquery.flot.pie.js
 END
 README.txt
 K 25
@@ -127,7 +133,7 @@ Makefile
 K 25
 svn:wc:ra_dav:version-url
 V 32
-/svn/!svn/ver/226/trunk/Makefile
+/svn/!svn/ver/325/trunk/Makefile
 END
 jquery.flot.image.js
 K 25
