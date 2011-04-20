@@ -1,6 +1,7 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
 
 {% load avatar_tags %}
@@ -70,7 +71,7 @@
             {% if series %}
                 {
                     label: "{{user}}",
-                    data: [{{series}}],
+                    data: [{{series|unlocalize}}],
                     color: {{ forloop.counter }}
                 },
             {% endif %}
@@ -91,7 +92,7 @@
     <div id="altdiv" style="height: 200px"></div>
 <script id="source" language="javascript" type="text/javascript">
     var alt = { data: [{{ alt }}], color: 3, lines: { fill: 0.7 } };
-    var options = { yaxes:[{}, { min: 0, max: {{ alt_max }}, }], };
+    var options = { yaxes:[{}, { min: 0, max: {{ alt_max|unlocalize }}, }], };
 $.plot($("#altdiv"), [alt], options);
 </script>
     <form id="route_form">
