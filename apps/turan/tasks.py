@@ -339,29 +339,29 @@ def best_x_sec(details, length, altvals, speed=True, power=False):
     len_i = len(details)
     for i in xrange(2, len_i):
         #try:
-            delta_t = (details[i].time - details[i-1].time).seconds
-            if speed:
-                # Break if exerciser is on a break as well
-                if delta_t < 60:
-                    q_speed.appendleft(details[i].speed * delta_t)
-                else:
-                    q_speed = deque()
-                    q_speed.appendleft(details[i].speed)
-                delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
-            if power:
-                if delta_t < 60 and details[i].power:
-                    q_power.appendleft(details[i].power * delta_t)
-                elif delta_t < 60 and not details[i].power:
-                    q_power.appendleft(0)
-                else:
-                    q_power = deque()
-                    if details[i].power:
-                        q_power.appendleft(details[i].power)
-                if not speed:
-                    delta_t_total = (details[i].time - details[i-len(q_power)].time).seconds
-            if delta_t_total >= length:
-                break
-            j += 1
+        delta_t = (details[i].time - details[i-1].time).seconds
+        if speed:
+            # Break if exerciser is on a break as well
+            if delta_t < 60:
+                q_speed.appendleft(details[i].speed * delta_t)
+            else:
+                q_speed = deque()
+                q_speed.appendleft(details[i].speed)
+            delta_t_total = (details[i].time - details[i-len(q_speed)].time).seconds
+        if power:
+            if delta_t < 60 and details[i].power:
+                q_power.appendleft(details[i].power * delta_t)
+            elif delta_t < 60 and not details[i].power:
+                q_power.appendleft(0)
+            else:
+                q_power = deque()
+                if details[i].power:
+                    q_power.appendleft(details[i].power)
+            if not speed:
+                delta_t_total = (details[i].time - details[i-len(q_power)].time).seconds
+        if delta_t_total >= length:
+            break
+        j += 1
         #except Exception as e:
         #    #print "%s %s %s %s %s" % (e, i, j, delta_t, len(q_speed))
         #    #j += 1
@@ -418,7 +418,7 @@ def best_x_sec(details, length, altvals, speed=True, power=False):
             while (power and (details[i].time - details[i-len(q_power)].time).seconds > length):
                 q_power.pop()
         except Exception as e:
-            #print "something wrong %s, %s, %s, %s" % (e, len(q_speed), i, j)
+            print "something wrong %s, %s, %s, %s" % (e, len(q_speed), i, j)
             #raise
             continue
 
