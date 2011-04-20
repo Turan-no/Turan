@@ -45,7 +45,7 @@
     <form class="uniForm" method="post" action="{% get_comment_url object %}">
         <fieldset class="inlineLabels">
             <div class="ctrlHolder">
-                <textarea id="id_comment" rows="2" cols="40" name="comment"></textarea>
+                <textarea class="drop-shadow lifted" id="id_comment" rows="2" cols="60" name="comment"></textarea>
             </div>
             <div class="form_block">
                 <input type="hidden" name="next" value="{{ request.path }}" />

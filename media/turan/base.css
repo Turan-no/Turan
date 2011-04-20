@@ -85,6 +85,8 @@ form input, form textarea {
 	color: black;
 	padding: 0.2em;
 	background: #eaeaea;
+    font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+
 }
 form#new_set {
 	text-align: right;
@@ -424,11 +426,10 @@ h1 a
 ul {
     padding: 0;
     margin: 0;
+    list-style:none;
 }
 ul li ul { 
     padding-left: 10px; 
-    border-left: 2px solid silver; 
-    margin: 5px 0 10px 0;
 }
 ul.comments {
     width: 450px;
@@ -477,69 +478,69 @@ ul.comments li {
     margin: 0;
 }
 
-li.duration {
+ul.iconlist>li.duration {
     list-style-image: url('/site_media/pinax/img/silk/icons/clock.png');
 }
-li.hr, 
-li.heart {
+ul.iconlist>li.hr, 
+ul.iconlist>li.heart {
     list-style-image: url('/site_media/pinax/img/silk/icons/heart.png');
 }
-li.comment {
+ul.iconlist>li.comment {
     list-style-image: url('/site_media/pinax/img/silk/icons/comment.png');
 }
-li.description p,
-li.comment p {
+ul.iconlist>li.description p,
+ul.iconlist>li.comment p {
     padding: 3px 12px;
     margin: 0;
 }
-li.gear,
-li.cadence {
+ul.iconlist>li.gear,
+ul.iconlist>li.cadence {
     list-style-image: url('/site_media/pinax/img/silk/icons/cog.png');
 }
-li.url {
+ul.iconlist>li.url {
     list-style-image: url('/site_media/pinax/img/silk/icons/link.png');
 }
-li.date {
+ul.iconlist>li.date {
     list-style-image: url('/site_media/pinax/img/silk/icons/date.png');
 }
-li.time {
+ul.iconlist>li.time {
     list-style-image: url('/site_media/pinax/img/silk/icons/time_go.png');
 }
-li.speed {
+ul.iconlist>li.speed {
     list-style-image: url('/site_media/pinax/img/silk/icons/lightning_go.png');
 }
-li.person {
+ul.iconlist>li.person {
     list-style-image: url('/site_media/pinax/img/silk/icons/user_suit.png');
 }
-li.person img {
+ul.iconlist>li.person img {
     float: right;
     margin: -1px 0 0 8px;
 }
-li.route {
+ul.iconlist>li.route {
     list-style-image: url('/site_media/pinax/img/silk/icons/map.png');
 }
-li.count {
+ul.iconlist>li.count {
     list-style-image: url('/site_media/pinax/img/silk/icons/arrow_rotate_clockwise.png');
 }
-li.distance {
+ul.iconlist>li.distance {
     list-style-image: url('/site_media/pinax/img/silk/icons/sum.png');
 }
-li.description {
+ul.iconlist>li.description {
     list-style-image: url('/site_media/pinax/img/silk/icons/textfield.png');
 }
-li.altitude,
-li.height,
-li.ascent {
+ul.iconlist>li.altitude,
+ul.iconlist>li.height,
+ul.iconlist>li.ascent {
     list-style-image: url('/site_media/pinax/img/silk/icons/arrow_up.png');
 }
-li.descent {
+ul.iconlist>li.descent {
     list-style-image: url('/site_media/pinax/img/silk/icons/arrow_down.png')
 }
-li.weight,
-li.kcal {
+ul.iconlist>li.weight,
+ul.iconlist>li.kcal {
     list-style-image: url('/site_media/pinax/img/silk/icons/cake.png')
 }
-li.power {
+ul.iconlist>li.power {
     list-style-image: url('/site_media/pinax/img/silk/icons/lightbulb.png')
 }
 
@@ -564,9 +565,6 @@ li.power {
 div.map {
     width: 500px;
     height: 500px;
-    -webkit-box-shadow: 1px 1px 7px rgb(150, 150, 150);
-    box-shadow: 1px 1px 7px rgb(150, 150, 150);
-    -moz-box-shadow: 1px 1px 7px rgb(150, 150, 150);
 }
 div.mapcontainer {
     padding-top: 1px; /* Adjust for misalignment mirage */
@@ -687,8 +685,19 @@ li.odd {
 }
 ul.iconlist li {
     list-style-type: none;
-    margin-left: 27px;
+    margin-bottom: 0px;
 }
+ul.iconlist>li>ul.extra>li {
+    font-size: 75%;
+    float: left;
+    list-style: none;
+    margin-left: 5px;
+    color: #999;
+}
+ul.iconlist>li>ul.extra {
+    overflow: auto;
+}
+
 
 /* Calendar */
 table.month th.sat,
