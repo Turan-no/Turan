@@ -154,7 +154,7 @@ hr.clear {
 hr.clearleft {
         clear: left;
 }
-hr.clearright {
+.clearright {
         clear: right;
 }
 

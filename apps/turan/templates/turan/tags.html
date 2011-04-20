@@ -2,15 +2,14 @@
 {% load i18n %}
 {% tags_for_object object as tag_list %}
 {% if tag_list %}
-<ul class="drop-shadow iconlist">
-    <ul class="spacer" >
+<div class="drop-shadow lifted clearright">
+<ul class="iconlist spacer">
         <li class="tag">
             <img alt="Tag" src="{{ MEDIA_URL }}pinax/img/silk/icons/tag_blue.png" class="noborder" />
         </li>
         {% for tag in tag_list %}
         <li class="tag {{ tag }}"><a href="/tags/{{ tag }}">{{ tag }}</a></li>
         {% endfor %}
-    </ul>
-    </li>
 </ul>
+</div>
 {% endif %}
