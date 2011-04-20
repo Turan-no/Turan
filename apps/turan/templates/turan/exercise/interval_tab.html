@@ -1,45 +1,47 @@
 {% load i18n %}
 {% load l10n %}
 {% load turan_extras %}
+{% load sorting_tags %}
+{% autosort intervals %}
 <table class="fullsize">
     <tr class="{% cycle odd,even %}">
         <th>
             {% trans "Zoom" %}
         </th>
         <th>
-            {% trans "Start" %}
+            {% anchortrans start %}
         </th>
         <th>
-            {% trans "Duration" %}
+            {% anchortrans duration %}
         </th>
 
         {% if object.avg_speed %}
         <th>
-            {% trans "Length" %}
+            {% anchortrans length %}
         </th>
         <th>
             {% trans "Elevation" %}
         </th>
         <th>
-            {% trans "Speed" %}
+            {% anchortrans speed" %}
         </th>
         {% endif %}
 
         {% if object.avg_power and power_show%}
         <th>
-            {% trans "Avg power" %}
+            {% anchortrans avg_power "Avg power" %}
         </th>
         <th>
-            {% trans "FTP %"%}
+            {% anchortrans ftp %"%}
         </th>
         <th>
             {% trans "Avg power/kg" %}
         </th>
-        <th> {% trans "Max power" %} </th>
+        <th> {% anchortrans max_power "Max power" %} </th>
         {% endif %}
 
         <th>
-            {% trans "Avg HR" %}
+            {% anchortrans avg_hr "Avg HR" %}
         </th>
     </tr>
     {% for interval in intervals %}
