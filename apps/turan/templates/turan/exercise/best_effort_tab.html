@@ -93,7 +93,7 @@
             </th>
             {% endif %}
         </tr>
-        {% for effort in bestpowerefforts %}
+        {% for effort in object.bestspeedeffort_set.all %}
         <tr class="{% cycle odd,even %}">
             <td>
                 <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="Zoom" id="szoom{{forloop.counter0}}-link-1" class="zoom-select" />
@@ -109,7 +109,7 @@
                 {{ effort.duration|durationformat }} 
             </td>
             <td>
-                {{ effort.speed|floatformat }} {% trans "km/h" %}
+                {{ effort.speed|floatformat}} {% trans "km/h" %}
             </td>
             <td>
                 {{ effort.pos|floatformat }} {% trans "km" %}
