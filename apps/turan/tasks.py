@@ -506,7 +506,7 @@ def getzones(exercise):
     return zones
 
 @task
-def calculate_best_efforts(exercise, effort_range=[5, 10, 30, 60, 240, 300, 600, 1200, 1800, 3600], calc_only_power=True, callback=None):
+def calculate_best_efforts(exercise, effort_range=[5, 10, 30, 60, 240, 300, 600, 1200, 1800, 3600], calc_only_power=False, callback=None):
     ''' Iterate over details for different effort ranges finding best
     speed and power efforts '''
 

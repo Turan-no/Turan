@@ -44,6 +44,9 @@ function durationFormatter(time, axis) {
     }
     return result.slice(0, result.length-1).join(", ") + " " + result[result.length-1];
 }
+function choose (set) {
+    return set[Math.floor(Math.random() * set.length)];
+}
 
 jQuery.fn.autoscroll = function() {
     $('html,body').animate({scrollTop: this.offset().top}, 500);
