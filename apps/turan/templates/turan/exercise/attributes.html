@@ -57,8 +57,7 @@
         {% if object.duration %} 
         <li class="duration">
             <span class="label">{% trans "Duration" %}:</span> {{ object.duration }}
-        </li>
-        {% endif %}
+        <ul class="extra">
 
         <li class="date">
             <span class="label">{% trans "Date" %}:</span> {{ object.date }}
@@ -67,6 +66,9 @@
         {% if object.time %}
         <li class="time">
             <span class="label">{% trans "Start time" %}:</span> {{ object.time }}
+        </li>
+        {% endif %}
+        </ul>
         </li>
         {% endif %}
 
@@ -79,95 +81,99 @@
         {% if object.avg_speed %}
         <li class="speed">
             <span class="label">{% trans "Avg Speed" %}:</span> {{ object.avg_speed|floatformat }} {% trans "km/h" %}
+        <ul class="extra">
+            {% if object.max_speed %}
+            <li>
+            <span class="label">{% trans "Max Speed" %}:</span> {{ object.max_speed|floatformat }} {% trans "km/h" %}
+            </li>
+            {% endif %}
+        </ul>
         </li>
         {% endif %}
 
         {% if object.avg_hr %}
-        <li class="heart">
+            <li class="heart">
             <span class="label">{% trans "Avg HR" %}:</span> {{ object.avg_hr }} {% trans "BPM" %} {% if object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}){% endif %}
-        </li>
+            <ul class="extra">
+            {% if object.max_hr %}
+                <li>
+                <span class="label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}{% if object.user.get_profile.max_hr %} ({{ object.max_hr|percent:object.user.get_profile.max_hr }}){% endif %}
+            {% endif %}
+                </li>
+            </ul>
+            </li>
         {% endif %}
 
         {% if object.avg_cadence %}
         <li class="cadence">
             <span class="label">{% trans "Avg Cadence" %}:</span> {{ object.avg_cadence }} {% trans "RPM" %}
-        </li>
-        {% endif %}
+
+            <ul class="extra">
 
         {% if object.avg_pedaling_cad %}
-        <li class="cadence">
-            <span class="label">{% trans "Avg Pedaling Cadence" %}:</span> {{ object.avg_pedaling_cad }} {% trans "RPM" %}
+        <li><span class="label">{% trans "Avg Pedaling Cadence" %}:</span> {{ object.avg_pedaling_cad }} {% trans "RPM" %}</li>
+        {% endif %}
+        {% if object.max_cadence %}
+        <li><span class="label">{% trans "Max Cadence" %}:</span> {{ object.max_cadence }} {% trans "RPM" %}</li>
+        {% endif %}
+            </ul>
         </li>
         {% endif %}
 
         {% if object.avg_power %}
         <li class="power">
             <span class="label">{% trans "Avg Power" %}:</span> {{ object.avg_power }} {% trans "W" %}
+        <ul class="extra">
+
+            {% if object.avg_pedaling_power %}
+            <li class="power">
+                <span class="label">{% trans "Avg Pedaling Power" %}:</span> {{ object.avg_pedaling_power }} {% trans "W" %}
+            </li>
+            {% endif %}
+
+            {% if object.normalized_power %}
+            <li class="power">
+                <span class="label">{% trans "Normalized Power" %}:</span> {{ object.normalized_power }} {% trans "W" %}
+            </li>
+            {% if object.get_intensityfactor %}
+            <li class="intensity">
+                <span class="label">{% trans "Intensity Factor" %}:</span> {{ object.get_intensityfactor }}
+            </li>
+            {% if object.max_power %}
+            <li class="power">
+                <span class="label">{% trans "Max Power" %}:</span> {{ object.max_power }} {% trans "W" %}
+            </li>
+            {% endif %}
+            {% if object.kcal %}
+            <li class="kcal" >
+                <span class="label">{% trans "Used kcal" %}:</span> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})
+            </li>
+        {% endif %}
+        </ul>
         </li>
+        {% endif %}
+        {% endif %}
         {% endif %}
 
-        {% if object.avg_pedaling_power %}
-        <li class="power">
-            <span class="label">{% trans "Avg Pedaling Power" %}:</span> {{ object.avg_pedaling_power }} {% trans "W" %}
-        </li>
-        {% endif %}
 
-        {% if object.normalized_power %}
-        <li class="power">
-            <span class="label">{% trans "Normalized Power" %}:</span> {{ object.normalized_power }} {% trans "W" %}
-        </li>
-        {% if object.get_intensityfactor %}
-        <li class="intensity">
-            <span class="label">{% trans "Intensity Factor" %}:</span> {{ object.get_intensityfactor }}
-        </li>
-        {% endif %}
-        {% endif %}
-
-        {% if object.max_speed %}
-        <li class="speed">
-            <span class="label">{% trans "Max Speed" %}:</span> {{ object.max_speed|floatformat }} {% trans "km/h" %}
-        </li>
-        {% endif %}
-
-        {% if object.max_hr %}
-        <li class="heart">
-            <span class="label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}{% if object.user.get_profile.max_hr %} ({{ object.max_hr|percent:object.user.get_profile.max_hr }}){% endif %}
-        </li>
-        {% endif %}
-
-        {% if object.max_cadence %}
-        <li class="cadence">
-            <span class="label">{% trans "Max Cadence" %}:</span> {{ object.max_cadence }} {% trans "RPM" %}
-        </li>
-        {% endif %}
-
-        {% if object.max_power %}
-        <li class="power">
-            <span class="label">{% trans "Max Power" %}:</span> {{ object.max_power }} {% trans "W" %}
-        </li>
-        {% endif %}
-
-        {% if object.kcal %}
-        <li class="kcal" >
-            <span class="label">{% trans "Used kcal" %}:</span> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})
-        </li>
-        {% endif %}
 
         {% if object.temperature %}
         <li class="temperature" >
             <span class="label">{% trans "Temperature" %}:</span> {{ object.temperature|floatformat }} {% trans "℃" %}
-        </li>
-        {% endif %}
+            <ul class="extra">
 
-        {% if object.min_temperature %}
-        <li class="temperature" >
-            <span class="label">{% trans "Min Temperature" %}:</span> {{ object.min_temperature|floatformat }} {% trans "℃" %}
-        </li>
-        {% endif %}
+            {% if object.min_temperature %}
+            <li class="temperature" >
+                <span class="label">{% trans "Min Temperature" %}:</span> {{ object.min_temperature|floatformat }} {% trans "℃" %}
+            </li>
+            {% endif %}
 
-        {% if object.max_temperature %}
-        <li class="temperature" >
-            <span class="label">{% trans "Max Temperature" %}:</span> {{ object.max_temperature|floatformat }} {% trans "℃" %}
+            {% if object.max_temperature %}
+            <li class="temperature" >
+                <span class="label">{% trans "Max Temperature" %}:</span> {{ object.max_temperature|floatformat }} {% trans "℃" %}
+            </li>
+            {% endif %}
+        </ul>
         </li>
         {% endif %}
 
