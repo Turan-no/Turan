@@ -463,6 +463,10 @@ class Exercise(models.Model):
             return self.route.end_lon
         return 0.0
 
+    def get_weight(self):
+        ''' Find weight during exercise '''
+        return self.user.get_profile().get_weight(self.date)
+
 
 class ExercisePermission(models.Model):
     exercise = models.OneToOneField(Exercise, primary_key=True)
@@ -595,7 +599,7 @@ class Interval(models.Model):
 
     def get_avg_power_per_kg(self):
         ''' Find weight during exercise and calculate W/kg'''
-        userweight = self.exercise.user.get_profile().get_weight(self.exercise.date)
+        userweight = self.exercise.get_weight()
         try:
             if self.avg_power:
                 return self.avg_power/userweight
