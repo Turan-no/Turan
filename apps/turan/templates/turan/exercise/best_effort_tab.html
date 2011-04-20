@@ -53,7 +53,7 @@
                 {{ effort.power }} {% trans "W" %}
             </td>
             <td>
-                {{ effort.power|divide:userweight|floatformat }} {% trans "W/kg" %}
+                {{ effort.power|divide:object.get_weight}} {% trans "W/kg" %}
             </td>
             <td>
                 {{ effort.pos|floatformat }} {% trans "km" %}
