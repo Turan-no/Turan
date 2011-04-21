@@ -34,8 +34,22 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 CACHE_MIDDLEWARE_KEY_PREFIX = 'turan'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+        },
+    'memcache': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        },
+}
+
+COMPRESS_CACHE_BACKEND = 'memcache'
+#COMPRESS = True
+COMPRESS_ROOT = os.path.join(PROJECT_ROOT, "site_media")
+
 
 
 # Local time zone for this installation. Choices can be found here:
@@ -70,7 +84,7 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'static')
 
 # URL that handles the static files like app media.
 # Example: "http://media.lawrence.com"
-STATIC_URL = '/site_media/static/'
+STATIC_URL = '/site_media/'
 
 # Additional directories which hold static files
 STATICFILES_DIRS = (
@@ -82,6 +96,12 @@ STATICFILES_EXTRA_MEDIA = (
     ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
     ('turansite', os.path.join(PROJECT_ROOT, 'media')),
 )
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
@@ -91,10 +111,6 @@ ADMIN_MEDIA_PREFIX = posixpath.join(MEDIA_URL, "admin/")
 SECRET_KEY = '%z3t0zu+99#5(m^w%-+q)m7tc2o9n#p_o%vah-$@7i_#))+0l8'
 
 # List of callables that know how to import templates from various sources.
-#TEMPLATE_LOADERS = (
-#    'django.template.loaders.filesystem.load_template_source',
-#    'django.template.loaders.app_directories.load_template_source',
-#)
 
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', (
@@ -205,6 +221,8 @@ INSTALLED_APPS = (
     'uni_form',
     'django_sorting',
     'django_markup',
+
+    'compressor',
 
 # TUUURAN
     'turan',
