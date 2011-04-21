@@ -221,6 +221,7 @@ div.profile_info p {
 }
 
 #subnav ul {
+    float: right;
     margin: 0 15px;
     padding: 0;
 }
