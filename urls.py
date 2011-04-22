@@ -57,9 +57,12 @@ urlpatterns = patterns('',
     (r'^feeds/posts/(.*)/$', 'django.contrib.syndication.views.feed', blogs_feed_dict),
     (r'^feeds/bookmarks/(.*)/?$', 'django.contrib.syndication.views.feed', bookmarks_feed_dict),
     (r'', include('turan.urls')),
-    (r'', include('djangodblog.urls')),
+#    (r'', include('djangodblog.urls')),
 )
 
+urlpatterns += patterns('',
+    (r'^sentry/', include('sentry.urls')),
+)
 
 handler500 = 'turan.views.internal_server_error'
 ## @@@ for now, we'll use friends_app to glue this stuff together

@@ -184,6 +184,10 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.markup',
     'django.contrib.webdesign',
+    'indexer',
+    'paging',
+    'sentry',
+    'sentry.client',
     'pinax.templatetags',
 
 #    'devserver',
