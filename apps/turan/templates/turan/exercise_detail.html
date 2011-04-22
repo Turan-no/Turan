@@ -22,35 +22,26 @@
 {% endblock %}
 {% block extramenu %}
 {{ block.super }}
-<li>
-    <div class="modify">
+<li class="floatright">
         {% url exercise object.id as exercise_url %}
         <a title="Post exercise on Twitter" href="http://twitter.com/home?status={{ object.exercise_type }}{% if object.route %} at {{ object.route }}{% endif %} - http://turan.no{{ exercise_url|urlencode }}"><img src="http://twitter-badges.s3.amazonaws.com/t_mini-a.png" alt="Twitter icon"/></a>
-    </div>
 </li>
-{% ifequal user object.user %}
-        {% if object.sensor_file %}
-        <li class="modify"><a href="{% url exercise_parse object.id %}">
-        <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}">
-         {% trans "Reparse" %}</a></li>
-        {% endif %}
-        <li class="modify">
+{% if user == object.user %}
+        <li class="floatright"><a href="{% url exercise_delete object.id %}">
+        <img alt="delete" title="{% trans "Delete exercise" %}" src="{{ "cross"|silk_icon }}"> {% trans "Delete" %}
+        </a></li>
+        <li class="floatright">
         <a href="{% url exercise_update object.id %}">
         <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"> {% trans "Modify" %}
         </a>
         </li>
-        <li class="modify delete"><a href="{% url exercise_delete object.id %}">
-        <img alt="delete" title="{% trans "Delete exercise" %}" src="{{ "cross"|silk_icon }}"> {% trans "Delete" %}
-        </a></li>
-{% else %}
-{% if user.is_superuser %}
-        {% if object.sensor_file %}
-            <li class="modify"><a href="{% url exercise_parse object.id %}">
-            <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}">
-             {% trans "Reparse" %}</a></li>
-        {% endif %}
+{% endif%}
+{% if user == object.user or user.is_superuser%}
+    {% if object.sensor_file %}
+        <li class="floatright"><a href="{% url exercise_parse object.id %}">
+        <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}"></a></li>
+    {% endif %}
 {% endif %}
-{% endifequal %}
 {% endblock%}
 {% block content %}
 {% if object.route.gpx_file %}

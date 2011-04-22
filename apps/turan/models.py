@@ -5,7 +5,8 @@ from django.utils.translation import ugettext
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday
 from django.core.urlresolvers import reverse
-from django.template.defaultfilters import slugify
+#from django.template.defaultfilters import slugify
+from turan.templatetags.turan_extras import u_slugify as slugify
 from django.core.files.storage import FileSystemStorage
 from django.db.models.signals import pre_save, post_save
 from django.conf import settings
@@ -15,6 +16,7 @@ from django.core.files.base import ContentFile
 from tagging.fields import TagField
 import types
 from os.path import join
+import re
 
 from photos.models import Pool, Image
 
