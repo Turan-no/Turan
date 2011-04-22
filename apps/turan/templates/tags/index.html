@@ -6,10 +6,8 @@
 {% load tribes_tags %}
 {% load avatar_tags %}
 {% load blog_tags %}
-{% load wiki_tags %}
 {% load voting_tags %} 
 {% load extra_voting_tags %}
-{% load in_filter %}
 {% load extra_tagging_tags %}
 
 
@@ -90,6 +88,7 @@
 
 
     <div class="spacer">
+        {% comment %}
         <h1>All Bookmarks Matching <i>&quot;{{ tag }}&quot;</i></h1>
         {% if bookmarktags %}
             {% scores_for_objects bookmarktags as score_dict %}
@@ -117,6 +116,7 @@
             No bookmarks matching tag.
         {% endif %}
     </div>
+    {% endcomment %}
 
 
     <div class="spacer">
@@ -149,7 +149,7 @@
         {% endfor %}
         {% endcomment %}
     </div>
-
+    {% comment %}
     <div class="spacer">
         <h1>{% blocktrans %}All Wiki Articles Matching <i>&quot;{{ tag }}&quot;</i>{% endblocktrans %}</h1>
 
@@ -159,6 +159,7 @@
             {% endfor %}
         </table>
     </div>
+    {% endcomment %}
 
 
 {% endblock %}
