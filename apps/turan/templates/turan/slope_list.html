@@ -42,7 +42,7 @@
 <table class="fullsize">
     <tr class="{% cycle odd,even %}">
         <th>
-            {% anchortrans user %}
+            {% anchortrans exercise__user User %}
         </th>
         <th>
             {% anchortrans exercise %}
@@ -85,7 +85,7 @@
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
     <td><a href="{{ object.exercise.user.get_absolute_url }}" title="{{ object.exercise.user }}"> {% avatar object.exercise.user 32 %} </a></td>
     <td><a href="{{object.exercise.get_absolute_url}}">{{object.exercise.route}}</a></td>
-    <td>{{ object.length|divide:"1000"|floatformat }} {% trans "km" %} </td>
+    <td>{{ object.length|divide:"1000" }} {% trans "km" %} </td>
     <td>{{object.ascent}} {% trans "m" %}</td>
     <td>{{object.grade|floatformat}} %</td>
     <td>{{ object.duration|durationformatshort }}</td>
