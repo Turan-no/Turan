@@ -2,6 +2,7 @@ from calendar import LocaleHTMLCalendar
 from datetime import date, timedelta
 from itertools import groupby
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 from django.utils.html import conditional_escape as esc
 from turan.templatetags.turan_extras import exercise_mouseover
 
@@ -20,8 +21,15 @@ class WorkoutCalendar(LocaleHTMLCalendar):
         self.week_sums = self.get_week_sums()
 
     def formatmonthname(self, *args, **kwargs):
-        ''' We do not want monthname displayed on top '''
-        return ''
+
+        sums = self.sums.copy()
+        for w, wsums in self.week_sums.items():
+            for attr in ('kcal_sum', 'distance_sum', 'duration_sum'):
+                sums[attr] += wsums[attr]
+
+        sums = ugettext('Distance: %(distance_sum).1f km, Duration: %(duration_sum)s, kcal: %(kcal_sum)s' %sums)
+
+        return _('Month sums') + ': %s' %sums
 
     def formatday(self, day, weekday):
         # Day outside month are 0
