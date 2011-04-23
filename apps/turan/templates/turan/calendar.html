@@ -6,6 +6,10 @@
 {% block title %}
 {{ block.super }}
 {% trans "Calendar" %}
+{{ year }}.{{month}}
+{% if username %}
+- {{ username }}
+{% endif %}
 {% endblock %}
 {% block searchenginemeta %}
 <meta name="description" content="{% trans "Exercise calendar" %}" />
