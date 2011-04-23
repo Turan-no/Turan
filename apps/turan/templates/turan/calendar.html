@@ -16,9 +16,15 @@
 {% endblock %}
 {% block content %}
 {% if username %}
+<div class="floatleft">
     <a class="profilehoverpoint" id="user_{{user.id}}" title="{{user.username}}" href="{{user.get_profile.get_absolute_url }}">{% avatar user 60 %}</a>
     {{ user|profile_hover }}
+</div>
 {% endif %}
+<h1>
+    {% trans "Calendar" %} 
+    {{ year }} - {{ month }}
+</h1>
 <ul class="buttons floatright">
     <li>
     <a href="{% url calendar previous_month.year previous_month.month %}{% if username %}/?username={{username}}{% endif %}">
@@ -31,10 +37,6 @@
     </a>
     </li>
 </ul>
-<h1 class="floatright">
-    {% trans "Calendar" %} 
-    {{ year }} - {{ month }}
-</h1>
 {{ calendar }}
 {% if z_by_week %}
 <h3>{% trans "Time in HR zones by week"%}</h3>

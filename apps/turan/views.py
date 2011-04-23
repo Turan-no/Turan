@@ -418,7 +418,7 @@ def statistics(request, year=None, month=None, day=None, week=None):
 
 
     bestest_power = []
-    intervals = [5, 30, 60, 300, 600, 1200, 1800, 3600]
+    intervals = [5, 10, 30, 60, 300, 600, 1200, 1800, 3600]
     for i in intervals:
         userweight_tmp = []
         #.filter(user__exercise__bestpowereffort__duration=i)\
