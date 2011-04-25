@@ -630,10 +630,10 @@ def parse_sensordata(exercise, callback=None):
            ):
             if hasattr(val, v):
                 setattr(interval, v, getattr(val, v))
-        try:
-            interval.save()
-        except:
-            pass
+        #try:
+        interval.save()
+        #except:
+        #    pass
 
     exercise.max_hr = parser.max_hr
     exercise.max_speed = parser.max_speed
@@ -812,10 +812,10 @@ def power_30s_average(details):
         for j in xrange(0,30):
             if (i+j-30) > 0 and (i+j-30) < datasetlen:
                 delta_t = (details[i+j-30].time - details[i+j-31].time).seconds
-                # Break if sample is not 1 sek...
+                ## Break if sample is not 1 sek...
                 if delta_t == 1:
                     power = details[i+j-30].power
-                    if power:
+                    if power != None:
                         foo += power*delta_t
                         foo_element += 1.0
                 else:
