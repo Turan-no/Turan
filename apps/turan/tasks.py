@@ -12,6 +12,7 @@ from django.utils.datastructures import SortedDict
 
 import numpy
 from collections import deque
+from datetime import timedelta
 
 from svg import GPX2SVG
 from gpxwriter import GPXWriter
@@ -725,8 +726,52 @@ def parse_sensordata(exercise, callback=None):
     create_gpx_from_details(exercise)
     calculate_best_efforts(exercise)
     calculate_time_in_zones(exercise)
+    populate_interval_info(exercise)
     if hasattr(route, 'ascent') and route.ascent > 0:
         getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date))
+
+@task
+def populate_interval_info(exercise):
+    if exercise.sensor_file.name.endswith('.fit'):
+        #"FIT. SO PRO"
+        return
+    details = list(exercise.exercisedetail_set.all())
+    d = filldistance(details) # FIXME
+    for interval in exercise.interval_set.all():
+        start = 0 #= exercise.exercisedetail_set.get(time=interval.start_time)
+        stop = 0 # exercise.exercisedetail_set.get(time=interval.start_time+interval.duration)
+        stop_time = interval.start_time + timedelta(0, interval.duration)
+        for i, ed in enumerate(details):
+            if not start:
+                if ed.time >= interval.start_time:
+                    start = i
+            else:
+                if ed.time >= stop_time:
+                    stop = i
+                    break
+
+        i_details = details[start:stop]
+        ret = detailslice_info(i_details)
+
+
+        def check_and_set(attr, val):
+            if hasattr(interval, attr):
+                if not getattr(interval, attr):
+                    if val:
+                        setattr(interval, attr, val)
+
+        for attr in ('ascent', 'descent'):
+            if attr in ret:
+                check_and_set(attr, ret[attr])
+        if 'speed__avg' in ret:
+            check_and_set('avg_speed', ret['speed__avg'])
+        if 'power__avg' in ret:
+            check_and_set('avg_power', ret['speed__avg'])
+        if 'power__max' in ret:
+            check_and_set('max_power', ret['speed__max'])
+        # TODO add a bunch more
+        interval.save()
+        #assert False, (start, stop, ret)
 
 
 @task
@@ -852,3 +897,78 @@ def hr2zone(hr_percent):
         zone = 1
 
     return zone
+
+def detailslice_info(details):
+    ''' Given details, return as much info as possible for them '''
+
+    detailcount = len(details)
+    if not detailcount:
+        return {}
+    exercise = details[0].exercise
+    ascent, descent = calculate_ascent_descent_gaussian(details)
+    val_types = ('speed', 'hr', 'cadence', 'power', 'temp')
+    ret = {
+            'speed__min': 9999,
+            'hr__min': 9999,
+            'cadence__min': 9999,
+            'power__min': 9999,
+            'temp__min': 9999,
+            'speed__max': 0,
+            'hr__max': 0,
+            'cadence__max': 0,
+            'temp__max': 0,
+            'power__max': 0,
+            'speed__avg': 0,
+            'hr__avg': 0,
+            'cadence__avg': 0,
+            'power__avg': 0,
+            'temp__avg': 0,
+            'start_lon': 0.0,
+            'start_lat': 0.0,
+            'end_lon': 0.0,
+            'end_lat': 0.0,
+    }
+    for d in details:
+        for val in val_types:
+            ret[val+'__min'] =  min(ret[val+'__min'], getattr(d, val))
+            ret[val+'__max'] = max(ret[val+'__max'], getattr(d, val))
+            if getattr(d, val):
+                ret[val+'__avg'] += getattr(d, val)
+    for val in val_types:
+        ret[val+'__avg'] = ret[val+'__avg']/len(details)
+
+    ret['ascent'] = ascent
+    ret['descent'] = descent
+
+    details = list(details) # needs to be list for filldistance?
+
+    ret['start_lat'] = details[0].lat
+    ret['start_lon'] = details[0].lon
+    ret['end_lon'] = details[detailcount-1].lat
+    ret['end_lat'] = details[detailcount-1].lon
+    ret['start'] = details[0].distance/1000
+    distance = details[detailcount-1].distance - details[0].distance
+    gradient = ascent/distance
+    duration = (details[detailcount-1].time - details[0].time).seconds
+    speed = ret['speed__avg']
+    userweight = exercise.user.get_profile().get_weight(exercise.date)
+
+    # EQweight hard coded to 10! 
+    ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
+    ret['duration'] = duration
+    ret['distance'] = distance
+    ret['gradient'] = gradient*100
+    ret['power__normalized'] = power_30s_average(details)
+    ret['vam'] = int(round((float(ascent)/duration)*3600))
+
+    if ret['power__avg']:
+        power = ret['power__avg']
+    else:
+        power = ret['power__avg_est']
+
+    ret['power_per_kg'] = power/userweight
+    #for a, b in ret.items():
+        # Do not return empty values
+    #    if not b:
+    #        del ret[a]
+    return ret

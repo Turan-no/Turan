@@ -1,5 +1,6 @@
 from models import *
-from tasks import smoothListGaussian, calcpower, power_30s_average, hr2zone
+from tasks import smoothListGaussian, calcpower, power_30s_average \
+        , hr2zone, detailslice_info
 from itertools import groupby, islice
 from forms import ExerciseForm
 from profiles.models import Profile
@@ -610,80 +611,6 @@ def calendar_month(request, year, month):
              },
             context_instance=RequestContext(request))
 
-def detailslice_info(details):
-    ''' Given details, return as much info as possible for them '''
-
-    detailcount = len(details)
-    if not detailcount:
-        return {}
-    exercise = details[0].exercise
-    ascent, descent = calculate_ascent_descent_gaussian(details)
-    val_types = ('speed', 'hr', 'cadence', 'power', 'temp')
-    ret = {
-            'speed__min': 9999,
-            'hr__min': 9999,
-            'cadence__min': 9999,
-            'power__min': 9999,
-            'temp__min': 9999,
-            'speed__max': 0,
-            'hr__max': 0,
-            'cadence__max': 0,
-            'temp__max': 0,
-            'power__max': 0,
-            'speed__avg': 0,
-            'hr__avg': 0,
-            'cadence__avg': 0,
-            'power__avg': 0,
-            'temp__avg': 0,
-            'start_lon': 0.0,
-            'start_lat': 0.0,
-            'end_lon': 0.0,
-            'end_lat': 0.0,
-    }
-    for d in details:
-        for val in val_types:
-            ret[val+'__min'] =  min(ret[val+'__min'], getattr(d, val))
-            ret[val+'__max'] = max(ret[val+'__max'], getattr(d, val))
-            if getattr(d, val):
-                ret[val+'__avg'] += getattr(d, val)
-    for val in val_types:
-        ret[val+'__avg'] = ret[val+'__avg']/len(details)
-
-    ret['ascent'] = ascent
-    ret['descent'] = descent
-
-    details = list(details) # needs to be list for filldistance?
-
-    ret['start_lat'] = details[0].lat
-    ret['start_lon'] = details[0].lon
-    ret['end_lon'] = details[detailcount-1].lat
-    ret['end_lat'] = details[detailcount-1].lon
-    ret['start'] = details[0].distance/1000
-    distance = details[detailcount-1].distance - details[0].distance
-    gradient = ascent/distance
-    duration = (details[detailcount-1].time - details[0].time).seconds
-    speed = ret['speed__avg']
-    userweight = exercise.user.get_profile().get_weight(exercise.date)
-
-    # EQweight hard coded to 10! 
-    ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
-    ret['duration'] = duration
-    ret['distance'] = distance
-    ret['gradient'] = gradient*100
-    ret['power__normalized'] = power_30s_average(details)
-    ret['vam'] = int(round((float(ascent)/duration)*3600))
-
-    if ret['power__avg']:
-        power = ret['power__avg']
-    else:
-        power = ret['power__avg_est']
-
-    ret['power_per_kg'] = power/userweight
-    #for a, b in ret.items():
-        # Do not return empty values
-    #    if not b:
-    #        del ret[a]
-    return ret
 
 def powerjson(request, object_id):
 

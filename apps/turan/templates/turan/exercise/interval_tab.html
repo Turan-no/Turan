@@ -71,7 +71,7 @@
         <td>{{interval.duration|durationformatshort}}</td>
 
         {% if object.avg_speed %}
-        <td>{{ interval.distance|floatformat }} {% trans "m" %} </td>
+        <td>{{ interval.distance|divide:"1000"}} {% trans "km" %} </td>
         <td>+{{ interval.ascent}}/-{{ interval.descent }} {% trans "m" %} </td>
         <td>{{interval.avg_speed|floatformat}} {% trans "km/h" %}</td>
         {% endif %}
