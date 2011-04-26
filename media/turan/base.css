@@ -13,24 +13,28 @@ p {
 
 /* Headers */
 h1 {
+    font-family: 'Arvo', Georgia, Times, serif;
 	font-size: 175%;
 	font-weight: bolder;
 	margin: 5px 0 7px;
     text-shadow:1px 1px 4px #bbb;
 }
 h2 {
+    font-family: 'Arvo', Georgia, Times, serif;
 	font-size: 150%;
 	font-weight: normal;
 	margin: 5px 0 4px;
     text-shadow:1px 1px 4px #bbb;
 }
 h3 {
+    font-family: 'Arvo', Georgia, Times, serif;
 	font-size: 125%;
 	font-weight: normal;
 	margin: 5px 0 4px;
 }
 
 h4 {
+    font-family: 'Arvo', Georgia, Times, serif;
 	font-size: 120%;
 	font-weight: normal;
 	margin: 5px 0 2px;
@@ -85,7 +89,8 @@ form input, form textarea {
 	color: black;
 	padding: 0.2em;
 	background: #eaeaea;
-    font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+    /*font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;*/
+    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
 
 }
 form#new_set {
@@ -312,7 +317,8 @@ h1 a
 	border: 1px solid #dedede;
 	border-top: 1px solid #eee;
 	border-left: 1px solid #eee;
-	font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+	/*font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;*/
+    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
 	line-height: 130%;
 	text-decoration: none;
 	font-weight: bold;

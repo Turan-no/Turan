@@ -11,7 +11,7 @@ pre#logo {
 }
 body {
     color: #333;
-    font-family: sans-serif;
+    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
     font-size: 10pt;
 }
 a, a:visited {
@@ -66,9 +66,9 @@ td {
     padding: 0;
     margin: 0;
 }
-h1 {
+/*h1 {
     margin: 0;
-}
+}*/
 form th {
     text-align : left;
 }
