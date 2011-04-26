@@ -24,6 +24,12 @@
 {{ block.super }}
 <li class="floatright">
         {% url exercise object.id as exercise_url %}
+        <div id="fb-root"></div>
+        <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
+        <fb:send href="http://turan.no/{{exercise_url|urlencode}}"></fb:send>
+</li>
+<li class="floatright">
+        {% url exercise object.id as exercise_url %}
         <a title="Post exercise on Twitter" href="http://twitter.com/home?status={{ object.exercise_type }}{% if object.route %} at {{ object.route }}{% endif %} - http://turan.no{{ exercise_url|urlencode }}"><img src="http://twitter-badges.s3.amazonaws.com/t_mini-a.png" alt="Twitter icon"/></a>
 </li>
 {% if user == object.user %}
