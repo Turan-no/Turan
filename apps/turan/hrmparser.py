@@ -167,7 +167,7 @@ class HRMParser(object):
                     elif laprow == 4:
                         lap_type, distance, power, temperature, phrase_lap, air_pressure = splitted[:]
                         temperature = float(temperature)/10
-                        distance = float(distance)/1000
+                        distance = float(distance)
                         self.laps[-1].avg_temp = temperature
                         self.laps[-1].distance = distance
                         self.temperature = temperature
