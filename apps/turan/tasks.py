@@ -948,27 +948,26 @@ def detailslice_info(details):
     ret['end_lon'] = details[detailcount-1].lat
     ret['end_lat'] = details[detailcount-1].lon
     ret['start'] = details[0].distance/1000
+    userweight = exercise.user.get_profile().get_weight(exercise.date)
     distance = details[detailcount-1].distance - details[0].distance
+    duration = (details[detailcount-1].time - details[0].time).seconds
     if distance:
         gradient = ascent/distance
+        speed = ret['speed__avg']
         # EQweight hard coded to 10! 
         ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
         ret['gradient'] = gradient*100
         ret['power__normalized'] = power_30s_average(details)
         ret['vam'] = int(round((float(ascent)/duration)*3600))
-    duration = (details[detailcount-1].time - details[0].time).seconds
-    speed = ret['speed__avg']
-    userweight = exercise.user.get_profile().get_weight(exercise.date)
+        if ret['power__avg']:
+            power = ret['power__avg']
+        else:
+            power = ret['power__avg_est']
+        ret['power_per_kg'] = power/userweight
 
     ret['duration'] = duration
     ret['distance'] = distance
 
-    if ret['power__avg']:
-        power = ret['power__avg']
-    else:
-        power = ret['power__avg_est']
-
-    ret['power_per_kg'] = power/userweight
     #for a, b in ret.items():
         # Do not return empty values
     #    if not b:
