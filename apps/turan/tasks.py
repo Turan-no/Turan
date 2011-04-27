@@ -951,17 +951,17 @@ def detailslice_info(details):
     distance = details[detailcount-1].distance - details[0].distance
     if distance:
         gradient = ascent/distance
+        # EQweight hard coded to 10! 
+        ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
+        ret['gradient'] = gradient*100
+        ret['power__normalized'] = power_30s_average(details)
+        ret['vam'] = int(round((float(ascent)/duration)*3600))
     duration = (details[detailcount-1].time - details[0].time).seconds
     speed = ret['speed__avg']
     userweight = exercise.user.get_profile().get_weight(exercise.date)
 
-    # EQweight hard coded to 10! 
-    ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
     ret['duration'] = duration
     ret['distance'] = distance
-    ret['gradient'] = gradient*100
-    ret['power__normalized'] = power_30s_average(details)
-    ret['vam'] = int(round((float(ascent)/duration)*3600))
 
     if ret['power__avg']:
         power = ret['power__avg']
