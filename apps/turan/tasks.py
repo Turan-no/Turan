@@ -726,9 +726,9 @@ def parse_sensordata(exercise, callback=None):
     create_gpx_from_details(exercise)
     calculate_best_efforts(exercise)
     calculate_time_in_zones(exercise)
-    populate_interval_info(exercise)
     if hasattr(route, 'ascent') and route.ascent > 0:
         getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date))
+    populate_interval_info(exercise)
 
 @task
 def populate_interval_info(exercise):
@@ -765,10 +765,11 @@ def populate_interval_info(exercise):
                 check_and_set(attr, ret[attr])
         if 'speed__avg' in ret:
             check_and_set('avg_speed', ret['speed__avg'])
-        if 'power__avg' in ret:
-            check_and_set('avg_power', ret['speed__avg'])
-        if 'power__max' in ret:
-            check_and_set('max_power', ret['speed__max'])
+        if exercise.avg_power:
+            if 'power__avg' in ret:
+                check_and_set('avg_power', ret['speed__avg'])
+            if 'power__max' in ret:
+                check_and_set('max_power', ret['speed__max'])
         # TODO add a bunch more
         interval.save()
         #assert False, (start, stop, ret)
@@ -948,7 +949,8 @@ def detailslice_info(details):
     ret['end_lat'] = details[detailcount-1].lon
     ret['start'] = details[0].distance/1000
     distance = details[detailcount-1].distance - details[0].distance
-    gradient = ascent/distance
+    if distance:
+        gradient = ascent/distance
     duration = (details[detailcount-1].time - details[0].time).seconds
     speed = ret['speed__avg']
     userweight = exercise.user.get_profile().get_weight(exercise.date)
