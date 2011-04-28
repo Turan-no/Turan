@@ -30,7 +30,7 @@ from gpxwriter import GPXWriter
 
 from tasks import create_simplified_gpx, create_svg_from_gpx, create_gpx_from_details, \
         merge_sensordata, calculate_ascent_descent_gaussian, calculate_best_efforts, \
-        parse_sensordata, filldistance, hr2zone
+        parse_sensordata, filldistance, hr2zone, watt2zone
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -520,6 +520,15 @@ class HRZoneSummary(models.Model):
     class Meta:
         ordering = ('zone',)
 
+class WZoneSummary(models.Model):
+    exercise = models.ForeignKey(Exercise)
+    zone = models.IntegerField()
+    duration = models.IntegerField()
+
+    class Meta:
+        ordering = ('zone',)
+
+
 class BestSpeedEffort(models.Model):
     exercise = models.ForeignKey(Exercise)
     pos = models.FloatField()
@@ -921,32 +930,6 @@ def new_comment(sender, instance, **kwargs):
                 {"user": instance.user, "exercise": exercise, "comment": instance})
 models.signals.post_save.connect(new_comment, sender=ThreadedComment)
 
-def watt2zone(watt_percentage):
-    ''' Given watt_percentage in relation to FTP, return coggan zone 
-
-1   Active Recovery <55%    165w      Taking your bike for a walk!
-2   Endurance   >75%    225w      All day pace.
-3   Tempo   >90%    270w      Chain Gang pace.
-4   Lactate Threshold   >105%   315w      At or around 25m TT pace
-5   VO2max  >120%   360w      3-8 minute interval pace
-6   Anaerobic   121%+   360w+     Flamme Rouge SHITS intervals
-7   Neuromuscular       >1000w?   Jump Intervals '''
-    zone = 1
-    if watt_percentage > 150:
-        zone = 7
-    elif watt_percentage > 121:
-        zone = 6
-    elif watt_percentage > 105:
-        zone = 5
-    elif watt_percentage > 90:
-        zone = 4
-    elif watt_percentage > 75:
-        zone = 3
-    elif watt_percentage > 54:
-        zone = 2
-    elif watt_percentage < 55:
-        zone = 1
-    return zone
 
 def get_category(grade, length):
     ''' The categories are the same as in the Tour De France or other bike race

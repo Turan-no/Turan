@@ -457,8 +457,10 @@ def calculate_time_in_zones(exercise, callback=None):
 
     # First: Delete any existing in case of reparse
     exercise.hrzonesummary_set.all().delete()
+    exercise.wzonesummary_set.all().delete()
 
     HRZoneSummary = get_model('turan', 'HRZoneSummary')
+    WZoneSummary = get_model('turan', 'WZoneSummary')
 
     zones = getzones(exercise)
     for zone, val in zones.items():
@@ -467,6 +469,13 @@ def calculate_time_in_zones(exercise, callback=None):
         hrz.zone = zone
         hrz.duration = val
         hrz.save()
+    wzones = getwzones(exercise)
+    for zone, val in wzones.items():
+        wz = WZoneSummary()
+        wz.exercise_id = exercise.id
+        wz.zone = zone
+        wz.duration = val
+        wz.save()
 
 def getzones(exercise):
     ''' Calculate time in different sport zones given trip details '''
@@ -504,6 +513,40 @@ def getzones(exercise):
         if exercise.duration:
             zones[0] = exercise.duration.seconds
 
+    return zones
+
+def getwzones(exercise):
+    ''' Get time in watt zones '''
+
+    values = exercise.get_details().all()
+    # Check for FTP, can't calculate zones if not
+    userftp = exercise.user.get_profile().get_ftp(exercise.date)
+    if not userftp:
+        return {}
+
+    zones = SortedDict({
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            6: 0,
+            7: 0,
+        })
+    previous_time = False
+    for d in values:
+        if not previous_time:
+            previous_time = d.time
+            continue
+        time = d.time - previous_time
+        previous_time = d.time
+        if time.seconds > 60:
+            continue
+        w_percent = 0
+        if d.power:
+            w_percent = float(d.power)*100/userftp
+        zone = watt2zone(w_percent)
+        zones[zone] += time.seconds
     return zones
 
 @task
@@ -1005,3 +1048,29 @@ def normalized_attr(exercise, attr):
         normalized = int(round(pow(fourth/len(attrlist), (0.25))))
         return normalized
 
+def watt2zone(watt_percentage):
+    ''' Given watt_percentage in relation to FTP, return coggan zone 
+
+1   Active Recovery <55%    165w      Taking your bike for a walk!
+2   Endurance   >75%    225w      All day pace.
+3   Tempo   >90%    270w      Chain Gang pace.
+4   Lactate Threshold   >105%   315w      At or around 25m TT pace
+5   VO2max  >120%   360w      3-8 minute interval pace
+6   Anaerobic   121%+   360w+     Flamme Rouge SHITS intervals
+7   Neuromuscular       >1000w?   Jump Intervals '''
+    zone = 1
+    if watt_percentage > 150:
+        zone = 7
+    elif watt_percentage > 121:
+        zone = 6
+    elif watt_percentage > 105:
+        zone = 5
+    elif watt_percentage > 90:
+        zone = 4
+    elif watt_percentage > 75:
+        zone = 3
+    elif watt_percentage > 54:
+        zone = 2
+    elif watt_percentage < 55:
+        zone = 1
+    return zone

@@ -1000,55 +1000,28 @@ def getinclinesummary(values):
 
     return inclines
 
-def getwzones(values):
+def getwzones_with_legend(exercise):
     ''' Calculate time in different coggans ftp watt zones given trip details '''
 
-    # Check for FTP, can't calculate zones if not
-    userftp = values[0].exercise.user.get_profile().get_ftp(values[0].exercise.date)
-    if not userftp:
-        return []
 
-    zones = SortedDict({
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-        })
-    previous_time = False
-    for i, d in enumerate(values):
-        if not previous_time:
-            previous_time = d.time
-            continue
-        time = d.time - previous_time
-        previous_time = d.time
-        if time.seconds > 60:
-            continue
-        w_percent = 0
-        if d.power:
-            w_percent = float(d.power)*100/userftp
-        zone = watt2zone(w_percent)
-        zones[zone] += time.seconds
-
+    zones = exercise.wzonesummary_set.all()
     zones_with_legend = SortedDict()
 
-    for zone, val in zones.items():
-        if zone == 1:
-            zones_with_legend['1 (0% - 55%)'] = val
-        elif zone == 2:
-            zones_with_legend['2 (55% - 75%)'] = val
-        elif zone == 3:
-            zones_with_legend['3 (75% - 90%)'] = val
-        elif zone == 4:
-            zones_with_legend['4 (90% - 105%)'] = val
-        elif zone == 5:
-            zones_with_legend['5 (105% - 121%)'] = val
-        elif zone == 6:
-            zones_with_legend['6 (121% - 150%)'] = val
-        elif zone == 7:
-            zones_with_legend['7 (150% - '] = val
+    for zone in zones:
+        if zone.zone == 1:
+            zones_with_legend['1 (0% - 55%)'] = zone.duration
+        elif zone.zone == 2:
+            zones_with_legend['2 (55% - 75%)'] = zone.duration
+        elif zone.zone == 3:
+            zones_with_legend['3 (75% - 90%)'] = zone.duration
+        elif zone.zone == 4:
+            zones_with_legend['4 (90% - 105%)'] = zone.duration
+        elif zone.zone == 5:
+            zones_with_legend['5 (105% - 121%)'] = zone.duration
+        elif zone.zone == 6:
+            zones_with_legend['6 (121% - 150%)'] = zone.duration
+        elif zone.zone == 7:
+            zones_with_legend['7 (150% - '] = zone.duration
 
     return zones_with_legend
 
@@ -1294,8 +1267,7 @@ def exercise(request, object_id):
             gradients, inclinesums = getgradients(details)
         intervals = object.interval_set.select_related().all()
         zones = getzones_with_legend(object)
-        if object.avg_power: # Only get wzones for exercises with power
-            wzones = getwzones(details)
+        wzones = getwzones_with_legend(object)
         hrhzones = gethrhzones(details)
         cadfreqs = []
         bestpowerefforts = object.bestpowereffort_set.all()
