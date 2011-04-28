@@ -104,9 +104,6 @@ class RouteForm(forms.ModelForm):
 class FullRouteForm(forms.ModelForm):
     class Meta:
         model = Route
-class FullSegmentForm(forms.ModelForm):
-    class Meta:
-        model = Segment
 
 class FullExerciseForm(forms.ModelForm):
     class Meta:
@@ -116,7 +113,12 @@ class FullExerciseForm(forms.ModelForm):
 class SegmentForm(forms.ModelForm):
     class Meta:
         model = Segment
-        exclude = ('gpx_file', 'category', 'start_lat', 'start_lon', 'end_lat', 'end_lon')
+        fields =('name', 'description')
+
+class FullSegmentForm(forms.ModelForm):
+    class Meta:
+        model = Segment
+
 class SegmentDetailForm(forms.ModelForm):
     class Meta:
         model = SegmentDetail

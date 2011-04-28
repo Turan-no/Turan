@@ -78,7 +78,7 @@ def datetime2jstimestamp(obj):
 def index(request):
     ''' Index view for Turan '''
 
-    exercise_list = Exercise.objects.all()[:10]
+    exercise_list = Exercise.objects.select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')[:10]
     comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')[:5]
 
     route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])[:12]
@@ -568,6 +568,7 @@ def calendar_month(request, year, month):
     else:
         next_month = None
 
+
     # Calculate the previous month
     if first_day.month == 1:
         previous_month = first_day.replace(year=first_day.year-1,month=12)
@@ -999,67 +1000,36 @@ def getinclinesummary(values):
 
     return inclines
 
-def getwzones(values):
+def getwzones_with_legend(exercise):
     ''' Calculate time in different coggans ftp watt zones given trip details '''
 
 
-    # Check if exercise even has watts
-    if not values[0].exercise.avg_power:
-        return []
-    # Check for FTP, can't calculate zones if not
-    userftp = values[0].exercise.user.get_profile().get_ftp(values[0].exercise.date)
-    if not userftp:
-        return []
-
-    zones = SortedDict({
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-        })
-    previous_time = False
-    for i, d in enumerate(values):
-        if not previous_time:
-            previous_time = d.time
-            continue
-        time = d.time - previous_time
-        previous_time = d.time
-        if time.seconds > 60:
-            continue
-        w_percent = 0
-        if d.power:
-            w_percent = float(d.power)*100/userftp
-        zone = watt2zone(w_percent)
-        zones[zone] += time.seconds
-
+    zones = exercise.wzonesummary_set.all()
     zones_with_legend = SortedDict()
 
-    for zone, val in zones.items():
-        if zone == 1:
-            zones_with_legend['1 (0% - 55%)'] = val
-        elif zone == 2:
-            zones_with_legend['2 (55% - 75%)'] = val
-        elif zone == 3:
-            zones_with_legend['3 (75% - 90%)'] = val
-        elif zone == 4:
-            zones_with_legend['4 (90% - 105%)'] = val
-        elif zone == 5:
-            zones_with_legend['5 (105% - 121%)'] = val
-        elif zone == 6:
-            zones_with_legend['6 (121% - 150%)'] = val
-        elif zone == 7:
-            zones_with_legend['7 (150% - '] = val
+    for zone in zones:
+        if zone.zone == 1:
+            zones_with_legend['1 (0% - 55%)'] = zone.duration
+        elif zone.zone == 2:
+            zones_with_legend['2 (55% - 75%)'] = zone.duration
+        elif zone.zone == 3:
+            zones_with_legend['3 (75% - 90%)'] = zone.duration
+        elif zone.zone == 4:
+            zones_with_legend['4 (90% - 105%)'] = zone.duration
+        elif zone.zone == 5:
+            zones_with_legend['5 (105% - 121%)'] = zone.duration
+        elif zone.zone == 6:
+            zones_with_legend['6 (121% - 150%)'] = zone.duration
+        elif zone.zone == 7:
+            zones_with_legend['7 (150% - '] = zone.duration
 
     return zones_with_legend
 
 
-def gethrhzones(values):
+def gethrhzones(exercise, values, max_hr):
     ''' Calculate time in different sport zones given trip details '''
 
-    max_hr = values[0].exercise.user.get_profile().max_hr
+    #max_hr = values[0].exercise.user.get_profile().max_hr
     #resting_hr = values[0].exercise.user.get_profile().resting_hr
     if not max_hr: #or not resting_hr:
         return []
@@ -1086,8 +1056,8 @@ def gethrhzones(values):
     #for i in range(40,100):
     #    filtered_zones[i] = 0
 
-    if d.exercise.duration:
-        total_seconds = d.exercise.duration.seconds
+    if exercise.duration:
+        total_seconds = exercise.duration.seconds
         for hr in sorted(zones):
             #if 100*float(zones[hr])/total_seconds > 0:
             if hr > 40 and hr < 101:
@@ -1259,8 +1229,9 @@ def exercise(request, object_id):
 
     # Provide template string for maximum yaxis value for HR, for easier comparison
     maxhr_js = ''
-    if object.user.get_profile().max_hr:
-        max_hr = int(object.user.get_profile().max_hr)
+    profile = object.user.get_profile()
+    if profile.max_hr:
+        max_hr = int(profile.max_hr)
         maxhr_js = ', max: %s' %max_hr
     else:
         max_hr = 200 # FIXME, maybe demand from user ?
@@ -1281,7 +1252,8 @@ def exercise(request, object_id):
                     smooth = int(req_s)
                 except:
                     smooth = 0
-            userweight = object.user.get_profile().get_weight(object.date)
+            userweight = profile.get_weight(object.date)
+            userftp = profile.get_ftp(object.date)
             slopes = object.slope_set.all().order_by('start')
             # TODO: maybe put this in json details for cache etc
             lonlats = []
@@ -1297,15 +1269,16 @@ def exercise(request, object_id):
             gradients, inclinesums = getgradients(details)
         intervals = object.interval_set.select_related().all()
         zones = getzones_with_legend(object)
-        wzones = getwzones(details)
-        hrhzones = gethrhzones(details)
+        wzones = getwzones_with_legend(object)
+        hrhzones = gethrhzones(object, details, max_hr)
         cadfreqs = []
         bestpowerefforts = object.bestpowereffort_set.all()
         # fetch the all time best for comparison
-        bestbestpowerefforts = []
-        for bpe in bestpowerefforts:
-            bbpes = BestPowerEffort.objects.filter(exercise__user=object.user,duration=bpe.duration).order_by('-power')[0]
-            bestbestpowerefforts.append(bbpes)
+        #bestbestpowerefforts = []
+        #for bpe in bestpowerefforts:
+        #    bbpes = BestPowerEffort.objects.filter(exercise__user=object.user,duration=bpe.duration).order_by('-power')[0]
+        #    bestbestpowerefforts.append(bbpes)
+        bestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user__username='tor').values('duration').annotate(power=Max('power'))
         speedfreqs = []
         if object.avg_cadence:
             cadfreqs = getfreqs(details, 'cadence', min=1)

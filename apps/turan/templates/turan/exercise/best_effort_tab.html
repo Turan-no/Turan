@@ -53,7 +53,7 @@
                 {{ effort.power }} {% trans "W" %}
             </td>
             <td>
-                {{ effort.power|divide:object.get_weight}} {% trans "W/kg" %}
+                {{ effort.power|divide:userweight}} {% trans "W/kg" %}
             </td>
             <td>
                 {{ effort.pos|floatformat }} {% trans "km" %}
@@ -133,15 +133,15 @@
     var best_effort_data = [
         {
             label: '{% trans "This exercise" %}',
-            data: [ {% for effort in bestpowerefforts %}{% if effort.length %}
-                [{{ effort.length }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
+            data: [ {% for effort in bestpowerefforts %}{% if effort.duration %}
+                [{{ effort.duration }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
             {% endif %}{% endfor %}],
             color: 3,
         },
         {
             label: '{% trans "All time best" %}',
-            data: [ {% for effort in bestbestpowerefforts %}{% if effort.length %}
-                [{{ effort.length }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
+            data: [ {% for effort in bestbestpowerefforts %}{% if effort.duration %}
+                [{{ effort.duration }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
             {% endif %}{% endfor %}],
             color: 4,
         }
