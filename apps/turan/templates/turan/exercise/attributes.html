@@ -98,8 +98,13 @@
             {% if object.max_hr %}
                 <li>
                 <span class="label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}{% if object.user.get_profile.max_hr %} ({{ object.max_hr|percent:object.user.get_profile.max_hr }}){% endif %}
-            {% endif %}
                 </li>
+            {% endif %}
+            {% if object.normalized_hr %}
+                <li>
+                <span class="label">{% trans "Normalized HR" %}:</span> {{ object.normalized_hr }} {% trans "BPM" %}{% if object.user.get_profile.max_hr %} ({{ object.normalized_hr|percent:object.user.get_profile.max_hr }}){% endif %}
+                </li>
+            {% endif %}
             </ul>
             </li>
         {% endif %}

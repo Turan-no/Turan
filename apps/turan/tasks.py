@@ -691,6 +691,10 @@ def parse_sensordata(exercise, callback=None):
     # Normalize altitude, that is, if it's below zero scale every value up
     normalize_altitude(exercise)
 
+
+    # Calculate normalized hr
+    exercise.normalized_hr = normalized_attr(exercise, 'hr')
+
     # Auto calculate total ascent and descent
     route = exercise.route
     if route:
@@ -716,6 +720,8 @@ def parse_sensordata(exercise, callback=None):
             route.ascent = ascent
             route.descent = descent
             route.save()
+
+    # Somebadyyy saaaaaaave meee
     exercise.save()
 
     if not callback is None:
@@ -729,6 +735,7 @@ def parse_sensordata(exercise, callback=None):
     if hasattr(route, 'ascent') and route.ascent > 0:
         getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date))
     populate_interval_info(exercise)
+
 
 @task
 def populate_interval_info(exercise):
@@ -973,3 +980,28 @@ def detailslice_info(details):
     #    if not b:
     #        del ret[a]
     return ret
+
+def smoothList(list,strippedXs=False,degree=30):
+    list = [x if x else 0 for x in list] # Change None into 0
+    if strippedXs==True: return Xs[0:-(len(list)-(len(list)-degree+1))]
+    smoothed=[0]*(len(list)-degree+1)
+    for i in range(len(smoothed)):
+        smoothed[i]=sum(list[i:i+degree])/float(degree)
+    return smoothed
+
+def normalized_attr(exercise, attr):
+    exercise_details = exercise.get_details().all()
+    count = exercise_details.count()
+    if count < 23:
+        return 0
+    exercise_details = exercise_details[21:23]
+    delta_t = (exercise_details[1].time - exercise_details[0].time).seconds
+    if delta_t > 1: # Check smart sample
+        return 0
+    attrlist = exercise.exercisedetail_set.values_list(attr,flat=1)
+    attrlist = smoothList(attrlist,degree=30)
+    fourth = sum([pow(x,4) for x in attrlist])
+    if fourth:
+        normalized = int(round(pow(fourth/len(attrlist), (0.25))))
+        return normalized
+
