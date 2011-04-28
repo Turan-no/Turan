@@ -78,7 +78,7 @@ def datetime2jstimestamp(obj):
 def index(request):
     ''' Index view for Turan '''
 
-    exercise_list = Exercise.objects.all()[:10]
+    exercise_list = Exercise.objects.select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')[:10]
     comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')[:5]
 
     route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])[:12]
@@ -1003,10 +1003,6 @@ def getinclinesummary(values):
 def getwzones(values):
     ''' Calculate time in different coggans ftp watt zones given trip details '''
 
-
-    # Check if exercise even has watts
-    if not values[0].exercise.avg_power:
-        return []
     # Check for FTP, can't calculate zones if not
     userftp = values[0].exercise.user.get_profile().get_ftp(values[0].exercise.date)
     if not userftp:
@@ -1298,7 +1294,8 @@ def exercise(request, object_id):
             gradients, inclinesums = getgradients(details)
         intervals = object.interval_set.select_related().all()
         zones = getzones_with_legend(object)
-        wzones = getwzones(details)
+        if object.avg_power: # Only get wzones for exercises with power
+            wzones = getwzones(details)
         hrhzones = gethrhzones(details)
         cadfreqs = []
         bestpowerefforts = object.bestpowereffort_set.all()

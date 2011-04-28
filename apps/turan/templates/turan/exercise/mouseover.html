@@ -2,7 +2,7 @@
 {% load avatar_tags %}
 {% load turan_extras %}
 <div class="tooltip hidden" id="mouseover_{{object.id}}">
-    <a href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user %}</a>
+    <a href="{% url profile_detail object.user %}">{% avatar object.user %}</a>
     <div class="floatright">
         <img alt="Exerciselogo" src="{{object.icon}}" />
     </div>

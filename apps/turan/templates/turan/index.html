@@ -26,7 +26,7 @@
             <a href="{{ object.get_absolute_url }}">
                 <img alt="User image" class="floatleft" src="{{ object.icon|safe }}" width="32" height="32" />
             </a>
-            <a class="floatright" href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
+            <a class="floatright" href="{% url profile_detail object.user %}">{% avatar object.user 30 %}</a>
             <a href="{{ object.get_absolute_url }}">
                 {{ object|slice:":35" }}
             </a>
@@ -108,10 +108,8 @@
     <div id="exercisers" class="spacer">
     <h2>{% trans "Top exercisers" %}</h2>
         {% for exerciser in user_list %}
-        {% if exerciser.exercise_set.count %}
-        <a class="profilehoverpoint" id="user_{{exerciser.id}}" title="{{exerciser.username}}" href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 60 %}</a>
+        <a class="profilehoverpoint" id="user_{{exerciser.id}}" title="{{exerciser.username}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
         {{ exerciser|profile_hover }}
-        {% endif %}
         {% endfor %}
     </div>
     <div id="tabs">
