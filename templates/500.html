@@ -1,0 +1,13 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}500 {% trans "Server Error" %}{% endblock %}
+
+{% block body %}
+<div align="center">
+<h1>500 {% trans "Server Error Occured"%}</h1>
+    <p>{% trans "We're sorry but a server error has occurred. We've been notified and will look into it as soon as possible." %}</p>
+    <img src="{{MEDIA_URL}}turan/bike-crash.jpg">
+</div>
+{% endblock %}
