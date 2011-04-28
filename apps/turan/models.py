@@ -618,8 +618,9 @@ class Interval(models.Model):
         except ZeroDivisionError:
             return 0
 
-    def get_ftp_percentage(self):
-        userftp = self.exercise.user.get_profile().get_ftp(self.exercise.date)
+    def get_ftp_percentage(self, userftp=None):
+        if not userftp:
+            userftp = self.exercise.user.get_profile().get_ftp(self.exercise.date)
         if userftp:
             return self.avg_power*100/userftp
 

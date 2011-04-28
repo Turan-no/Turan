@@ -1026,10 +1026,10 @@ def getwzones_with_legend(exercise):
     return zones_with_legend
 
 
-def gethrhzones(values):
+def gethrhzones(exercise, values, max_hr):
     ''' Calculate time in different sport zones given trip details '''
 
-    max_hr = values[0].exercise.user.get_profile().max_hr
+    #max_hr = values[0].exercise.user.get_profile().max_hr
     #resting_hr = values[0].exercise.user.get_profile().resting_hr
     if not max_hr: #or not resting_hr:
         return []
@@ -1056,8 +1056,8 @@ def gethrhzones(values):
     #for i in range(40,100):
     #    filtered_zones[i] = 0
 
-    if d.exercise.duration:
-        total_seconds = d.exercise.duration.seconds
+    if exercise.duration:
+        total_seconds = exercise.duration.seconds
         for hr in sorted(zones):
             #if 100*float(zones[hr])/total_seconds > 0:
             if hr > 40 and hr < 101:
@@ -1229,8 +1229,9 @@ def exercise(request, object_id):
 
     # Provide template string for maximum yaxis value for HR, for easier comparison
     maxhr_js = ''
-    if object.user.get_profile().max_hr:
-        max_hr = int(object.user.get_profile().max_hr)
+    profile = object.user.get_profile()
+    if profile.max_hr:
+        max_hr = int(profile.max_hr)
         maxhr_js = ', max: %s' %max_hr
     else:
         max_hr = 200 # FIXME, maybe demand from user ?
@@ -1251,7 +1252,8 @@ def exercise(request, object_id):
                     smooth = int(req_s)
                 except:
                     smooth = 0
-            userweight = object.user.get_profile().get_weight(object.date)
+            userweight = profile.get_weight(object.date)
+            userftp = profile.get_ftp(object.date)
             slopes = object.slope_set.all().order_by('start')
             # TODO: maybe put this in json details for cache etc
             lonlats = []
@@ -1268,14 +1270,15 @@ def exercise(request, object_id):
         intervals = object.interval_set.select_related().all()
         zones = getzones_with_legend(object)
         wzones = getwzones_with_legend(object)
-        hrhzones = gethrhzones(details)
+        hrhzones = gethrhzones(object, details, max_hr)
         cadfreqs = []
         bestpowerefforts = object.bestpowereffort_set.all()
         # fetch the all time best for comparison
-        bestbestpowerefforts = []
-        for bpe in bestpowerefforts:
-            bbpes = BestPowerEffort.objects.filter(exercise__user=object.user,duration=bpe.duration).order_by('-power')[0]
-            bestbestpowerefforts.append(bbpes)
+        #bestbestpowerefforts = []
+        #for bpe in bestpowerefforts:
+        #    bbpes = BestPowerEffort.objects.filter(exercise__user=object.user,duration=bpe.duration).order_by('-power')[0]
+        #    bestbestpowerefforts.append(bbpes)
+        bestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user__username='tor').values('duration').annotate(power=Max('power'))
         speedfreqs = []
         if object.avg_cadence:
             cadfreqs = getfreqs(details, 'cadence', min=1)
