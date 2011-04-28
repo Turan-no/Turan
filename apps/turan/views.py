@@ -568,6 +568,7 @@ def calendar_month(request, year, month):
     else:
         next_month = None
 
+
     # Calculate the previous month
     if first_day.month == 1:
         previous_month = first_day.replace(year=first_day.year-1,month=12)

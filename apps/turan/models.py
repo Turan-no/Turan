@@ -650,7 +650,7 @@ class Interval(models.Model):
 class Segment(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))
     distance = models.FloatField(help_text=_('in km'), default=0)
-    description = models.TextField(help_text=_('route description'))
+    description = models.TextField(help_text=_('Describe where it starts and ends and other noteworthy details'))
     gpx_file = models.FileField(upload_to='gpx', blank=True, storage=gpxstore)
 
     ascent = models.IntegerField(blank=True, null=True) # m
