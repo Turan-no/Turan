@@ -313,6 +313,7 @@ class Exercise(models.Model):
     avg_power = models.IntegerField(blank=True, null=True) # W
     avg_pedaling_power = models.IntegerField(blank=True, null=True) # W
     normalized_power = models.IntegerField(blank=True, null=True) # W 
+    normalized_hr = models.IntegerField(blank=True, null=True) # W 
 
     max_speed = models.FloatField(blank=True, null=True) #kmt
     max_cadence = models.IntegerField(blank=True, null=True) # rpm
