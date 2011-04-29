@@ -187,8 +187,8 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     for ftuple in ftpqs.values_list('time', 'ftp'):
         ftpdataseries += '[%s, %s],' % (datetime2jstimestamp(ftuple[0]), ftuple[1])
 
-    exerciseqs = other_user.exercise_set.order_by('date')
-    exerciseqs_dataseries = other_user.exercise_set.order_by('date')[:7]
+    exerciseqs = other_user.exercise_set.select_related('route','exercise_type').order_by('date')
+    exerciseqs_dataseries = other_user.exercise_set.select_related('route','exercise_type').order_by('date')[:7]
 
     i = 0
 
@@ -251,7 +251,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
 
     
 
-    latest_exercises = other_user.exercise_set.order_by('-date')[:20]
+    latest_exercises = other_user.exercise_set.select_related('route','exercise_type', 'user').order_by('-date')[:20]
 
 
     return render_to_response(template_name, locals(),
