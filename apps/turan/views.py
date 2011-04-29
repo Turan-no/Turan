@@ -579,7 +579,7 @@ def calendar_month(request, year, month):
 
 
 
-   # FIXME django locale
+    # FIXME django locale
     # stupid calendar needs int
     year, month = int(year), int(month)
     cal = WorkoutCalendar(exercises, locale.getdefaultlocale()).formatmonth(year, month)
@@ -591,11 +591,9 @@ def calendar_month(request, year, month):
     if username: # Only give zone week graph for individuals
         for week, es in e_by_week:
             zones =[0,0,0,0,0,0,0]
-            for e in es:
-                dbzones = e.hrzonesummary_set.all()
-                for dbzone in dbzones:
-                    zones[dbzone.zone] += dbzone.duration
-                #zones = e.hrzonesummary_set.all()
+            dbzones = HRZoneSummary.objects.filter(exercise__in=es).values('zone').annotate(duration=Sum('duration'))
+            for dbzone in dbzones:
+                zones[dbzone['zone']] += dbzone['duration']
             z_by_week[week] = zones#[float(zone)/60/60 for zone in zones if zone]
 
     return render_to_response('turan/calendar.html',
