@@ -1255,7 +1255,12 @@ def exercise(request, object_id):
                     smooth = 0
             userweight = profile.get_weight(object.date)
             userftp = profile.get_ftp(object.date)
-            slopes = object.slope_set.all().order_by('start')
+            slopes = []
+            # add both segment details and slopes
+            slopes += object.slope_set.all().order_by('start')
+            slopes += object.segmentdetail_set.all()
+            slopes = sorted(slopes, key=lambda x: x.start)
+
             # TODO: maybe put this in json details for cache etc
             lonlats = []
             for d in details:

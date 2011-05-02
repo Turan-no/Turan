@@ -812,7 +812,7 @@ class Slope(models.Model):
 class SegmentDetail(models.Model):
 
     exercise = models.ForeignKey(Exercise)
-    segment = models.ForeignKey(Segment)
+    segment = models.ForeignKey(Segment, blank=True, null=True, help_text=_("Add this selection to a shared public segment"))
     start = models.FloatField(help_text=_('in km'), default=0)
     length = models.FloatField(help_text=_('in km'), default=0)
     ascent = models.IntegerField(help_text=_('in m'), default=0)
@@ -840,6 +840,10 @@ class SegmentDetail(models.Model):
 
         super(SegmentDetail, self).save(*args, **kwargs)
         self.segment.save()
+
+    def category(self):
+        if self.segment:
+            return self.segment.category
 
 
 
