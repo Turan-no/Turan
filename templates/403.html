@@ -1,0 +1,15 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}403 {% trans "Permission Denied" %}{% endblock %}
+
+{% block body %}
+
+<h1 align="center">403 {% trans "Permission Denied"%}</h1>
+<img class="floatleft" src="{{MEDIA_URL}}turan/403.jpg">
+<br>
+<p>
+
+{% trans "We're sorry but you do not have permission to view this page." %}</p>
+{% endblock %}
