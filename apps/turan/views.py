@@ -1183,7 +1183,7 @@ def exercise_permission_checks(request, exercise):
 
     is_friend = False
     if request.user.is_authenticated():
-        is_friend = Friendship.objects.are_friends(request.user, object.user)
+        is_friend = Friendship.objects.are_friends(request.user, exercise.user)
 
     # Check for permission to display attributes
     try:
