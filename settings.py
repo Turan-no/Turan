@@ -120,8 +120,8 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-#        'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.gzip.GZipMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -130,7 +130,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'django_sorting.middleware.SortingMiddleware',
-#    'djangodblog.middleware.DBLogMiddleware',
+    'turan.middleware.Http403Middleware',
     'pinax.middleware.security.HideSensistiveFieldsMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
 )
@@ -231,8 +231,8 @@ INSTALLED_APPS = (
 # TUUURAN
     'turan',
     'rosetta',
-#    'south',
-#    'debug_toolbar',
+    'south',
+    'debug_toolbar',
     
     # internal (for now)
     #
@@ -304,6 +304,7 @@ LOGIN_REDIRECT_URLNAME = "profile_redirect"
 
 INTERNAL_IPS = (
     '10.2.4.100',
+    '83.242.17.117',
 )
 
 LANGUAGES = (

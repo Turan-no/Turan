@@ -34,6 +34,7 @@ from django.middleware.gzip import GZipMiddleware
 
 from django.core.files.base import ContentFile
 from turan.models import Route
+from turan.middleware import Http403
 from urllib2 import urlopen
 from tempfile import NamedTemporaryFile
 
@@ -794,10 +795,10 @@ def json_trip_series(request, object_id):
         if request.user.is_authenticated():
             is_friend = Friendship.objects.are_friends(request.user, exercise.user)
         if exercise.exercise_permission == 'N':
-            return redirect_to_login(request.path)
+            raise Http403()
         elif exercise.exercise_permission == 'F':
             if not is_friend:
-                return redirect_to_login(request.path)
+                raise Http403()
     power_show = exercise_permission_checks(request, exercise)
 
     cache_key = 'json_trip_series_%s_%dtime_xaxis_%dpower_%dsmooth' %(object_id, time_xaxis, smooth, power_show)
@@ -1219,9 +1220,11 @@ def exercise(request, object_id):
         if request.user.is_authenticated():
             is_friend = Friendship.objects.are_friends(request.user, object.user)
         if object.exercise_permission == 'N':
+            raise Http403()
             return redirect_to_login(request.path)
         elif object.exercise_permission == 'F':
             if not is_friend:
+                raise Http403()
                 return redirect_to_login(request.path)
     power_show = exercise_permission_checks(request, object)
 
