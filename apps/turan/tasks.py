@@ -309,7 +309,7 @@ def altvals_to_ascent_descent(altvals):
 
         if a > previous:
             ascent += (a - previous)
-        if a < previous:
+        elif a < previous:
             descent += (previous - a)
 
         previous = a
@@ -873,7 +873,7 @@ def calculate_ascent_descent(event):
 
         if a > previous:
             ascent += (a - previous)
-        if a < previous:
+        elif a < previous:
             descent += (previous - a)
 
         previous = a
@@ -1013,7 +1013,8 @@ def detailslice_info(details):
             power = ret['power__avg']
         else:
             power = ret['power__avg_est']
-        ret['power_per_kg'] = power/userweight
+        if power and userweight:
+            ret['power_per_kg'] = power/userweight
 
     ret['duration'] = duration
     ret['distance'] = distance
