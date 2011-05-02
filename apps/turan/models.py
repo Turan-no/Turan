@@ -736,7 +736,7 @@ class Segment(models.Model):
                         if slopeattr == 'distance': # this design is so silly, why vary between m and km?
                             slopeval = slopeval/1000
                         setattr(self, slopeattr, slopeval)
-        self.category = get_category(self.grade, self.distance)
+        self.category = get_category(self.grade, self.distance*1000)
 
         super(Segment, self).save(*args, **kwargs)
 
