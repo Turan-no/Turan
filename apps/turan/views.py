@@ -1181,6 +1181,10 @@ def exercise_permission_checks(request, exercise):
     power_show = True
     poweravg30_show = True
 
+    is_friend = False
+    if request.user.is_authenticated():
+        is_friend = Friendship.objects.are_friends(request.user, object.user)
+
     # Check for permission to display attributes
     try:
         # Try to find permission object for this exercise
