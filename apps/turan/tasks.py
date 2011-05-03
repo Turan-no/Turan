@@ -195,6 +195,53 @@ def match_slopes(se, offset=70):
                     s.save()
 
 @task
+def search_trip_for_possible_segments_matches(exercise, offset=30):
+    ''' For every segment
+            iterate every detail searching for pos matching the start pos
+            then find match for end pos if distance elapsed doesn't exceed segment distance
+                finally save the segment found if start and stop pos found '''
+    Segment = get_model('turan', 'Segment')
+    SegmentDetail = get_model('turan', 'SegmentDetail')
+    details = exercise.get_details().filter(lon__gt=0).filter(lat__gt=0).values('distance','lon','lat')
+    for se in Segment.objects.all():
+        previous_start = 0
+        started_at_distance = 0
+        found_start = 0
+        previous_end = 0
+        found_end = 0
+        for i, d in enumerate(details):
+            if not found_start:
+                start_distance = proj_distance(se.start_lat, se.start_lon, d['lat'], d['lon'])
+                if start_distance < offset:
+                    print i, start_distance
+                    if previous_start:
+                        if start_distance > previous_start:
+                            found_start = i-1
+                            started_at_distance = d['distance']
+                            print "Start of %s at index %s" %(se, found_start)
+                    previous_start = start_distance
+            elif not found_end:
+                end_distance = proj_distance(se.end_lat, se.end_lon, d['lat'], d['lon'])
+                #Check if distance from start is longer than segment plus some, means we didnt' find stop
+                if d['distance']-started_at_distance > (se.distance*1000)+offset*2:
+                    print started_at_distance, d['distance'], se.distance*1000
+                    print "Didn't find end, resetting state"
+                    # reset start
+                    found_start, found_end, previous_start, started_at_distance, previous_end = 0, 0, 0, 0, 0
+                    continue
+                if end_distance < offset:
+                    print i, end_distance
+                    if previous_end:
+                        if end_distance > previous_end:
+                            found_end = i-1
+                            print "End of %s at index %s" %(se, found_end)
+                    previous_end = end_distance
+            elif found_start and found_end:
+                print "______________________ Found Segment %s" %se
+                print "Adding segment detail"
+                found_start, found_end, previous_start, started_at_distance, previous_end = 0, 0, 0, 0, 0
+
+@task
 def create_simplified_gpx(gpx_path, filename):
     cmd = 'gpsbabel -i gpx -f %s -x duplicate,location -x position,distance=1m -x simplify,crosstrack,error=0.005k -o gpx -F %s' % (\
             gpx_path,
@@ -995,8 +1042,8 @@ def detailslice_info(details):
 
     ret['start_lat'] = details[0].lat
     ret['start_lon'] = details[0].lon
-    ret['end_lon'] = details[detailcount-1].lat
-    ret['end_lat'] = details[detailcount-1].lon
+    ret['end_lat'] = details[detailcount-1].lat
+    ret['end_lon'] = details[detailcount-1].lon
     ret['start'] = details[0].distance/1000
     userweight = exercise.user.get_profile().get_weight(exercise.date)
     distance = details[detailcount-1].distance - details[0].distance
