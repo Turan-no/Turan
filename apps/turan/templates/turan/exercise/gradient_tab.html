@@ -14,11 +14,28 @@
             clickable: true,
         }
     };
+    var options2 = {
+        selection: { mode: "x" },
+        grid: { 
+            hoverable: true, 
+            clickable: true,
+            backgroundColor: { colors: ["#eee", "#eee"] },
+       }
 
+    };
+/*
+            markings: [
+         {yaxis: { from: 0.0, to: 6.0 },color: "#842DCE"},
+         {yaxis: { from: 6.0, to: 10.0 },color: "#4AA02C"},
+         {yaxis: { from: 10.0, to: 15.0 },color: "#736AFF"},
+         {yaxis: { from: 15.0, to: 20.0 },color: "#FDD017"},
+         {yaxis: { from: 20.0},color: "#C11B17"},
+        ]
+        */
     var gradientzonedata = [
         {
             color: 3,
-            lines: { fill: 0.6, },
+            lines: { fill: 0.7, },
             data: [
             {% for km, gradient in gradients %}[{{ km }},{{ gradient }}],{% endfor %}
             ]
@@ -27,13 +44,13 @@
         }
     ];
 
-    $.plot($("#gradientzonediv"), gradientzonedata, options);
+    $.plot($("#gradientzonediv"), gradientzonedata, options2);
 
     $("#gradientzonediv").bind("plotselected", function (event, ranges) {            
         plot = $.plot(
             $("#gradientzonediv"), 
             gradientzonedata, 
-            $.extend(true, {}, options, { 
+            $.extend(true, {}, options2, { 
                 xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
             })
         );
@@ -41,7 +58,7 @@
         $("#gradientinfo2").text( "{% trans "Click graph to reset selection" %}");
     });                                                                      
     $("#gradientzonediv").bind("plotclick", function (event, pos, item) {
-        plot = $.plot($("#gradientzonediv"), gradientzonedata, options);
+        plot = $.plot($("#gradientzonediv"), gradientzonedata, options2);
         $("#gradientinfo").text("");
         $("#gradientinfo2").text("");
     });

@@ -207,16 +207,16 @@ def route_detail(request, object_id):
 def segment_detail(request, object_id):
     object = get_object_or_404(Segment, pk=object_id)
     usertimes = {}
-    for slope in sorted(object.get_slopes(), key=lambda x:x.exercise.date):
+    slopes = object.get_slopes().select_related('exercise', 'exercise__route', 'exercise__user__profile', 'segment', 'profile', 'exercise__user')
+    for slope in sorted(slopes, key=lambda x:x.exercise.date):
         if not slope.exercise.user in usertimes:
             usertimes[slope.exercise.user] = ''
         time = slope.duration/60
         usertimes[slope.exercise.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(slope.exercise.date), slope.duration))
 
     done_altitude_profile = False
-    slopecount = object.get_slopes().count()
-    if slopecount:
-        slope = object.get_slopes()[0]
+    if slopes:
+        slope = slopes[0] # Select first detail for details for gradients and altitude profile, TODO: save in db
         trip = slope.exercise
         if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
 
@@ -228,26 +228,18 @@ def segment_detail(request, object_id):
                     if d.distance >= slope.start*1000 and not start:
                         start = i
                     elif start:
-                        #assert False, (d.distance,  slope.start*1000, slope.start*1000+slope.length)
-                        if d.distance > (slope.start*1000+ slope.length):
+                        if d.distance > (slope.start*1000 + slope.length):
                             stop = i
                             break
                     i += 1
-            #assert False, (start, stop)
             #start =  trip.get_details().filter(lon=slope.start_lon).filter(lat=slope.start_lat)[0].id
             #stop =  trip.get_details().filter(lon=slope.end_lon).filter(lat=slope.end_lat)[0].id
-            alt = tripdetail_js(None, trip.id, 'altitude', start=start, stop=stop)
+            #alt = tripdetail_js(None, trip.id, 'altitude', start=start, stop=stop)
+            d_offset = tripdetails[start].distance
+            alt = simplejson.dumps([((d.distance-d_offset)/1000, d.altitude) for d in tripdetails[start:stop]])
             alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
             done_altitude_profile = True
-        gradients, inclinesums = getgradients(tripdetails[start:stop])
-#
-#    except TypeError:
-#        # bug for trips without date
-#        pass
-#    except UnboundLocalError:
-        # no trips found
-#        pass
-        # Todo, maybe calculate and save in db or cache ?
+        gradients, inclinesums = getgradients(tripdetails[start:stop],d_offset=d_offset)
     return render_to_response('turan/segment_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):
@@ -1099,24 +1091,23 @@ def getfreqs(values, val_type, min=0, max=0, val_cutoff=0):
 
     return freqs
 
-def getgradients(values):
+def getgradients(values, d_offset=0):
     ''' Iterate over details, return list with tuples with distances and gradients '''
 
     altitudes = []
     distances = []
     inclinesums = {}
 
-
     for d in values:
         altitudes.append(d.altitude)
         # Distances is used in the graph, so divide by 1000 to get graph xasis in km
         if d.distance:
-            distances.append(d.distance/1000)
+            distances.append((d.distance-d_offset)/1000)
         else:
             distances.append(0)
 
-    # Smooth 10 Wide!
-    altitudes = smoothListGaussian(altitudes, 10)
+    # Smooth 3 Wide!
+    altitudes = smoothListGaussian(altitudes, 3)
 
     gradients = []
     previous_altitude = 0

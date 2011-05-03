@@ -47,7 +47,7 @@
 {% include "turan/tags.html" %}
 
 <hr class="clearleft" />
-{% with object.get_slopes as object_list %}
+{% with slopes as object_list %}
 {% autosort object_list %}
 {% autopaginate object_list %}
 {% if object_list %}
@@ -84,7 +84,7 @@ $(function () {
     <div id="altdiv" style="height: 200px"></div>
 <script id="source" language="javascript" type="text/javascript">
     {% localize off %}
-    var alt = { data: [{{ alt }}], color: 3, lines: { fill: 0.7 } };
+    var alt = { data: {{ alt }}, color: 3, lines: { fill: 0.7 } };
     var options = { yaxes:[{}, { min: 0, max: {{ alt_max }}, }], };
 $.plot($("#altdiv"), [alt], options);
     {% endlocalize%}
