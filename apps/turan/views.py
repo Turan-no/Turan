@@ -1,6 +1,6 @@
 from models import *
 from tasks import smoothListGaussian, calcpower, power_30s_average \
-        , hr2zone, detailslice_info
+        , hr2zone, detailslice_info, search_trip_for_possible_segments_matches
 from itertools import groupby, islice
 from forms import ExerciseForm
 from profiles.models import Profile
@@ -1369,24 +1369,27 @@ def create_object(request, model=None, template_name=None,
 
                 task = new_object.parse()
                 if task:
+                    if request.user.is_authenticated():
+                        request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": model._meta.verbose_name})
                     return HttpResponseRedirect(\
                             reverse('exercise_parse_progress', kwargs = {
                                 'object_id': new_object.id,
                                 'task_id': task.task_id}))
 
 
-            if request.user.is_authenticated():
-                request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": model._meta.verbose_name})
             return redirect(post_save_redirect, new_object)
     else:
         if model == SegmentDetail: # prefill variables
             exercise = request.GET.get('exercise', '')
             start = request.GET.get('start', '')
             stop = request.GET.get('stop', '')
+            segment = request.GET.get('segment', '')
             try:
                 exercise = int(exercise)
                 start = int(start)
                 stop = int(stop)
+                if segment:
+                    segment = int(segment)
             except ValueError:
                 return HttpResponseForbidden('Invalid request')
             exercise = Exercise.objects.get(pk=exercise)
@@ -1413,6 +1416,11 @@ def create_object(request, model=None, template_name=None,
             data['end_lon'] = ret['end_lon']
             data['end_lat'] = ret['end_lat']
             data['power_per_kg'] = ret['power_per_kg']
+            if segment:
+                data['segment'] = Segment.objects.get(pk=segment)
+                new_object = SegmentDetail(**data)
+                new_object.save()
+                return HttpResponseRedirect(new_object.get_absolute_url())
             form = form_class(initial=data)
         else:
             form = form_class()
@@ -1693,6 +1701,7 @@ def internal_server_error(request, template_name='500.html'):
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request, {})))
 
+@login_required
 def exercise_parse(request, object_id):
     ''' View to trigger reparse of a single exercise given exercise id '''
 
@@ -1704,6 +1713,17 @@ def exercise_parse(request, object_id):
                     'object_id': object_id,
                     'task_id': task.task_id}))
 
+@login_required
+def exercise_segment_search(request, object_id):
+    ''' View to display segments found in an exercise and make user able to
+    add to shared segments '''
+
+    exercise = get_object_or_404(Exercise, id=object_id)
+    segments = search_trip_for_possible_segments_matches(exercise)
+
+    return render_to_response('turan/exercise_segments.html', locals(), context_instance=RequestContext(request))
+
+@login_required
 def exercise_parse_progress(request, object_id, task_id):
     ''' View to display progress on parsing and redirect user
     to fully parsed exercised when done '''

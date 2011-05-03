@@ -194,6 +194,32 @@ def match_slopes(se, offset=70):
                     s.segment = se
                     s.save()
 
+
+def slice_to_segmentdetail(exercise, segment, start, stop):
+    SegmentDetail = get_model('turan', 'SegmentDetail')
+    ret = detailslice_info(exercise.get_details().all()[start:stop+1])
+    data = {}
+    data['exercise'] = exercise
+    data['start'] = ret['start']
+    data['length'] = ret['distance']
+    data['ascent'] = int(ret['ascent'])
+    data['grade'] = ret['gradient']
+    data['duration'] = ret['duration']
+    data['speed'] = ret['speed__avg']
+    data['est_power'] = ret['power__avg_est']
+    data['act_power'] = ret['power__avg']
+    data['vam'] = ret['vam']
+    data['avg_hr'] = ret['hr__avg']
+    data['start_lon'] = ret['start_lon']
+    data['start_lat'] = ret['start_lat']
+    data['end_lon'] = ret['end_lon']
+    data['end_lat'] = ret['end_lat']
+    data['power_per_kg'] = ret['power_per_kg']
+    data['segment'] = segment
+    data['comment'] = 'Auto'
+    new_object = SegmentDetail(**data)
+    new_object.save()
+
 @task
 def search_trip_for_possible_segments_matches(exercise, offset=30):
     ''' For every segment
@@ -202,7 +228,10 @@ def search_trip_for_possible_segments_matches(exercise, offset=30):
                 finally save the segment found if start and stop pos found '''
     Segment = get_model('turan', 'Segment')
     SegmentDetail = get_model('turan', 'SegmentDetail')
-    details = exercise.get_details().filter(lon__gt=0).filter(lat__gt=0).values('distance','lon','lat')
+    # Only works for exercises with distance
+    details = exercise.get_details().filter(lon__gt=0).filter(lat__gt=0).filter(distance__gt=0).values('distance','lon','lat')
+    segments = [] #'[(segment, start, stop)...'
+    #old_segmentdetails = exercise.segmentdetail_set.all()
     for se in Segment.objects.all():
         previous_start = 0
         started_at_distance = 0
@@ -233,13 +262,16 @@ def search_trip_for_possible_segments_matches(exercise, offset=30):
                     print i, end_distance
                     if previous_end:
                         if end_distance > previous_end:
-                            found_end = i-1
+                            found_end = i-1 # subtract, indexed used in list slice later
                             print "End of %s at index %s" %(se, found_end)
                     previous_end = end_distance
             elif found_start and found_end:
                 print "______________________ Found Segment %s" %se
-                print "Adding segment detail"
+                # TODO Add dupecheck
+                segments.append((se, found_start, found_end))
+
                 found_start, found_end, previous_start, started_at_distance, previous_end = 0, 0, 0, 0, 0
+    return segments
 
 @task
 def create_simplified_gpx(gpx_path, filename):
