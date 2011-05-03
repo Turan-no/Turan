@@ -833,7 +833,10 @@ class SegmentDetail(models.Model):
     comment = models.TextField(blank=True, null=True)
 
     def get_absolute_url(self):
-        return self.segment.get_absolute_url()
+        if self.segment:
+            return self.segment.get_absolute_url()
+        else:
+            return self.exercise.get_absolute_url()
 
     def save(self, *args, **kwargs):
         ''' Save parent also to populate shit '''
