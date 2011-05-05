@@ -669,7 +669,10 @@ def geojson(request, object_id):
     if not start and not stop:
         gjstr = cache.get(cache_key)
         if gjstr:
-            return HttpResponse(gjstr, mimetype='text/javascript')
+            response = HttpResponse(gjstr, mimetype='text/javascript')
+            response['Content-Encoding'] = 'gzip'
+            response['Content-Length'] = len(gjstr)
+            return response
 
 
     max_hr = Exercise.objects.get(pk=object_id).user.get_profile().max_hr
@@ -733,12 +736,16 @@ def geojson(request, object_id):
     "type": "FeatureCollection",
         "features": ['''
     gjstr = '%s%s]}' % (gjhead, ','.join(filter(lambda x: x, [f.json for f in features])))
+    gjstr = compress_string(gjstr)
 
     # save to cache if no start and stop
     if not start and not stop:
         cache.set(cache_key, gjstr, 86400)
 
-    return HttpResponse(gjstr, mimetype='text/javascript')
+    response = HttpResponse(gjstr, mimetype='text/javascript')
+    response['Content-Encoding'] = 'gzip'
+    response['Content-Length'] = len(gjstr)
+    return response
 
 def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     if start:
