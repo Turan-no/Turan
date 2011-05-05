@@ -10,6 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.template import RequestContext, Context, loader
 from django.contrib.auth.decorators import login_required
+from django.utils.text import compress_string
+
 from django.contrib.auth import logout
 from django import forms
 from django.forms.models import inlineformset_factory
@@ -29,6 +31,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from django.utils.decorators import decorator_from_middleware
+from django.views.decorators.gzip import gzip_page
 from django.utils.datastructures import SortedDict
 from django.middleware.gzip import GZipMiddleware
 
@@ -765,6 +768,7 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
             js += '[%.4f,%s],' % (distance, dval)
     return js
 
+#@profile("json_trip_series")
 def json_trip_series(request, object_id):
     ''' Generate a json file to be retrieved by web browsers and renderend in flot '''
     exercise = get_object_or_404(Exercise, pk=object_id)
@@ -800,9 +804,12 @@ def json_trip_series(request, object_id):
         if exercise.avg_power:
             generate_30s_power = power_30s_average(details)
         d = filldistance(details)
-        js = js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
+        js = compress_string(js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False))
         cache.set(cache_key, js, 86400)
-    return HttpResponse(js, mimetype='text/javascript')
+    response = HttpResponse(js, mimetype='text/javascript')
+    response['Content-Encoding'] = 'gzip'
+    response['Content-Length'] = len(js)
+    return response
 
 def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, use_constraints=True, smooth=0):
     ''' Generate javascript to be used directly in flot code
@@ -1152,7 +1159,7 @@ def getgradients(values, d_offset=0):
 
 def filldistance(values):
     d = 0
-    if values:
+    if values.exists():
         d_check = values[len(values)-1].distance
         if d_check > 0:
             return d_check
@@ -1208,7 +1215,15 @@ def exercise_permission_checks(request, exercise):
 def exercise(request, object_id):
     ''' View for exercise detail '''
 
-    object = get_object_or_404(Exercise, pk=object_id)
+    # Can't be used with select_related so do this manually object = get_object_or_404(Exercise, pk=object_id)
+    try:
+        object = Exercise.objects.select_related('route', 'user', \
+                'exercisepermission', 'hrzonesummary', 'wzonesummary'\
+                'exercise_type', 'slope', 'segmentdetail'
+                )\
+                .get(pk=object_id)
+    except Exercise.DoesNotExist:
+        raise Http404
 
     if not object.user == request.user:  # Allow self
         is_friend = False
@@ -1236,7 +1251,7 @@ def exercise(request, object_id):
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
     smooth = 0
-    if details:
+    if details.exists():
         if filldistance(details): # Only do this if we actually have distance
             # xaxis by distance if we have distance in details unless user requested time !
             req_t = request.GET.get('xaxis', '')
