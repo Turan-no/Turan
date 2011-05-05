@@ -66,7 +66,7 @@
 {% for object in object_list %}
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
     <td><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a></td>
-    <td><span class="smaller">{{object.description}}</span></td>
+    <td>{{object.description}}</td>
     <td>{{ object.distance|floatformat }} {% trans "km" %} </td>
     <td>{{object.ascent}} {% trans "m" %}</td>
     <td>{{object.grade|floatformat}} %</td>
