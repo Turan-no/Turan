@@ -3,7 +3,7 @@ import datetime
 
 class HRMEntry(object):
 
-    def __init__(self, time, hr, speed, cadence, altitude, power):
+    def __init__(self, time, hr, speed, cadence, altitude, power, distance):
         self.time = time
         self.hr = hr
         self.speed = speed
@@ -12,6 +12,7 @@ class HRMEntry(object):
         self.lat = 0 #not supported by hrm shit
         self.lon = 0 #not supported by hrm shit
         self.power = power
+        self.distance = distance
 
 class HRMLap(object):
 
@@ -125,6 +126,10 @@ class HRMParser(object):
                     if speed > self.max_speed:
                         self.max_speed = speed
 
+                    if speed:
+                        self.distance_sum += speed/3.6*self.interval
+                        distance = self.distance_sum
+
                     self.cadence_sum += cadence
                     if cadence > self.max_cadence:
                         self.max_cadence = cadence
@@ -139,7 +144,7 @@ class HRMParser(object):
 
 
                     time = self.time + datetime.timedelta(0, self.interval*i)
-                    self.entries.append(HRMEntry(time, hr, speed, cadence, altitude, power))
+                    self.entries.append(HRMEntry(time, hr, speed, cadence, altitude, power, distance))
                     i += 1
             elif lapstarted:
                 laprow += 1
@@ -210,7 +215,7 @@ class HRMParser(object):
             self.avg_pedaling_cad = self.pedaling_cad/self.pedaling_cad_seconds
         if self.pedaling_power and self.pedaling_power_seconds:
             self.avg_pedaling_power = self.pedaling_power/self.pedaling_power_seconds
-        self.distance_sum = self.interval*len(self.entries) * self.avg_speed/3.6
+        #self.distance_sum = self.interval*len(self.entries) * self.avg_speed/3.6
 
 
 if __name__ == '__main__':
@@ -220,8 +225,8 @@ if __name__ == '__main__':
     h = HRMParser()
     h.parse_uploaded_file(file(sys.argv[1]))
 
-    #for x in h.entries:
-    #    print x.time, x.speed, x.altitude, x.hr, x.cadence
+    for x in h.entries:
+        print x.time, x.speed, x.altitude, x.hr, x.cadence, x.distance
 
     print "avg hr, avg speed, avg cadence"
     print h.avg_hr, h.avg_speed, h.avg_cadence
