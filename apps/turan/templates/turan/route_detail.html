@@ -92,13 +92,7 @@
         $.plot($("#avgspeeddiv"), times, options);
     });
     </script>
-    <h2 style="clear: both">{% trans "Altitude profile" %}</h2>
-    <div id="altdiv" style="height: 200px"></div>
-<script id="source" language="javascript" type="text/javascript">
-    var alt = { data: [{{ alt }}], color: 3, lines: { fill: 0.7 } };
-    var options = { yaxes:[{}, { min: 0, max: {{ alt_max|unlocalize }}, }], };
-$.plot($("#altdiv"), [alt], options);
-</script>
+    {% include "turan/altitude_profile.html" %}
     <form id="route_form">
     <h2>{% trans "Trips on this route" %}</h2>
     <input type="submit" value="{% trans "Compare"%}">
