@@ -67,7 +67,7 @@
                 });
             </script>
         </td>
-        <td>{{ interval.start_time|time:"H:i" }} </td>
+        <td>{{ interval.start_time|time:"H:i" }}, {{interval.start|divide:"1000"}} km </td>
         <td>{{interval.duration|durationformatshort}}</td>
 
         {% if object.avg_speed %}
