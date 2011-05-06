@@ -2,6 +2,42 @@
 var colors = ["rgb(240,240,240)", "rgb(204,204,204)", "rgb(51,102,255)", "rgb(102,204,0)", 
         "rgb(255,153,0)", "rgb(255,0,0)", "rgb(166,0,0)", "rgb(119,0,119)"];
 
+var axisformatters = {
+    speed: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' km/h';
+    },
+    altitude: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' m';
+    },
+    length: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' km';
+    },
+    distance: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' km';
+    },
+    power: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' W';
+    },
+    hr: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' BPM';
+    },
+    temp: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' ℃';
+    },
+    percent: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' %';
+    },
+    time: function(val, axis) {
+        var hours = Math.floor(val / 60);
+        var minutes = val;
+
+        if (hours)
+                return hours + 'h ' + minutes + 'm';
+        return minutes + 'm';
+    }
+
+};
+
 
 /* conver rgb colors to hex, openlayers uses those */
 function colorToHex(color) {

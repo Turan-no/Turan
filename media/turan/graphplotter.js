@@ -10,35 +10,6 @@ var GraphPlotter = {
     max_hr: 200,
     markings: [],
     ranges: {},
-    formatters: {
-            speed: function(val, axis) {
-                return (val).toFixed(axis.tickDecimals) + ' km/h';
-            },
-            altitude: function(val, axis) {
-                return (val).toFixed(axis.tickDecimals) + ' m';
-            },
-            length: function(val, axis) {
-                return (val).toFixed(axis.tickDecimals) + ' km';
-            },
-            power: function(val, axis) {
-                return (val).toFixed(axis.tickDecimals) + ' W';
-            },
-            hr: function(val, axis) {
-                return (val).toFixed(axis.tickDecimals) + ' BPM';
-            },
-            temp: function(val, axis) {
-                return (val).toFixed(axis.tickDecimals) + ' ℃';
-            },
-            time: function(val, axis) {
-                var hours = Math.floor(val / 60);
-                var minutes = val;
-
-                if (hours)
-                        return hours + 'h&nbsp;' + minutes + 'm';
-                return minutes + 'm';
-            }
-
-    },
 
     setRange: function(range) {
         this.ranges = range;
@@ -88,11 +59,11 @@ var GraphPlotter = {
         if (data.length > 0) {
             plot = $.plot($("#tripdiv"), data, {
                 yaxes: [
-                    { tickFormatter: this.formatters['speed'], max: 100},
-                    { position: "right", min: 80, max: this.max_hr, tickFormatter: this.formatters['hr'] }, 
-                    { position: "right", tickFormatter: this.formatters['power']},
-                    { tickFormatter: this.formatters['altitude']} ,
-                    { tickFormatter: this.formatters['temp']},
+                    { tickFormatter: axisformatters['speed'], max: 100},
+                    { position: "right", min: 80, max: this.max_hr, tickFormatter: axisformatters['hr'] }, 
+                    { position: "right", tickFormatter: axisformatters['power']},
+                    { tickFormatter: axisformatters['altitude']} ,
+                    { tickFormatter: axisformatters['temp']},
                     
                     ],
                 xaxis: xaxisattrs,
@@ -197,7 +168,7 @@ var GraphPlotter = {
         var backendUrl = args.backendUrl;
         this.max_hr = args.max_hr;
         this.markings = args.markings;
-        this.xaxisformatter = this.formatters[args.xaxisformatter];
+        this.xaxisformatter = axisformatters[args.xaxisformatter];
         function evaluate(y,threshold) { 
             return y < threshold;
         }
