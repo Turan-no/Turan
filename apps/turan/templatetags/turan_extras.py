@@ -222,7 +222,8 @@ def divide(value, arg):
         return floatformat(float(value) / float(arg))
     except ValueError:
         return 0
-percent.is_safe = False
+    except TypeError:
+        return
 
 @register.filter
 def jstimestamp(value):
