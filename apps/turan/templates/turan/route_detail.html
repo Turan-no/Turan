@@ -61,7 +61,6 @@
 {% include "turan/tags.html" %}
 
 <hr class="clearleft" />
-{% with object.get_trips as object_list %}
 {% autosort object_list %}
 {% autopaginate object_list %}
 {% if object_list %}
@@ -145,7 +144,6 @@
     </script>
 {% paginate %}
 {% endif %}
-{% endwith %}
 <hr>
 {% include "turan/commentform.html" %}
 {% endblock content %}

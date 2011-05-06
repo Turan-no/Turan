@@ -145,7 +145,7 @@ class Route(models.Model):
         ordering = ('-created','name')
 
     def get_trips(self):
-        return self.exercise_set.all().order_by('duration')
+        return self.exercise_set.select_related('route', 'user').order_by('duration')
 
     def get_photos(self):
         ct = ContentType.objects.get_for_model(self)
@@ -649,6 +649,8 @@ class Interval(models.Model):
             if startd:
                 if startd[0].distance:
                     self.start = startd[0].distance
+                else:
+                    self.start = 0
 
         super(Interval, self).save(*args, **kwargs)
 
@@ -656,6 +658,7 @@ class Interval(models.Model):
         seconds = (self.start_time - self.exercise.get_full_start_time()).seconds
         if seconds:
             return seconds/60
+        return 0
 
 class Segment(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))

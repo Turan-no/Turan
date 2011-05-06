@@ -223,7 +223,7 @@ def divide(value, arg):
     except ValueError:
         return 0
     except TypeError:
-        return
+        return 0
 
 @register.filter
 def jstimestamp(value):

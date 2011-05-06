@@ -76,7 +76,7 @@ urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^exercise/(?P<object_id>\d+)', exercise, name='exercise'),
     url(r'^exercise/parse/(?P<object_id>\d+)/(?P<task_id>.*)/?$', exercise_parse_progress, name='exercise_parse_progress'),
     url(r'^exercise/parse/(?P<object_id>\d+)/?$', exercise_parse, name='exercise_parse'),
-    url(r'^exercise/segments/(?P<object_id>\d+)/?$', exercise_segment_search, name='exercise_segment_search'),
+    url(r'^exercise/segments/(?P<object_id>\d+)', exercise_segment_search, name='exercise_segment_search'),
 )
 urlpatterns += patterns('django.views.generic.simple',
     url(r'^about/', 'direct_to_template', {'template': 'turan/about.html'}, name='turan_about'),
