@@ -1,5 +1,6 @@
 {% extends "turan/base.html" %}
 {% load i18n %}
+{% load turan_extras %}
 
 {% block content %}
 {% for segment in segments %}
@@ -9,7 +10,7 @@
 <div id="result">
 {% endif %}
 <li>
-{{ segment.0 }}, <a href="{% url segmentdetail_create %}?exercise={{exercise.id}}&segment={{segment.0.id}}&start={{segment.1}}&stop={{segment.2}}">{% trans "Add this segment" %}</a>
+{{ segment.0 }}, Start at: {{segment.3|divide:"1000"}}, Segment distance: {{segment.4|floatformat}} m <a href="{% url segmentdetail_create %}?exercise={{exercise.id}}&segment={{segment.0.id}}&start={{segment.1}}&stop={{segment.2}}">{% trans "Add this segment" %}</a>
 
 </li>
 

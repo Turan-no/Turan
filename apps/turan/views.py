@@ -181,9 +181,10 @@ def events(request, group_slug=None, bridge=None, username=None, latitude=None, 
 def route_detail(request, object_id):
     object = get_object_or_404(Route, pk=object_id)
     usertimes = {}
+    object_list = object.get_trips()
     try:
         done_altitude_profile = False
-        for trip in sorted(object.get_trips(), key=lambda x:x.date):
+        for trip in sorted(object_list, key=lambda x:x.date):
             if not trip.user in usertimes:
                 usertimes[trip.user] = ''
             try:
@@ -193,7 +194,7 @@ def route_detail(request, object_id):
             except AttributeError:
                 pass # stupid decimal value in trip duration!
 
-            if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
+            if trip.avg_speed and trip.get_details().exists() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
                                                              # and trip with details
                 alt = tripdetail_js(None, trip.id, 'altitude')
                 alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
@@ -758,7 +759,7 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     x = 0
     distance = 0
     previous_time = False
-    js = ''
+    js = []
     for i, d in enumerate(qs.all().values('time', 'speed', val)):
         if start and i < start:
             continue
@@ -772,8 +773,8 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
         # time_xaxis = x += float(time.seconds)/60
         dval = d[val]
         if dval > 0: # skip zero values (makes prettier graph)
-            js += '[%.4f,%s],' % (distance, dval)
-    return js
+            js.append((distance, dval))
+    return simplejson.dumps(js)
 
 #@profile("json_trip_series")
 def json_trip_series(request, object_id):
