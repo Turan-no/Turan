@@ -60,8 +60,9 @@
             "yaxis": 5
             },
         {% endif %}
-        {% if index %}
-        {% autoescape off %}
-        "index": [ {{ index }} ]
-        {% endautoescape %}
+        {% if lon%}
+        "lon":  {{ lon}},
+        {% endif %}
+        {% if lat%}
+        "lat":  {{ lat}},
         {% endif %}

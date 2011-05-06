@@ -835,8 +835,9 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
             'cadence': [],
             'hr': [],
             'temp': [],
+            'lon': [],
+            'lat': [],
         }
-
     x = 0
     previous_time = False
 
@@ -919,22 +920,28 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
                 ### Export every single item to graph, this because indexes are used in zooming, etc
                 if dval == None:
                     dval = 0
-                js_strings[val].append((x, dval))
+                if val in ('lon', 'lat'): # No distance needed for these, uses indexes
+                    js_strings[val].append(dval)
+                else:
+                    js_strings[val].append((x, dval))
             except AttributeError: # not all formats support all values
                 pass
+
 
     # Convert lists into strings
     for val in js_strings.keys():
         thevals = js_strings[val]
         if smooth:
-            vals = js_strings[val]
-            dists = islice([d[0] for d in vals], None,None, smooth)
-            vals = [v[1] for v in vals]
-            thevals = [sum(vals[i*smooth:(i+1)*smooth])/smooth for i in xrange(len(vals)/smooth)]
-            thevals = zip(dists, thevals)
+            if val in ('lon', 'lat'): # No Distance needed for these
+                thevals = [sum(thevals[i*smooth:(i+1)*smooth])/smooth for i in xrange(len(thevals)/smooth)]
+            else:
+                #if not dists: # Only do this once
+                dists = islice([d[0] for d in thevals], None,None, smooth)
+                vals = [v[1] for v in thevals]
+                thevals = [sum(vals[i*smooth:(i+1)*smooth])/smooth for i in xrange(len(vals)/smooth)]
+                thevals = zip(dists, thevals)
         if len(thevals):
             js_strings[val] =  simplejson.dumps(thevals, separators=(',',':'))
-#''.join(js_strings[val]).rstrip(',')
 
     js_strings['use_constraints'] = use_constraints
 
@@ -1279,15 +1286,14 @@ def exercise(request, object_id):
             slopes = sorted(slopes, key=lambda x: x.start)
 
             # TODO: maybe put this in json details for cache etc
-            lonlats = []
-            for d in details:
-                if d.lon == None:
-                    d.lon = 0.0
-                if d.lat == None:
-                    d.lat = 0.0
-                lonlats.append((d.lon, d.lat))
+            #lonlats = []
+            #for d in details:
+            #    if d.lon == None:
+            #        d.lon = 0.0
+            #    if d.lat == None:
+            #        d.lat = 0.0
+            #    lonlats.append((d.lon, d.lat))
             #    [(d.lon, d.lat) for d in details if d.lon and d.lat])
-            lonlats = simplejson.dumps(lonlats)
             # Todo, maybe calculate and save in db or cache ?
             gradients, inclinesums = getgradients(details)
         intervals = object.interval_set.select_related().all()
