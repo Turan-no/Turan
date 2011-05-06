@@ -37,12 +37,12 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 CACHE_MIDDLEWARE_KEY_PREFIX = 'turan'
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/var/tmp/django_cache',
-        },
-    'memcache': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
+        },
+    'file': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
         },
 }
 
