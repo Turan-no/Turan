@@ -46,7 +46,7 @@ CACHES = {
         },
 }
 
-COMPRESS_CACHE_BACKEND = 'memcache'
+COMPRESS_CACHE_BACKEND = 'default'
 #COMPRESS = True
 COMPRESS_ROOT = os.path.join(PROJECT_ROOT, "site_media")
 
