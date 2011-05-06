@@ -136,16 +136,18 @@ var Mapper = {
             });
             this.map.addLayer(this.vectors);
         }
-        if (typeof(route_coordinates) != "undefined") {
-            for (var i = 0; i < route_coordinates.length; i++) {
-                var p = route_coordinates[i];
-                route_points.push(new OpenLayers.Geometry.Point(p[0], p[1]));
-            
-            }
-        }
         
         this.map.render("map");
         return this.map;
+    /*pushPoints: function(poslist) {
+        if (typeof(poslist) != "undefined") {
+            for (var i = 0; i < poslist.length; i++) {
+                var p = poslist[i];
+                this.route_points.push(new OpenLayers.Geometry.Point(p[0], p[1]));
+            
+            }
+    },
+    */
     },
     deleteMarkers: function() {
         var i=0;

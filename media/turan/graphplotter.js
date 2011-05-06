@@ -52,7 +52,8 @@ var GraphPlotter = {
             if (key && that.datasets[key]) {
                 if (key == 'hr')
                     that.datasets[key]['constraints'] = [that.constraint0, that.constraint1, that.constraint2, that.constraint3, that.constraint4, that.constraint5];
-                data.push(that.datasets[key]);
+                if (key != 'lon' && key != 'lat') // lon and lat doesn't go in the graph
+                    data.push(that.datasets[key]);
             }
         });
 
@@ -216,9 +217,12 @@ var GraphPlotter = {
             if (key == 'power') 
                 checked = ''
 
-            that.choiceContainer.append('<input type="checkbox" name="' + key +
-                '" ' + checked + ' id="chk_' + key + '"><label for="chk_' + key + 
-                '">' + val.label + '</label></input>');
+            if (key != 'lon' && key != 'lat') {
+
+                that.choiceContainer.append('<input type="checkbox" name="' + key +
+                    '" ' + checked + ' id="chk_' + key + '"><label for="chk_' + key + 
+                    '">' + val.label + '</label></input>');
+            }
         });
         $("#reset_zoom").bind("click", function(evt) {
             evt.preventDefault();
@@ -257,10 +261,12 @@ var GraphPlotter = {
             if (item) {
                 // Move marker to current pos
                 if (typeof(Mapper) != "undefined") {
-                    if (route_points.length >= item.dataIndex) {
+                    var route_lon = that.datasets['lon'];
+                    var route_lat = that.datasets['lat'];
+                    if (route_lon.length >= item.dataIndex) {
 
-                        var x = route_points[item.dataIndex].x;
-                        var y = route_points[item.dataIndex].y;
+                        var x = route_lon[item.dataIndex];
+                        var y = route_lat[item.dataIndex];
                         Mapper.updatePosMarker(x, y);
                     }
                 }

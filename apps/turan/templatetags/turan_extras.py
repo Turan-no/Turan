@@ -7,6 +7,7 @@ from django.utils.safestring import mark_safe
 from django.template.defaultfilters import floatformat
 from django_sorting.templatetags.sorting_tags import SortAnchorNode
 from time import mktime
+import simplejson as json
 import re
 
 register = template.Library()
@@ -258,3 +259,7 @@ def profile_hover(obj):
 @register.filter
 def silk_icon(name):
     return settings.MEDIA_URL + 'pinax/img/silk/icons/%s.png' %name
+
+@register.filter
+def as_json(obj):
+    return json.dumps(obj)

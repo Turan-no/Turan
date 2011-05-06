@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load l10n %}
+{% load turan_extras %}
 <a href="#" title="{% trans "Zoom out" %}" id="reset_zoom" >
     <img style="float: right" src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_out.png" /> 
 </a>
@@ -53,14 +54,16 @@
     <hr class="clear" />
 </div>
 <script type="text/javascript">
-    {% localize off %}
+{% comment %}
     {% if lonlats %}
-    var route_coordinates = {{lonlats}};
+    var route_coordinates = {{lonlats|as_json}};
     {% else %}
     var route_coordinates = [];
     {% endif %}
 
     var route_points = [];
+{% endcomment %}
+{% localize off %}
 
     var markings = [];
 
