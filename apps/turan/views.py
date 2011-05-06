@@ -811,7 +811,9 @@ def json_trip_series(request, object_id):
         details = exercise.exercisedetail_set.all()
         if exercise.avg_power:
             generate_30s_power = power_30s_average(details)
-        d = filldistance(details)
+        has_distance = filldistance(details)
+        if not has_distance:
+            time_xaxis = True
         js = compress_string(js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False))
         cache.set(cache_key, js, 86400)
     response = HttpResponse(js, mimetype='text/javascript')
@@ -827,6 +829,8 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
     if not details:
         return
 
+
+
     # The JS arrays
     js_strings = {
             'speed': [],
@@ -839,8 +843,6 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
             'lon': [],
             'lat': [],
         }
-    x = 0
-    previous_time = False
 
     exercise = details[0].exercise
     # User always has permission for their own shit
@@ -872,12 +874,12 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
             # No permissionojbect found
             pass
 
-# Check if we should export altitude to graph
+    # Check if we should export altitude to graph
     has_altitude = details[0].exercise.exercise_type.altitude
     if not has_altitude:
         del js_strings['altitude']
 
-# Check if we should export temperature to graph
+    # Check if we should export temperature to graph
     has_temperature = False
     if exercise.max_temperature:
         has_temperature = True
@@ -892,32 +894,27 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
         del js_strings['cadence']
 
 
+    x = 0
+    previous_time = False
 
     for i, d in enumerate(details):
         if start and start < i:
             continue
         if stop and i > stop:
             break
-        if not previous_time:
+        if not previous_time: # For first value
             previous_time = d.time
         time = d.time - previous_time
         previous_time = d.time
-        if not time_xaxis:
-            #if d.speed != None:
+        if time_xaxis:
+            x += float(time.seconds)/60
+        else:
             if d.distance:
                 x = d.distance/1000
-            #else:
-            #    x = += ((d.speed/3.6) * time.seconds)/1000
-        else:
-            x += float(time.seconds)/60
 
         for val in js_strings.keys():
             try:
                 dval = getattr(d, val)
-                #if dval != 0: # skip zero values (makes prettier graph)
-                #    if dval != None:
-                #
-
                 ### Export every single item to graph, this because indexes are used in zooming, etc
                 if dval == None:
                     dval = 0
@@ -927,7 +924,6 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
                     js_strings[val].append((x, dval))
             except AttributeError: # not all formats support all values
                 pass
-
 
     # Convert lists into strings
     for val in js_strings.keys():
@@ -951,15 +947,7 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
     js = t.render(c)
     # Remove last comma for nazi json parsing
     js = js.rstrip(', \n') + '}'
-
     return js
-
-#def json_tripdetail(request, event_type, object_id, val, start=False, stop=False):
-
-    #response = HttpResponse()
-    #serializers.serialize('json', qs, fields=('id', val), indent=4, stream=response)
-#    js = tripdetail_js(event_type, object_id, val, start, stop)
-#    return HttpResponse(js)
 
 def getzones_with_legend(exercise):
 
