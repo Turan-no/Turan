@@ -26,7 +26,11 @@
 {% endblock %}
 {% block content %}
 
-<div style="width:500px; height:500px; float: right;" id="map"></div>
+{% if object.gpx_file %}
+<div class="mapcontainer"><div class="map drop-shadow raised" id="map"></div>
+    <a href="{{MEDIA_URL}}turan/{{ object.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
+</div>
+{% endif %}
 <h1>
     {{ object.name }}
 </h1>
