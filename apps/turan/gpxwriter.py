@@ -26,6 +26,7 @@ xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/
 
     def __init__(self, objects, anon_time=True):
 
+        self.points = 0
         self.anon_time = anon_time
 
 
@@ -33,6 +34,7 @@ xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/
             if not lon or not lat:
                 # Some devices (Garmin!) likes to save 0-points. Skip those.
                 return ''
+            self.points += 1
             xmlp = '<trkpt lat="%s" lon="%s">\n' %(lat, lon)
             xmlp+= ' <ele>%.1f</ele>\n' %alt
             timestring = '0001-01-01T00:00:00Z'
