@@ -9,6 +9,7 @@ var GraphPlotter = {
     backendUrl: null,
     max_hr: 200,
     markings: [],
+    ranges: {},
     formatters: {
             speed: function(val, axis) {
                 return (val).toFixed(axis.tickDecimals) + ' km/h';
@@ -39,7 +40,10 @@ var GraphPlotter = {
 
     },
 
-    plotAccordingToChoices: function(ranges) {
+    setRange: function(range) {
+        this.ranges = range;
+    },
+    plot: function() {
         data = [];
         var that = this;
         var minIndex = null;
@@ -50,10 +54,9 @@ var GraphPlotter = {
             tickDecimals: 0,
             tickFormatter: this.xaxisformatter
         };
-        if (ranges.xaxis != undefined) {
-            var xaxe = plot.getXAxes()[0];
-            min = ranges.xaxis.from;
-            max = ranges.xaxis.to;
+        if (this.ranges.xaxis != undefined) {
+            min = this.ranges.xaxis.from;
+            max = this.ranges.xaxis.to;
             xaxisattrs.min = min;
             xaxisattrs.max = max;
 
@@ -250,7 +253,8 @@ var GraphPlotter = {
             evt.preventDefault();
             $("#scrollhacks").css("overflow", "hidden");
             $("#tripdiv").width( $("#tripdiv").width(980));
-            that.plotAccordingToChoices({}); 
+            that.setRange({});
+            that.plot(); 
         });
         $("#enlarge").bind("click", function(evt) {
             evt.preventDefault();
@@ -260,7 +264,7 @@ var GraphPlotter = {
         //$("#segment_add").bind("click", function(evt) {
         //});
         this.choiceContainer.find("input").bind("change", function(evt) {
-                that.plotAccordingToChoices({}); 
+                that.plot(); 
         });
         $('.legendColorBox > div').each(function(i){
             $(this).clone().prependTo(that.choiceContainer.find("li").eq(i));
@@ -318,7 +322,8 @@ var GraphPlotter = {
 
 
         $("#tripdiv").bind("plotselected", function (event, ranges) {
-            that.plotAccordingToChoices(ranges);
+            that.setRange(ranges);
+            that.plot();
         });
     }
 };
