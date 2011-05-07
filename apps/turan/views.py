@@ -38,9 +38,8 @@ from django.middleware.gzip import GZipMiddleware
 from django.core.files.base import ContentFile
 from turan.models import Route
 from turan.middleware import Http403
-from urllib2 import urlopen
 from tempfile import NamedTemporaryFile
-
+import urllib2
 
 from BeautifulSoup import BeautifulSoup
 
@@ -1587,7 +1586,7 @@ def import_data(request):
 
                 if id > 0:
                     route = Route()
-                    content = ContentFile(urlopen(url).read())
+                    content = ContentFile(urllib2.urlopen(url).read())
 
                     route.gpx_file.save("gpx/sporty_" + id + ".gpx", content)
                     form.save()
@@ -1601,19 +1600,17 @@ def import_data(request):
                 base_url = "http://connect.garmin.com"
                 id = url.split("/")[-1].rstrip("/")
 
-                tripdata = urlopen(url).read()
+                tripdata = urllib2.urlopen(url).read()
                 tripsoup = BeautifulSoup(tripdata, convertEntities=BeautifulSoup.HTML_ENTITIES)
-
-                elem = tripsoup.find(id="actionGpx")
-                if elem:
-                    gpx_url = elem['href']
-
-                elem = tripsoup.find(id="actionTcx")
-                if elem:
-                    tcx_url = elem['href']
+                headers = {'User-agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
+                # Lets hope these ones work for a while
+                gpx_url = "/proxy/activity-service-1.1/gpx/activity/%s?full=true" % ( id )
+                # Website used 1.0 for tcx and 1.1 for gpx when this was written
+                # although 1.1 also seems to work for tcx
+                tcx_url = "/proxy/activity-service-1.0/tcx/activity/%s?full=true" % ( id )
 
                 route_name = tripsoup.find(id="activityName")
-                if route and route_name.string:
+                if route_name and route_name.string:
                     route_name = route_name.string.strip()
                 else:
                     route_name = "Unnamed"
@@ -1628,13 +1625,15 @@ def import_data(request):
 
                 if gpx_url:
                     route = Route()
-                    content = ContentFile(urlopen(base_url + gpx_url).read())
+                    req = urllib2.Request(base_url + gpx_url, None, headers)
+                    content = ContentFile(urllib2.urlopen(req).read())
                     route.gpx_file.save("gpx/garmin_connect_" + id + ".gpx", content)
                     route.name = route_name
                     route.save()
 
                 if tcx_url:
-                    content = ContentFile(urlopen(base_url + tcx_url).read())
+                    req = urllib2.Request(base_url + gpx_url, None, headers)
+                    content = ContentFile(urllib2.urlopen(req).read())
                     exercise_filename = 'sensor/garmin_connect_' + id + '.tcx'
 
                     exercise = Exercise()
