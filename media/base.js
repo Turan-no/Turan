@@ -34,8 +34,31 @@ var axisformatters = {
         if (hours)
                 return hours + 'h ' + minutes + 'm';
         return minutes + 'm';
-    }
+    },
+    duration: function(val, axis) {
+        var days    = parseInt((val / (60*60*24)));
+        var hours   = parseInt((val % (60*60*24)) / (60*60));
+        var minutes = parseInt((val % (60*60)) / (60));
 
+        var result = [];
+
+        if (days > 0) {
+            result.push(days + "d");
+        }
+        if (hours > 0) {
+            result.push(hours + "h");
+        }
+        if (minutes > 0) {
+            result.push(minutes + "m");
+        }
+        if (result.length == 0) {
+            return "0m" 
+        }
+        if (result.length == 1) {
+            return result[0];
+        }
+        return result.slice(0, result.length-1).join(", ") + " " + result[result.length-1];
+    }
 };
 
 
@@ -54,32 +77,21 @@ function colorToHex(color) {
     return digits[1] + '#' + rgb.toString(16);
 };
 
-function durationFormatter(time, axis) {
-    //var time = date_object.getTime();
-
-    var days    = parseInt((time / (60*60*24)));
-    var hours   = parseInt((time % (60*60*24)) / (60*60));
-    var minutes = parseInt((time % (60*60)) / (60));
-
-    var result = [];
-
-    if (days > 0) {
-        result.push(days + "d");
-    }
-    if (hours > 0) {
-        result.push(hours + "h");
-    }
-    if (minutes > 0) {
-        result.push(minutes + "m");
-    }
-    if (result.length == 0) {
-        return "0 m" 
-    }
-    if (result.length == 1) {
-        return result[0];
-    }
-    return result.slice(0, result.length-1).join(", ") + " " + result[result.length-1];
+function heightFormatterKm(val, axis) {
+    return val + " km";
 }
+
+function heightFormatter(val, axis) {
+    if (val >= 1000)
+        return val + " km";
+    else 
+        return val + " m";
+}
+
+function speedFormatterKmh(val, axis) {
+    return val + " km/h";
+}
+
 function choose (set) {
     return set[Math.floor(Math.random() * set.length)];
 }

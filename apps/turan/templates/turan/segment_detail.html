@@ -67,7 +67,6 @@ $(function () {
             {
                 label: "{{user}}",
                 bars: { show: true },
-                lines: { show: true },
                 data: [{{series}}],
                 color: {{ forloop.counter }}
             },
@@ -76,7 +75,7 @@ $(function () {
     ];
     var options = { 
         xaxis: { mode: "time", timeformat: "%y/%m/%d" }, 
-        yaxis: { tickFormatter: durationFormatter  },
+        yaxis: { tickFormatter: axisformatters.duration },
         legend: {
             position: "sw",
             noColumns: 0,
