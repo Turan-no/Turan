@@ -76,22 +76,6 @@ function colorToHex(color) {
     var rgb = blue | (green << 8) | (red << 16);
     return digits[1] + '#' + rgb.toString(16);
 };
-
-function heightFormatterKm(val, axis) {
-    return val + " km";
-}
-
-function heightFormatter(val, axis) {
-    if (val >= 1000)
-        return val + " km";
-    else 
-        return val + " m";
-}
-
-function speedFormatterKmh(val, axis) {
-    return val + " km/h";
-}
-
 function choose (set) {
     return set[Math.floor(Math.random() * set.length)];
 }
