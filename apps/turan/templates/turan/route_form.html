@@ -7,12 +7,16 @@
 {% trans "Routes" %}
 {% endblock %}
 {% block content %}
+{% if not object %}
 <h1>{% trans "Create new route" %}</h1>
+{% else %}
+<h1>{% trans "Update route" %}</h1>
+{% endif %}
 <form class="uniForm" enctype="multipart/form-data" method="post">
 {{ form|as_uni_form}}
 {% comment %}
 <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
 {% endcomment %}
-<input type="submit" value="{% trans "Submit" %}" />
+<input type="submit" value="{% trans "Save route" %}" />
 </form>
 {% endblock content %}
