@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8
 from django.db import models
 
 from django.utils.translation import ugettext_lazy as _
@@ -347,13 +349,14 @@ class Exercise(models.Model):
     def save(self, *args, **kwargs):
         super(Exercise, self).save(*args, **kwargs)
         if self.sensor_file:
-            if not self.route and (str(self.exercise_type) == "Cycling" or str(self.exercise_type) == "Running" or str(self.exercise_type) == "Hike"):
+            if not self.route and str(self.exercise_type) not in ("Puls", "Spinning",  "Rollers", 'Svømming', 'Volleyball', 'Basketball', 'Elliptical'):
                 r = Route()
                 r.name = str(self.user) + " " + datetime.now().strftime('%d%m%y')
                 r.description = AUTOROUTE_DESCRIPTION
                 r.single_serving = True
                 r.save()
                 self.route = r
+                r.save() # Double save, think maybe geo_title needs this, FIXME, bad code
         # set avg_speed if distance and duration is given
         if self.route and self.route.distance and self.duration and not self.avg_speed:
             self.avg_speed = float(self.route.distance)/(float(self.duration.seconds)/60/60)
