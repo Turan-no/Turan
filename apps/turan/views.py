@@ -1604,17 +1604,22 @@ def import_data(request):
                 tripdata = urlopen(url).read()
                 tripsoup = BeautifulSoup(tripdata, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
-                gpx_url = tripsoup.find(id="actionGpx")['href']
-                tcx_url = tripsoup.find(id="actionTcx")['href']
+                elem = tripsoup.find(id="actionGpx")
+                if elem:
+                    gpx_url = elem['href']
+
+                elem = tripsoup.find(id="actionTcx")
+                if elem:
+                    tcx_url = elem['href']
 
                 route_name = tripsoup.find(id="activityName")
-                if route_name.string:
+                if route and route_name.string:
                     route_name = route_name.string.strip()
                 else:
                     route_name = "Unnamed"
 
                 exercise_description = tripsoup.find(id="discriptionValue")
-                if exercise_description.string:
+                if exercise_description and exercise_description.string:
                     exercise_description = exercise_description.string.strip()
                 else:
                     exercise_description = None
