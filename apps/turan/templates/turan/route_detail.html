@@ -68,32 +68,32 @@
     <div id="avgspeeddiv" style="width:420px;height:200px"></div>
     <script id="source" language="javascript" type="text/javascript">
     $(function () {
-
-            var times = [
-            {% for user, series in usertimes.items %}
-            {% if series %}
-                {
-                    label: "{{user}}",
-                    data: [{{series|unlocalize}}],
-                    color: {{ forloop.counter }}
-                },
-            {% endif %}
-            {% endfor %}
-    ];
-    var options = { 
-        xaxis: { mode: "time", timeformat: "%y/%m/%d" }, 
-        yaxis: { min: 0, },
-        legend: {
-            position: "sw",
-            noColumns: 0,
+        var times = [
+        {% for user, series in usertimes.items %}
+        {% if series %}
+            {
+                label: "{{user}}",
+                data: [{{series|unlocalize}}],
+                color: {{ forloop.counter }}
             },
-        }
-        $.plot($("#avgspeeddiv"), times, options);
-    });
+        {% endif %}
+        {% endfor %}
+        ];
+        var options = { 
+            xaxis: { mode: "time", timeformat: "%y/%m/%d" }, 
+            yaxis: { min: 0, tickFormatter: axisformatters.speed },
+            legend: {
+                position: "sw",
+                noColumns: 0,
+                },
+            }
+            $.plot($("#avgspeeddiv"), times, options);
+        });
     </script>
     {% include "turan/altitude_profile.html" %}
     <form id="route_form">
     <h2>{% trans "Trips on this route" %}</h2>
+    <form id="route_form">
     <input type="submit" value="{% trans "Compare"%}">
     <table class="fullsize">
         <tr>

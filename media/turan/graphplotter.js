@@ -60,7 +60,7 @@ var GraphPlotter = {
         if (data.length > 0) {
             plot = $.plot($("#tripdiv"), data, {
                 yaxes: [
-                    { tickFormatter: axisformatters['speed'], max: 100},
+                    { tickFormatter: axisformatters['speed'] },
                     { position: "right", min: 80, max: this.max_hr, tickFormatter: axisformatters['hr'] }, 
                     { position: "right", tickFormatter: axisformatters['power']},
                     { tickFormatter: axisformatters['altitude']} ,

@@ -59,7 +59,7 @@
 {% include "turan/tags.html" %}
 <hr class="clear" />
 {% block graph %}
-{% ifnotequal object.exercisedetail_set.count 0 %}
+{% if details %}
 <div id="tabs">
     <!-- Tab selectors -->
     <ul>
@@ -216,9 +216,8 @@
 
 
 </script>
-{% endifnotequal %}
-{% ifequal object.exercisedetail_set.count 0 %}
+{% else %}
 {% include "turan/commentform.html" %}
-{% endifequal %}
+{% endif %}
 {% endblock %}
 {% endblock content %}
