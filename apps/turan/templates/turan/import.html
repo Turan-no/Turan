@@ -1,12 +1,11 @@
 {% extends "turan/base.html" %}
 {% load i18n %}
+{% load uni_form_tags %}
 {{ block.super }}
 {% block content %}
-{% if form.errors %}
-<h4>Feil</h4>
-{{ form.errors }}
-{% endif %}
 <h2>{% trans "Import exercise from external site" %}</h2>
+<p>{% trans "Note: You can also upload file .tcx or .fit file directly from Garmin device"%}</p>
+<hr>
 <p>{% trans "Currently supported sites" %}:</p>
 <ul>
     <li>
@@ -17,10 +16,8 @@
     </li>
 </ul>
 <h3>Step 1</h3>
-<form action="" method="post">
-    <table class="fullsize">
-    {{ form.as_table }}
-    </table>
-    <input type="submit" value="Garmin-import is currently broken. You must upload the .tcx manually" />
+<form class="uniForm" action="" method="post">
+    {{ form|as_uni_form }}
+    <input type="submit" value="{% trans "Import exercise"%}" />
 </form>
 {% endblock %}
