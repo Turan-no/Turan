@@ -1656,7 +1656,7 @@ def import_data(request):
                     route.save()
 
                 if tcx_url:
-                    req = urllib2.Request(gpx_url, None, headers)
+                    req = urllib2.Request(tcx_url, None, headers)
                     content = ContentFile(urllib2.urlopen(req).read())
                     exercise_filename = 'sensor/garmin_connect_' + id + '.tcx'
 
