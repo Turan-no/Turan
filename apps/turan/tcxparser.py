@@ -1,6 +1,5 @@
 #!/usr/bin/python
 from xml.etree import ElementTree
-from django.http import HttpResponse
 import datetime
 import pyproj
 from math import hypot
