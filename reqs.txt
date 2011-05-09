@@ -83,3 +83,12 @@ vobject==0.8.1c
 wadofstuff-django-serializers==1.0.0
 wsgiref==0.1.2
 ybrowserauth==1.2
+MySQL-python
+PIL
+pyproj
+python-memcached
+#numpy
+gdata
+django-wikiapp
+docutils
+django-kombu
