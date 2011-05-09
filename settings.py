@@ -257,6 +257,7 @@ INSTALLED_APPS = (
    # 'topics',
     'groups',
 
+#    'djkombu',
     'djcelery',
     'django.contrib.admin',
     'wakawaka',
@@ -266,7 +267,7 @@ INSTALLED_APPS = (
 
 )
 
-GPX_STORAGE = '/home/turan.lart.no/pinax-env/turansite/site_media/turan'
+GPX_STORAGE = '/home/turan.no/turansite/site_media/turan'
 #DEFAULT_FILE_STORAGE = GPX_STORAGE
 
 
@@ -349,6 +350,7 @@ import djcelery
 djcelery.setup_loader()
 
 BROKER_HOST = "localhost"
+#BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 BROKER_PORT = 5672
 BROKER_USER = "turan"
 BROKER_PASSWORD = "tur4n"
