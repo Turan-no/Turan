@@ -27,16 +27,21 @@
     <div style="clear: left"></div>
 
     <ul class="iconlist">
+        {% comment %}
+        Tor: Isn't displaying picture enough?
         <li class="person">
             <span class="label">{% trans "Exerciser" %}:</span> 
             <a href="{{ object.user.get_profile.get_absolute_url }}">
                 {{ object.user }}
             </a> 
         </li>
+        {% endcomment %}
 
         {% if object.route %}
         <li class="route">
-            <span class="label">{% trans "Route" %}:</span>
+            <a href="{{ object.route.get_absolute_url }}">
+            <span class="label">{% trans "Route" %}</span>
+            </a>
             {% ifequal object.route.single_serving 1 %}
             {% ifequal object.user request.user %}
             <a href="{% url route_update object.route.id %}">
@@ -46,7 +51,6 @@
             {% else %}
             {% endifequal %}
             {% else %}
-            <a href="{{ object.route.get_absolute_url }}">{{ object.route }}</a>
             {% endifequal %}
             {% endif %}
             {% with object.route as object %}

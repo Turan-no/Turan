@@ -8,7 +8,7 @@
 {% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
-{% trans "Segment" %} : {{object}} {% if object.distance %} {{ object.distance|floatformat }} km {% endif %}{% if object.ascent %} {{ object.ascent|floatformat }} asc m {% endif %}
+{% trans "Segment" %} : {{object}} {% if object.distance %} {{ object.distance|floatformat }} km {% endif %}{% if object.ascent %} {{ object.ascent|floatformat }} asc m {% endif %} {{ object.grade|floatformat }} %
 {% endblock %}
 {% block searchenginemeta %}
 <meta name="description" content="{{object.description|truncatewords:20|escape}}" />
