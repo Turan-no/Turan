@@ -76,5 +76,10 @@
 {%endfor %}
 </table>
 {% paginate %}
+<hr>
+<p>
+<a href="{% url segment_create %}">{% trans "Create new segment" %}</a>
+</p>
+<hr>
 {% endblock content %}
 
