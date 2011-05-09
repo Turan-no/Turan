@@ -1,4 +1,4 @@
-from calendar import LocaleHTMLCalendar
+from calendar import LocaleHTMLCalendar, HTMLCalendar
 from datetime import date, timedelta
 from itertools import groupby
 from django.utils.translation import ugettext_lazy as _
@@ -6,7 +6,7 @@ from django.utils.translation import ugettext
 from django.utils.html import conditional_escape as esc
 from turan.templatetags.turan_extras import exercise_mouseover
 
-class WorkoutCalendar(LocaleHTMLCalendar):
+class WorkoutCalendar(HTMLCalendar):
     sums = {
                 'kcal_sum': 0,
                 'distance_sum': 0,
@@ -14,7 +14,8 @@ class WorkoutCalendar(LocaleHTMLCalendar):
                 }
 
     def __init__(self, workouts, locale):
-        super(WorkoutCalendar, self).__init__(locale=locale)
+        #super(WorkoutCalendar, self).__init__(locale=locale)
+        super(WorkoutCalendar, self).__init__()
         self.current_week = 0
         self.workouts = self.group_by_day(workouts)
         self.workouts_by_week = self.group_by_week(workouts)
@@ -29,7 +30,7 @@ class WorkoutCalendar(LocaleHTMLCalendar):
 
         sums = ugettext('Distance: %(distance_sum).1f km, Duration: %(duration_sum)s, kcal: %(kcal_sum)s' %sums)
 
-        return _('Month sums') + ': %s' %sums
+        return unicode(_('Month sums') + ': %s' %sums)
 
     def formatday(self, day, weekday):
         # Day outside month are 0
@@ -72,7 +73,7 @@ class WorkoutCalendar(LocaleHTMLCalendar):
                 dayhtml = '<div class="day">%d</div>' %day
                 if day == 0:
                     dayhtml = ''
-                return self.day_cell(cssclass, '%s %s' % (dayhtml, ''.join(body)))
+                return unicode(self.day_cell(cssclass, '%s %s' % (dayhtml, ''.join(body))))
         return self.day_cell('noday', '&nbsp;')
 
     def get_week_sums(self):
@@ -116,14 +117,14 @@ class WorkoutCalendar(LocaleHTMLCalendar):
             week[t_key] = _(t_key)
 
         self.current_week += 1
-        return '<tr>%(days)s<td> \
+        return unicode('<tr>%(days)s<td> \
                 <p>\
                 <span class="label">%(Week)s:</span> %(week)s<br>\
                 <span class="label">%(Distance)s:</span> %(distance_sum)s<br>\
                 <span class="label">%(Kcal)s:</span> %(kcal_sum)s<br>\
                 <span class="label">%(Duration)s:</span> %(duration_sum)s\
                 </p>\
-                </td></tr>' % week
+                </td></tr>' % week)
 
     def formatmonth(self, year, month):
         self.year, self.month = year, month
@@ -148,5 +149,5 @@ class WorkoutCalendar(LocaleHTMLCalendar):
         )
 
     def day_cell(self, cssclass, body):
-        return '<td class="%s">%s</td>' % (cssclass, body)
+        return unicode('<td class="%s">%s</td>' % (cssclass, body))
 
