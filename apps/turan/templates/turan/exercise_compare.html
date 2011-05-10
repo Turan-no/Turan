@@ -1,6 +1,7 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
 {% block title %} {{trip1}} {% trans "versus" %} {{ trip2}}
 {% trans "Exercise" %} 
@@ -17,6 +18,7 @@
 <h2 class="power">{% trans "Power" %}</h2>
 <div class="graph power" id="powerdiv" style="width:1000px;height:200px"></div>
 <script id="source" language="javascript" type="text/javascript">
+    {% localize off %}
     var alt = { 
         data: [{{ alt }}], 
         yaxis: 2, 
@@ -99,6 +101,7 @@ var datasets2 = {{ datasets2 }};
    plotThem({});
 $(function () {
 });
+{% endlocalize %}
 </script>
 
 
