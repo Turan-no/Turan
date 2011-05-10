@@ -76,6 +76,10 @@ var GraphPlotter = {
                 xaxis: xaxisattrs,
                 legend: { 
                     container: $("#tripdiv_legend"),
+                    labelFormatter: function(label, series) {
+                        // series is the series object for the label
+                        return label;
+                    },
                     noColumns: 15
                 },
                 grid: { 
