@@ -152,6 +152,9 @@
                 show: true,
                 hoverable: true,
             },
+            series: {
+                lines: { lineWidth: 3}
+            },
             yaxis: { tickFormatter: axisformatters.power }
     });
     function showTooltip (x, y, contents) {
@@ -175,7 +178,7 @@
                     y = item.datapoint[1];
                 
                 showTooltip(item.pageX, item.pageY,
-                    item.series.label + " {% trans 'at' %} " + x + " {% trans 'is'%} " + y + " w");
+                    item.series.label + " {% trans 'at' %} " + x + " {% trans 'minutes' %} {% trans 'is'%} " + y + " w");
 
             }
         }
