@@ -1,7 +1,21 @@
 /* Colors in use for lots of zone related stuffs */
-var colors = ["rgb(240,240,240)", "rgb(204,204,204)", "rgb(51,102,255)", "rgb(102,204,0)", 
-        "rgb(255,153,0)", "rgb(255,0,0)", "rgb(166,0,0)", "rgb(119,0,119)"];
+var colors = [
+    "rgb(240,240,240)", 
+    "rgb(102,204,0)", 
+    "rgb(000,200,255)",
+    "rgb(51,102,255)", 
+    "rgb(255,153,0)", 
+    "rgb(255,0,0)", 
+    "rgb(166,0,0)", 
+    "rgb(119,0,119)"];
 
+/* conver rgb colors to hex, openlayers uses those */
+function colorToHex(c) {
+    var m = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/.exec(c);
+    return m ? '#' + (1 << 24 | m[1] << 16 | m[2] << 8 | m[3]).toString(16).substr(1) : c;
+}
+
+/* Used by flot axis */
 var axisformatters = {
     speed: function(val, axis) {
         return (val).toFixed(axis.tickDecimals) + ' km/h';
@@ -61,21 +75,6 @@ var axisformatters = {
     }
 };
 
-
-/* conver rgb colors to hex, openlayers uses those */
-function colorToHex(color) {
-    if (color.substr(0, 1) === '#') {
-        return color;
-    }
-    var digits = /(.*?)rgb\((\d+), ?(\d+), ?(\d+)\)/.exec(color);
-    
-    var red = parseInt(digits[2]);
-    var green = parseInt(digits[3]);
-    var blue = parseInt(digits[4]);
-    
-    var rgb = blue | (green << 8) | (red << 16);
-    return digits[1] + '#' + rgb.toString(16);
-};
 function choose (set) {
     return set[Math.floor(Math.random() * set.length)];
 }
