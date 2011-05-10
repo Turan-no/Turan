@@ -146,7 +146,47 @@
             color: 4,
         }
     ];
-    $.plot($("#besteffortdiv"), best_effort_data, { legend: {show: true}, grid: { show: true } });
+    $.plot($("#besteffortdiv"), best_effort_data, { 
+            legend: {show: true}, 
+            grid: { 
+                show: true,
+                hoverable: true,
+            },
+            series: {
+                lines: { lineWidth: 3}
+            },
+            yaxis: { tickFormatter: axisformatters.power }
+    });
+    function showTooltip (x, y, contents) {
+        $('<div class="tooltip" id="btooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            padding: '2px',
+            opacity: 0.80
+        }).appendTo("body").fadeIn(50);
+    };
+    var previousPoint = null;
+    $("#besteffortdiv").bind("plothover", function (event, pos, item) {
+        if (item) {
+            if (previousPoint != item.datapoint) {
+                previousPoint = item.datapoint;
+                
+                $("#btooltip").remove();
+                var x = item.datapoint[0],
+                    y = item.datapoint[1];
+                
+                showTooltip(item.pageX, item.pageY,
+                    item.series.label + " {% trans 'at' %} " + x + " {% trans 'minutes' %} {% trans 'is'%} " + y + " w");
+
+            }
+        }
+        else {
+            $("#btooltip").remove();
+            previousPoint = null;            
+        }
+    });
 {% else %}
     var best_effort_data = [
         {% for effort in object.bestspeedeffort_set.all %}
