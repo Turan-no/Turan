@@ -331,7 +331,8 @@ RESTRUCTUREDTEXT_FILTER_SETTINGS = {
 }
 
 
-PAGINATION_INVALID_PAGE_RAISES_404 = False
+PAGINATION_INVALID_PAGE_RAISES_404 = True
+SORTING_INVALID_FIELD_RAISES_404 = True
 # if Django is running behind a proxy, we need to do things like use
 # HTTP_X_FORWARDED_FOR instead of REMOTE_ADDR. This setting is used
 # to inform apps of this fact
