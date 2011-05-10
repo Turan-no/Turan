@@ -59,6 +59,12 @@ var GraphPlotter = {
 
         if (data.length > 0) {
             plot = $.plot($("#tripdiv"), data, {
+                series: {
+                    lines: {
+                        lineWidth: 2, // less cluttere
+                    },
+                    shadowSize: 0 //drawing is faster without shadoes
+                },
                 yaxes: [
                     { tickFormatter: axisformatters['speed'] },
                     { position: "right", min: 80, max: this.max_hr, tickFormatter: axisformatters['hr'] }, 
@@ -75,7 +81,8 @@ var GraphPlotter = {
                 grid: { 
                     hoverable: true, 
                     clickable: true,
-                    markings: this.markings,
+                    backgroundColor: { colors: ["#fff", "#eee"] }
+                    //markings: this.markings,
                 },
                 crosshair: { mode: "x" },
                 selection: { mode: "x" }
@@ -137,8 +144,10 @@ var GraphPlotter = {
 
             // find the nearest points, x-wise 
             for (j = 0; j < series.data.length; ++j) 
-                if (series.data[j][0] > pos.x) 
-                    break; 
+                if (series.data[j]) {
+                    if (series.data[j][0] > pos.x) 
+                        break;
+                }
 
             // now interpolate 
             var y, p1 = series.data[j - 1], p2 = series.data[j];
@@ -247,7 +256,7 @@ var GraphPlotter = {
 
         this.legends = $(".legendLabel"); 
         this.legends.each(function () { 
-        // fix the widths so they don't jump around
+            // fix the widths so they don't jump around
             $(this).css('width', $(this).width());
         });
 
@@ -255,9 +264,9 @@ var GraphPlotter = {
         this.updateLegendTimeout = null;
         this.latestPosition = null;
         $("#tripdiv").bind("plothover", function (event, pos, item) {
-//            that.latestPosition = pos; 
+            that.latestPosition = pos; 
   //          if (!that.updateLegendTimeout) that.updateLegendTimeout = setTimeout(that.updateLegend, 50); 
-//            that.updateLegend(pos);
+            //that.updateLegend(pos);
             if (item) {
                 // Move marker to current pos
                 if (typeof(Mapper) != "undefined") {
