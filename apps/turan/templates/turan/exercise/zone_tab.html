@@ -40,6 +40,27 @@
     </table>
 </div>
 <script type="text/javascript">
+var pieoptions = { 
+    grid: { show: false },
+    series: {
+            pie: { 
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 1,
+                    formatter: function(label, series){
+                        return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                    },
+                    background: { opacity: 0.8 }
+                }
+            }
+        },
+        legend: {
+            show: false
+        }
+}
+
     $(function () {
         var wzonedata = [
             {% for zone, length in wzones.items %}
@@ -52,18 +73,7 @@
             }{% if not forloop.last %},{%endif%}
             {% endfor %}
         ];
-        $.plot($("#wzonediv"),wzonedata, { 
-            grid: { show: false },
-            series: {
-                pie: {
-                    show: true,
-                    label: {
-                        show: false,
-                        radius: 1
-                    },
-                },
-            }
-        });
+        $.plot($("#wzonediv"),wzonedata, pieoptions);
     });
 </script>
 {% endif %}
@@ -119,13 +129,6 @@
             {% endfor %}
         ];
 
-        $.plot($("#zonediv"),zonedata, { grid: { show: false },
-            series: {
-                pie: {
-                    show: true,
-                    showLabel: true
-                }
-            }
-        });
+        $.plot($("#zonediv"),zonedata, pieoptions);
     });
 </script>

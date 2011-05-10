@@ -35,7 +35,7 @@
         {% for effort in bestpowerefforts %}
         <tr class="{% cycle odd,even %}">
             <td>
-                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
+                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" title="{% trans "Zoom" %}" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
                 <script type="text/javascript">
                     $('#pzoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
                         plot.setSelection({ 
