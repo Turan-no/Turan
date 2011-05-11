@@ -299,6 +299,7 @@ AVATAR_GRAVATAR_DEFAULT = 'http://turan.no/site_media/turan/unknown.png'
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
 CONTACT_EMAIL = "turan@turan.no"
+SERVER_EMAIL = CONTACT_EMAIL
 SITE_NAME = "Turan"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "profile_redirect"
