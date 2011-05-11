@@ -10,4 +10,8 @@
     <p>{% trans "We're sorry but a server error has occurred. We've been notified and will look into it as soon as possible." %}</p>
     <img src="{{MEDIA_URL}}turan/bike-crash.jpg">
 </div>
+
+{% if request.sentry.id %}
+    <p>{% trans "If you need assistance, you may reference this error as"%} <strong>{{ request.sentry.id }}</strong>.</p>
+    {% endif %}
 {% endblock %}

@@ -861,6 +861,7 @@ div.box {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#ffffff'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#dddddd), to(#ffffff)); /* for webkit browsers */
     background: -moz-linear-gradient(top, #eeeeee,  #ffffff); /* for firefox 3.6+ */
+    background: -o-linear-gradient(#eeeeee,  #ffffff); /* for opera */
     padding: 10px;
 }
 div.box h2 {
