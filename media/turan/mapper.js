@@ -16,6 +16,7 @@ var Mapper = {
             projection: this.projection
         });
         lgpx.events.register("loadend", this, this.resizeMapToLayerExtents);
+        this.lgpx = lgpx;
 
 
         this.map = new OpenLayers.Map ({
@@ -60,11 +61,28 @@ var Mapper = {
         var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
         var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
         var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
+        var gphy = new OpenLayers.Layer.Google(
+            "Google Physical",
+            {type: google.maps.MapTypeId.TERRAIN}
+        );
+        var gmap = new OpenLayers.Layer.Google(
+            "Google Streets", // the default
+            {numZoomLevels: 20}
+        );
+        var ghyb = new OpenLayers.Layer.Google(
+            "Google Hybrid",
+            {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20}
+        );
+        var gsat = new OpenLayers.Layer.Google(
+            "Google Satellite",
+            {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
+        );
 
-        var defaultlayers = [layerMapnik, layerCycleMap, layerTilesAtHome, FKB, FKBraster, lgpx];
+
+        var defaultlayers = [layerMapnik, layerCycleMap, layerTilesAtHome, FKB, FKBraster, lgpx, gphy, gmap, ghyb, gsat];
         if (start) {
             if (start[0] > 4 && start[1] > 57) { // Quickfix for checking for norwegian maps or not
-                defaultlayers = [FKB, FKBraster, layerMapnik, layerCycleMap, layerTilesAtHome, lgpx];
+                defaultlayers = [FKB, FKBraster, layerMapnik, layerCycleMap, layerTilesAtHome, lgpx, gphy, gmap, ghyb, gsat];
             }
         }
         this.map.addLayers(defaultlayers);
@@ -120,12 +138,12 @@ var Mapper = {
                 7: {strokeColor: colorToHex(colors[7]), strokeWidth: 4}
             });
 
-            this.vectors = new OpenLayers.Layer.Vector("HR Line", {
+            /*this.vectors = new OpenLayers.Layer.Vector("HR Line", {
                 strategies: [new OpenLayers.Strategy.Fixed()],                
                 protocol: new OpenLayers.Protocol.HTTP({
                     url: geojson_url,
                     format: new OpenLayers.Format.GeoJSON({
-                                  'internalProjection': new OpenLayers.Projection("EPSG:4326"),
+                                  'internalProjection': this.projection,
 //                                  'externalProjection': new OpenLayers.Projection("EPSG:900913")
                                   }
                         )
@@ -134,10 +152,11 @@ var Mapper = {
                 styleMap: this.styles,
 
             });
-            this.map.addLayer(this.vectors);
+            this.map.addLayer(this.vectors);*/
         }
         
         this.map.render("map");
+        this.lgpx.setVisibility(true); // Dunno why this was needed after openlayers 2.8
         return this.map;
     /*pushPoints: function(poslist) {
         if (typeof(poslist) != "undefined") {
@@ -177,12 +196,15 @@ var Mapper = {
     loadGeoJSON: function(minIndex, maxIndex) {
         if (this.map != null) {
         if (this.geojson_url) {
-            this.map.removeLayer(this.map.getLayersByName('HR Line')[0]);
+            oldlayer = this.map.getLayersByName('HR Line');
+            if (oldlayer.length) {
+                this.map.removeLayer(oldlayer[0]);
+            }
             var selection_vectors = new OpenLayers.Layer.Vector("HR Line", {
                     strategies: [new OpenLayers.Strategy.Fixed()],                
                     protocol: new OpenLayers.Protocol.HTTP({
                         url: this.geojson_url + '?start=' + minIndex + '&stop=' + maxIndex,
-                        format: new OpenLayers.Format.GeoJSON({ 'internalProjection': new OpenLayers.Projection("EPSG:4326"), })
+                        format: new OpenLayers.Format.GeoJSON({ 'internalProjection': this.projection })
                     }),
                     projection: this.projection,
                     styleMap: this.styles
@@ -190,6 +212,10 @@ var Mapper = {
                 this.map.addLayer(selection_vectors);
                 selection_vectors.events.register("loadend", this, this.resizeMapToLayerExtents);
         }
+        if (!this.map.center) {
+            this.map.zoomToExtent(this.lgpx.getDataExtent());
         }
+        
      } 
+    }
 };
