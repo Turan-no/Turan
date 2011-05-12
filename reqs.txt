@@ -1,3 +1,4 @@
+--extra-index-url=http://dist.pinaxproject.com/dev/
 BeautifulSoup
 Cheetah==2.0.1
 Django==1.3
