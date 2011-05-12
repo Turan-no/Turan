@@ -409,7 +409,8 @@ h1 a
 
 .buttons li {
     list-style-type: none;
-    margin: 0;
+    margin: 2px;
+    overflow: auto;
     padding: 0;
 }
 
