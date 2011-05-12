@@ -71,7 +71,7 @@ class UserProfileDetail(models.Model):
         ''' Overriden to update UserProfile with new data '''
         super(UserProfileDetail, self).save(force_insert, force_update)
         if self.weight:
-            self.userprofile.weight = int(round(self.weight))
+            self.userprofile.weight = self.weight
         if self.resting_hr:
             self.userprofile.resting_hr = self.resting_hr
         if self.ftp:
