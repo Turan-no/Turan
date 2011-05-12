@@ -737,6 +737,14 @@ def parse_sensordata(exercise, callback=None):
     parser = find_parser(exercise.sensor_file.name)
     parser.parse_uploaded_file(exercise.sensor_file.file)
 
+
+    # Some parsers return non-zero distance for the first sample
+    # We make assumption that the user wants his trip to show as starting at 0 km
+    # The cause of this can be tcx-files that have laps cut out
+    distance_offset = 0
+    if parser.entries[0].distance > 100: # We don't care about small values
+        distance_offset = parser.entries[0].distance
+
     for val in parser.entries:
         detail = ExerciseDetail()
         detail.exercise_id = exercise.id
@@ -744,7 +752,8 @@ def parse_sensordata(exercise, callback=None):
         # Figure out which values the parser has
         for v in ('distance', 'time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power', 'temp'):
             if hasattr(val, v):
-                #if not types.NoneType == type(val[v]):
+                if v == 'distance' and distance_offset: # Subtract the distance offsett
+                    val.distance = val.distance - distance_offset
                 setattr(detail, v, getattr(val, v))
         detail.save()
     # Parse laps/intervals
