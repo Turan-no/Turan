@@ -19,71 +19,77 @@
             <img alt="calendar" src="{{MEDIA_URL}}/pinax/img/silk/icons/calendar.png">
             {% trans "Show" %} {{ other_user }}{% trans "'s calendar" %}</a>
         </li>
-            <br />
-        {% if user.is_authenticated %}
-            {% if is_me %}
+        {% if user.is_authenticated and is_me %}
         <li>
             <a href="{% url exercise_create %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
                 {% trans "Add an exercise" %}
             </a>
         </li>
-            <br />
-            <li><a href="{% url route_create %}">
+        <li>
+            <a href="{% url route_create %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="menu_button" />
-                {% trans "Add a route"%}</a></li>
-            <br />
-            <li><a href="{% url import_data %}">
+                {% trans "Add a route"%}
+            </a>
+        </li>
+        <li>
+            <a href="{% url import_data %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="menu_button" />
-                {% trans "import data from another site"%}</a></li>
-            <br />
-            <li><a href="{% url userprofiledetail_create %}">
+                {% trans "import data from another site"%}
+            </a>
+        </li>
+        <li>
+            <a href="{% url userprofiledetail_create %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/cake.png" alt="menu_button" />
-                {% trans "lost weight?"%}</a></li>
-            <br />
-            <li><a href="{% url acct_email %}">
+                {% trans "lost weight?"%}
+            </a>
+        </li>
+        <li>
+            <a href="{% url acct_email %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/email_go.png" alt="menu_button" />
-                {% trans "verify an email address"%}</a></li>
-            <br />
-            <li><a href="{% url avatar_change %}">
+                {% trans "verify an email address"%}
+            </a>
+        </li>
+        <li>
+            <a href="{% url avatar_change %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/photo.png" alt="menu_button" />
-                {% trans "add an avatar"%}</a></li>
-            <br />
-            <li><a href="{% url invitations %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/user_go.png" alt="menu_button" />
-                {% trans "invite more people to the site"%}</a></li>
-            <br />
-
-                {% endif %}
+                {% trans "add an avatar"%}
+            </a>
+        </li>
+        <li><a href="{% url invitations %}">
+            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/user_go.png" alt="menu_button" />
+            {% trans "invite more people to the site"%}</a>
+        </li>
         {% endif %}
     </ul>
 </div>
-        {% include "profiles/profile_right_panel.html" %}
+{% include "profiles/profile_right_panel.html" %}
 
-            {% comment %}
-        <div style="float: right">
-            {% if other_user.get_profile.image %}
-            <img alt="{% trans "User image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.image }}"><br>
-            {% endif %}
-            {% if other_user.get_profile.cycle_image %}
-            <img alt="{% trans "Cycle image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.cycle_image }}">
-            {% endif %}
-        </div>
-            {% endcomment %}
-    <h3>{% trans "Cycle trip graph"%}</h2>
-    <div class="drop-shadow lifted" id="tripdiv" style="width:300px;height:150px"></div>
-    <h3>{% trans "Avg speed trend: cycling"%}</h2>
-    <div class="drop-shadow lifted" id="avgspeeddiv" style="width:300px;height:150px"></div>
-    <h3>{% trans "Avg HR trend overall"%}</h2>
-    <div class="drop-shadow lifted" id="avghrdiv" style="width:300px;height:150px"></div>
-    <h3>{% trans "BMI graph"%}</h2>
-    <div class="drop-shadow lifted" id="bmidiv" style="width:300px;height:150px"></div>
-    <h3>{% trans "Resting pulse graph"%}</h2>
-    <div class="drop-shadow lifted" id="pulsediv" style="width:300px;height:150px"></div>
-    {% if ftpdataseries %}
-    <h3>{% trans "FTP graph"%}</h2>
-    <div class="drop-shadow lifted" id="ftpdiv" style="width:300px;height:150px"></div>
+{% comment %}
+<div style="float: right">
+    {% if other_user.get_profile.image %}
+    <img alt="{% trans "User image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.image }}"><br>
     {% endif %}
+    {% if other_user.get_profile.cycle_image %}
+    <img alt="{% trans "Cycle image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.cycle_image }}">
+    {% endif %}
+</div>
+{% endcomment %}
+
+<h3>{% trans "Cycle trip graph"%}</h2>
+<div class="drop-shadow lifted" id="tripdiv" style="width:300px;height:150px"></div>
+<h3>{% trans "Avg speed trend: cycling"%}</h2>
+<div class="drop-shadow lifted" id="avgspeeddiv" style="width:300px;height:150px"></div>
+<h3>{% trans "Avg HR trend overall"%}</h2>
+<div class="drop-shadow lifted" id="avghrdiv" style="width:300px;height:150px"></div>
+<h3>{% trans "BMI graph"%}</h2>
+<div class="drop-shadow lifted" id="bmidiv" style="width:300px;height:150px"></div>
+<h3>{% trans "Resting pulse graph"%}</h2>
+<div class="drop-shadow lifted" id="pulsediv" style="width:300px;height:150px"></div>
+{% if ftpdataseries %}
+<h3>{% trans "FTP graph"%}</h2>
+<div class="drop-shadow lifted" id="ftpdiv" style="width:300px;height:150px"></div>
+{% endif %}
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
     var d1 = { color: 2, data: [{{pulsedataseries}}], }
