@@ -483,17 +483,17 @@ class ExercisePermission(models.Model):
 
 class ExerciseDetail(models.Model):
 
-    exercise = models.ForeignKey(Exercise)
-    time = models.DateTimeField()
-    distance = models.FloatField(blank=True, null=True)
-    speed = models.FloatField(blank=True, null=True)
-    hr = models.IntegerField(blank=True, null=True)
-    altitude = models.FloatField(blank=True, null=True)
-    lat = models.FloatField(blank=True, null=True)
-    lon = models.FloatField(blank=True, null=True)
-    cadence = models.IntegerField(blank=True, null=True)
-    power = models.IntegerField(blank=True, null=True)
-    temp = models.FloatField(blank=True, null=True)
+    exercise   = models.ForeignKey(Exercise)
+    time       = models.DateTimeField()
+    distance   = models.FloatField(blank=True, null=True)
+    speed      = models.FloatField(blank=True, null=True)
+    hr         = models.IntegerField(blank=True, null=True)
+    altitude   = models.FloatField(blank=True, null=True)
+    lat        = models.FloatField(blank=True, null=True)
+    lon        = models.FloatField(blank=True, null=True)
+    cadence    = models.IntegerField(blank=True, null=True)
+    power      = models.IntegerField(blank=True, null=True)
+    temp       = models.FloatField(blank=True, null=True)
 
     def get_relative_time(self):
         start_time = datetime(self.time.year, self.time.month, self.time.day, self.trip.time.hour, self.trip.time.minute, self.trip.time.second)

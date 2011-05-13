@@ -1778,3 +1778,93 @@ def exercise_parse_progress(request, object_id, task_id):
     result = AsyncResult(task_id).status
 
     return render_to_response('turan/exercise_parse.html', locals(), context_instance=RequestContext(request))
+
+@login_required
+def exercise_create_live(request):
+    ''' View to handle creation of new live exercise '''
+    if not request.user.is_authenticated():
+        return redirect_to_login(request.path)
+    ExerciseFormSet = inlineformset_factory(Exercise, ExercisePermission, form=ExerciseForm)
+
+    if request.method == 'POST':
+        form = ExerciseFormSet(request.POST, request.FILES)
+        if form.is_valid():
+            new_object = form.save(commit=False)
+            new_object.user = request.user
+            new_object.save()
+
+            # notify friends of new object
+            if notification and user_required: # only notify for user owned objects
+                notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
+
+            if request.user.is_authenticated():
+                request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": Exercise._meta.verbose_name})
+            return redirect(post_save_redirect, new_object)
+    else:
+        form = ExerciseFormSet()
+
+    return render_to_response('turan/exercise_form.html', locals(), context_instance=RequestContext(request))
+
+@login_required
+def exercise_update_live(request, object_id):
+    ''' View to handle submitted values from client, make them into exercise details
+
+    They should arrive posted as a json object that looks like this
+
+     should arrive posted as a json object that looks like this
+     [
+        {"power": 400, "hr": 62, "lon": 5.3, "time": 12312323, "lat": 60, "speed": 34.3},
+        {"power": 410, "hr": 64, "lon": 5.4, "time": 12312324, "lat": 61, "speed": 35.3}
+     ]
+
+     Fields can vary from entry to entry.
+     Supported fieldlist:
+        time
+        distance
+        speed
+        hr
+        altitude
+        lat
+        lon
+        cadence
+        power
+        temp
+
+    '''
+
+    exercise = get_object_or_404(Exercise, id=object_id)
+    if request.method == 'POST':
+        data = request.POST
+        assert False, data
+        new_object = ExerciseDetail(**data)
+        new_object.exercise = exercise
+        new_object.save()
+
+    return HttpResponse('json OK')
+
+def exercise_player(request, object_id):
+
+    exercise = get_object_or_404(Exercise, pk=object_id)
+    object = exercise
+    if exercise.exercise_permission == 'N':
+        return redirect_to_login(request.path)
+        # TODO Friend check
+
+    alt = tripdetail_js(None, exercise.id, 'altitude')
+    #alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
+
+
+    details = exercise.get_details().all()
+
+    datasets = js_trip_series(request, details, time_xaxis=False, use_constraints=False)
+    #lonlats = []
+    #for d in details:
+    #    if d.lon == None:
+    #        d.lon = 0.0
+    #    if d.lat == None:
+    #        d.lat = 0.0
+    #    lonlats.append((d.lon, d.lat))
+    #lonlats = simplejson.dumps(lonlats)
+    datasets = mark_safe(datasets)
+
+    return render_to_response('turan/exercise_player.html', locals(), context_instance=RequestContext(request))
