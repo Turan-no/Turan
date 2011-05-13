@@ -198,7 +198,7 @@ var Mapper = {
     },
     zoomToPosMarker: function() {
         lonlat = this.posMarker.lonlat;
-        this.map.setCenter(lonlat, 15);
+        this.map.setCenter(lonlat);
     }, 
     loadGeoJSON: function(minIndex, maxIndex) {
         if (this.map != null) {
