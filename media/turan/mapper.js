@@ -185,15 +185,10 @@ var Mapper = {
     },
     updatePosMarker: function(x, y) {
         if (x != undefined && y != undefined ) {
-            //if ( this.posMarker != null )
-            //    this.posMarker.erase();
             this.deleteMarkers();
-            //this.posMarker = this.startMarker.clone()
-            //this.startMarker.erase();
             lonlat = new OpenLayers.LonLat(x, y).transform(this.projection, this.map.getProjectionObject());
             this.posMarker = new OpenLayers.Marker(lonlat, this.pos_icon.clone());
             this.layerMarkers.addMarker(this.posMarker);
-            //        this.layerMarkers.redraw();
         }
     },
     zoomToPosMarker: function() {
@@ -224,5 +219,28 @@ var Mapper = {
         }
         
      } 
-    }
+    },
+    initLine: function(name) {
+        lineLayer = new OpenLayers.Layer.Vector(name);
+        map.addLayer(lineLayer);
+        return lineLayer;
+    },
+    drawLine: function(layer,color, x1,y1,x2,y2) {
+
+        points = new Array();
+        style = { strokeColor: color, 
+         strokeOpacity: 0.8,
+         strokeWidth: 2
+        };
+
+        points[0] =new OpenLayers.LonLat(x1,y1 ).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());;
+        points[0] = new OpenLayers.Geometry.Point(points[0].lon,points[0].lat);
+
+        points[1] = new OpenLayers.LonLat(x2,y2 ).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());;
+        points[1] = new OpenLayers.Geometry.Point(points[1].lon,points[1].lat);
+        var linear_ring = new OpenLayers.Geometry.LinearRing(points);
+        polygonFeature = new OpenLayers.Feature.Vector(
+         new OpenLayers.Geometry.Polygon([linear_ring]), null, style);
+         layer.addFeatures([polygonFeature]);
+  }
 };

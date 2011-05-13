@@ -510,6 +510,56 @@ def generate_tshirt(request):
     data.seek(0)
     return HttpResponse(data.read(), mimetype='image/png',status=200)
 
+def colorize_and_scale(request):
+    import Image
+    from cStringIO import StringIO
+
+    if 'i' in request.GET:
+        i = request.GET['i']
+        if not os.path.abspath(i).startswith(os.path.abspath("site_media")):
+            return HttpResponseServerError()
+    else:
+        return HttpResponseServerError()
+
+    if 'w' in request.GET:
+        w = int(request.GET['w'])
+    else:
+        w = 24
+
+    if 'h' in request.GET:
+        h = int(request.GET['h'])
+    else:
+        h = 24
+
+    if 'r' in request.GET:
+        r = int(request.GET['r'])
+    else:
+        r = 255
+
+    if 'g' in request.GET:
+        g = int(request.GET['g'])
+    else:
+        g = 0
+
+    if 'b' in request.GET:
+        b = int(request.GET['b'])
+    else:
+        b = 0
+
+    i = Image.open(i)
+    sized = i.resize((w, h), Image.ANTIALIAS)
+
+    channels = sized.split()
+
+    channels = (channels[0].point(lambda i: r), channels[1].point(lambda i: g), channels[2].point(lambda i: b), channels[3])
+
+    sized = Image.merge(sized.mode, channels)
+
+    data = StringIO()
+    sized.save(data, "png")
+    data.seek(0)
+    return HttpResponse(data.read(), mimetype='image/png',status=200)
+    
 
 def calendar(request):
     now = datetime.now()
@@ -1841,30 +1891,32 @@ def exercise_update_live(request, object_id):
         new_object.save()
 
     return HttpResponse('json OK')
+    search_query = request.GET.get('q', '')
 
-def exercise_player(request, object_id):
+def exercise_player(request):
 
-    exercise = get_object_or_404(Exercise, pk=object_id)
-    object = exercise
-    if exercise.exercise_permission == 'N':
-        return redirect_to_login(request.path)
-        # TODO Friend check
+    exercises = []
+    ids = request.GET.getlist('id')
+    for id in ids:
+        try:
+            object_id = int(id)
+        except ValueError:
+            return Http404()
+        exercise = get_object_or_404(Exercise, pk=object_id)
+        if exercise.exercise_permission == 'N':
+            return redirect_to_login(request.path)
+            # TODO Friend check
+        exercises.append(exercise)
 
     alt = tripdetail_js(None, exercise.id, 'altitude')
 
 
-    details = exercise.get_details().all()
-    alt_max = details.aggregate(Max('altitude'))['altitude__max']
-
-    datasets = js_trip_series(request, details, time_xaxis=False, use_constraints=False)
-    #lonlats = []
-    #for d in details:
-    #    if d.lon == None:
-    #        d.lon = 0.0
-    #    if d.lat == None:
-    #        d.lat = 0.0
-    #    lonlats.append((d.lon, d.lat))
-    #lonlats = simplejson.dumps(lonlats)
-    datasets = mark_safe(datasets)
+    datasets = []
+    alt_max = 0
+    for exercise in exercises:
+        details = exercise.get_details().all()
+        if not alt_max:
+            alt_max = details.aggregate(Max('altitude'))['altitude__max']
+        datasets.append(mark_safe(js_trip_series(request, details, time_xaxis=False, use_constraints=False)))
 
     return render_to_response('turan/exercise_player.html', locals(), context_instance=RequestContext(request))
