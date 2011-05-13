@@ -100,6 +100,8 @@ $(document).ready(function() {
 
     //Mapper.gsat.setVisibility(1);
     Mapper.map.setBaseLayer(Mapper.gsat);
+    Mapper.lgpx.setVisibility(0);
+    //Mapper.map.removeLayer(Mapper.lgpx);
     // Focus le map
     $('#mapcontainer').focus();
 
@@ -113,7 +115,10 @@ $(document).ready(function() {
     $('#altdiv').bind("plotclick", function (evt, pos, item) {
         index = item.dataIndex;
     });
-
+    var lineLayers = [];
+    {% for object in exercises %}
+        lineLayers.push(Mapper.initLine('{{object.user}}'));
+    {% endfor %}
     var updateMapAndGraph= function() {
         if (index >= iterations) {
             clearInterval(interval);
@@ -121,14 +126,21 @@ $(document).ready(function() {
         {% for object in exercises %}
             var lon = datasets[{{forloop.counter0}}]["lon"][index];
             var lat = datasets[{{forloop.counter0}}]["lat"][index];
+            var p_lon = datasets[{{forloop.counter0}}]["lon"][index-1];
+            var p_lat = datasets[{{forloop.counter0}}]["lat"][index-1];
             // Check for none-values, we don't want to zoom to 0_o o_0
             if (lon != 0.0 && lat != 0.0) {
-                // Only move map every 4th sample, less cluttery looking
-                if (mapUpdater >= 4) {
-                    Mapper.zoomToPosMarker();
-                    mapUpdater = 0;
+                {% if forloop.first %}
+                    // Only move map every 4th sample, less cluttery looking
+                    if (mapUpdater >= 4) {
+                        Mapper.zoomToPosMarker();
+                        mapUpdater = 0;
+                    }
+                    Mapper.updatePosMarker(datasets[{{forloop.counter0}}]["lon"][index],datasets[{{forloop.counter0}}]["lat"][index]);
+                {% endif %}
+                if (p_lon != 0.0 && p_lat != 0.0) {
+                    Mapper.drawLine(lineLayers[{{forloop.counter0}}], colors[{{forloop.counter}}], p_lon, p_lat, lon, lat);
                 }
-                Mapper.updatePosMarker(datasets[{{forloop.counter0}}]["lon"][index],datasets[{{forloop.counter0}}]["lat"][index]);
             }
             {% if object.avg_hr %}
             var hrval = datasets[{{forloop.counter0}}]['hr']['data'][index][1];
