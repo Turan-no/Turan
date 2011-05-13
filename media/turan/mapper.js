@@ -45,6 +45,7 @@ var Mapper = {
             'http://opencache.statkart.no/gatekeeper/gk/gk.open',
             {layers: 'topo2', format: 'image/png'},
             {minZoomLevel: 5, maxZoomLevel: 19,
+                transitionEffect: 'resize',
              attribution: 'Kartgrunnlag: ' +
               '<a href="http://www.statkart.no/">Statens kartverk</a>, ' +
               '<a href="http://www.statkart.no/nor/Land/Fagomrader/Geovekst/">Geovekst</a> og ' +
@@ -193,6 +194,10 @@ var Mapper = {
             //        this.layerMarkers.redraw();
         }
     },
+    zoomToPosMarker: function() {
+        lonlat = this.posMarker.lonlat;
+        this.map.setCenter(lonlat);
+    }, 
     loadGeoJSON: function(minIndex, maxIndex) {
         if (this.map != null) {
         if (this.geojson_url) {
