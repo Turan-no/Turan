@@ -78,6 +78,8 @@ var Mapper = {
             "Google Satellite",
             {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
         );
+        this.gsat = gsat;
+        this.FKB = FKB;
 
 
         var defaultlayers = [layerMapnik, layerCycleMap, layerTilesAtHome, FKB, FKBraster, lgpx, gphy, gmap, ghyb, gsat];
@@ -196,7 +198,7 @@ var Mapper = {
     },
     zoomToPosMarker: function() {
         lonlat = this.posMarker.lonlat;
-        this.map.setCenter(lonlat);
+        this.map.setCenter(lonlat, 15);
     }, 
     loadGeoJSON: function(minIndex, maxIndex) {
         if (this.map != null) {

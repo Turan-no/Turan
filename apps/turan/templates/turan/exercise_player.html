@@ -8,31 +8,29 @@
 {{ block.super }}
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.crosshair.js"></script>
 {% with object.route.gpx_file as gpx_file %}
-{% comment %}
     {% include "turan/maphead.html" %}
-{% endcomment %}
 {% endwith %}
 {% endblock %}
 {% block content %}
 <h1>{% trans "Playback of exercise" %} {{ exercise }}</h1>
 {% include "turan/altitude_profile.html" %}
 <div>
-<p class="speed floatleft">{% trans "Speed" %}
+<p class="graphheader speed floatleft">{% trans "Speed" %}
 <br>
 <span class="title" id="speedval"></span>
 </p>
-<div class="graph speed floatleft drop-shadow" id="speeddiv" style="width:150px;height:60px"></div>
-<p class="hr floatleft">{% trans "HR" %}<br><span class="title" id="hrval"</span></p>
-<div class="graph hr floatleft drop-shadow" id="hrdiv" style="width:150px;height:60px"></div>
+<div class="graph speed floatleft drop-shadow" id="speeddiv" style="width:130px;height:40px"></div>
+<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="hrval"</span></p>
+<div class="graph hr floatleft drop-shadow" id="hrdiv" style="width:130px;height:40px"></div>
 {% if object.max_cadence %}
-<p class="cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="cadenceval"</span></p>
-<div class="graph cadence floatleft drop-shadow" id="cadencediv" style="width:150px;height:60px"></div>
+<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="cadenceval"</span></p>
+<div class="graph cadence floatleft drop-shadow" id="cadencediv" style="width:130px;height:40px"></div>
 {% endif %}
-<p class="altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="altitudeval"</span></p>
-<div class="graph altitude floatleft drop-shadow" id="altitudediv" style="width:150px;height:60px"></div>
+<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="altitudeval"</span></p>
+<div class="graph altitude floatleft drop-shadow" id="altitudediv" style="width:130px;height:40px"></div>
 {% if object.avg_power %}
-<p class="power floatleft">{% trans "Power" %}<br><span class="title" id="powerval"</span></p>
-<div class="graph power floatleft drop-shadow" id="powerdiv" style="width:150px;height:60px"></div>
+<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="powerval"</span></p>
+<div class="graph power floatleft drop-shadow" id="powerdiv" style="width:130px;height:40px"></div>
 {% endif %}
 </div>
 <script id="source" language="javascript" type="text/javascript">
@@ -43,12 +41,12 @@
              lines: { show: false },
              bars: { 
                 show: true,
-                horizontal: false,
+                horizontal: true,
                 fill: 1,
                 barWidth: 1,
                 align: "center"
              },
-            xaxis: { tickDecimals: 0, tickSize: 1, tickLength: 1, tickFormatter: ''},
+            xaxis: { tickDecimals: 0, tickSize: 1, tickLength: 1},
             yaxis: { tickDecimals: 0, tickSize: 1}
         },
         grid: {
@@ -65,17 +63,17 @@
 
 var datasets = {{ datasets }};
 {% if object.avg_hr %}
-var hroptions = $.extend(true, {}, options, { yaxis: {max: {{object.max_hr}}, min: 80}, grid: { markings: [ { yaxis: { from: {{object.avg_hr}}, to: {{object.avg_hr}}}}]} });
+var hroptions = $.extend(true, {}, options, { xaxis: {max: {{object.max_hr}}, min: 80}, grid: { markings: [ { yaxis: { from: {{object.avg_hr}}, to: {{object.avg_hr}}}}]} });
 {% endif %}
 {% if object.avg_speed %}
-var speedoptions = $.extend(true, {}, options, { yaxis: {max: {{object.max_speed}}, min: 0 }});
+var speedoptions = $.extend(true, {}, options, { xaxis: {max: {{object.max_speed}}, min: 0 }});
 {% endif %}
 {% if object.max_cadence %}
-var cadenceoptions = $.extend(true, {}, options, { yaxis: {max: {{object.max_cadence}}, min: 0}});
+var cadenceoptions = $.extend(true, {}, options, { xaxis: {max: {{object.max_cadence}}, min: 0}});
 {% endif %}
-var altitudeoptions = $.extend(true, {}, options, { yaxis: {max: {{alt_max}}, min: 0}});
+var altitudeoptions = $.extend(true, {}, options, { xaxis: {max: {{alt_max}}, min: 0}});
 {% if object.avg_power %}
-var poweroptions = $.extend(true, {}, options, { yaxis: {max: {{object.max_power}}, min: 0}});
+var poweroptions = $.extend(true, {}, options, { xaxis: {max: {{object.max_power}}, min: 0}});
 {% endif %}
 var index = 1;
 var plots = {
@@ -88,7 +86,13 @@ var plots = {
 */
 $(document).ready(function() {
 
+    //Mapper.gsat.setVisibility(1);
+    Mapper.map.setBaseLayer(Mapper.gsat);
+    // Focus le map
+    $('#mapcontainer').focus();
+
     var updateInterval = 500;
+    var zoomLevel = 15;
     var interval = 0;
     index = 0;
     var mapUpdater = 0;
@@ -103,35 +107,36 @@ $(document).ready(function() {
         var lat = datasets["lat"][index];
         // Check for none-values, we don't want to zoom to 0_o o_0
         if (lon != 0.0 && lat != 0.0) {
+            // Only move map every 4th sample, less cluttery looking
             if (mapUpdater >= 4) {
-                //Mapper.zoomToPosMarker();
+                Mapper.zoomToPosMarker();
                 mapUpdater = 0;
             }
-            //Mapper.updatePosMarker(datasets["lon"][index],datasets["lat"][index]);
+            Mapper.updatePosMarker(datasets["lon"][index],datasets["lat"][index]);
         }
         {% if object.avg_hr %}
             var hrval = datasets['hr']['data'][index][1];
             $('#hrval').html(hrval);
-            plots['hr'] = $.plot($("#hrdiv"),[{ 'color': 2, 'data': [[0, hrval]]}], hroptions);
+            plots['hr'] = $.plot($("#hrdiv"),[{ 'color': 2, 'data': [[hrval, 0]]}], hroptions);
         {% endif %}
         {% if object.avg_speed %}
             var speedval = datasets['speed']['data'][index][1];
             $('#speedval').html(speedval.toFixed(1));
-            plots['speed'] = $.plot($("#speeddiv"),[{ 'color': 0, 'data': [[0, speedval]]}], speedoptions);
+            plots['speed'] = $.plot($("#speeddiv"),[{ 'color': 0, 'data': [[speedval, 0]]}], speedoptions);
         {% endif %}
 
             var altitudeval = datasets['altitude']['data'][index][1];
             $('#altitudeval').html(altitudeval.toFixed(0));
-            plots['altitude'] = $.plot($("#altitudediv"),[{ 'color': 3, 'data': [[0, altitudeval]]}], altitudeoptions);
+            plots['altitude'] = $.plot($("#altitudediv"),[{ 'color': 3, 'data': [[altitudeval, 0]]}], altitudeoptions);
         {% if object.max_cadence %}
             var cadenceval = datasets['cadence']['data'][index][1];
             $('#cadenceval').html(cadenceval.toFixed(0));
-            plots['cadence'] = $.plot($("#cadencediv"),[{ 'color': 1, 'data': [[0, cadenceval]]}], cadenceoptions);
+            plots['cadence'] = $.plot($("#cadencediv"),[{ 'color': 1, 'data': [[cadenceval, 0]]}], cadenceoptions);
         {% endif %}
         {% if object.avg_power %}
             var powerval = datasets['power']['data'][index][1];
             $('#powerval').html(powerval.toFixed(0));
-            plots['power'] = $.plot($("#powerdiv"),[{ 'color': 4, 'data': [[0, powerval]]}], poweroptions);
+            plots['power'] = $.plot($("#powerdiv"),[{ 'color': 4, 'data': [[powerval, 0]]}], poweroptions);
         {% endif %}
         
         // Unhighlight all previous points
@@ -142,16 +147,13 @@ $(document).ready(function() {
         index = index+1;
         mapUpdater++;
     }
-    //Mapper.map.zoomTo(9);
 
     interval = setInterval(updateMapAndGraph, updateInterval);
 });
 
 {% endlocalize %}
 </script>
-{% comment%}
 <div class="mapcontainer"><div style="width:1000px;height:1000px" class="drop-shadow raised" id="map"></div>
-{% endcomment %}
 
 {% endblock content %}
 

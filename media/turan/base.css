@@ -1217,3 +1217,6 @@ p.description {
 .graph { 
     margin: 5px;
 }
+.graphheader {
+    width: 40px;
+}
