@@ -9,6 +9,6 @@
         yaxis: { tickFormatter: axisformatters['altitude'],  min: 0, max: {{ alt_max }}, },
         xaxis: { tickFormatter: axisformatters['distance']}
     };
-    $.plot($("#altdiv"), [alt], options);
+    var altitudeprofileplot = $.plot($("#altdiv"), [alt], options);
     {% endlocalize%}
 </script>

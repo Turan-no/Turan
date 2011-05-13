@@ -1214,3 +1214,9 @@ p.description {
     font-size: 8pt;
     color: #888;
 }
+.graph { 
+    margin: 5px;
+}
+.graphheader {
+    width: 40px;
+}

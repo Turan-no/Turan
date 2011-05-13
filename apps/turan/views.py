@@ -1851,10 +1851,10 @@ def exercise_player(request, object_id):
         # TODO Friend check
 
     alt = tripdetail_js(None, exercise.id, 'altitude')
-    #alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
 
     details = exercise.get_details().all()
+    alt_max = details.aggregate(Max('altitude'))['altitude__max']
 
     datasets = js_trip_series(request, details, time_xaxis=False, use_constraints=False)
     #lonlats = []
