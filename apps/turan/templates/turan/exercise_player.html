@@ -35,7 +35,6 @@
 </div>
 <script id="source" language="javascript" type="text/javascript">
     {% localize off %}
-    //$('#altdiv').css('height', '100px');
     var options = { 
         series: {
              lines: { show: false },
@@ -75,7 +74,6 @@ var altitudeoptions = $.extend(true, {}, options, { xaxis: {max: {{alt_max}}, mi
 {% if object.avg_power %}
 var poweroptions = $.extend(true, {}, options, { xaxis: {max: {{object.max_power}}, min: 0}});
 {% endif %}
-var index = 1;
 var plots = {
 };
 /*
@@ -94,10 +92,13 @@ $(document).ready(function() {
     var updateInterval = 500;
     var zoomLevel = 15;
     var interval = 0;
-    index = 0;
+    var index = 0;
     var mapUpdater = 0;
     var iterations = datasets["lon"].length;
 
+    $('#altdiv').bind("plotclick", function (evt, pos, item) {
+        index = item.dataIndex;
+    });
 
     var updateMapAndGraph= function() {
         if (index >= iterations) {
