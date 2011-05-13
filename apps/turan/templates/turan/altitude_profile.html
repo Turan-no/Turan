@@ -4,11 +4,40 @@
     <div id="altdiv" style="height: 200px"></div>
 <script id="source" language="javascript" type="text/javascript">
     {% localize off %}
+    var image = null;
+    var lastX = null;
+    var lastY = null;
+    var i = 0;
+    function cycling_symbol (ctx, x, y, radius, shadow) {
+        if (image == null) {
+            image = new Image();
+            image.src = '/site_media/turan/exerciselogos/cyclist.png';
+        }
+        if (lastX != null) {
+            var movedX = Math.abs(x-lastX);
+            var movedY = y-lastY;
+            if (movedX > 0) {
+                var rad = Math.atan(movedY/movedX);
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(rad);
+                ctx.drawImage(image, -16, -16, 32, 32);
+                ctx.restore();
+            }
+        }
+        if (i > 10) {
+            lastX = x;
+            lastY = y;
+            i = 0;
+        }
+        i++;
+    }
     var alt = { data: {{ alt }}, color: 3, lines: { fill: 0.7 } };
     var options = { 
         yaxis: { tickFormatter: axisformatters['altitude'],  min: 0, max: {{ alt_max }}, },
        xaxis: { tickFormatter: axisformatters['distance']},
-       grid: { clickable: true, hoverable: true }
+       grid: { clickable: true, hoverable: true },
+       series: { points: { symbol: cycling_symbol } }
     };
     var altitudeprofileplot = $.plot($("#altdiv"), [alt], options);
     {% endlocalize %}
