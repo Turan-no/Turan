@@ -22,20 +22,20 @@
 <hr class="clearleft">
 <p class="graphheader speed floatleft">{% trans "Speed" %}
 <br>
-<span class="title" id="speedval{{object.pk}}"></span>
+<span class="title" id="speedval{{forloop.counter0}}"></span>
 </p>
-<div class="graph speed floatleft drop-shadow" id="speeddiv{{object.pk}}" style="width:130px;height:40px"></div>
-<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="hrval{{object.pk}}"</span></p>
-<div class="graph hr floatleft drop-shadow" id="hrdiv{{object.pk}}" style="width:130px;height:40px"></div>
+<div class="graph speed floatleft drop-shadow" id="speeddiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="hrval{{forloop.counter0}}"</span></p>
+<div class="graph hr floatleft drop-shadow" id="hrdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% if object.max_cadence %}
-<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="cadenceval{{object.pk}}"</span></p>
-<div class="graph cadence floatleft drop-shadow" id="cadencediv{{object.pk}}" style="width:130px;height:40px"></div>
+<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="cadenceval{{forloop.counter0}}"</span></p>
+<div class="graph cadence floatleft drop-shadow" id="cadencediv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% endif %}
-<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="altitudeval{{object.pk}}"</span></p>
-<div class="graph altitude floatleft drop-shadow" id="altitudediv{{object.pk}}" style="width:130px;height:40px"></div>
+<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="altitudeval{{forloop.counter0}}"</span></p>
+<div class="graph altitude floatleft drop-shadow" id="altitudediv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% if object.avg_power %}
-<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="powerval{{object.pk}}"</span></p>
-<div class="graph power floatleft drop-shadow" id="powerdiv{{object.pk}}" style="width:130px;height:40px"></div>
+<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="powerval{{forloop.counter0}}"</span></p>
+<div class="graph power floatleft drop-shadow" id="powerdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% endif %}
 {% endfor %}
 <script  language="javascript" type="text/javascript">
@@ -87,15 +87,8 @@ datasets.push({{dataset}});
     {% endif %}
     });
 {% endfor %}
-
-var plots = {
-};
-/*
-        'hr' : $.plot($("#hrdiv"),{ color: 2, data: datasets['hr']['data'].slice(index-1, index)}, hroptions),
-        'speed' : $.plot($("#speeddiv"),[datasets['speed']['data'].slice(index-1, index)], speedoptions),
-        'cadence' : $.plot($("#cadencediv"),[datasets['cadence']['data'].slice(index-1, index)], cadenceoptions),
-        'power' :$.plot($("#powerdiv"),[datasets['power']['data'].slice(index-1, index)], poweroptions)
-*/
+// All plot objects stord in this to be used by setData()
+var plots = { };
 $(document).ready(function() {
 
     //Mapper.gsat.setVisibility(1);
@@ -119,6 +112,16 @@ $(document).ready(function() {
     {% for object in exercises %}
         lineLayers.push(Mapper.initLine('{{object.user}}'));
     {% endfor %}
+    var setAndDraw = function(index, key, data) {
+        plot = plots[key+index];
+        if (plot) {
+            plot.setData(data);
+            plot.draw()
+        }
+        else {
+            plot = $.plot($("#"+key+"div"+index),data, graphoptions[index][key]);
+        }
+    }
     var updateMapAndGraph= function() {
         if (index >= iterations) {
             clearInterval(interval);
@@ -144,27 +147,27 @@ $(document).ready(function() {
             }
             {% if object.avg_hr %}
             var hrval = datasets[{{forloop.counter0}}]['hr']['data'][index][1];
-                $('#hrval{{object.pk}}').html(hrval);
-                plots['hr'] = $.plot($("#hrdiv{{object.pk}}"),[{ 'color': 2, 'data': [[hrval, 0]]}], graphoptions[{{forloop.counter0}}]['hr']);
+                $('#hrval{{forloop.counter0}}').html(hrval);
+                setAndDraw({{forloop.counter0}}, 'hr', [{ 'color': 2, 'data': [[hrval, 0]]}]);
             {% endif %}
             {% if object.avg_speed %}
             var speedval = datasets[{{forloop.counter0}}]['speed']['data'][index][1];
-                $('#speedval{{object.pk}}').html(speedval.toFixed(1));
-                plots['speed'] = $.plot($("#speeddiv{{object.pk}}"),[{ 'color': 0, 'data': [[speedval, 0]]}], graphoptions[{{forloop.counter0}}]['speed']);
+                $('#speedval{{forloop.counter0}}').html(speedval.toFixed(1));
+                setAndDraw({{forloop.counter0}}, 'speed', [{ 'color': 0, 'data': [[speedval, 0]]}]);
             {% endif %}
 
             var altitudeval = datasets[{{forloop.counter0}}]['altitude']['data'][index][1];
-                $('#altitudeval{{object.pk}}').html(altitudeval.toFixed(0));
-                plots['altitude'] = $.plot($("#altitudediv{{object.pk}}"),[{ 'color': 3, 'data': [[altitudeval, 0]]}], graphoptions[{{forloop.counter0}}]['altitude']);
+                $('#altitudeval{{forloop.counter0}}').html(altitudeval.toFixed(0));
+                setAndDraw({{forloop.counter0}}, 'altitude', [{ 'color': 3, 'data': [[altitudeval, 0]]}]);
             {% if object.max_cadence %}
             var cadenceval = datasets[{{forloop.counter0}}]['cadence']['data'][index][1];
-                $('#cadenceval{{object.pk}}').html(cadenceval.toFixed(0));
-                plots['cadence'] = $.plot($("#cadencediv{{object.pk}}"),[{ 'color': 1, 'data': [[cadenceval, 0]]}], graphoptions[{{forloop.counter0}}]['cadence']);
+                $('#cadenceval{{forloop.counter0}}').html(cadenceval.toFixed(0));
+                setAndDraw({{forloop.counter0}}, 'cadence', [{ 'color': 1, 'data': [[cadenceval, 0]]}]);
             {% endif %}
             {% if object.avg_power %}
             var powerval = datasets[{{forloop.counter0}}]['power']['data'][index][1];
-                $('#powerval{{object.pk}}').html(powerval.toFixed(0));
-                plots['power'] = $.plot($("#powerdiv{{object.pk}}"),[{ 'color': 4, 'data': [[powerval, 0]]}], graphoptions[{{forloop.counter0}}]['power']);
+                $('#powerval{{forloop.counter0}}').html(powerval.toFixed(0));
+                setAndDraw({{forloop.counter0}}, 'power', [{ 'color': 4, 'data': [[powerval, 0]]}]);
             {% endif %}
         {% endfor %}
             
