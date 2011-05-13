@@ -7,8 +7,9 @@
     var alt = { data: {{ alt }}, color: 3, lines: { fill: 0.7 } };
     var options = { 
         yaxis: { tickFormatter: axisformatters['altitude'],  min: 0, max: {{ alt_max }}, },
-        xaxis: { tickFormatter: axisformatters['distance']}
+       xaxis: { tickFormatter: axisformatters['distance']},
+       grid: { clickable: true, hoverable: true }
     };
     var altitudeprofileplot = $.plot($("#altdiv"), [alt], options);
-    {% endlocalize%}
+    {% endlocalize %}
 </script>
