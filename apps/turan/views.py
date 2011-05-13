@@ -1893,21 +1893,23 @@ def exercise_update_live(request, object_id):
     return HttpResponse('json OK')
     search_query = request.GET.get('q', '')
 
-def exercise_player(request, object_id, object_id2=None):
+def exercise_player(request):
 
-    exercise = get_object_or_404(Exercise, pk=object_id)
-    if object_id2:
-        exercise2 = get_object_or_404(Exercise, pk=object_id2)
-    if exercise.exercise_permission == 'N':
-        return redirect_to_login(request.path)
-        # TODO Friend check
-    if exercise2.exercise_permission == 'N':
-        return redirect_to_login(request.path)
-        # TODO Friend check
+    exercises = []
+    ids = request.GET.getlist('id')
+    for id in ids:
+        try:
+            object_id = int(id)
+        except ValueError:
+            return Http404()
+        exercise = get_object_or_404(Exercise, pk=object_id)
+        if exercise.exercise_permission == 'N':
+            return redirect_to_login(request.path)
+            # TODO Friend check
+        exercises.append(exercise)
 
     alt = tripdetail_js(None, exercise.id, 'altitude')
 
-    exercises = [exercise, exercise2]
 
     datasets = []
     alt_max = 0
