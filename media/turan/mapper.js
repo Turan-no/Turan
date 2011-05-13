@@ -185,15 +185,10 @@ var Mapper = {
     },
     updatePosMarker: function(x, y) {
         if (x != undefined && y != undefined ) {
-            //if ( this.posMarker != null )
-            //    this.posMarker.erase();
             this.deleteMarkers();
-            //this.posMarker = this.startMarker.clone()
-            //this.startMarker.erase();
             lonlat = new OpenLayers.LonLat(x, y).transform(this.projection, this.map.getProjectionObject());
             this.posMarker = new OpenLayers.Marker(lonlat, this.pos_icon.clone());
             this.layerMarkers.addMarker(this.posMarker);
-            //        this.layerMarkers.redraw();
         }
     },
     zoomToPosMarker: function() {
