@@ -510,6 +510,56 @@ def generate_tshirt(request):
     data.seek(0)
     return HttpResponse(data.read(), mimetype='image/png',status=200)
 
+def colorize_and_scale(request):
+    import Image
+    from cStringIO import StringIO
+
+    if 'i' in request.GET:
+        i = request.GET['i']
+        if not os.path.abspath(i).startswith(os.path.abspath("site_media")):
+            return HttpResponseServerError()
+    else:
+        return HttpResponseServerError()
+
+    if 'w' in request.GET:
+        w = int(request.GET['w'])
+    else:
+        w = 24
+
+    if 'h' in request.GET:
+        h = int(request.GET['h'])
+    else:
+        h = 24
+
+    if 'r' in request.GET:
+        r = int(request.GET['r'])
+    else:
+        r = 255
+
+    if 'g' in request.GET:
+        g = int(request.GET['g'])
+    else:
+        g = 0
+
+    if 'b' in request.GET:
+        b = int(request.GET['b'])
+    else:
+        b = 0
+
+    i = Image.open(i)
+    sized = i.resize((w, h), Image.ANTIALIAS)
+
+    channels = sized.split()
+
+    channels = (channels[0].point(lambda i: r), channels[1].point(lambda i: g), channels[2].point(lambda i: b), channels[3])
+
+    sized = Image.merge(sized.mode, channels)
+
+    data = StringIO()
+    sized.save(data, "png")
+    data.seek(0)
+    return HttpResponse(data.read(), mimetype='image/png',status=200)
+    
 
 def calendar(request):
     now = datetime.now()
