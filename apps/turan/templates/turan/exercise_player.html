@@ -1,0 +1,107 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% load l10n %}
+{% load turan_extras %}
+{% block title %} {% trans "Exercise" %} {% endblock %}
+{% block extra_head %}
+{{ block.super }}
+    <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.crosshair.js"></script>
+{% with object.route.gpx_file as gpx_file %}
+    {% include "turan/maphead.html" %}
+{% endwith %}
+{% endblock %}
+{% block content %}
+<div>
+<p class="speed floatleft">{% trans "Speed" %}</p>
+<div class="graph speed floatleft" id="speeddiv" style="width:150px;height:60px"></div>
+<p class="hr floatleft">{% trans "HR" %}</p>
+<div class="graph hr floatleft" id="hrdiv" style="width:150px;height:60px"></div>
+<p class="cadence floatleft">{% trans "Cadence" %}</p>
+<div class="graph cadence floatleft" id="cadencediv" style="width:150px;height:60px"></div>
+<p class="altitude floatleft">{% trans "Altitude" %}</p>
+<div class="graph altitude floatleft" id="altitudediv" style="width:150px;height:60px"></div>
+<p class="power floatleft">{% trans "Power" %}</p>
+<div class="graph power floatleft" id="powerdiv" style="width:150px;height:60px"></div>
+</div>
+<script id="source" language="javascript" type="text/javascript">
+    {% localize off %}
+    var alt = { 
+        data: [{{ alt }}], 
+        yaxis: 2, 
+        color: 3,
+        lines: {
+            fill: 0.2,
+        }
+    };
+    var options = { 
+        series: {
+             lines: { show: false },
+             bars: { 
+                show: true,
+                horizontal: false,
+             },
+             xaxis: { tickDecimals: 0, tickSize: 1 },
+             yaxis: { tickDecimals: 0, tickSize: 1}
+        },
+        grid: {
+            show: true
+        }
+    };
+
+var datasets = {{ datasets }};
+// Set up initial graphs
+
+var hroptions = $.extend(true, {}, options, { yaxis: {max: {{object.max_hr}}, min: 80}});
+var speedoptions = $.extend(true, {}, options, { yaxis: {max: {{object.max_speed}}, min: 0 }});
+var cadenceoptions = $.extend(true, {}, options, { yaxis: {max: {{object.max_cadence}}, min: 0}});
+var altitudeoptions = $.extend(true, {}, options, { yaxis: {max: {{object.route.max_altitude}}, min: 0}});
+var poweroptions = $.extend(true, {}, options, { yaxis: {max: {{object.max_power}}, min: 0}});
+var index = 1;
+var plots = {
+};
+/*
+        'hr' : $.plot($("#hrdiv"),{ color: 2, data: datasets['hr']['data'].slice(index-1, index)}, hroptions),
+        'speed' : $.plot($("#speeddiv"),[datasets['speed']['data'].slice(index-1, index)], speedoptions),
+        'cadence' : $.plot($("#cadencediv"),[datasets['cadence']['data'].slice(index-1, index)], cadenceoptions),
+        'power' :$.plot($("#powerdiv"),[datasets['power']['data'].slice(index-1, index)], poweroptions)
+*/
+$(document).ready(function() {
+
+    var updateInterval = 500;
+    var interval = 0;
+    index = 0;
+    var mapUpdater = 0;
+    var iterations = datasets["lon"].length;
+
+
+    var updateMapAndGraph= function() {
+        if (index >= iterations) {
+            clearInterval(interval);
+        }
+        if (mapUpdater == 9) {
+            Mapper.zoomToPosMarker();
+            mapUpdater = 0;
+        }
+        Mapper.updatePosMarker(datasets["lon"][index],datasets["lat"][index]);
+
+        plots['hr'] = $.plot($("#hrdiv"),[{ 'color': 2, 'data': datasets['hr']['data'].slice(index-1, index)}], hroptions);
+        plots['speed'] = $.plot($("#speeddiv"),[{ 'color': 0, 'data': datasets['speed']['data'].slice(index-1, index)}], speedoptions);
+        plots['cadence'] = $.plot($("#cadencediv"),[{ 'color': 1, 'data': datasets['cadence']['data'].slice(index-1, index)}], cadenceoptions);
+        plots['altitude'] = $.plot($("#altitudediv"),[{ 'color': 3, 'data': datasets['altitude']['data'].slice(index-1, index)}], altitudeoptions);
+        plots['power'] = $.plot($("#powerdiv"),[{ 'color': 4, 'data': datasets['power']['data'].slice(index-1, index)}], poweroptions);
+
+        index = index+1;
+        mapUpdater++;
+    }
+    //Mapper.map.zoomTo(9);
+
+    interval = setInterval(updateMapAndGraph, updateInterval);
+});
+
+{% endlocalize %}
+</script>
+<div class="mapcontainer"><div style="width:1000px;height:1000px" class="drop-shadow raised" id="map"></div>
+
+{% endblock content %}
+
