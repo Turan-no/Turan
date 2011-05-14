@@ -9,6 +9,15 @@ var colors = [
     "rgb(166,0,0)", 
     "rgb(119,0,119)"];
 
+var playercolors = [
+    { r: 255, g: 20, b: 20 },
+    { r: 20, g: 20, b: 255 },
+    { r: 20, g: 255, b: 255 },
+    { r: 255, g: 20, b: 255 },
+    { r: 255, g: 255, b: 20 },
+    { r: 80, g: 80, b: 80 }
+];
+
 /* conver rgb colors to hex, openlayers uses those */
 function colorToHex(c) {
     var m = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/.exec(c);

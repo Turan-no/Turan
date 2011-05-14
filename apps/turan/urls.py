@@ -42,6 +42,8 @@ urlpatterns = patterns('',
 
     url(r'^exercise/compare/(?P<exercise1>\d+)/(?P<exercise2>\d+)', exercise_compare, name='exercise_compare'),
     url(r'^play/exercise/?', exercise_player, name='exercise_player'),
+    url(r'^live/raam/?', exercise_live, name='exercise_live'),
+    url(r'^fetchRAAM/?', fetchRAAM, name='fetchRAAM'),
     url(r'^json/comment/random/?$', json_serializer, { 'queryset': Comment.objects.order_by('?')[:10], 'relations': ('content_type',) }, name='json_comments'),
 #    url(r'^json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/(?P<start>\d+)/(?P<stop>\d+)', json_tripdetail, name='json_tripdetail-startstop'),
 #    url(r'^json/(?P<event_type>\w+)/(?P<object_id>\d+)/(?P<val>\w+)/?$', json_tripdetail, name='json_tripdetail'),
