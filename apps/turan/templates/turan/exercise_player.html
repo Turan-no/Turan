@@ -15,6 +15,32 @@
 {% endblock %}
 {% block content %}
 <h1>{% trans "Playback of exercise" %} {{ exercise }}</h1>
+    <ul class="buttons spacer">
+        <li style="float: left">
+            <a id="control_start" href="#">
+                <img class="icons" src="{{ "control_start"|silk_icon }}" alt="{% trans "Start" %}" />
+                {% trans "Start" %}
+            </a>
+        </li>
+        <li style="float: left">
+            <a id="control_play" href="#">
+                <img class="icons" src="{{ "control_play"|silk_icon }}" alt="{% trans "Play" %}" />
+                {% trans "Play" %}
+            </a>
+        </li>
+        <li style="float: left">
+            <a id="control_pause" href="#">
+                <img class="icons" src="{{ "control_pause"|silk_icon }}" alt="{% trans "Pause" %}" />
+                {% trans "Pause" %}
+            </a>
+        </li>
+        <li style="float: left">
+            <a id="control_fastforward" href="#">
+                <img class="icons" src="{{ "control_fastforward"|silk_icon }}" alt="{% trans "FFWD" %}" />
+                {% trans "Fast forward" %}
+            </a>
+        </li>
+    </ul>
 {% include "turan/altitude_profile.html" %}
 {% for object in exercises %}
 <hr class="clearleft">
@@ -40,6 +66,28 @@
 {% endfor %}
 <script  language="javascript" type="text/javascript">
     {% localize off %}
+
+var index = 0;
+var speed = 1;
+
+$('#control_start').bind("click", function (evt) {
+        evt.preventDefault();
+        index = 0;
+    });
+$('#control_pause').bind("click", function (evt) {
+        evt.preventDefault();
+        speed = 0;
+    });
+$('#control_play').bind("click", function (evt) {
+        evt.preventDefault();
+        speed = 1;
+    });
+$('#control_fastforward').bind("click", function (evt) {
+        evt.preventDefault();
+        speed += 5;
+    });
+
+
     var options = { 
         series: {
              lines: { show: false },
@@ -101,7 +149,6 @@ $(document).ready(function() {
     var updateInterval = 500;
     var zoomLevel = 15;
     var interval = 0;
-    var index = 0;
     var mapUpdater = 0;
     var iterations = datasets[0]["lon"].length;
 
@@ -175,8 +222,7 @@ $(document).ready(function() {
             altitudeprofileplot.unhighlight();
             // Highlight the point at index in the first series in the altitudeprofile plot
             altitudeprofileplot.highlight(0, index);
-
-        index = index+1;
+        index += speed;
         mapUpdater++;
     }
 
