@@ -135,6 +135,9 @@
                     autoHighlight: true, // highlight in case mouse is near
                     mouseActiveRadius: 10 // how far the mouse can be away to activate an item
                 },
+                interaction: {
+                    redrawOverlayInterval: 1000/60 // time between updates, -1 means in same flow
+                },
                 hooks: {}
             },
         canvas = null,      // the canvas for the plot itself
@@ -764,9 +767,8 @@
             ctx = canvas.getContext("2d");
             octx = overlay.getContext("2d");
 
-            // we include the canvas in the event holder too, because IE 7
-            // sometimes has trouble with the stacking order
-            eventHolder = $([overlay, canvas]);
+            // define which element we're listening for events on
+            eventHolder = $(overlay);
 
             if (reused) {
                 // run shutdown in the old plot object
@@ -895,8 +897,8 @@
                 ctx.restore();
             }
 
-            axis.labelWidth = axisw;
-            axis.labelHeight = axish;
+            axis.labelWidth = Math.ceil(axisw);
+            axis.labelHeight = Math.ceil(axish);
         }
 
         function allocateAxisBoxFirstPhase(axis) {
@@ -2433,8 +2435,14 @@
         }
 
         function triggerRedrawOverlay() {
+            var t = options.interaction.redrawOverlayInterval;
+            if (t == -1) {      // skip event queue
+                drawOverlay();
+                return;
+            }
+            
             if (!redrawTimeout)
-                redrawTimeout = setTimeout(drawOverlay, 30);
+                redrawTimeout = setTimeout(drawOverlay, t);
         }
 
         function drawOverlay() {

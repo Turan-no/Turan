@@ -29,6 +29,7 @@
 //   or use Box Sizing Behavior from WebFX
 //   (http://webfx.eae.net/dhtml/boxsizing/boxsizing.html)
 // * Non uniform scaling does not correctly scale strokes.
+// * Filling very large shapes (above 5000 points) is buggy.
 // * Optimize. There is always room for speed improvements.
 
 // Only add this code if we do not already have a canvas implementation
@@ -877,90 +878,101 @@ if (!document.createElement('canvas').getContext) {
   };
 
   contextPrototype.stroke = function(aFill) {
-    var lineStr = [];
-    var lineOpen = false;
-
     var W = 10;
     var H = 10;
+    // Divide the shape into chunks if it's too long because IE has a limit
+    // somewhere for how long a VML shape can be. This simple division does
+    // not work with fills, only strokes, unfortunately.
+    var chunkSize = 5000;
 
-    lineStr.push('<g_vml_:shape',
-                 ' filled="', !!aFill, '"',
-                 ' style="position:absolute;width:', W, 'px;height:', H, 'px;"',
-                 ' coordorigin="0,0"',
-                 ' coordsize="', Z * W, ',', Z * H, '"',
-                 ' stroked="', !aFill, '"',
-                 ' path="');
-
-    var newSeq = false;
     var min = {x: null, y: null};
     var max = {x: null, y: null};
 
-    for (var i = 0; i < this.currentPath_.length; i++) {
-      var p = this.currentPath_[i];
-      var c;
+    for (var j = 0; j < this.currentPath_.length; j += chunkSize) {
+      var lineStr = [];
+      var lineOpen = false;
 
-      switch (p.type) {
-        case 'moveTo':
-          c = p;
-          lineStr.push(' m ', mr(p.x), ',', mr(p.y));
-          break;
-        case 'lineTo':
-          lineStr.push(' l ', mr(p.x), ',', mr(p.y));
-          break;
-        case 'close':
-          lineStr.push(' x ');
-          p = null;
-          break;
-        case 'bezierCurveTo':
-          lineStr.push(' c ',
-                       mr(p.cp1x), ',', mr(p.cp1y), ',',
-                       mr(p.cp2x), ',', mr(p.cp2y), ',',
-                       mr(p.x), ',', mr(p.y));
-          break;
-        case 'at':
-        case 'wa':
-          lineStr.push(' ', p.type, ' ',
-                       mr(p.x - this.arcScaleX_ * p.radius), ',',
-                       mr(p.y - this.arcScaleY_ * p.radius), ' ',
-                       mr(p.x + this.arcScaleX_ * p.radius), ',',
-                       mr(p.y + this.arcScaleY_ * p.radius), ' ',
-                       mr(p.xStart), ',', mr(p.yStart), ' ',
-                       mr(p.xEnd), ',', mr(p.yEnd));
-          break;
+      lineStr.push('<g_vml_:shape',
+                   ' filled="', !!aFill, '"',
+                   ' style="position:absolute;width:', W, 'px;height:', H, 'px;"',
+                   ' coordorigin="0,0"',
+                   ' coordsize="', Z * W, ',', Z * H, '"',
+                   ' stroked="', !aFill, '"',
+                   ' path="');
+
+      var newSeq = false;
+
+      for (var i = j; i < Math.min(j + chunkSize, this.currentPath_.length); i++) {
+        if (i % chunkSize == 0 && i > 0) { // move into position for next chunk
+          lineStr.push(' m ', mr(this.currentPath_[i-1].x), ',', mr(this.currentPath_[i-1].y));
+        }
+
+        var p = this.currentPath_[i];
+        var c;
+
+        switch (p.type) {
+          case 'moveTo':
+            c = p;
+            lineStr.push(' m ', mr(p.x), ',', mr(p.y));
+            break;
+          case 'lineTo':
+            lineStr.push(' l ', mr(p.x), ',', mr(p.y));
+            break;
+          case 'close':
+            lineStr.push(' x ');
+            p = null;
+            break;
+          case 'bezierCurveTo':
+            lineStr.push(' c ',
+                         mr(p.cp1x), ',', mr(p.cp1y), ',',
+                         mr(p.cp2x), ',', mr(p.cp2y), ',',
+                         mr(p.x), ',', mr(p.y));
+            break;
+          case 'at':
+          case 'wa':
+            lineStr.push(' ', p.type, ' ',
+                         mr(p.x - this.arcScaleX_ * p.radius), ',',
+                         mr(p.y - this.arcScaleY_ * p.radius), ' ',
+                         mr(p.x + this.arcScaleX_ * p.radius), ',',
+                         mr(p.y + this.arcScaleY_ * p.radius), ' ',
+                         mr(p.xStart), ',', mr(p.yStart), ' ',
+                         mr(p.xEnd), ',', mr(p.yEnd));
+            break;
+        }
+  
+  
+        // TODO: Following is broken for curves due to
+        //       move to proper paths.
+  
+        // Figure out dimensions so we can do gradient fills
+        // properly
+        if (p) {
+          if (min.x == null || p.x < min.x) {
+            min.x = p.x;
+          }
+          if (max.x == null || p.x > max.x) {
+            max.x = p.x;
+          }
+          if (min.y == null || p.y < min.y) {
+            min.y = p.y;
+          }
+          if (max.y == null || p.y > max.y) {
+            max.y = p.y;
+          }
+        }
       }
-
-
-      // TODO: Following is broken for curves due to
-      //       move to proper paths.
-
-      // Figure out dimensions so we can do gradient fills
-      // properly
-      if (p) {
-        if (min.x == null || p.x < min.x) {
-          min.x = p.x;
-        }
-        if (max.x == null || p.x > max.x) {
-          max.x = p.x;
-        }
-        if (min.y == null || p.y < min.y) {
-          min.y = p.y;
-        }
-        if (max.y == null || p.y > max.y) {
-          max.y = p.y;
-        }
+      lineStr.push(' ">');
+  
+      if (!aFill) {
+        appendStroke(this, lineStr);
+      } else {
+        appendFill(this, lineStr, min, max);
       }
+  
+      lineStr.push('</g_vml_:shape>');
+  
+      this.element_.insertAdjacentHTML('beforeEnd', lineStr.join(''));
     }
-    lineStr.push(' ">');
-
-    if (!aFill) {
-      appendStroke(this, lineStr);
-    } else {
-      appendFill(this, lineStr, min, max);
-    }
-
-    lineStr.push('</g_vml_:shape>');
-
-    this.element_.insertAdjacentHTML('beforeEnd', lineStr.join(''));
   };
 
   function appendStroke(ctx, lineStr) {

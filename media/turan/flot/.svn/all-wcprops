@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 23
-/svn/!svn/ver/330/trunk
+/svn/!svn/ver/332/trunk
 END
 jquery.flot.selection.js
 K 25
@@ -13,7 +13,7 @@ excanvas.js
 K 25
 svn:wc:ra_dav:version-url
 V 35
-/svn/!svn/ver/223/trunk/excanvas.js
+/svn/!svn/ver/332/trunk/excanvas.js
 END
 FAQ.txt
 K 25
@@ -25,7 +25,7 @@ API.txt
 K 25
 svn:wc:ra_dav:version-url
 V 31
-/svn/!svn/ver/328/trunk/API.txt
+/svn/!svn/ver/332/trunk/API.txt
 END
 jquery.flot.threshold.js
 K 25
@@ -55,7 +55,7 @@ NEWS.txt
 K 25
 svn:wc:ra_dav:version-url
 V 32
-/svn/!svn/ver/328/trunk/NEWS.txt
+/svn/!svn/ver/332/trunk/NEWS.txt
 END
 jquery.colorhelpers.js
 K 25
@@ -79,7 +79,7 @@ jquery.flot.js
 K 25
 svn:wc:ra_dav:version-url
 V 38
-/svn/!svn/ver/330/trunk/jquery.flot.js
+/svn/!svn/ver/332/trunk/jquery.flot.js
 END
 PLUGINS.txt
 K 25
@@ -109,7 +109,7 @@ excanvas.min.js
 K 25
 svn:wc:ra_dav:version-url
 V 39
-/svn/!svn/ver/223/trunk/excanvas.min.js
+/svn/!svn/ver/332/trunk/excanvas.min.js
 END
 .gitignore
 K 25
