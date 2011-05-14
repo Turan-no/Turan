@@ -63,11 +63,28 @@
 <p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="powerval{{forloop.counter0}}"</span></p>
 <div class="graph power floatleft drop-shadow" id="powerdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% endif %}
+<hr class="clearleft">
+
+<p class="graphheader speed floatleft">{% trans "Speed" %}<br><span class="title" id="2speedval{{forloop.counter0}}"></span></p>
+<div class="graph speed floatleft" id="2speeddiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="2hrval{{forloop.counter0}}"</span></p>
+<div class="graph hr floatleft" id="2hrdiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+{% if object.max_cadence %}
+<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="2cadenceval{{forloop.counter0}}"</span></p>
+<div class="graph cadence floatleft" id="2cadencediv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+{% endif %}
+<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="2altitudeval{{forloop.counter0}}"</span></p>
+<div class="graph altitude floatleft" id="2altitudediv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+{% if object.avg_power %}
+<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="2powerval{{forloop.counter0}}"</span></p>
+<div class="graph power floatleft" id="2powerdiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+{% endif %}
+
 {% endfor %}
 <script  language="javascript" type="text/javascript">
     {% localize off %}
 
-var index = 0;
+var index = 30;
 var speed = 1;
 
 $('#control_start').bind("click", function (evt) {
@@ -196,25 +213,30 @@ $(document).ready(function() {
             var hrval = datasets[{{forloop.counter0}}]['hr']['data'][index][1];
                 $('#hrval{{forloop.counter0}}').html(hrval);
                 setAndDraw({{forloop.counter0}}, 'hr', [{ 'color': 2, 'data': [[hrval, 0]]}]);
+                $.plot($("#2hrdiv{{forloop.counter0}}"), [{'color': 2, 'data': datasets[{{forloop.counter0}}]['hr']['data'].slice(index-30,index)}],{});
             {% endif %}
             {% if object.avg_speed %}
             var speedval = datasets[{{forloop.counter0}}]['speed']['data'][index][1];
                 $('#speedval{{forloop.counter0}}').html(speedval.toFixed(1));
                 setAndDraw({{forloop.counter0}}, 'speed', [{ 'color': 0, 'data': [[speedval, 0]]}]);
+                $.plot($("#2speeddiv{{forloop.counter0}}"), [{'color': 0, 'data': datasets[{{forloop.counter0}}]['speed']['data'].slice(index-30,index)}],{});
             {% endif %}
 
             var altitudeval = datasets[{{forloop.counter0}}]['altitude']['data'][index][1];
                 $('#altitudeval{{forloop.counter0}}').html(altitudeval.toFixed(0));
                 setAndDraw({{forloop.counter0}}, 'altitude', [{ 'color': 3, 'data': [[altitudeval, 0]]}]);
+                $.plot($("#2altitudediv{{forloop.counter0}}"), [{'color': 3, 'data': datasets[{{forloop.counter0}}]['altitude']['data'].slice(index-30,index)}],{});
             {% if object.max_cadence %}
             var cadenceval = datasets[{{forloop.counter0}}]['cadence']['data'][index][1];
                 $('#cadenceval{{forloop.counter0}}').html(cadenceval.toFixed(0));
                 setAndDraw({{forloop.counter0}}, 'cadence', [{ 'color': 1, 'data': [[cadenceval, 0]]}]);
+                $.plot($("#2cadencediv{{forloop.counter0}}"), [{'color': 1, 'data': datasets[{{forloop.counter0}}]['cadence']['data'].slice(index-30,index)}],{});
             {% endif %}
             {% if object.avg_power %}
             var powerval = datasets[{{forloop.counter0}}]['power']['data'][index][1];
                 $('#powerval{{forloop.counter0}}').html(powerval.toFixed(0));
                 setAndDraw({{forloop.counter0}}, 'power', [{ 'color': 4, 'data': [[powerval, 0]]}]);
+                $.plot($("#2powerdiv{{forloop.counter0}}"), [{'color': 4, 'data': datasets[{{forloop.counter0}}]['power']['data'].slice(index-30,index)}],{});
             {% endif %}
         {% endfor %}
             
