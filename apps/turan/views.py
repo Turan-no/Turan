@@ -867,7 +867,9 @@ def json_trip_series(request, object_id):
         has_distance = filldistance(details)
         if not has_distance:
             time_xaxis = True
-        js = compress_string(js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False))
+        js = js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
+        js = js.encode('UTF-8')
+        js = compress_string(js)
         cache.set(cache_key, js, 86400)
     response = HttpResponse(js, mimetype='text/javascript')
     response['Content-Encoding'] = 'gzip'
