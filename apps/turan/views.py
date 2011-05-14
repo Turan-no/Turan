@@ -515,8 +515,8 @@ def colorize_and_scale(request):
     from cStringIO import StringIO
 
     if 'i' in request.GET:
-        i = request.GET['i']
-        if not os.path.abspath(i).startswith(os.path.abspath("site_media")):
+        i = settings.MEDIA_ROOT + request.GET['i']
+        if not os.path.abspath(i).startswith(settings.MEDIA_ROOT):
             return HttpResponseServerError()
     else:
         return HttpResponseServerError()
