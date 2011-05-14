@@ -1922,3 +1922,18 @@ def exercise_player(request):
         datasets.append(mark_safe(js_trip_series(request, details, time_xaxis=False, use_constraints=False)))
 
     return render_to_response('turan/exercise_player.html', locals(), context_instance=RequestContext(request))
+
+def exercise_live(request):
+
+    exercise = Exercise.objects.get(pk=4570)
+
+    return render_to_response('turan/exercise_live.html', locals(), context_instance=RequestContext(request))
+
+
+def fetchRAAM(request):
+    #callback = request.GET.get('callback', '')
+    req = {}
+    url = "http://live.raam.no/LastPing.aspx"
+    req ['data'] = urllib2.urlopen(url).read().strip()
+    response = simplejson.dumps(req)
+    return HttpResponse(response, mimetype="application/json")
