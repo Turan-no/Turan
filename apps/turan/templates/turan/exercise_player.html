@@ -177,7 +177,10 @@ $(document).ready(function() {
     {% for object in exercises %}
         lineLayers.push(Mapper.initLine('{{object.user}}'));
     {% endfor %}
-    var setAndDraw = function(index, key, data) {
+    // Function to update both graphs for each val
+    // Try and look and for existing plot
+    // if cannot be found, create the initial plot and save key to var plots.
+    var setAndDraw = function(index, key, data, histdata) {
         plot = plots[key+index];
         if (plot) {
             plot.setData(data);
@@ -185,6 +188,14 @@ $(document).ready(function() {
         }
         else {
             plot = $.plot($("#"+key+"div"+index),data, graphoptions[index][key]);
+        }
+        histplot = plots[2+key+index];
+        if (histplot) {
+            histplot.setData(histdata);
+            histplot.draw();
+        }
+        else {
+            $.plot($("#2"+key+"div"+index), histdata ,{});
         }
     }
     var updateMapAndGraph= function() {
@@ -210,41 +221,39 @@ $(document).ready(function() {
                     Mapper.drawLine(lineLayers[{{forloop.counter0}}], colors[{{forloop.counter}}], p_lon, p_lat, lon, lat);
                 }
             }
+            {% if forloop.first %}
+                // Unhighlight all previous points
+                altitudeprofileplot.unhighlight();
+                // Highlight the point at index in the first series in the altitudeprofile plot
+                altitudeprofileplot.highlight(0, index);
+            {% endif %}
+
             {% if object.avg_hr %}
             var hrval = datasets[{{forloop.counter0}}]['hr']['data'][index][1];
                 $('#hrval{{forloop.counter0}}').html(hrval);
-                setAndDraw({{forloop.counter0}}, 'hr', [{ 'color': 2, 'data': [[hrval, 0]]}]);
-                $.plot($("#2hrdiv{{forloop.counter0}}"), [{'color': 2, 'data': datasets[{{forloop.counter0}}]['hr']['data'].slice(index-30,index)}],{});
+                setAndDraw({{forloop.counter0}}, 'hr', [{ 'color': 2, 'data': [[hrval, 0]]}], [{'color': 2, 'data': datasets[{{forloop.counter0}}]['hr']['data'].slice(index-30,index)}]);
             {% endif %}
             {% if object.avg_speed %}
             var speedval = datasets[{{forloop.counter0}}]['speed']['data'][index][1];
                 $('#speedval{{forloop.counter0}}').html(speedval.toFixed(1));
-                setAndDraw({{forloop.counter0}}, 'speed', [{ 'color': 0, 'data': [[speedval, 0]]}]);
-                $.plot($("#2speeddiv{{forloop.counter0}}"), [{'color': 0, 'data': datasets[{{forloop.counter0}}]['speed']['data'].slice(index-30,index)}],{});
+                setAndDraw({{forloop.counter0}}, 'speed', [{ 'color': 0, 'data': [[speedval, 0]]}], [{'color': 0, 'data': datasets[{{forloop.counter0}}]['speed']['data'].slice(index-30,index)}]);
             {% endif %}
 
             var altitudeval = datasets[{{forloop.counter0}}]['altitude']['data'][index][1];
                 $('#altitudeval{{forloop.counter0}}').html(altitudeval.toFixed(0));
-                setAndDraw({{forloop.counter0}}, 'altitude', [{ 'color': 3, 'data': [[altitudeval, 0]]}]);
-                $.plot($("#2altitudediv{{forloop.counter0}}"), [{'color': 3, 'data': datasets[{{forloop.counter0}}]['altitude']['data'].slice(index-30,index)}],{});
+                setAndDraw({{forloop.counter0}}, 'altitude', [{ 'color': 3, 'data': [[altitudeval, 0]]}], [{'color': 3, 'data': datasets[{{forloop.counter0}}]['altitude']['data'].slice(index-30,index)}]);
             {% if object.max_cadence %}
             var cadenceval = datasets[{{forloop.counter0}}]['cadence']['data'][index][1];
                 $('#cadenceval{{forloop.counter0}}').html(cadenceval.toFixed(0));
-                setAndDraw({{forloop.counter0}}, 'cadence', [{ 'color': 1, 'data': [[cadenceval, 0]]}]);
-                $.plot($("#2cadencediv{{forloop.counter0}}"), [{'color': 1, 'data': datasets[{{forloop.counter0}}]['cadence']['data'].slice(index-30,index)}],{});
+                setAndDraw({{forloop.counter0}}, 'cadence', [{ 'color': 1, 'data': [[cadenceval, 0]]}], [{'color': 1, 'data': datasets[{{forloop.counter0}}]['cadence']['data'].slice(index-30,index)}]);
             {% endif %}
             {% if object.avg_power %}
             var powerval = datasets[{{forloop.counter0}}]['power']['data'][index][1];
                 $('#powerval{{forloop.counter0}}').html(powerval.toFixed(0));
-                setAndDraw({{forloop.counter0}}, 'power', [{ 'color': 4, 'data': [[powerval, 0]]}]);
-                $.plot($("#2powerdiv{{forloop.counter0}}"), [{'color': 4, 'data': datasets[{{forloop.counter0}}]['power']['data'].slice(index-30,index)}],{});
+                setAndDraw({{forloop.counter0}}, 'power', [{ 'color': 4, 'data': [[powerval, 0]]}], [{'color': 4, 'data': datasets[{{forloop.counter0}}]['power']['data'].slice(index-30,index)}]);
             {% endif %}
         {% endfor %}
             
-            // Unhighlight all previous points
-            altitudeprofileplot.unhighlight();
-            // Highlight the point at index in the first series in the altitudeprofile plot
-            altitudeprofileplot.highlight(0, index);
         index += speed;
         mapUpdater++;
     }
