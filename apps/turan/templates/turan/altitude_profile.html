@@ -14,7 +14,7 @@
     {% for object in exercises %}
     var marker = {};
     marker.image = new Image();
-    marker.image.src = "/generate/icon?i=.{{ MEDIA_URL }}turan/{{ object.exercise_type.logo }}&r=" + playercolors[{{forloop.counter0}}].r + "&g=" + playercolors[{{forloop.counter0}}].g + "&b=" + playercolors[{{forloop.counter0}}].b + "&h=64&w=64"
+    marker.image.src = "/generate/icon?i=/turan/{{ object.exercise_type.logo }}&r=" + playercolors[{{forloop.counter0}}].r + "&g=" + playercolors[{{forloop.counter0}}].g + "&b=" + playercolors[{{forloop.counter0}}].b + "&h=64&w=64"
     options.markers.push(marker);
     {% endfor %}
     var altitudeprofileplot = $.plot($("#altdiv"), [alt], options);
