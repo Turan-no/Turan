@@ -16,7 +16,12 @@
 {% endblock %}
 {% block content %}
 <h1>{% trans "Playback of exercise" %}</h1>
-{% for exercise in exercises %}<a href="{% url exercise exercise.pk %}">{{ exercise }} </a>{% endfor %}
+{% for exercise in exercises %}
+<a href="{% url exercise exercise.pk %}">
+    <img src="{{ forloop.counter0|player_icon:exercise.exercise_type}}" />
+    {{ exercise }}
+</a>
+{% endfor %}
     <ul class="buttons spacer">
         <li style="float: left">
             <a id="control_start" href="#">

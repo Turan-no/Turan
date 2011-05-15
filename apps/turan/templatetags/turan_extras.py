@@ -40,6 +40,18 @@ def anchortrans(parser, token):
     return SortAnchorNode(bits[1].strip(), title.strip())
 
 @register.filter
+def player_icon(player, exercise_type):
+    playercolors = [
+        { "r": 255, "g": 20, "b": 20 },
+        { "r": 20, "g": 20, "b": 255 },
+        { "r": 20, "g": 255, "b": 255 },
+        { "r": 255, "g": 20, "b": 255 },
+        { "r": 255, "g": 255, "b": 20 },
+        { "r": 80, "g": 80, "b": 80 }
+    ]
+    return "/generate/icon?i=/turan/%s&r=%d&g=%d&b=%d&h=24&w=24" % ( exercise_type.logo, playercolors[player]["r"], playercolors[player]["g"], playercolors[player]["b"] )
+
+@register.filter
 def nbsp(value):
     """ Make sure string can't break """
     return mark_safe(unicode(value).replace(" ", "&nbsp;"))
