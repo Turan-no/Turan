@@ -17,7 +17,7 @@ def proj_distance(lat1, lon1, lat2, lon2, elev1=None, elev2=None):
 
 class GPXEntry(object):
 
-    def __init__(self, time, hr, speed, cadence, altitude, lon, lat):
+    def __init__(self, time, hr, speed, cadence, altitude, lon, lat, distance):
         self.time = time
         self.hr = hr
         self.speed = speed
@@ -27,6 +27,7 @@ class GPXEntry(object):
         self.altitude = altitude
         self.lat = lat
         self.lon = lon
+        self.distance = distance
 
 class GPXParser(object):
 
@@ -155,7 +156,7 @@ class GPXParser(object):
                             if time_d:
                                 speed = 3.6 * this_distance/time_d
 
-                    e = GPXEntry(time, hr, speed, cad, ele, lon, lat)
+                    e = GPXEntry(time, hr, speed, cad, ele, lon, lat, self.distance)
                     self.avg_speed += speed
                     self.max_speed = max(self.max_speed, speed)
 
@@ -193,7 +194,7 @@ if __name__ == '__main__':
 
     for e in g.entries:
         #if 'speed' in e and 'altitude' in e:
-        print e.time, e.lon, e.lat, e.altitude, e.speed
+        print e.time, e.lon, e.lat, e.altitude, e.speed, e.distance
         #else:
         #    print e['time'], e['lon'], e['lat']
     print 'distance: ', g.distance
