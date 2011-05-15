@@ -742,8 +742,10 @@ def parse_sensordata(exercise, callback=None):
     # We make assumption that the user wants his trip to show as starting at 0 km
     # The cause of this can be tcx-files that have laps cut out
     distance_offset = 0
-    if parser.entries[0].distance > 100: # We don't care about small values
-        distance_offset = parser.entries[0].distance
+
+    if hasattr(parser.entries[0], 'distance'):
+        if parser.entries[0].distance > 100: # We don't care about small values
+            distance_offset = parser.entries[0].distance
 
     for val in parser.entries:
         detail = ExerciseDetail()
