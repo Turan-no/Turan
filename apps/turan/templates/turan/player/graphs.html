@@ -1,0 +1,35 @@
+{% load i18n %}
+<hr class="clearleft">
+<p class="graphheader speed floatleft">{% trans "Speed" %}
+<br>
+<span class="title" id="speedval{{index}}"></span>
+</p>
+<div class="graph speed floatleft drop-shadow" id="speeddiv{{index}}" style="width:130px;height:40px"></div>
+<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="hrval{{index}}"</span></p>
+<div class="graph hr floatleft drop-shadow" id="hrdiv{{index}}" style="width:130px;height:40px"></div>
+{% if max_cadence %}
+<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="cadenceval{{index}}"</span></p>
+<div class="graph cadence floatleft drop-shadow" id="cadencediv{{index}}" style="width:130px;height:40px"></div>
+{% endif %}
+<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="altitudeval{{index}}"</span></p>
+<div class="graph altitude floatleft drop-shadow" id="altitudediv{{index}}" style="width:130px;height:40px"></div>
+{% if max_power %}
+<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="powerval{{index}}"</span></p>
+<div class="graph power floatleft drop-shadow" id="powerdiv{{index}}" style="width:130px;height:40px"></div>
+{% endif %}
+<hr class="clearleft">
+
+<p class="graphheader speed floatleft">{% trans "Speed" %}<br><span class="title" id="2speedval{{index}}"></span></p>
+<div class="graph speed floatleft" id="2speeddiv{{index}}" style="width:130px;height:60px"></div>
+<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="2hrval{{index}}"</span></p>
+<div class="graph hr floatleft" id="2hrdiv{{index}}" style="width:130px;height:60px"></div>
+{% if max_cadence %}
+<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="2cadenceval{{index}}"</span></p>
+<div class="graph cadence floatleft" id="2cadencediv{{index}}" style="width:130px;height:60px"></div>
+{% endif %}
+<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="2altitudeval{{index}}"</span></p>
+<div class="graph altitude floatleft" id="2altitudediv{{index}}" style="width:130px;height:60px"></div>
+{% if max_power %}
+<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="2powerval{{index}}"</span></p>
+<div class="graph power floatleft" id="2powerdiv{{index}}" style="width:130px;height:60px"></div>
+{% endif %}
