@@ -207,8 +207,8 @@ $(document).ready(function() {
             var player = {{forloop.counter0}};
             var lon = datasets[{{forloop.counter0}}]["lon"][index];
             var lat = datasets[{{forloop.counter0}}]["lat"][index];
-            var p_lon = datasets[{{forloop.counter0}}]["lon"][index-1];
-            var p_lat = datasets[{{forloop.counter0}}]["lat"][index-1];
+            var p_lon = datasets[{{forloop.counter0}}]["lon"][index-speed];
+            var p_lat = datasets[{{forloop.counter0}}]["lat"][index-speed];
             // Check for none-values, we don't want to zoom to 0_o o_0
             if (lon != 0.0 && lat != 0.0) {
                 {% if forloop.first %}

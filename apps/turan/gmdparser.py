@@ -94,8 +94,9 @@ class GMDParser(object):
             self.entries.append(e)
 
 if __name__ == '__main__':
+    import sys
     p = GMDParser()
-    f = open("test.gmd")
+    f = open(sys.argv[1])
     p.parse_uploaded_file(f)
 
     for ent in p.entries:
