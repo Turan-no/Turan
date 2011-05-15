@@ -7,7 +7,7 @@
 {% block extra_head %}
 {{ block.super }}
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.crosshair.js"></script>
-    <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.symbol.js"></script>
+    <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.imagemarkers.js"></script>
 {% with exercise as object %}
 {% with exercise.route.gpx_file as gpx_file %}
     {% include "turan/maphead.html" %}
