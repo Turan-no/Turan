@@ -63,7 +63,7 @@ Flot plugin that adds some image cursors that can move along the path
     
     $.plot.plugins.push({
         init: init,
-        name: 'symbol',
+        name: 'imagemarkers',
         version: '1.0',
         options: options
     });
