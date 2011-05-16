@@ -195,6 +195,10 @@ var Mapper = {
         lonlat = this.posMarker.lonlat;
         this.map.setCenter(lonlat);
     }, 
+    panTo: function(x1, y1) {
+        lonlat =new OpenLayers.LonLat(x1,y1 ).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());;
+        this.map.panTo(lonlat);
+    }, 
     loadGeoJSON: function(minIndex, maxIndex) {
         if (this.map != null) {
         if (this.geojson_url) {

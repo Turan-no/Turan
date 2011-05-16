@@ -238,6 +238,7 @@ $(document).ready(function() {
                     //Mapper.moveMarker(markers[{{forloop.counter0}}], lon, lat);
                     var angle = Mapper.calculateAngle(p_lon, p_lat, lon, lat);
                     Mapper.moveFeature(markers[player], lon, lat, angle);
+                    Mapper.panTo(lon, lat);
                 }
             }
 
