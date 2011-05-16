@@ -232,6 +232,18 @@ $(document).ready(function() {
     {% endfor %}
     Mapper.map.zoomTo(zoomLevel);
     Mapper.map.panMethod = OpenLayers.Easing.Linear.easeOut;
+
+
+    // Hash check
+    var orly = window.location.hash.split('-')
+    if (orly) {
+        if (orly[0] == "#start") {
+            var player = orly[1];
+            var start = orly[2];
+        }
+
+
+
     // Function to update both graphs for each val
     // Try and look and for existing plot
     // if cannot be found, create the initial plot and save key to var plots.
