@@ -231,6 +231,7 @@ $(document).ready(function() {
         playerLayers.push(Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{ forloop.counter0|player_icon:object.exercise_type}}" ));
     {% endfor %}
     Mapper.map.zoomTo(zoomLevel);
+    Mapper.map.panMethod = OpenLayers.Easing.Linear.easeOut;
     // Function to update both graphs for each val
     // Try and look and for existing plot
     // if cannot be found, create the initial plot and save key to var plots.

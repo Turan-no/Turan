@@ -288,8 +288,10 @@ var Mapper = {
   moveFeature: function(feature, lon, lat, angle) {
     lonlat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
     point = new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
-    feature.attributes.angle = angle;
-    if(feature.attributes.angle>360){feature.attributes.angle -= 360;}
+    if(angle) {
+        feature.attributes.angle = angle;
+        if(feature.attributes.angle>360){feature.attributes.angle -= 360;}
+    }
     feature.move(lonlat);
 
   },
