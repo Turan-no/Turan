@@ -2,13 +2,13 @@
 
 #left_tabs {
     position: absolute;
-    bottom: -1px; /* must be same thickness as tab border */
+    bottom: 0px; /* must be same thickness as tab border */
     left: 0px; /* based on width and padding of logo */
 }
 #right_tabs {
     position: absolute;
     right: 15px;
-    bottom: -1px; /* must be same thickness as tab border */
+    bottom: 0px; /* must be same thickness as tab border */
 }
 
 ul.tabs a, ul.tabs a:visited {
@@ -21,11 +21,11 @@ ul.tabs a, ul.tabs a:visited {
     text-decoration: none; 
     margin:0; cursor:hand; 
     text-shadow: 0 0 0 #000;      
-    padding: 6px 0 6px 0;
+    padding: 5px 0 5px 0;
 }
 ul.tabs a:hover, 
 ul.tabs a:focus {
-    background-position: 0 -27px; color:#FFF;             
+    background-position: 0 -28px; color:#FFF;             
 }
 body.profile ul.tabs #tab_profile a,
 body.turan ul.tabs #tab_turan a,
