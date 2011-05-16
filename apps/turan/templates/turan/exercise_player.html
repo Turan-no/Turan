@@ -161,6 +161,9 @@ datasets.push({{dataset}});
 {% endfor %}
 // All plot objects stord in this to be used by setData()
 var plots = { };
+// All Markers stored in this
+var markers = [];
+var playerLayers = []
 $(document).ready(function() {
 
     //Mapper.gsat.setVisibility(1);
@@ -182,6 +185,7 @@ $(document).ready(function() {
     var lineLayers = [];
     {% for object in exercises %}
         lineLayers.push(Mapper.initLine('{{object.user}}'));
+        playerLayers.push(Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{ forloop.counter0|player_icon:object.exercise_type}}" ));
     {% endfor %}
     // Function to update both graphs for each val
     // Try and look and for existing plot
@@ -216,18 +220,28 @@ $(document).ready(function() {
             var p_lat = datasets[{{forloop.counter0}}]["lat"][index-speed];
             // Check for none-values, we don't want to zoom to 0_o o_0
             if (lon != 0.0 && lat != 0.0) {
+                if (!markers[player])
+                    // Init the feature icon
+                    markers.push(Mapper.createFeature(playerLayers[player], lon, lat, 90));
                 {% if forloop.first %}
                     // Only move map every 4th sample, less cluttery looking
                     if (mapUpdater >= 4) {
-                        Mapper.zoomToPosMarker();
+                        //Mapper.zoomToPosMarker();
                         mapUpdater = 0;
                     }
-                    Mapper.updatePosMarker(datasets[{{forloop.counter0}}]["lon"][index],datasets[{{forloop.counter0}}]["lat"][index]);
+                    //Mapper.updatePosMarker(datasets[{{forloop.counter0}}]["lon"][index],datasets[{{forloop.counter0}}]["lat"][index]);
+
                 {% endif %}
                 if (p_lon != 0.0 && p_lat != 0.0) {
                     Mapper.drawLine(lineLayers[{{forloop.counter0}}], colors[{{forloop.counter}}], p_lon, p_lat, lon, lat);
+                    // Move the markers
+                    //Mapper.moveMarker(markers[{{forloop.counter0}}], lon, lat);
+                    var angle = Mapper.calculateAngle(p_lon, p_lat, lon, lat);
+                    Mapper.moveFeature(markers[player], lon, lat, angle);
+                    Mapper.panTo(lon, lat);
                 }
             }
+
             // Highlight the point at index in the first series in the altitudeprofile plot
             var x = datasets[player]['altitude']['data'][index][0];
             var y = datasets[player]['altitude']['data'][index][1];

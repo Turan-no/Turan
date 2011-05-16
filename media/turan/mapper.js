@@ -195,6 +195,10 @@ var Mapper = {
         lonlat = this.posMarker.lonlat;
         this.map.setCenter(lonlat);
     }, 
+    panTo: function(x1, y1) {
+        lonlat =new OpenLayers.LonLat(x1,y1 ).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());;
+        this.map.panTo(lonlat);
+    }, 
     loadGeoJSON: function(minIndex, maxIndex) {
         if (this.map != null) {
         if (this.geojson_url) {
@@ -225,7 +229,7 @@ var Mapper = {
         map.addLayer(lineLayer);
         return lineLayer;
     },
-    drawLine: function(layer,color, x1,y1,x2,y2) {
+    drawLine: function(layer, color, x1, y1, x2, y2) {
 
         points = new Array();
         style = { strokeColor: color, 
@@ -233,14 +237,74 @@ var Mapper = {
          strokeWidth: 2
         };
 
-        points[0] =new OpenLayers.LonLat(x1,y1 ).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());;
+        points[0] =new OpenLayers.LonLat(x1,y1 ).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());;
         points[0] = new OpenLayers.Geometry.Point(points[0].lon,points[0].lat);
 
-        points[1] = new OpenLayers.LonLat(x2,y2 ).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());;
+        points[1] = new OpenLayers.LonLat(x2,y2 ).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());;
         points[1] = new OpenLayers.Geometry.Point(points[1].lon,points[1].lat);
         var linear_ring = new OpenLayers.Geometry.LinearRing(points);
         polygonFeature = new OpenLayers.Feature.Vector(
          new OpenLayers.Geometry.Polygon([linear_ring]), null, style);
          layer.addFeatures([polygonFeature]);
+  },
+  initMarker: function (icon_url, lon, lat) {
+    var size = new OpenLayers.Size(32,32);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var pos_icon = new OpenLayers.Icon(icon_url,size,offset);
+    var lonlat = new OpenLayers.LonLat(lon, lat).transform(this.projection, this.map.getProjectionObject());
+    var posMarker = new OpenLayers.Marker(lonlat, pos_icon);// Dummy pos, updated lateer
+    layerMarkers.addMarker(posMarker);
+    return posMarker;
+  },
+  moveMarker: function (marker, lon, lat) {
+    var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
+    var newPx = map.getPixelFromLonLat(lonLat);
+    marker.moveTo(newPx);
+  },
+  initFeature: function(athlete, icon_url) {
+      var athleteStyleMap = new OpenLayers.StyleMap({
+	  	externalGraphic: icon_url,
+	  	graphicWidth: 24,
+	  	graphicHeight: 24,
+	  	fillOpacity: 0.85,
+	  	rotation: "${angle}",
+	  });
+	  athleteLayer=new OpenLayers.Layer.Vector(athlete,{styleMap:athleteStyleMap});
+      this.map.addLayer(athleteLayer)
+      return athleteLayer;
+
+  },
+  createFeature: function(layer, lon, lat, angle) {
+    lonlat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
+    point = new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
+    var feature = new OpenLayers.Feature.Vector(point, {
+        angle: angle,
+        poppedup: false
+    });
+    layer.addFeatures([feature]);
+    return feature;
+
+  },
+  moveFeature: function(feature, lon, lat, angle) {
+    lonlat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
+    point = new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
+    feature.attributes.angle = angle;
+    if(feature.attributes.angle>360){feature.attributes.angle -= 360;}
+    feature.move(lonlat);
+
+  },
+  calculateAngle: function(x1, y1, x2, y2) {
+    var startPt=map.getPixelFromLonLat(new OpenLayers.LonLat(x1, y1).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject()));
+    var endPt=map.getPixelFromLonLat(new OpenLayers.LonLat(x2, y2).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject()));
+    //in the above line I think it would work too if we use Coordinates
+    //instead of Pixels, but I used pixel cause its easy to do the math with
+    var dy=endPt.y - startPt.y;
+    var dx=endPt.x - startPt.x;
+    var angle=Math.atan(dy/dx) / (Math.PI/180); //convert to degrees
+    if(dx<0) // adjustment in angle for line moving to bottom
+    angle-=180; // switch direction..if I dont do this.. the traigle will
+                //point in other direction in certain cases
+    return angle;   
   }
+
 };
