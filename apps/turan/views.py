@@ -1857,7 +1857,7 @@ def exercise_create_live(request):
 
     return render_to_response('turan/exercise_form.html', locals(), context_instance=RequestContext(request))
 
-@login_required
+#@login_required TODO enable auth
 def exercise_update_live(request, object_id):
     ''' View to handle submitted values from client, make them into exercise details
 
@@ -1885,15 +1885,21 @@ def exercise_update_live(request, object_id):
     '''
 
     exercise = get_object_or_404(Exercise, id=object_id)
-    if request.method == 'POST':
-        data = request.POST
-        assert False, data
-        new_object = ExerciseDetail(**data)
-        new_object.exercise = exercise
-        new_object.save()
+    if request.method == 'POST' or request.method == 'GET':
+        data = request.raw_post_data
+        data = simplejson.loads(data)
+        print 'JSON: %s' %data
+        try:
+            for item in data:
+                new_object = ExerciseDetail(**item)
+                new_object.time = datetime.fromtimestamp(new_object.time)
+                new_object.exercise = exercise
+                new_object.save()
+                return HttpResponse('Saved OK')
+        except Exception, e:
+            return HttpResponse(e)
 
-    return HttpResponse('json OK')
-    search_query = request.GET.get('q', '')
+    return HttpResponse('Nothing saved')
 
 def exercise_player(request):
 
