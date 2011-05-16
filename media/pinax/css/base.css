@@ -38,7 +38,6 @@ td {
     margin: 0 auto;
     padding: 10px;
     width: 1000px;
-    border-left: 2px solid silver;
     background: white;
     overflow: auto;
 }
@@ -206,13 +205,13 @@ div.profile_info p {
 #subnav {
     margin: 0 auto;
     padding: 0 10px;
-    border-left: 2px solid silver;
     background: #ccc; /* tab colour */
     border-top: 1px solid #000;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#ffffff'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); /* for webkit browsers */
     background: -moz-linear-gradient(top,  #ccc,  #fff); /* for firefox 3.6+ */
     background: -o-linear-gradient(top,  #ccc,  #fff); 
+    border-radius: 10px 10px 0 0;
     width: 1000px;
 }
 
