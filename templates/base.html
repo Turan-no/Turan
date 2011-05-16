@@ -1,12 +1,12 @@
 {% load i18n %}
 {% load compress %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
+<!DOCTYPE html>
+<html dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         {% block searchenginemeta %}
         <meta name="keywords" content="sykkel,tur,trening,exercise,trip,bicycle,analyser,analyze,plot,graf,graph,polar,garmin,gps,tcx,hrm" />
-        <meta name="description" content="{% trans "Log, analyze and graph your exercises" %}" />
+        <meta name="description" content="{% trans "Upload your exercises and analyze them. Play them back and compare them to prior efforts. Share and comment on your friends exercises." %}" />
         {% endblock %}
         <meta name="google-site-verification" content="nZhZhwBQiOgH2v8ppj86mIhm3mVMdufD94LaOG_xPm4" />
         <title>{% if site_name %}{{ site_name }} : {% endif %}{% block head_title %}{% endblock %}</title>
