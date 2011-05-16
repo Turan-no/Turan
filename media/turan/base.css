@@ -13,31 +13,35 @@ p {
 
 /* Headers */
 h1 {
-    font-family: 'Arvo', Georgia, Times, serif;
-	font-size: 175%;
+    font-family: 'PT Serif Caption', Georgia, Times, serif;
+	font-size: 180%;
 	font-weight: bolder;
 	margin: 5px 0 7px;
-    text-shadow:1px 1px 4px #bbb;
+    letter-spacing: 1px;
+    /*text-shadow:1px 1px 4px #bbb;*/
 }
 h2 {
-    font-family: 'Arvo', Georgia, Times, serif;
-	font-size: 150%;
+    font-family: 'PT Serif Caption', Georgia, Times, serif;
+	font-size: 160%;
 	font-weight: normal;
 	margin: 5px 0 4px;
-    text-shadow:1px 1px 4px #bbb;
+    letter-spacing: 1px;
+    /*text-shadow:1px 1px 4px #bbb;*/
 }
 h3 {
-    font-family: 'Arvo', Georgia, Times, serif;
+    font-family: 'PT Serif Caption', Georgia, Times, serif;
 	font-size: 125%;
 	font-weight: normal;
 	margin: 5px 0 4px;
+    letter-spacing: 1px;
 }
 
 h4 {
-    font-family: 'Arvo', Georgia, Times, serif;
+    font-family: 'PT Serif Caption', Georgia, Times, serif;
 	font-size: 120%;
 	font-weight: normal;
 	margin: 5px 0 2px;
+    letter-spacing: 1px;
 }
 
 /* Tables */
