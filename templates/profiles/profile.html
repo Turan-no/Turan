@@ -230,7 +230,7 @@ $(function () {
                     <ul class="trips">
                 {% for trip in latest_exercises %}
                 <li class="{% cycle "even" "odd" %} hoverpoint" id="trip_{{trip.id}}">
-                    <img width="32" height="32" alt="{{ trip.exercise_type }}" src="{{ trip.icon }}" />
+                    <img class="floatleft" width="32" height="32" alt="{{ trip.exercise_type }}" src="{{ trip.icon }}" />
                     <a href="{{ trip.get_absolute_url }}">{{ trip }}</a> 
                     {% if trip.route.distance %}
                     {{ trip.route.distance|floatformat}} km

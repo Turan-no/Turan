@@ -1072,6 +1072,7 @@ ul.trips li {
     list-style-type: none;
     margin-left: 0;
     padding: 5px;
+    overflow: auto;
 }
 
 .routeimage {
