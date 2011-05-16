@@ -54,6 +54,9 @@ urlpatterns = patterns('',
     url(r'^json/wiki/(?P<slug>\w+)/(?P<rev_id>\d+)/?', wikijson, name='wikijson'),
 
 
+    url(r'^exercise/update/live/(?P<object_id>\d+)', exercise_update_live,name='exercise_update_live'),
+
+
 # celery
     url(r'^json/(?P<task_id>[\w\d\-]+)/done/?$', celery_views.is_task_successful,
                     name="celery-is_task_successful"),
