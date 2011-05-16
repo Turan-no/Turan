@@ -549,7 +549,7 @@ def colorize_and_scale(request):
         try:
             g = int(request.GET['g'])
         except ValueError,e:
-            b = 255
+            g = 255
     else:
         g = 0
 
