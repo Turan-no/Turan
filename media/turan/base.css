@@ -13,23 +13,23 @@ p {
 
 /* Headers */
 h1 {
-    font-family: 'PT Serif Caption', Georgia, Times, serif;
-	font-size: 180%;
+    font-family: 'PT Sans', Georgia, Times, serif;
+	font-size: 170%;
 	font-weight: bolder;
 	margin: 5px 0 7px;
     letter-spacing: 1px;
     /*text-shadow:1px 1px 4px #bbb;*/
 }
 h2 {
-    font-family: 'PT Serif Caption', Georgia, Times, serif;
-	font-size: 160%;
+    font-family: 'PT Sans', Georgia, Times, serif;
+	font-size: 150%;
 	font-weight: normal;
 	margin: 5px 0 4px;
     letter-spacing: 1px;
     /*text-shadow:1px 1px 4px #bbb;*/
 }
 h3 {
-    font-family: 'PT Serif Caption', Georgia, Times, serif;
+    font-family: 'PT Sans', Georgia, Times, serif;
 	font-size: 125%;
 	font-weight: normal;
 	margin: 5px 0 4px;
@@ -37,7 +37,7 @@ h3 {
 }
 
 h4 {
-    font-family: 'PT Serif Caption', Georgia, Times, serif;
+    font-family: 'PT Sans', Georgia, Times, serif;
 	font-size: 120%;
 	font-weight: normal;
 	margin: 5px 0 2px;
@@ -129,7 +129,7 @@ ul li {
 }
 
 #subnav a {
-	font-size: 75%;
+	font-size: 90%;
 }
 
 /* Links */
