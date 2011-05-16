@@ -713,16 +713,16 @@ ul.iconlist>li>ul.extra {
 /* Calendar */
 table.month th.sat,
 table.month th.sun {
-    background: #e22;
+    background: #999;
 }
 table.month .filled {
-    background-color: #cec;
+    background-color: #eee;
 }
 table.month .today div.day {
     background-color: #7e7;
 }
 table.month td.noday {
-    background: #e0e0e0;
+    background: #eee;
 }
 table.month {
     margin-top: 10px;
@@ -736,13 +736,13 @@ table.month th {
 }
 table.month th.month {
     background-color: white;
-    color: black;
+    color: #4F96CA;
     border: none;
     font-size: 14pt;
 }
 table.month th {
     padding: 4px;
-    background-color: black;
+    background-color: #4F96CA;
     color: white;
 }
 
@@ -750,7 +750,7 @@ table.month td>ul li {
     list-style-type: none;
     padding: 2px 2px 4px 4px;
     margin: 2px 2px 2px 1px;
-    background-color: #4c3;
+    background-color: #999;
     border-radius: 3px;
 }
 table.month img {
