@@ -522,27 +522,42 @@ def colorize_and_scale(request):
         return HttpResponseServerError()
 
     if 'w' in request.GET:
-        w = int(request.GET['w'])
+        try:
+            w = int(request.GET['w'])
+        except ValueError,e:
+            w = 24
     else:
         w = 24
 
     if 'h' in request.GET:
-        h = int(request.GET['h'])
+        try:
+            h = int(request.GET['h'])
+        except ValueError,e:
+            h = 24
     else:
         h = 24
 
     if 'r' in request.GET:
-        r = int(request.GET['r'])
+        try:
+            r = int(request.GET['r'])
+        except ValueError,e:
+            r = 255
     else:
         r = 255
 
     if 'g' in request.GET:
-        g = int(request.GET['g'])
+        try:
+            g = int(request.GET['g'])
+        except ValueError,e:
+            b = 255
     else:
         g = 0
 
     if 'b' in request.GET:
-        b = int(request.GET['b'])
+        try:
+            b = int(request.GET['b'])
+        except ValueError,e:
+            b = 255
     else:
         b = 0
 
