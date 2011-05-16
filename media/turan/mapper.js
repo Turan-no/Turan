@@ -300,8 +300,6 @@ var Mapper = {
     if(dx<0) // adjustment in angle for line moving to bottom
     angle-=180; // switch direction..if I dont do this.. the traigle will
                 //point in other direction in certain cases
-    console.log(angle);
-                                                    
     return angle;   
   }
 
