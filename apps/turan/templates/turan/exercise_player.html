@@ -163,6 +163,7 @@ datasets.push({{dataset}});
 var plots = { };
 // All Markers stored in this
 var markers = [];
+var playerLayers = []
 $(document).ready(function() {
 
     //Mapper.gsat.setVisibility(1);
@@ -184,7 +185,7 @@ $(document).ready(function() {
     var lineLayers = [];
     {% for object in exercises %}
         lineLayers.push(Mapper.initLine('{{object.user}}'));
-        // Create the markers 
+        playerLayers.push(Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{ forloop.counter0|player_icon:object.exercise_type}}" ));
     {% endfor %}
     // Function to update both graphs for each val
     // Try and look and for existing plot
@@ -220,7 +221,8 @@ $(document).ready(function() {
             // Check for none-values, we don't want to zoom to 0_o o_0
             if (lon != 0.0 && lat != 0.0) {
                 if (!markers[player])
-                    markers.push(Mapper.initMarker("/generate/icon?i=/turan/{{ object.exercise_type.logo }}&r=" + playercolors[{{forloop.counter0}}].r + "&g=" + playercolors[{{forloop.counter0}}].g + "&b=" + playercolors[{{forloop.counter0}}].b + "&h=32&w=32", lon, lat));
+                    // Init the feature icon
+                    markers.push(Mapper.createFeature(playerLayers[player], lon, lat, 90));
                 {% if forloop.first %}
                     // Only move map every 4th sample, less cluttery looking
                     if (mapUpdater >= 4) {
@@ -230,10 +232,12 @@ $(document).ready(function() {
                     //Mapper.updatePosMarker(datasets[{{forloop.counter0}}]["lon"][index],datasets[{{forloop.counter0}}]["lat"][index]);
 
                 {% endif %}
-                // Move the markers
-                Mapper.moveMarker(markers[{{forloop.counter0}}], lon, lat);
                 if (p_lon != 0.0 && p_lat != 0.0) {
                     Mapper.drawLine(lineLayers[{{forloop.counter0}}], colors[{{forloop.counter}}], p_lon, p_lat, lon, lat);
+                    // Move the markers
+                    //Mapper.moveMarker(markers[{{forloop.counter0}}], lon, lat);
+                    var angle = Mapper.calculateAngle(p_lon, p_lat, lon, lat);
+                    Mapper.moveFeature(markers[player], lon, lat, angle);
                 }
             }
 

@@ -256,6 +256,53 @@ var Mapper = {
     var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
     var newPx = map.getPixelFromLonLat(lonLat);
     marker.moveTo(newPx);
+  },
+  initFeature: function(athlete, icon_url) {
+      var athleteStyleMap = new OpenLayers.StyleMap({
+	  	externalGraphic: icon_url,
+	  	graphicWidth: 24,
+	  	graphicHeight: 24,
+	  	fillOpacity: 0.85,
+	  	rotation: "${angle}",
+	  });
+	  athleteLayer=new OpenLayers.Layer.Vector(athlete,{styleMap:athleteStyleMap});
+      this.map.addLayer(athleteLayer)
+      return athleteLayer;
+
+  },
+  createFeature: function(layer, lon, lat, angle) {
+    lonlat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
+    point = new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
+    var feature = new OpenLayers.Feature.Vector(point, {
+        angle: angle,
+        poppedup: false
+    });
+    layer.addFeatures([feature]);
+    return feature;
+
+  },
+  moveFeature: function(feature, lon, lat, angle) {
+    lonlat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
+    point = new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
+    feature.attributes.angle = angle;
+    if(feature.attributes.angle>360){feature.attributes.angle -= 360;}
+    feature.move(lonlat);
+
+  },
+  calculateAngle: function(x1, y1, x2, y2) {
+    var startPt=map.getPixelFromLonLat(new OpenLayers.LonLat(x1, y1).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject()));
+    var endPt=map.getPixelFromLonLat(new OpenLayers.LonLat(x2, y2).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject()));
+    //in the above line I think it would work too if we use Coordinates
+    //instead of Pixels, but I used pixel cause its easy to do the math with
+    var dy=endPt.y - startPt.y;
+    var dx=endPt.x - startPt.x;
+    var angle=Math.atan(dy/dx) / (Math.PI/180); //convert to degrees
+    if(dx<0) // adjustment in angle for line moving to bottom
+    angle-=180; // switch direction..if I dont do this.. the traigle will
+                //point in other direction in certain cases
+    console.log(angle);
+                                                    
+    return angle;   
   }
 
 };
