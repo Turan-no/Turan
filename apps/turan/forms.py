@@ -5,94 +5,28 @@ from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
-from uni_form.helpers import FormHelper, Submit, Reset
-from uni_form.helpers import Layout, Fieldset, Row, HTML
-#from views import autocomplete_route
 
-class ForeignKeySearchInput(forms.HiddenInput):
-    """
-    A Widget for displaying ForeignKeys in an autocomplete search input 
-    instead in a <select> box.
-    """
-    class Media:
-        css = {
-            'all': ('django_extensions/css/jquery.autocomplete.css',)
-        }
-        js = (
-            'jquery.bgiframe.js',
-            'jquery.ajaxQueue.js',
-            'jquery.autocomplete.js'
-        )
-
-    def label_for_value(self, value):
-        obj = Route.objects.get(pk=value)
-        return truncate_words(obj, 14)
-
-    def __init__(self, rel, attrs=None):
-        self.rel = rel
-        super(ForeignKeySearchInput, self).__init__(attrs)
-
-    def render(self, name, value, attrs=None):
-        if attrs is None:
-            attrs = {}
-        rendered = super(ForeignKeySearchInput, self).render(name, value, attrs)
-        if value:
-            label = self.label_for_value(value)
-        else:
-            label = u''
-        return rendered + mark_safe(u'''
-<tr><th><label>%(route)s:</label></th><td>
-            <style type="text/css" media="screen">
-                #lookup_%(name)s {
-                    padding-right:16px;
-                    background: url(
-                        %(admin_media_prefix)simg/admin/selector-search.gif
-                    ) no-repeat right;
-                }
-                #del_%(name)s {
-                    display: none;
-                }
-            </style>
-<input type="text" id="lookup_%(name)s" value="%(label)s" /> <br>Search for route or <a href="%(route_create)s">Create new</a> first
-            <script type="text/javascript">
-            jQuery("#lookup_%(name)s").autocomplete('%(url)s', {
-                max: 50,
-                highlight: false,
-                multiple: true,
-                multipleSeparator: "\\n",
-                scroll: true,
-                scrollHeight: 300,
-                matchContains: true,
-                autoFill: true,
-            }).result(function(event, data, formatted) {
-                if (data) {
-                    $('#id_%(name)s').val(data[1]);
-                }
-            });
-            </script>
-</td></tr>
-        ''') % {
-            'route': _('Route'),
-            'name': name,
-            'label': label,
-            'admin_media_prefix': settings.ADMIN_MEDIA_PREFIX,
-            'url': reverse('autocomplete_route', args=('a','b')),
-            'route_create': reverse('route_create'),
-        }
-
+from django.core.exceptions import ObjectDoesNotExist
 class ExerciseForm(forms.ModelForm):
-    route = forms.CharField(widget=ForeignKeySearchInput('Route'), required=False)#, 'turan'))
+    route = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = Exercise
-        fields = ['exercise_type', 'route', 'sensor_file', 'comment', 'tags', 'kcal','exercise_permission', 'url']
+        fields = ['route', 'sensor_file', 'exercise_type', 'comment', 'tags', 'kcal','exercise_permission', 'url']
 
     def clean_route(self):
-        '''Translate number from autocomplete to object '''
+        '''Translate number from autocomplete to object.
+           If not number, just create a new route with the text given as name
+         '''
+
         data = self.cleaned_data['route']
-        if not data:
-            return None
-        data = Route.objects.get(pk=data)
+        try:
+            data = Route.objects.get(pk=data)
+        except ValueError: # not int, means name
+            r = Route()
+            r.name = data
+            r.save()
+            data = r
         return data
 
 

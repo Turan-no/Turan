@@ -15,6 +15,7 @@
     <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
     <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
     {% compress js %}
+    <script src="{{ MEDIA_URL }}jquery-ui-1.8.13.custom.min.js" type="text/javascript"></script>
     <script src="{{ MEDIA_URL }}base.js" type="text/javascript"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.js"></script>
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.pie.js"></script>
@@ -34,6 +35,9 @@
     {% compress css %}
     <link rel="stylesheet" href="{{ MEDIA_URL }}pinax/css/topics.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/social_project.css" />
+    <link type="text/css" href="{{MEDIA_URL }}css/start/jquery-ui-1.8.13.custom.css" rel="stylesheet" />  
+
+
     {% endcompress %}
     <!--
 <script type="text/javascript"> 

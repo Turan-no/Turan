@@ -7,10 +7,7 @@
 {% endblock %}
 {% block extra_head %}
 {{ form.media }}
-<script type="text/javascript" src="{{MEDIA_URL}}date.js"></script>
-<script type="text/javascript" src="{{MEDIA_URL}}jquery.datePicker.js"></script>
-<link rel="stylesheet" href="{{MEDIA_URL}}/datePicker.css" />
-
+<script type="text/javascript" src="{{MEDIA_URL}}jquery.ui.datepicker-no.js"></script>
 {% endblock %}
 {% block content %}
 <h1>{% trans "Add new profile detail" %}</h1>
@@ -23,14 +20,16 @@
 <input type="submit" value="{% trans "Submit" %}" />
 </form>
 <script type="text/javascript">
-    Date.firstDayOfWeek = 0;
-    Date.format = 'yyyy-mm-dd';
     $(function() {
+        $.datepicker.setDefaults( $.datepicker.regional[ "no" ] ); // TODO fix regional 
         var dateField = $('#id_time');
         if (dateField.val() != undefined ) {
-            dateField.datePicker({startDate:'2011-01-01'});
-            if (dateField.val().length == 0)
-                dateField.val(new Date().asString()).trigger('change');
+        dateField.datepicker($.datepicker.regional['no'],{
+            startDate:'2011-01-01',
+            constrainInput: false,
+            dateFormat: 'yy-mm-dd'
+
+                });
         }
     });
 </script>

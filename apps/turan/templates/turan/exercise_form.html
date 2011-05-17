@@ -1,10 +1,112 @@
-{% extends "turan/event_form.html" %}:{% load i18n %}
+{% extends "turan/base.html" %}
+{% load i18n %}
+{% load uni_form_tags %}
 
 {% block title %}
 {{ block.super }}
 {% trans "Add Exercise" %}
 {% endblock %}
-
-{% block action_title %}
-<h1>{% trans "Add Exercise" %}</h1>
+{% block extra_head %}
+{{ form.media }}
+<script type="text/javascript" src="{{MEDIA_URL}}jquery.ui.datepicker-no.js"></script>
 {% endblock %}
+
+{% block content %}
+{% block action_title %}
+<div id="result">
+    {% if object %}
+        <h1>    {% trans "Modify exercise" %}</h1>
+    {% else %}
+        <h1>{% trans "Add Exercise" %}</h1>
+    {% endif %}
+    {% endblock %}
+    <form class="uniForm" id="form" enctype="multipart/form-data" method="post">
+
+  <div id="div_route" class="ctrlHolder "> 
+        <label for="route"> 
+            {% trans "Route" %}
+        </label> 
+            <p >{% trans "Give a name to this exercise or start typing to search in existing routes" %}</p>
+        <input id="route" type="text" class="textinput textInput" name="route" /> 
+        
+    </div> 
+ 
+    {{ form|as_uni_form}}
+    {% comment %}
+    <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
+    {% endcomment%}
+    <input id="submit_btn" type="submit" value="{% trans "Save exercise" %}" />
+    <input id="route_object_id" type="hidden">
+    </form>
+</div>
+<style>
+    .ui-autocomplete {
+        max-height: 500px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+    }
+    </style>
+<script type="text/javascript">
+var ids= 0;
+$(function() {
+    var dateField = $('#id_date');
+    if (dateField.val() != undefined ) {
+        dateField.datepicker($.datepicker.regional['no'],{ //TODO region
+        startDate:'2011-01-01',
+        constrainInput: false,
+        dateFormat: 'yy-mm-dd'
+
+            });
+    }
+    var cache = {}, lastXhr;
+    $( "#route" ).autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+            var term = request.term;
+            /*
+            if ( term in cache ) {
+                response( cache[ term ] );
+                return;
+            }*/
+
+            lastXhr = $.getJSON( "{% url autocomplete_route "a" "b" %}", request, function( data, status, xhr ) {
+                if ( xhr === lastXhr ) {
+                    response( data );
+                }
+            });
+        },
+        focus: function( event, ui ) {
+                $( "#route" ).val( ui.item.name );
+                return false;
+        },
+        select: function( event, ui ) {
+                $( "#route" ).val( ui.item.name );
+                $( "#id_route" ).val( ui.item.id );
+                $( "#route-description" ).html( ui.item.description );
+            return false;
+        }})
+        .data( "autocomplete" )._renderItem = function( ul, item ) {
+            return $( "<li></li>" )
+                .data( "item.autocomplete", item )
+                .append( '<a>' + item.name + '<br><span class="smaller">' + item.description + ", " + item.tcount + " {% trans "trips"%}</span></a>" )
+                .appendTo( ul );
+        };
+});
+
+$(document).ready(function() { 
+    $('#form').bind('submit', function(evt) {
+
+
+        // If no object id set, just send the text in the field to django
+        // And let it create a new route
+        if ( !$( "#id_route" ).val() ) {
+                $( "#id_route" ).val( $('#route').val());
+        }
+        $('#result').html('<h1>{% trans "Uploading" %} ...</h1>');
+})
+}); 
+</script> 
+{% endblock content %}
