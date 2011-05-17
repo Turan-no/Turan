@@ -22,6 +22,7 @@
     {% endblock %}
     <form class="uniForm" id="form" enctype="multipart/form-data" method="post">
 
+    {% if not object %}
   <div id="div_route" class="ctrlHolder "> 
         <label for="route"> 
             {% trans "Route" %}
@@ -30,6 +31,7 @@
         <input id="route" type="text" class="textinput textInput" name="route" /> 
         
     </div> 
+    {% endif %}
  
     {{ form|as_uni_form}}
     {% comment %}
