@@ -88,7 +88,7 @@
     </td>
     <td>
         {% if object.route.gpx_file %}
-            <object width="64" height="64" type="image/svg+xml" data="{{ object.route.get_svg_url }}"></object>
+            <img src="{{ object.route.get_png_url }}">
         {% endif %}
     </td>
     <td>

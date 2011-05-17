@@ -57,7 +57,6 @@ from datetime import date as datetimedate
 from time import mktime, strptime
 import locale
 
-from svg import GPX2SVG
 from turancalendar import WorkoutCalendar
 from feeds import ExerciseCalendar
 
@@ -1591,7 +1590,7 @@ def autocomplete_route(request, app_label, model):
     limit = 20
 
     routes = Route.objects.filter(qset).exclude(single_serving=1).extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',]).distinct()[:limit]
-    route_list = [{'id': f.pk, 'name': f.__unicode__(), 'description': f.description, 'tcount': f.tcount, 'icon': f.get_svg_url()} for f in routes]
+    route_list = [{'id': f.pk, 'name': f.__unicode__(), 'description': f.description, 'tcount': f.tcount, 'icon': f.get_png_url()} for f in routes]
 
     return HttpResponse(simplejson.dumps(route_list), mimetype='text/javascript')
 

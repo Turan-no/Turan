@@ -93,7 +93,7 @@ $(function() {
         .data( "autocomplete" )._renderItem = function( ul, item ) {
             return $( "<li></li>" )
                 .data( "item.autocomplete", item )
-                .append( '<a>' + item.name + '<br><span class="smaller">' + item.description + ", " + item.tcount + " {% trans "trips"%}</span></a>" )
+                .append( '<a><img src="' +item.icon +'">' + item.name + '<br><span class="smaller">' + item.description + ", " + item.tcount + " {% trans "trips"%}</span></a>" )
                 .appendTo( ul );
         };
 });
