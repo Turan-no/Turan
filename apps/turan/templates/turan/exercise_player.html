@@ -242,12 +242,15 @@ $(document).ready(function() {
             var yarly = orly[rly].split('-');
             var playeri = parseInt(yarly[1]);
             var startkm = parseFloat(yarly[2]);
-            for (x in datasets[playeri]['speed']['data']) {
-                val = datasets[playeri]['speed']['data'][x];
-                if (startkm <= val[0]) {
-                    indexoffsets.push( parseInt(x) );
-                    break;
+            for (dataset in datasets[playeri]) {
+                for (x in datasets[playeri][dataset]['data']) {
+                    val = datasets[playeri][dataset]['data'][x];
+                    if (startkm <= val[0]) {
+                        indexoffsets.push( parseInt(x) );
+                        break;
+                    }
                 }
+                break;
             }
         }
     }
