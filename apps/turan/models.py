@@ -30,7 +30,7 @@ from durationfield import DurationField
 from gpxparser import GPXParser, proj_distance
 from gpxwriter import GPXWriter
 
-from tasks import create_simplified_gpx, create_svg_from_gpx, create_gpx_from_details, \
+from tasks import create_simplified_gpx, create_png_from_gpx, create_gpx_from_details, \
         merge_sensordata, calculate_ascent_descent_gaussian, calculate_best_efforts, \
         parse_sensordata, filldistance, hr2zone, watt2zone
 
@@ -96,9 +96,9 @@ class Route(models.Model):
         super(Route, self).save(force_insert, force_update)
         if self.gpx_file:
             # generate svg if it doesn't exist (after save, it uses id for filename)
-            filename = 'svg/%s.svg' %self.id
+            filename = 'svg/%s.png' %self.id
             if not gpxstore.exists(filename):
-                create_svg_from_gpx.delay(self.gpx_file.path, filename)
+                create_png_from_gpx.delay(self.gpx_file.path, filename)
 
             # generate simplified gpx to use as layer, for faster loading
             filename = 'gpx/%s.simpler.gpx' %self.id

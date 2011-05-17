@@ -438,6 +438,9 @@ ul {
     padding: 0;
     margin: 0;
 }
+ul li {
+    margin-left: 20px;
+}
 ul li ul { 
     padding-left: 10px; 
 }
