@@ -15,6 +15,7 @@ from collections import deque
 from datetime import timedelta
 
 from svg import GPX2SVG
+from gpx2png import GPX2PNG
 from gpxwriter import GPXWriter
 from tcxwriter import TCXWriter
 from gpxparser import GPXParser, proj_distance
@@ -288,6 +289,13 @@ def create_simplified_gpx(gpx_path, filename):
             '/'.join(gpx_path.split('/')[0:-2]) + '/' + filename)
     retcode = call(cmd.split())
     return retcode
+
+@task
+def create_png_from_gpx(gpx_path, filename):
+    png = GPX2PNG(gpx_path)
+    f = png.get_file()
+    gpxstore.save(filename, ContentFile(f.read()))
+    return True
 
 @task
 def create_svg_from_gpx(gpx_path, filename):
