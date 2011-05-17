@@ -132,7 +132,9 @@ $(function () {
                     {% endifequal %}
             </td>
             <td>
-                <input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
+                <input type="checkbox" name="selected_routes" value="{{ object.exercise.id }}">
+                <input type="hidden" id="start{{object.exercise.id}}" value="{{object.start|unlocalize}}">
+            </td>
             <td>
                 <a href="{{ object.exercise.get_absolute_url }}">
                 {{ object.exercise.route }}
@@ -171,13 +173,25 @@ $(function () {
     $('#route_form').bind("submit", function (ev) {
         ev.preventDefault();
         var selectedIds = [];
+        var selectedStarts = [];
         $(this.selected_routes).each(function (i, elem) {
             if (elem.checked) {
                 selectedIds.push(elem.value);
             }
         });
-        // todo.. yea this code is real bad. *sighface*
-        document.location = "/turan/exercise/compare/" + selectedIds.join("/");
+        var player_url =  "/play/exercise/?id=" + selectedIds.join("&id=");
+        // Then add hash for start
+        player_url += '#';
+        var index=0;
+        for(id in selectedIds) {
+            var hashstr = 'start-' + index + '-' + $('#' + 'start' + selectedIds[id]).val();
+            console.log(hashstr);
+            selectedStarts.push (hashstr);
+            index++;
+        }
+        player_url += selectedStarts.join(',')
+        document.location = player_url;
+
     });
     </script>
 {% paginate %}
