@@ -183,6 +183,7 @@ var GraphPlotter = {
         this.max_hr = args.max_hr;
         this.markings = args.markings;
         this.xaxisformatter = axisformatters[args.xaxisformatter];
+        this.posFeature = null;
         function evaluate(y,threshold) { 
             return y < threshold;
         }
@@ -280,7 +281,11 @@ var GraphPlotter = {
 
                         var x = route_lon[item.dataIndex];
                         var y = route_lat[item.dataIndex];
-                        Mapper.updatePosMarker(x, y);
+                        if (!this.posFeature) {
+                            this.posFeature = Mapper.createFeature(Mapper.posLayer, x, y, 0);
+                        }
+                        // Mapper.updatePosMarker(x, y);
+                        Mapper.moveFeature(this.posFeature, x, y, 0); // Hardcoded to 0 degrees
                     }
                 }
 
