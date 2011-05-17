@@ -98,6 +98,7 @@
     {% localize off %}
 
 var index = 0;
+var indexoffsets = [];
 var speed = 1;
 
 $('#control_start').bind("click", function (evt) {
@@ -235,20 +236,18 @@ $(document).ready(function() {
 
 
     // Hash check
-    var orly = window.location.hash.split('-')
+    var orly = window.location.hash.split(',')
     if (orly) {
-        if (orly[0] == "#start") {
-            var player = orly[1];
-            var start = orly[2];
-            // We were given player index and start, find correct index
-            for(series in datasets[player]['speed']) {
-                for (k in series['data']) {
-                    if (start <= series[k][0]) {
-                        index = k;
-                        break;
-                    }
+        for (rly in orly) {
+            var yarly = orly[rly].split('-');
+            var playeri = parseInt(yarly[1]);
+            var startkm = parseFloat(yarly[2]);
+            for (x in datasets[playeri]['speed']['data']) {
+                val = datasets[playeri]['speed']['data'][x];
+                if (startkm <= val[0]) {
+                    indexoffsets.push( parseInt(x) );
+                    break;
                 }
-                break;
             }
         }
     }
@@ -304,15 +303,19 @@ $(document).ready(function() {
         }
     }
     var updateMapAndGraph= function() {
-        if (index >= iterations) {
-            clearInterval(interval);
-        }
         {% for object in exercises %}
+            var thisindex = index;
             var player = {{forloop.counter0}};
-            var lon = datasets[player]["lon"][index];
-            var lat = datasets[player]["lat"][index];
-            var p_lon = datasets[player]["lon"][index-speed];
-            var p_lat = datasets[player]["lat"][index-speed];
+            if (indexoffsets[player]) {
+                thisindex =  index + indexoffsets[player]
+            }
+            if (thisindex >= iterations) {
+                clearInterval(interval);
+            }
+            var lon = datasets[player]["lon"][thisindex];
+            var lat = datasets[player]["lat"][thisindex];
+            var p_lon = datasets[player]["lon"][thisindex-speed];
+            var p_lat = datasets[player]["lat"][thisindex-speed];
             // Check for none-values, we don't want to zoom to 0_o o_0
             if (lon != 0.0 && lat != 0.0) {
                 if (!markers[player])
@@ -326,7 +329,7 @@ $(document).ready(function() {
                         Mapper.panTo(lon, lat);
                         mapUpdater = 0;
                     }
-                    //Mapper.updatePosMarker(datasets[player]["lon"][index],datasets[player]["lat"][index]);
+                    //Mapper.updatePosMarker(datasets[player]["lon"][thisindex],datasets[player]["lat"][index]);
 
                 {% endif %}
                 if (p_lon != 0.0 && p_lat != 0.0) {
@@ -338,23 +341,23 @@ $(document).ready(function() {
                 }
             }
 
-            // Highlight the point at index in the first series in the altitudeprofile plot
-            var x = datasets[player]['altitude']['data'][index][0];
-            var y = datasets[player]['altitude']['data'][index][1];
+            // Highlight the point at thisindex in the first series in the altitudeprofile plot
+            var x = datasets[player]['altitude']['data'][thisindex][0];
+            var y = datasets[player]['altitude']['data'][thisindex][1];
             altitudeprofileplot.updateMarker(x, y, player);
 
             {% if object.avg_hr %}
-                setAndDraw(player, 'hr', 2, index);
+                setAndDraw(player, 'hr', 2, thisindex);
             {% endif %}
             {% if object.avg_speed %}
-                setAndDraw(player, 'speed', 0, index);
+                setAndDraw(player, 'speed', 0, thisindex);
             {% endif %}
-                setAndDraw(player, 'altitude', 3, index);
+                setAndDraw(player, 'altitude', 3, thisindex);
             {% if object.max_cadence %}
-                setAndDraw(player, 'cadence', 1, index);
+                setAndDraw(player, 'cadence', 1, thisindex);
             {% endif %}
             {% if object.avg_power %}
-                setAndDraw(player, 'power', 4, index);
+                setAndDraw(player, 'power', 4, thisindex);
             {% endif %}
         {% endfor %}
             
