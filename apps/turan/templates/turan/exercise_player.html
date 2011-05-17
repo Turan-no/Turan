@@ -240,14 +240,27 @@ $(document).ready(function() {
         if (orly[0] == "#start") {
             var player = orly[1];
             var start = orly[2];
+            // We were given player index and start, find correct index
+            for(series in datasets[player]['speed']) {
+                for (k in series['data']) {
+                    if (start <= series[k][0]) {
+                        index = k;
+                        break;
+                    }
+                }
+                break;
+            }
         }
+    }
+
 
 
 
     // Function to update both graphs for each val
     // Try and look and for existing plot
     // if cannot be found, create the initial plot and save key to var plots.
-    var setAndDraw = function(player, key, color, index, val) {
+    var setAndDraw = function(player, key, color, index) {
+        var val = datasets[player][key]['data'][index][1];
         //  Update HTML text display of val
         $('#'+key+'val'+player).html(val);
         plot = plots[key+player];
@@ -331,23 +344,17 @@ $(document).ready(function() {
             altitudeprofileplot.updateMarker(x, y, player);
 
             {% if object.avg_hr %}
-            var hrval = datasets[player]['hr']['data'][index][1];
-                setAndDraw(player, 'hr', 2, index, hrval);
+                setAndDraw(player, 'hr', 2, index);
             {% endif %}
             {% if object.avg_speed %}
-            var speedval = datasets[player]['speed']['data'][index][1];
-                setAndDraw(player, 'speed', 0, index, speedval);
+                setAndDraw(player, 'speed', 0, index);
             {% endif %}
-
-            var altitudeval = datasets[player]['altitude']['data'][index][1];
-                setAndDraw(player, 'altitude', 3, index, altitudeval);
+                setAndDraw(player, 'altitude', 3, index);
             {% if object.max_cadence %}
-            var cadenceval = datasets[player]['cadence']['data'][index][1];
-                setAndDraw(player, 'cadence', 1, index, cadenceval);
+                setAndDraw(player, 'cadence', 1, index);
             {% endif %}
             {% if object.avg_power %}
-            var powerval = datasets[player]['power']['data'][index][1];
-                setAndDraw(player, 'power', 4, index, powerval);
+                setAndDraw(player, 'power', 4, index);
             {% endif %}
         {% endfor %}
             
