@@ -8,6 +8,8 @@ from cStringIO import StringIO
 
 
 class GPX2PNG(object):
+    maxele = 0
+    minele = 0
     maxlat = 0
     minlat = 0
     maxlon = 0
@@ -30,12 +32,17 @@ class GPX2PNG(object):
             for trkpt in trkpts:
                 lat = float(trkpt.attrib['lat'])
                 lon = float(trkpt.attrib['lon'])
+                ele = trkpt.find(self.ns + 'ele')
+
                 if first:
-                  self.minlat = lat
-                  self.minlon = lon
-                  self.laxlat = lat
-                  self.maxlon = lon
-                  first = False
+                    self.minlat = lat
+                    self.minlon = lon
+                    self.laxlat = lat
+                    self.maxlon = lon
+                    if ele is not None:
+                        self.minele = float(ele.text)
+                        self.maxele = float(ele.text)
+                    first = False
                 else:
                     if lat < self.minlat:
                       self.minlat = lat
@@ -45,6 +52,10 @@ class GPX2PNG(object):
                       self.maxlat = lat
                     if lon > self.maxlon:
                       self.maxlon = lon
+                    if ele is not None:
+                        self.minele = min(float(ele.text), self.minele)
+                        self.maxele = max(float(ele.text), self.maxele)
+
 
         yscale = -math.cos( (self.minlat + self.maxlat) / 2 / 180 * 3.141592 )
 
@@ -54,22 +65,30 @@ class GPX2PNG(object):
             lon = 0
             oldx = 0
             oldy = 0
+            first = True
 
             trksegs = trk.find(self.ns + 'trkseg')
             trkpts = trksegs.findall(self.ns + 'trkpt')
             for trkpt in trkpts:
                 lat = float(trkpt.attrib['lat'])
                 lon = float(trkpt.attrib['lon'])
+                ele = trkpt.find(self.ns + 'ele')
 
                 x = (lon - self.minlon) / (self.maxlon - self.minlon) * xsize
                 y = xsize+ ((lat - self.minlat) / (self.maxlat - self.minlat) * xsize * yscale)
-                self.path.append((x, y))
                 if first:
-                    self.draw.rectangle((x-2, y-2, x+2, y+2), fill="#00ff00")
+                    oldx = x
+                    oldy = y
                     first = False
+                    continue
 
-            self.draw.rectangle((x-2, y-2, x+2, y+2), fill="#ff0000")
-            self.draw.polygon(self.path, outline="#888888")
+                if ele is not None:
+                    i = int((float(ele.text) - self.minele) / (self.maxele - self.minele) * 255)
+                else:
+                    i = 0
+                self.draw.line((oldx, oldy, x, y), fill="rgb(%d,%d,%d)" % (i, 255-i, 255))
+                oldx = x
+                oldy = y
 
     def get_file(self):
         f = StringIO()
