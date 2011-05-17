@@ -610,6 +610,9 @@ def getwzones(exercise):
     userftp = exercise.user.get_profile().get_ftp(exercise.date)
     if not userftp:
         return {}
+    # Check object for watt
+    if not exercise.avg_power:
+        return {}
 
     zones = SortedDict({
             1: 0,
