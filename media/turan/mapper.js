@@ -161,15 +161,6 @@ var Mapper = {
         this.map.render("map");
         this.lgpx.setVisibility(true); // Dunno why this was needed after openlayers 2.8
         return this.map;
-    /*pushPoints: function(poslist) {
-        if (typeof(poslist) != "undefined") {
-            for (var i = 0; i < poslist.length; i++) {
-                var p = poslist[i];
-                this.route_points.push(new OpenLayers.Geometry.Point(p[0], p[1]));
-            
-            }
-    },
-    */
     },
     deleteMarkers: function() {
         var i=0;
@@ -208,6 +199,7 @@ var Mapper = {
             }
             var selection_vectors = new OpenLayers.Layer.Vector("HR Line", {
                     strategies: [new OpenLayers.Strategy.Fixed()],                
+                    rendererOptions: { zIndexing: true },
                     protocol: new OpenLayers.Protocol.HTTP({
                         url: this.geojson_url + '?start=' + minIndex + '&stop=' + maxIndex,
                         format: new OpenLayers.Format.GeoJSON({ 'internalProjection': this.projection })
@@ -264,9 +256,10 @@ var Mapper = {
   initFeature: function(athlete, icon_url) {
       var athleteStyleMap = new OpenLayers.StyleMap({
 	  	externalGraphic: icon_url,
-	  	graphicWidth: 24,
-	  	graphicHeight: 24,
-	  	fillOpacity: 0.85,
+	  	graphicWidth: 32,
+	  	graphicHeight: 32,
+        graphicZIndex:745, // Over other layers TODO
+	  	fillOpacity: 1,
 	  	rotation: "${angle}",
 	  });
 	  athleteLayer=new OpenLayers.Layer.Vector(athlete,{styleMap:athleteStyleMap});
@@ -279,6 +272,7 @@ var Mapper = {
     point = new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
     var feature = new OpenLayers.Feature.Vector(point, {
         angle: angle,
+        rendererOptions: { zIndexing: true },
         poppedup: false
     });
     layer.addFeatures([feature]);
