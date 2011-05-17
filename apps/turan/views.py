@@ -1577,23 +1577,23 @@ def autocomplete_route(request, app_label, model):
     #except:
     #    raise Http404
 
-    if not request.GET.has_key('q'):
+    if not request.GET.has_key('term'):
         raise Http404
 
-    query = request.GET.get('q', '')
+    query = request.GET.get('term', '')
     qset = (
             Q(name__icontains=query) |
             Q(description__icontains=query) |
             Q(tags__contains=query)
         )
 
-    limit = request.GET.get('limit', None)
+    #limit = request.GET.get('limit', None)
+    limit = 20
 
-    routes = Route.objects.filter(qset).order_by('name').distinct()[:limit]
-    route_list = '\n'.join([u'%s|%s' % (f.__unicode__(), f.pk) for f in routes])
+    routes = Route.objects.filter(qset).exclude(single_serving=1).extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',]).distinct()[:limit]
+    route_list = [{'id': f.pk, 'name': f.__unicode__(), 'description': f.description, 'tcount': f.tcount, 'icon': f.get_svg_url()} for f in routes]
 
-    return HttpResponse(route_list)
-
+    return HttpResponse(simplejson.dumps(route_list), mimetype='text/javascript')
 
 def ical(request, username):
 

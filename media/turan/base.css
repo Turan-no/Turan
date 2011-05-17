@@ -43,7 +43,11 @@ h4 {
 	margin: 5px 0 2px;
     letter-spacing: 1px;
 }
-
+label {
+	font-size: 120%;
+    color: #4F96CA; 
+    font-weight: bolder;
+}
 /* Tables */
 table.fullsize {
 	margin: 0.3em 0;

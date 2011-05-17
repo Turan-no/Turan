@@ -11,7 +11,7 @@
 {% block searchenginemeta %}
 {% tags_for_object object as tag_list %}
 <meta name="keywords" content="{% if tag_list %}{{ tag_list|join:","|escape }},{% endif %}sykkel,tur,trening,exercise" />
-<meta name="description" content="{% if object.comment %}{{ object.comment|truncatewords:20|escape }}{% else %}{{object.route.description}}{% endif %}" />
+<meta name="description" content="{% if object.comment %}{{ object.comment|truncatewords:20|escape }}. {% endif %}{{object.route.description}}" />
 {% endblock %}
 {% block extra_head %}
 {{ block.super }}
@@ -20,39 +20,46 @@
     {% include "turan/maphead.html" %}
 {% endwith %}
 {% endblock %}
-{% block extramenu %}
-{{ block.super }}
-<li class="floatright">
+{% block submenu %}
+<ul class="submenu">
+    {% if user == object.user %}
+    <li>
+        <a href="{% url exercise_delete object.id %}">
+            <img alt="delete" title="{% trans "Delete exercise" %}" src="{{ "cross"|silk_icon }}"> {% trans "Delete" %}
+        </a>
+    </li>
+    <li>
+        <a href="{% url exercise_update object.id %}">
+            <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"> {% trans "Modify" %}
+        </a>
+    </li>
+    {% endif%}
+    {% if user == object.user or user.is_superuser%}
+        {% if object.sensor_file %}
+        <li>
+            <a href="{% url exercise_parse object.id %}">
+                <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}">
+            </a>
+        </li>
+        {% endif %}
+    {% endif %}
+    <li>
+        <a href="{% url exercise_player %}?id={{object.id }}">
+            <img alt="Play" title="{% trans "Play exercise" %}" src="{{ "control_play"|silk_icon }}">
+            {% trans "Play" %}
+        </a>
+    </li>
+    <li style="padding: 0">
+            {% url exercise object.id as exercise_url %}
+            <a title="Post exercise on Twitter" href="http://twitter.com/home?status={{ object.exercise_type }}{% if object.route %} at {{ object.route }}{% endif %} - http://turan.no{{ exercise_url|urlencode }}"><img src="http://twitter-badges.s3.amazonaws.com/t_mini-a.png" alt="Twitter icon"/></a>
+    </li>
+    <li style="margin-top: 3px; padding: 0; margin-left: 5px">
         {% url exercise object.id as exercise_url %}
         <div id="fb-root"></div>
         <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
         <fb:send href="http://turan.no/{{exercise_url|urlencode}}"></fb:send>
-</li>
-<li class="floatright">
-        {% url exercise object.id as exercise_url %}
-        <a title="Post exercise on Twitter" href="http://twitter.com/home?status={{ object.exercise_type }}{% if object.route %} at {{ object.route }}{% endif %} - http://turan.no{{ exercise_url|urlencode }}"><img src="http://twitter-badges.s3.amazonaws.com/t_mini-a.png" alt="Twitter icon"/></a>
-</li>
-{% if user == object.user %}
-        <li class="floatright"><a href="{% url exercise_delete object.id %}">
-        <img alt="delete" title="{% trans "Delete exercise" %}" src="{{ "cross"|silk_icon }}"> {% trans "Delete" %}
-        </a></li>
-        <li class="floatright">
-        <a href="{% url exercise_update object.id %}">
-        <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"> {% trans "Modify" %}
-        </a>
-        </li>
-{% endif%}
-{% if user == object.user or user.is_superuser%}
-    {% if object.sensor_file %}
-        <li class="floatright"><a href="{% url exercise_parse object.id %}">
-        <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}"></a></li>
-    {% endif %}
-{% endif %}
-<li class="floatright">
-<a href="{% url exercise_player %}?id={{object.id }}">
-<img alt="Play" title="{% trans "Play exercise" %}" src="{{ "control_play"|silk_icon }}"> {% trans "Play" %}
-</a>
-</li>
+    </li>
+</ul>
 {% endblock%}
 {% block content %}
 {% if object.route.gpx_file %}
