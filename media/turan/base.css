@@ -127,10 +127,6 @@ p, ul {
 em {
 	font-style: italic;
 }
-ul li {
-	list-style-type: square;
-	margin-left: 1.5em;
-}
 
 #subnav a {
 	font-size: 90%;
@@ -441,7 +437,6 @@ h1 a
 ul {
     padding: 0;
     margin: 0;
-    list-style:none;
 }
 ul li ul { 
     padding-left: 10px; 
