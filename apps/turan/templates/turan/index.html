@@ -66,6 +66,9 @@
                 </p>
                 <hr class="clearleft" />
             </div>
+            <a href="{{ object.get_absolute_url }}">
+                <img class="floatright" src="{{ object.get_png_url }}" width="32" height="32"/>
+            </a> 
             <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
             <p class="smaller fade">
                 {% if object.distance %}
