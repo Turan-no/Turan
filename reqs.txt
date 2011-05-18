@@ -93,3 +93,5 @@ gdata
 django-wikiapp
 docutils
 django-kombu
+aggdraw
+
