@@ -27,8 +27,9 @@
         <label for="route"> 
             {% trans "Route" %}
         </label> 
-            <p >{% trans "Give a name to this exercise or start typing to search in existing routes" %}</p>
+            <p >{% trans "Name this exercise or start typing to search in existing routes" %}</p>
         <input id="route" type="text" class="textinput textInput" name="route" /> 
+            <p id="hint_route" class="formHint">{% trans "You can optionally leave this field blank" %}</p>
         
     </div> 
     {% endif %}
@@ -103,7 +104,9 @@ $(document).ready(function() {
         // If no object id set, just send the text in the field to django
         // And let it create a new route
         if ( !$( "#id_route" ).val() ) {
+            if ($('#route').val()) {
                 $( "#id_route" ).val( $('#route').val());
+            }
         }
 })
 }); 
