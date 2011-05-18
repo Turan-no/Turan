@@ -24,7 +24,7 @@
         $.datepicker.setDefaults( $.datepicker.regional[ "no" ] ); // TODO fix regional 
         var dateField = $('#id_time');
         if (dateField.val() != undefined ) {
-        dateField.datepicker($.datepicker.regional['no'],{
+        dateField.datepicker({
             startDate:'2011-01-01',
             constrainInput: false,
             dateFormat: 'yy-mm-dd'
