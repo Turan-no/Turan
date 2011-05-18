@@ -146,8 +146,7 @@ class Route(models.Model):
             filename = 'svg/%s.png' %self.id
             #return gpxstore.url(filename) Broken ?
             return '%sturan/%s' %(settings.MEDIA_URL, filename)
-        else:
-            return ''
+        return '/empty.gif'
 
     class Meta:
         verbose_name = _("Route")
