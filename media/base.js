@@ -96,9 +96,13 @@ $(function() {
         var itemId = this.getAttribute("id").split("_")[1];
         
         var popupBox = $("#mouseover_" + itemId).show();
-        var boxWidth = 350;
-        var boxHeight = parseInt(popupBox.css("height").replace("px","")) + 50;
-        popupBox.css({ left: (evt.clientX > window.innerWidth - boxWidth ? window.innerWidth - boxWidth : evt.clientX) + "px", top: (evt.clientY > window.innerHeight - boxHeight ? window.innerHeight - boxHeight : evt.clientY) + "px", width: boxWidth-50 + "px" });
+        var boxWidth = 300;
+        var boxHeight = popupBox.height();
+        popupBox.css({ 
+            left: evt.clientX + 10 + (evt.clientX + boxWidth > window.innerWidth ? - boxWidth - 50 + window.innerWidth - evt.clientX : 0) + "px", 
+            top: evt.clientY + 10 + (evt.clientY + boxHeight > window.innerHeight ? - boxHeight - 50 + window.innerHeight - evt.clientY : 0) + "px", 
+            width: boxWidth + "px" 
+        });
     }
 
     function popupfadeout(evt) {
@@ -107,14 +111,14 @@ $(function() {
         var popupBox = $("#mouseover_" + itemId).hide();
     }
 
-    $(".hoverpoint").hoverIntent({timeout: 0, interval: 900, over: popupfadein, out: popupfadeout});
+    $(".hoverpoint").hoverIntent({timeout: 0, interval: 500, over: popupfadein, out: popupfadeout});
 
     function profilepopupfadein(evt) {
         var itemId = this.getAttribute("id").split("_")[1];
         
         var popupBox = $("#profile_" + itemId).show();
         var boxWidth = 300;
-        popupBox.css({ left: evt.clientX + (evt.clientX < boxWidth ? boxWidth : 0) + "px", top: evt.clientY + "px", width: boxWidth + "px" });
+        popupBox.css({ left: evt.clientX + 10 + (evt.clientX + boxWidth > window.innerWidth ? - boxWidth - 50 + window.innerWidth - evt.clientX : 0) + "px", top: evt.clientY + 10 + "px", width: boxWidth + "px" });
     }
 
     function profilepopupfadeout(evt) {
