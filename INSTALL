@@ -8,7 +8,7 @@ None of this should be run as root except apt-get.
 ~$ sudo apt-get install python-sqlite
 ~$ sudo apt-get install python-dev
 
-~$ virtualenv pinax-env
+~$ virtualenv turan-env
 
 ~$ . pinax-env/bin/activate
 
