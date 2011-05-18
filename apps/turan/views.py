@@ -683,7 +683,7 @@ def powerjson(request, object_id):
     try:
         start, stop = int(start), int(stop)
     except ValueError:
-        return {}
+        return HttpResponse(simplejson.dumps({}), mimetype='application/json')
     all_details = object.get_details()
 
     details = all_details.all()[start:stop]
@@ -959,6 +959,8 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
         del js_strings['poweravg30s']
     if not exercise.avg_hr:
         del js_strings['hr']
+    if not exercise.avg_speed:
+        del js_strings['speed']
     if not exercise.avg_cadence:
         del js_strings['cadence']
 
@@ -1909,9 +1911,13 @@ def exercise_update_live(request, object_id):
                 new_object.time = datetime.fromtimestamp(new_object.time)
                 new_object.exercise = exercise
                 new_object.save()
+                # Quickfix for enable values in graph 
+                if new_object.hr:
+                    exercise.avg_hr = new_object.hr
+                    exercise.save()
                 return HttpResponse('Saved OK')
         except Exception, e:
-            return HttpResponse(e)
+            return HttpResponse(str(e))
 
     return HttpResponse('Nothing saved')
 
