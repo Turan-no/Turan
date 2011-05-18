@@ -61,9 +61,9 @@ var GraphPlotter = {
             plot = $.plot($("#tripdiv"), data, {
                 series: {
                     lines: {
-                        lineWidth: 1, // less cluttere
+                        lineWidth: 2, // less cluttere
                     },
-                    shadowSize: 1 //drawing is faster without shadoes
+                    shadowSize: 3 //drawing is faster without shadoes
                 },
                 yaxes: [
                     { tickFormatter: axisformatters['speed'] },
