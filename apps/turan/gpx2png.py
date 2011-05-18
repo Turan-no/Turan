@@ -2,8 +2,9 @@
 
 from xml.etree import ElementTree as ET
 import math
-import Image, ImageDraw
+import Image, aggdraw
 from cStringIO import StringIO
+
 
 
 
@@ -19,7 +20,7 @@ class GPX2PNG(object):
 
     def __init__(self, filename, xsize=64, ysize=64):
         self.image = Image.new("RGBA", (xsize,ysize))
-        self.draw = ImageDraw.Draw(self.image)
+        self.draw = aggdraw.Draw(self.image)
 
         doc = ET.parse(filename)
         self.root = doc.getroot()
@@ -84,12 +85,16 @@ class GPX2PNG(object):
 
                 if ele is not None:
                     i = int((float(ele.text) - self.minele) / (self.maxele - self.minele) * 255)
-                    self.draw.line((oldx, oldy, x, y), fill="rgb(%d,%d,%d)" % (i, 255-i, 255))
+                    p = aggdraw.Pen("rgb(%d,%d,%d)" % (i, 0, 0), 2.0)
+                    self.draw.line((oldx, oldy, x, y), p)
                 else:
-                    self.draw.line((oldx, oldy, x, y), fill="rgb(0,0,0)")
+                    p = aggdraw.Pen("black", 2.0)
+                    self.draw.line((oldx, oldy, x, y), p)
 
                 oldx = x
                 oldy = y
+
+            self.draw.flush()
 
     def get_file(self):
         f = StringIO()
