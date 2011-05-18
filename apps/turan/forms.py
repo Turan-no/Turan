@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 
 from django.core.exceptions import ObjectDoesNotExist
 class ExerciseForm(forms.ModelForm):
-    route = forms.CharField(widget=forms.HiddenInput())
+    route = forms.CharField(widget=forms.HiddenInput(),required=False)
 
     class Meta:
         model = Exercise
@@ -23,10 +23,13 @@ class ExerciseForm(forms.ModelForm):
         try:
             data = Route.objects.get(pk=data)
         except ValueError: # not int, means name
-            r = Route()
-            r.name = data
-            r.save()
-            data = r
+            if data: # Check that string i set, if not, leave it to exercise.save() to create autoroute
+                r = Route()
+                r.name = data
+                r.save()
+                data = r
+            else:
+                return None
         return data
 
 
