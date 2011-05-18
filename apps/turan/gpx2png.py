@@ -84,9 +84,10 @@ class GPX2PNG(object):
 
                 if ele is not None:
                     i = int((float(ele.text) - self.minele) / (self.maxele - self.minele) * 255)
+                    self.draw.line((oldx, oldy, x, y), fill="rgb(%d,%d,%d)" % (i, 255-i, 255))
                 else:
-                    i = 0
-                self.draw.line((oldx, oldy, x, y), fill="rgb(%d,%d,%d)" % (i, 255-i, 255))
+                    self.draw.line((oldx, oldy, x, y), fill="rgb(0,0,0)")
+
                 oldx = x
                 oldy = y
 
