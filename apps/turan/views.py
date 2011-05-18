@@ -1188,7 +1188,7 @@ def getgradients(values, d_offset=0):
             distances.append(0)
 
     # Smooth 3 Wide!
-    altitudes = smoothListGaussian(altitudes, 3)
+    altitudes = smoothListGaussian(altitudes, 10)
 
     gradients = []
     previous_altitude = 0
