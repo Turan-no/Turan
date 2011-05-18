@@ -274,11 +274,10 @@ var GraphPlotter = {
             //that.updateLegend(pos);
             if (item) {
                 // Move marker to current pos
-                if (typeof(Mapper) != "undefined") {
+                if (Mapper.map != null || Mapper.posLayer != undefined) {
                     var route_lon = that.datasets['lon'];
                     var route_lat = that.datasets['lat'];
                     if (route_lon.length >= item.dataIndex) {
-
                         var x = route_lon[item.dataIndex];
                         var y = route_lat[item.dataIndex];
                         if (!this.posFeature) {
