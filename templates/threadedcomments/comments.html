@@ -6,7 +6,9 @@
 {% load humanize %}
 
 {% get_threaded_comment_tree for object as responses %}
+{% comment %}
 {% autopaginate responses %}
+{% endcomment %}
 <ul class="comments">
     {% for response in responses %}
         <li class="{% cycle even,odd %} thread-{{ response.depth }} clearfix">
