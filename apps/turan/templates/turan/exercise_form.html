@@ -100,14 +100,11 @@ $(function() {
 
 $(document).ready(function() { 
     $('#form').bind('submit', function(evt) {
-
-
         // If no object id set, just send the text in the field to django
         // And let it create a new route
         if ( !$( "#id_route" ).val() ) {
                 $( "#id_route" ).val( $('#route').val());
         }
-        $('#result').html('<h1>{% trans "Uploading" %} ...</h1>');
 })
 }); 
 </script> 
