@@ -27,6 +27,7 @@ class ExerciseForm(forms.ModelForm):
             if data: # Check that string i set, if not, leave it to exercise.save() to create autoroute
                 r = Route()
                 r.name = data
+                r.single_serving = True
                 r.save()
                 data = r
             else:

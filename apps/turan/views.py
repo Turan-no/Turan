@@ -619,10 +619,10 @@ def calendar_month(request, year, month):
     # Filter by username
     username = request.GET.get('username', '')
     if username:
-        user = get_object_or_404(User, username=username)
-        exercises = exercises.filter(user=user)
+        other_user = get_object_or_404(User, username=username)
+        exercises = exercises.filter(user=other_user)
     else:
-        user = ''
+        other_user = ''
 
     # Calculate the next month, if applicable.
     if allow_future:
@@ -668,7 +668,7 @@ def calendar_month(request, year, month):
              'next_month': next_month,
              'e_by_week': e_by_week,
              'z_by_week': z_by_week,
-             'user': user,
+             'other_user': other_user,
              'year': year,
              'month': month,
              },

@@ -21,7 +21,7 @@
 {% block content %}
 {% if username %}
 <div class="floatleft">
-    <a class="profilehoverpoint" id="user_{{user.id}}" title="{{user.username}}" href="{{user.get_profile.get_absolute_url }}">{% avatar user 60 %}</a>
+    <a class="profilehoverpoint" id="user_{{other_user.id}}" title="{{other_user.username}}" href="{{other_user.get_profile.get_absolute_url }}">{% avatar other_user 60 %}</a>
     {{ user|profile_hover }}
 </div>
 {% endif %}
