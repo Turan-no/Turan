@@ -63,34 +63,34 @@
 <br>
 <span class="title" id="speedval{{forloop.counter0}}"></span>
 </p>
-<div class="graph speed floatleft drop-shadow" id="speeddiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+<div class="playergraph speed floatleft drop-shadow" id="speeddiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 <p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="hrval{{forloop.counter0}}"</span></p>
-<div class="graph hr floatleft drop-shadow" id="hrdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+<div class="playergraph hr floatleft drop-shadow" id="hrdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% if object.max_cadence %}
 <p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="cadenceval{{forloop.counter0}}"</span></p>
-<div class="graph cadence floatleft drop-shadow" id="cadencediv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+<div class="playergraph cadence floatleft drop-shadow" id="cadencediv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% endif %}
 <p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="altitudeval{{forloop.counter0}}"</span></p>
-<div class="graph altitude floatleft drop-shadow" id="altitudediv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+<div class="playergraph altitude floatleft drop-shadow" id="altitudediv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% if object.avg_power %}
 <p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="powerval{{forloop.counter0}}"</span></p>
-<div class="graph power floatleft drop-shadow" id="powerdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+<div class="playergraph power floatleft drop-shadow" id="powerdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% endif %}
 <hr class="clearleft">
 
 <p class="graphheader speed floatleft">{% trans "Speed" %}<br><span class="title" id="2speedval{{forloop.counter0}}"></span></p>
-<div class="drop-shadow graph speed floatleft" id="2speeddiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+<div class="drop-shadow playergraph speed floatleft" id="2speeddiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
 <p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="2hrval{{forloop.counter0}}"</span></p>
-<div class="drop-shadow graph hr floatleft" id="2hrdiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+<div class="drop-shadow playergraph hr floatleft" id="2hrdiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
 {% if object.max_cadence %}
 <p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="2cadenceval{{forloop.counter0}}"</span></p>
-<div class="drop-shadow graph cadence floatleft" id="2cadencediv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+<div class="drop-shadow playergraph cadence floatleft" id="2cadencediv{{forloop.counter0}}" style="width:130px;height:60px"></div>
 {% endif %}
 <p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="2altitudeval{{forloop.counter0}}"</span></p>
-<div class="drop-shadow graph altitude floatleft" id="2altitudediv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+<div class="drop-shadow playergraph altitude floatleft" id="2altitudediv{{forloop.counter0}}" style="width:130px;height:60px"></div>
 {% if object.avg_power %}
 <p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="2powerval{{forloop.counter0}}"</span></p>
-<div class="drop-shadow graph power floatleft" id="2powerdiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+<div class="drop-shadow playergraph power floatleft" id="2powerdiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
 {% endif %}
 
 {% endfor %}
@@ -263,8 +263,14 @@ $(document).ready(function() {
     // if cannot be found, create the initial plot and save key to var plots.
     var setAndDraw = function(player, key, color, index) {
         var val = datasets[player][key]['data'][index][1];
+        var htmlval;
+        if (key == 'speed') {
+            htmlval=val.toFixed(1);
+        }else{
+            htmlval=val.toFixed(0);
+        }
         //  Update HTML text display of val
-        $('#'+key+'val'+player).html(val);
+        $('#'+key+'val'+player).html(htmlval);
         plot = plots[key+player];
         data = [{ 'color': color, 'data': [[val, 0]]}];
         if (plot) {

@@ -1188,7 +1188,7 @@ def getgradients(values, d_offset=0):
             distances.append(0)
 
     # Smooth 3 Wide!
-    altitudes = smoothListGaussian(altitudes, 3)
+    altitudes = smoothListGaussian(altitudes, 10)
 
     gradients = []
     previous_altitude = 0
@@ -1722,6 +1722,8 @@ def import_data(request):
                     content = ContentFile(urllib2.urlopen(req).read())
                     route.gpx_file.save("gpx/garmin_connect_" + id + ".gpx", content)
                     route.name = route_name
+                    # Until we have option to match existing route set it to single serving
+                    route.single_serving = True
                     route.save()
 
                 if tcx_url:

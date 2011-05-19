@@ -146,8 +146,7 @@ class Route(models.Model):
             filename = 'svg/%s.png' %self.id
             #return gpxstore.url(filename) Broken ?
             return '%sturan/%s' %(settings.MEDIA_URL, filename)
-        else:
-            return ''
+        return '/empty.gif'
 
     class Meta:
         verbose_name = _("Route")
@@ -974,3 +973,9 @@ def get_category(grade, length):
         return 1
     else:
         return 0 # HC ?
+
+class AutoTranslateField(models.CharField):
+    __metaclass__ = models.SubfieldBase
+
+    def to_python(self, value):
+        return str(_(value))
