@@ -27,6 +27,7 @@
                 <img alt="User image" class="floatleft" src="{{ object.icon|safe }}" width="32" height="32" />
             </a>
             <a class="floatright" href="{% url profile_detail object.user %}">{% avatar object.user 30 %}</a>
+            <img class="floatright" src="{{ object.route.get_png_url }}" width="32" height="32"/>
             <a href="{{ object.get_absolute_url }}">
                 {{ object|slice:":35" }}
             </a>
