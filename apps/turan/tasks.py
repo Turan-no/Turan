@@ -929,6 +929,12 @@ def populate_interval_info(exercise):
                 check_and_set('avg_power', ret['speed__avg'])
             if 'power__max' in ret:
                 check_and_set('max_power', ret['speed__max'])
+        if exercise.avg_cadence:
+            if 'cadence_pedaling__avg' in ret:
+                check_and_set('avg_pedaling_cadence', ret['cadence_pedaling__avg'])
+            if 'cadence__max' in ret:
+                check_and_set('max_cadence', ret['cadence__max'])
+
         # TODO add a bunch more
         interval.save()
         #assert False, (start, stop, ret)
@@ -1083,6 +1089,16 @@ def detailslice_info(details):
             'cadence__avg': 0,
             'power__avg': 0,
             'temp__avg': 0,
+            'speed_pedaling__avg': 0,
+            'hr_pedaling__avg': 0,
+            'cadence_pedaling__avg': 0,
+            'power_pedaling__avg': 0,
+            'temp_pedaling__avg': 0,
+            'speed_pedaling__len': 0,
+            'hr_pedaling__len': 0,
+            'cadence_pedaling__len': 0,
+            'power_pedaling__len': 0,
+            'temp_pedaling__len': 0,
             'start_lon': 0.0,
             'start_lat': 0.0,
             'end_lon': 0.0,
@@ -1093,9 +1109,17 @@ def detailslice_info(details):
             ret[val+'__min'] =  min(ret[val+'__min'], getattr(d, val))
             ret[val+'__max'] = max(ret[val+'__max'], getattr(d, val))
             if getattr(d, val):
-                ret[val+'__avg'] += getattr(d, val)
+                value = getattr(d, val)
+                ret[val+'__avg'] += value
+                if value:
+                    ret[val+'_pedaling__avg'] += value
+                    ret[val+'_pedaling__len'] += 1
+
+
     for val in val_types:
         ret[val+'__avg'] = ret[val+'__avg']/len(details)
+        if ret[val+'_pedaling__len']:
+            ret[val+'_pedaling__avg'] = ret[val+'_pedaling__avg']/ret[val+'_pedaling__len']
 
     ret['ascent'] = ascent
     ret['descent'] = descent

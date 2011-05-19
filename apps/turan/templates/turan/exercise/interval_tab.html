@@ -43,6 +43,14 @@
         <th>
             {% anchortrans avg_hr "Avg HR" %}
         </th>
+        {% if object.avg_cadence %}
+        <th>
+            {% anchortrans "Avg cadence" %}
+        </th>
+        <th>
+            {% anchortrans "Max cadence" %}
+        </th>
+        {% endif %}
     </tr>
     {% for interval in intervals %}
     <tr id="row{{forloop.counter0}}">
@@ -89,6 +97,11 @@
             {{interval.avg_hr|floatformat}} {% trans "BPM" %}
             {% endif %}
         </td>
+        {% if interval.avg_pedaling_cadence %}
+        <td>{{interval.avg_pedaling_cadence}}</td>
+        <td>{{interval.max_cadence}}</td>
+        {% endif %}
+
     </tr>
     {% endfor %}
 </table>

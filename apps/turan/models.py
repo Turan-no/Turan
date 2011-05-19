@@ -619,6 +619,8 @@ class Interval(models.Model):
     min_cadence = models.IntegerField(blank=True, null=True) # rpm
     min_power = models.IntegerField(blank=True, null=True) # W
 
+    avg_pedaling_cadence = models.IntegerField(blank=True, null=True) # rpm
+
     def get_avg_power_per_kg(self):
         ''' Find weight during exercise and calculate W/kg'''
         userweight = self.exercise.get_weight()
