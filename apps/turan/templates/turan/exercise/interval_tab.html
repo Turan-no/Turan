@@ -32,23 +32,22 @@
             {% anchortrans avg_power "Avg power" %}
         </th>
         <th>
-            {% anchortrans ftp %"%}
+            {% anchortrans ftp "FTP %" %}
         </th>
         <th>
             {% trans "Avg power/kg" %}
         </th>
         <th> {% anchortrans max_power "Max power" %} </th>
         {% endif %}
-
         <th>
             {% anchortrans avg_hr "Avg HR" %}
         </th>
         {% if object.avg_cadence %}
         <th>
-            {% anchortrans "Avg cadence" %}
+            {% anchortrans avg_pedaling_cadence "Avg cadence" %}
         </th>
         <th>
-            {% anchortrans "Max cadence" %}
+            {% anchortrans max_cadence "Max cadence" %}
         </th>
         {% endif %}
     </tr>
