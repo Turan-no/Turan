@@ -973,3 +973,9 @@ def get_category(grade, length):
         return 1
     else:
         return 0 # HC ?
+
+class AutoTranslateField(models.CharField):
+    __metaclass__ = models.SubfieldBase
+
+    def to_python(self, value):
+        return str(_(value))
