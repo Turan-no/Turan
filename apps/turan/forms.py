@@ -6,7 +6,8 @@ from django.utils.text import truncate_words
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
-from django.core.exceptions import ObjectDoesNotExist
+
+
 class ExerciseForm(forms.ModelForm):
     route = forms.CharField(widget=forms.HiddenInput(),required=False)
 
