@@ -26,6 +26,10 @@
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_previous.png" alt="{% trans "Previous"%}" />
         {% trans "Previous" %}
     </a>
+    <a href="{% url statistics-month now.year now.month %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_magnify.png" alt="{% trans "Current month"%}" />
+        {% trans "Current" %}
+    </a>
     <a href="{% url statistics-month next_month.year next_month.month %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_next.png" alt="{% trans "Next"%}" />
         {% trans "Next" %}
