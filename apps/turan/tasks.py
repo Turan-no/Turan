@@ -891,9 +891,9 @@ def parse_sensordata(exercise, callback=None):
 
 @task
 def populate_interval_info(exercise):
-    if exercise.sensor_file.name.endswith('.fit'):
+    #if exercise.sensor_file.name.endswith('.fit'):
         #"FIT. SO PRO"
-        return
+    #    return
     details = list(exercise.exercisedetail_set.all())
     d = filldistance(details) # FIXME
     for interval in exercise.interval_set.all():
