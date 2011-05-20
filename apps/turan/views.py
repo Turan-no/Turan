@@ -560,7 +560,11 @@ def colorize_and_scale(request):
     else:
         b = 0
 
-    i = Image.open(i)
+    try:
+        i = Image.open(i)
+    except IOError, e:
+        raise Http404()
+
     sized = i.resize((w, h), Image.ANTIALIAS)
 
     channels = sized.split()
