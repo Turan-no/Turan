@@ -1231,3 +1231,7 @@ p.description {
 .graphheader {
     width: 40px;
 }
+
+.olLayerGoogleCopyright {
+    display: none
+}
