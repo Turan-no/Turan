@@ -107,9 +107,11 @@ input[type="text"], input[type="password"], textarea {
     height: 50px;
     background: url('/site_media/turan/turan.png') 0 50px;
 }
-#tabhead .logo h1 {
-    visibility: hidden;
+#tabhead .logo a {
     font-size: 36px;
+}
+#tabhead .logo span {
+    visibility: hidden;
 }
 #tabhead .login {
     position: absolute;
