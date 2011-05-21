@@ -49,7 +49,10 @@
         {% endif %}
         
         <div id="tabhead">
-            <div class="logo" dir="ltr">{% block logo_link_image %}{% endblock %}</div>
+            <div class="logo" dir="ltr">
+                {% block logo_link_image %}{% endblock %}
+            </div>
+            <div class="sublogo">{% trans "What matters" %}</div>
             <div class="login">{% block login %}{% endblock %}{% block locale_switcher %}{% endblock %}<div style="text-align: right;"></div></div>
             <div id="left_tabs" >{% block left_tabs %}{% endblock %}</div>
             <div id="right_tabs" >{% block right_tabs %}{% endblock %}</div>
