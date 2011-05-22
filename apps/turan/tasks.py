@@ -250,6 +250,8 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
                             started_at_distance = d['distance']
                             print "Start of %s at index %s" %(se, found_start)
                     previous_start = start_distance
+                elif start_distance > 300000: # If start distance is further away than 300km we stop searching
+                    print "Skipped segment, start was %s m away" %start_distance
             elif not found_end:
                 end_distance = proj_distance(se.end_lat, se.end_lon, d['lat'], d['lon'])
                 #Check if distance from start is longer than segment plus some, means we didnt' find stop
@@ -273,13 +275,23 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
                     previous_end = end_distance
             elif found_start and found_end:
                 print "_________Found Segment %s" %se
-                # TODO Add dupecheck
+                # Iterate over the existing segments for this exercise
+                # Do not add the found segment if it's too close to existing
+                # If the start is within 500 meters, and the length is within 
+                # 500 meters we deem it coo close
 
-                # distcheck
-                if -500 < found_distance-se.distance*1000 < 500:
+                duplicate = False
+                for old_segment in exercise.segmentdetail_set.all():
+                    if not (-500 < (old_segment.start-found_start) < 500 and
+                        -500 < (old_segment.distance-found_distance) < 500):
+                        # If distance of found segment is within 500 meters of
+                        # the lenght of the segment we accept it
+                        duplicate = True
+                        break
+                if -500 < found_distance-se.distance*1000 < 500 and not duplicate:
                     segments.append((se, found_start, found_end, started_at_distance, found_distance))
-
                 found_start, found_end, previous_start, started_at_distance, previous_end = 0, 0, 0, 0, 0
+
     return segments
 
 @task
