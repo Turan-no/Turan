@@ -138,6 +138,8 @@
         </tr>
         {% endfor %}
     </table>
+{% if object.user == request.user %}
 <hr>
 <a href="{% url exercise_segment_search object.id %}">{% trans "Search for named segments" %}</a>
+{% endif %}
 </div>
