@@ -9,6 +9,9 @@
 {% block extra_head %}
 {{ form.media }}
 <script type="text/javascript" src="{{MEDIA_URL}}jquery.ui.datepicker-no.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}jquery.ui.datepicker-no.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}msdropdown/js/jquery.dd.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}/msdropdown/dd.css" />
 {% endblock %}
 
 {% block content %}
@@ -100,6 +103,12 @@ $(function() {
 });
 
 $(document).ready(function() { 
+    /*$("#id_exercise_type option").each (
+        function() {
+            var elem = $(this)[0];
+            elem.setAttribute( 'title', '/site_media/turan/exerciselogos/' + elem.innerHTML.toLowerCase() + '.png' );
+        });*/
+        $("#id_exercise_type").msDropDown();
     $('#form').bind('submit', function(evt) {
         // If no object id set, just send the text in the field to django
         // And let it create a new route

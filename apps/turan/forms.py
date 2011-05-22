@@ -1,19 +1,39 @@
 from django import forms
-from models import Route, Exercise, Segment, Slope, SegmentDetail
+from models import Route, Exercise, Segment, Slope, SegmentDetail, ExerciseType
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext as _
+#from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import StrAndUnicode, force_unicode
+from django.utils.html import escape, conditional_escape
 
+
+class ImageSelect(forms.Select):
+
+    def render_option(self, selected_choices, option_value, option_label):
+        option_value = force_unicode(option_value)
+        et = ExerciseType.objects.get(pk=option_value)
+        selected_html = (option_value in selected_choices) and u' selected="selected"' or ''
+        return u'<option title="%s" value="%s"%s>%s</option>' % (
+            et.icon(),
+            escape(option_value), selected_html,
+            conditional_escape(force_unicode(option_label)))
 
 
 class ExerciseForm(forms.ModelForm):
     route = forms.CharField(widget=forms.HiddenInput(),required=False)
+#    exercise_type = forms.ModelChoiceField(widget=ImageSelect())
+#    exercise_type = forms.ChoiceField(label=_("Exercise Type"), choices=(),
+#                                                    widget=forms.Select(attrs={'class':'selector'}))
 
     class Meta:
         model = Exercise
         fields = ['route', 'sensor_file', 'exercise_type', 'comment', 'tags', 'kcal','exercise_permission', 'url']
+        widgets = { 
+                'exercise_type': ImageSelect()
+                }
 
     def clean_route(self):
         '''Translate number from autocomplete to object.
