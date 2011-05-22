@@ -1235,3 +1235,13 @@ p.description {
 .olLayerGoogleCopyright {
     display: none
 }
+
+.dd .ddTitle {
+    height: 32px;
+}
+.dd .ddChild a img,
+.dd .ddTitle span.ddTitleText img {
+    height: 32px;
+    width: 32px;
+}
+
