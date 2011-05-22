@@ -1952,6 +1952,7 @@ def exercise_player(request):
     alt_max = 0
     for exercise in exercises:
         details = exercise.get_details().all()
+        distance = filldistance(details)
         if not alt_max:
             alt_max = details.aggregate(Max('altitude'))['altitude__max']
         datasets.append(mark_safe(js_trip_series(request, details, time_xaxis=False, use_constraints=False)))
