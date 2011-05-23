@@ -272,21 +272,38 @@ var GraphPlotter = {
             that.latestPosition = pos; 
   //          if (!that.updateLegendTimeout) that.updateLegendTimeout = setTimeout(that.updateLegend, 50); 
             //that.updateLegend(pos);
-            if (item) {
-                // Move marker to current pos
-                if (Mapper.map != null || Mapper.posLayer != undefined) {
-                    var route_lon = that.datasets['lon'];
-                    var route_lat = that.datasets['lat'];
-                    if (route_lon.length >= item.dataIndex) {
-                        var x = route_lon[item.dataIndex];
-                        var y = route_lat[item.dataIndex];
-                        if (!this.posFeature) {
-                            this.posFeature = Mapper.createFeature(Mapper.posLayer, x, y, 0);
+
+            var axes = plot.getAxes(); 
+            // Just retrn if we're hovering around outside the graph area
+            if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max || 
+                pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) 
+                return; 
+
+            // Move marker to current pos
+            if (Mapper.map != null || Mapper.posLayer != undefined) {
+                for (serieskey in that.datasets) { // Find first and best series that we got
+                    var series = that.datasets[serieskey]['data'];
+                    for (key in series) {
+                        if (series[key][0] >= pos.x) {
+                            var posIndex = key;
+                            var route_lon = that.datasets['lon'];
+                            var route_lat = that.datasets['lat'];
+                            if (route_lon.length >= posIndex) {
+                                var x = route_lon[posIndex];
+                                var y = route_lat[posIndex];
+                                if (!this.posFeature) {
+                                    this.posFeature = Mapper.createFeature(Mapper.posLayer, x, y, 0);
+                                }
+                                // Mapper.updatePosMarker(x, y);
+                                Mapper.moveFeature(this.posFeature, x, y, 0); // Hardcoded to 0 degrees
+                            }
+                            break;
                         }
-                        // Mapper.updatePosMarker(x, y);
-                        Mapper.moveFeature(this.posFeature, x, y, 0); // Hardcoded to 0 degrees
                     }
+                    break;
                 }
+            }
+            if (item) {
 
                 if (previousPoint != item.datapoint) {
                     previousPoint = item.datapoint;
