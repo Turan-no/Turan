@@ -173,8 +173,8 @@ var GraphPlotter = {
             display: 'none',
             top: y + 5,
             left: x + 5,
-            padding: '2px',
-            opacity: 0.80
+            padding: '10px',
+            opacity: 0.9
         }).appendTo("body").fadeIn(500);
     },
     init: function(args) {
@@ -309,28 +309,23 @@ var GraphPlotter = {
                 }
             }
                 
-            var x = pos.x
-                y = pos.y.toFixed(2);
+            var x = pos.x;
             
-            var tooltipHtml = '<h3>Data at ' + that.xaxisformatter(x.toFixed(2)) + '</h3><ul class="iconlist">';
+            var tooltipHtml = '<h3>Data at ' + that.xaxisformatter(x, plot.getAxes().xaxis) + '</h3><ul class="iconlist">';
             for (skey in that.datasets) {
                 if (skey == 'lon' || skey == 'lat') 
                     continue;
                 var series = that.datasets[skey];
                 var label = series['label'];
-                var plotData = null;
-                /*for (key in plot.getData()) {
-                    plotData = plot.getData()[key];
-                    label = plotData.label;
-                    if (series['label'] == label)
-                        break;
-                }*/
                 var tickFormatter = axisformatters[skey];
+                if (skey == 'poweravg30s')
+                    tickFormatter = axisformatters['power'];
                 var val = series['data'][posIndex][1]; // Must fetch this from datasets rather thatn the graph data itself because of multiple treshold splits up the indexes
                 if(tickFormatter != undefined) 
-                    val = tickFormatter(val, '' );
+                        
+                    val = tickFormatter(val, plot.getAxes().xaxis);
                 var color = plot.getOptions().colors[series['color']];
-                tooltipHtml += '<li><span class="label">' + label + '</span>: ' + val + '</li>';
+                tooltipHtml += '<li class="'+skey+'"><span class="label">' + label + '</span>: ' + val + '</li>';
             }
             tooltipHtml += '</ul>';
             that.showTooltip(pos.pageX, pos.pageY, tooltipHtml);
