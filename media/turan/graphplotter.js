@@ -175,7 +175,7 @@ var GraphPlotter = {
             left: x + 5,
             padding: '2px',
             opacity: 0.80
-        }).appendTo("body").fadeIn(100);
+        }).appendTo("body").fadeIn(500);
     },
     init: function(args) {
         this.datasets = args.datasets;
@@ -273,54 +273,69 @@ var GraphPlotter = {
   //          if (!that.updateLegendTimeout) that.updateLegendTimeout = setTimeout(that.updateLegend, 50); 
             //that.updateLegend(pos);
 
+            $("#gtooltip").remove();
             var axes = plot.getAxes(); 
             // Just retrn if we're hovering around outside the graph area
             if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max || 
                 pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) 
                 return; 
 
+            var posIndex = 0;
+            for (serieskey in that.datasets) { // Find first and best series that we got
+                var series = that.datasets[serieskey]['data'];
+                for (key in series) {
+                    if (series[key][0] >= pos.x) {
+                        var posIndex = key;
+                        break;
+                    }
+                }
+                break;
+            }
+            if (posIndex <= 0)  // No index found
+                return;
+
             // Move marker to current pos
             if (Mapper.map != null || Mapper.posLayer != undefined) {
-                for (serieskey in that.datasets) { // Find first and best series that we got
-                    var series = that.datasets[serieskey]['data'];
-                    for (key in series) {
-                        if (series[key][0] >= pos.x) {
-                            var posIndex = key;
-                            var route_lon = that.datasets['lon'];
-                            var route_lat = that.datasets['lat'];
-                            if (route_lon.length >= posIndex) {
-                                var x = route_lon[posIndex];
-                                var y = route_lat[posIndex];
-                                if (!this.posFeature) {
-                                    this.posFeature = Mapper.createFeature(Mapper.posLayer, x, y, 0);
-                                }
-                                // Mapper.updatePosMarker(x, y);
-                                Mapper.moveFeature(this.posFeature, x, y, 0); // Hardcoded to 0 degrees
-                            }
-                            break;
-                        }
+                var route_lon = that.datasets['lon'];
+                var route_lat = that.datasets['lat'];
+                if (route_lon.length >= posIndex) {
+                    var x = route_lon[posIndex];
+                    var y = route_lat[posIndex];
+                    if (!this.posFeature) {
+                        this.posFeature = Mapper.createFeature(Mapper.posLayer, x, y, 0);
                     }
-                    break;
+                    // Mapper.updatePosMarker(x, y);
+                    Mapper.moveFeature(this.posFeature, x, y, 0); // Hardcoded to 0 degrees
                 }
             }
-            if (item) {
-
-                if (previousPoint != item.datapoint) {
-                    previousPoint = item.datapoint;
-                    
-                    $("#gtooltip").remove();
-                    var x = item.datapoint[0].toFixed(2),
-                        y = item.datapoint[1].toFixed(2);
-                    
-                    that.showTooltip(item.pageX, item.pageY,
-                    item.series.label + " at " + x + " is " + y);
-
-                }
+                
+            var x = pos.x
+                y = pos.y.toFixed(2);
+            
+            var tooltipHtml = '<h3>Data at ' + that.xaxisformatter(x.toFixed(2)) + '</h3><ul class="iconlist">';
+            for (skey in that.datasets) {
+                if (skey == 'lon' || skey == 'lat') 
+                    continue;
+                var series = that.datasets[skey];
+                var label = series['label'];
+                var plotData = null;
+                /*for (key in plot.getData()) {
+                    plotData = plot.getData()[key];
+                    label = plotData.label;
+                    if (series['label'] == label)
+                        break;
+                }*/
+                var tickFormatter = axisformatters[skey];
+                var val = series['data'][posIndex][1]; // Must fetch this from datasets rather thatn the graph data itself because of multiple treshold splits up the indexes
+                if(tickFormatter != undefined) 
+                    val = tickFormatter(val, '' );
+                var color = plot.getOptions().colors[series['color']];
+                tooltipHtml += '<li><span class="label">' + label + '</span>: ' + val + '</li>';
             }
-            else {
-                $("#gtooltip").remove();
-                previousPoint = null;            
-            }
+            tooltipHtml += '</ul>';
+            that.showTooltip(pos.pageX, pos.pageY, tooltipHtml);
+            
+
         });
 
 
