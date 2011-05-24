@@ -69,8 +69,9 @@
                             }
                         });{% endlocalize %}
                     });
-
+                    {% if interval.get_zone %}
                     $('#row{{forloop.counter0}}').css('background-color', colors[{{interval.get_zone}}].replace("rgb", "rgba").replace(")", ", 0.5)"));
+                    {% endif %}
                 });
             </script>
         </td>
