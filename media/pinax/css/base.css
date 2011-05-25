@@ -118,6 +118,7 @@ input[type="text"], input[type="password"], textarea {
     top: 6px;
     right: 15px;
     color: #DEF; /* login bar text colour */
+    text-align: right;
 }
 #tabhead .login a, #tabhead .login a:visited {
     color: #DEF; /* login bar link colour */

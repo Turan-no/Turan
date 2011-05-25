@@ -353,7 +353,7 @@ h1 a
 	height: 16px;
 }
 /* Standard buttons */
-.buttons a:hover, button:hover {
+.buttons a:hover {
 	background-color: #dff4ff;
 	border: 1px solid #c2e1ef;
 	color: #336699;
@@ -1246,38 +1246,21 @@ p.description {
 }
 
 #search input {
-    width: 110;
-    padding: 6px 50px 6px 6px;
-    background: #000;
-    border:1px solid #666;
-    color: #fff;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+    background: #fff;
+    color: #000;
+    width: 190px;
+    padding: 4px 9px;
+    margin: 6px 2px 0 0;
+    font-size: 12px;
+    box-shadow: 3px 3px 6px #777 inset;
+    -moz-border-radius: 19px;
+    -webkit-border-radius: 19px;
+    border-radius: 19px;
 }
 #search button {
-    cursor: pointer;
-    margin-left: -8px;
-    top: 0;
-    padding: 6px;
-    padding-top: 9px;
-    height: 100%;
-    line-height: 100%;
-    font-weight: bold;
-    text-transform: uppercase;
-    background: #e0ebff;
-    background: #555; /* for non-css3 browsers */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#555555', endColorstr='#222222'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(#555555), to(#222222)); /* for webkit browsers */
-    background: -moz-linear-gradient(top,  #555,  #222); /* for firefox 3.6+ */
-    border: 1px solid #666;
-    color: #fff;
-    -moz-border-radius: 0 3px 3px 0;
-    -webkit-border-radius: 0 3px 3px 0;
-    border-radius: 0 3px 3px 0;
-}
-#search button:hover {
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#777777', endColorstr='#555555'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(#777777), to(#555555)); /* for webkit browsers */
-    background: -moz-linear-gradient(top,  #777777,  #555555); /* for firefox 3.6+ */
+    background: transparent;
+    border: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
