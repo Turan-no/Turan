@@ -1,0 +1,38 @@
+{% extends "turan/base.html" %}
+{% load tagging_tags %}
+{% load i18n %}
+{% block content %}
+{% if user_list %}
+<div class="drop-shadow spacer lifted clearright">
+<ul class="iconlist spacer">
+        {% for user in user_list %}
+        <li class="user"><a href="{{ user.get_absolute_url }}">{{ user }}</a></li>
+        {% endfor %}
+</ul>
+</div>
+{% endif %}
+{% if exercise_list %}
+<div class="drop-shadow spacer lifted clearright">
+<ul class="iconlist spacer">
+        <li class="tag">
+            <img alt="Tag" src="{{ MEDIA_URL }}pinax/img/silk/icons/tag_blue.png" class="noborder" />
+        </li>
+        {% for exercise in exercise_list %}
+        <li class="exercise"><a href="{{ exercise.get_absolute_url }}">{{ exercise }}</a></li>
+        {% endfor %}
+</ul>
+</div>
+{% endif %}
+{% if tag_list %}
+<div class="drop-shadow spacer lifted clearright">
+<ul class="iconlist spacer">
+        <li class="tag">
+            <img alt="Tag" src="{{ MEDIA_URL }}pinax/img/silk/icons/tag_blue.png" class="noborder" />
+        </li>
+        {% for tag in tag_list %}
+        <li class="tag {{ tag }}"><a href="/tags/{{ tag }}">{{ tag }}</a></li>
+        {% endfor %}
+</ul>
+</div>
+{% endif %}
+{% endblock %}
