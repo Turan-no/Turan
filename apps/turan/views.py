@@ -1328,7 +1328,7 @@ def exercise(request, object_id):
         max_hr = int(profile.max_hr)
         maxhr_js = ', max: %s' %max_hr
     else:
-        max_hr = 200 # FIXME, maybe demand from user ?
+        max_hr = 190 # FIXME, maybe demand from user ?
 
     details = object.exercisedetail_set.all()
     # Default is false, many exercises don't have distance, we try to detect later
