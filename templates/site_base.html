@@ -62,7 +62,7 @@
         <a href="{% url acct_login %}">{% trans "Login" %}</a> {% ifsetting ACCOUNT_OPEN_SIGNUP %}{% trans "or" %} <a href="{% url acct_signup %}"><b>{% trans "Sign up" %}</b></a>{% endifsetting %}
     {% endif %}
 {% endblock %}
-
+{% comment %}
 {% block locale_switcher %}
     <form action="{% if request.user.is_authenticated %}{% url acct_language_change %}{% else %}/i18n/setlang/{% endif %}" method="post" id="locale_switcher">
         <div class="floatright">
@@ -73,6 +73,12 @@
             </select>
         </div>
     </form>
+{% endblock %}
+{% endcomment%}
+{% block locale_switcher %}
+{% with "/search" as search_url %}
+{% include "turan/search_head.html" %}
+{% endwith %}
 {% endblock %}
 
 {% block logo_link_image %}

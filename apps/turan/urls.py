@@ -67,6 +67,7 @@ urlpatterns = patterns('',
       url(r'^autocomplete/(?P<app_label>\w+)/(?P<model>\w+)/$', autocomplete_route, name='autocomplete_route'),
 
     url(r'^/?$', index, name='turanindex'),
+    url(r'^search/?', search, name='search'),
 
 # The Feeds
     (r'^feed/(?P<url>.*)/?$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),

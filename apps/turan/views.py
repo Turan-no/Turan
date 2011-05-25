@@ -1978,3 +1978,31 @@ def fetchRAAM(request):
     req ['data'] = urllib2.urlopen(url).read().strip()
     response = simplejson.dumps(req)
     return HttpResponse(response, mimetype="application/json")
+
+def search(request):
+    ''' Global site Search view '''
+    search_query = request.GET.get('q', '')
+    if not search_query:
+        raise Http404
+
+    exercise_list = Exercise.objects.select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')
+    comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')
+    route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])
+    segment_list = Segment.objects.all()
+
+    tag_list = Tag.objects.all()
+    user_list = User.objects.all()
+    qset = (
+        Q(route__name__icontains=search_query) |
+        Q(comment__icontains=search_query) |
+        Q(tags__contains=search_query)
+    )
+    exercise_list = exercise_list.filter(qset).distinct()[:10]
+    uqset = (
+        Q(username__icontains=search_query)
+    )
+    user_list = user_list.filter(uqset).distinct()[:10]
+    tag_list = tag_list.filter(name__icontains=search_query)[:10]
+
+
+    return render_to_response('turan/search.html', locals(), context_instance=RequestContext(request))
