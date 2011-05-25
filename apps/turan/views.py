@@ -751,6 +751,8 @@ def geojson(request, object_id):
 
 
     max_hr = Exercise.objects.get(pk=object_id).user.get_profile().max_hr
+    if not max_hr: # sigh
+        max_hr = 190
 
     class Feature(object):
 
