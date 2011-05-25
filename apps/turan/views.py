@@ -427,7 +427,10 @@ def statistics(request, year=None, month=None, day=None, week=None):
         .annotate( max_power = Max('user__exercise__bestpowereffort__power'))\
         .order_by('-max_power')
         for a in best_power_tmp:
-            userweight_tmp.append(a.max_power/a.get_weight())#(a.exercise.date))
+            if a.get_weight():
+                userweight_tmp.append(a.max_power/a.get_weight())#(a.exercise.date))
+            else:
+                userweight_tmp.append(0)
         bestest_power.append(zip(best_power_tmp, userweight_tmp))
     bestest_power = zip(intervals, bestest_power)
 
