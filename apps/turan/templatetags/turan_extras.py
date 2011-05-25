@@ -240,6 +240,8 @@ def divide(value, arg):
         return 0
     except TypeError:
         return 0
+    except ZeroDivisionError:
+        return 0
 
 @register.filter
 def jstimestamp(value):
