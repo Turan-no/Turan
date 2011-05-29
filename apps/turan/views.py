@@ -1997,12 +1997,17 @@ def search(request):
         Q(comment__icontains=search_query) |
         Q(tags__contains=search_query)
     )
-    exercise_list = exercise_list.filter(qset).distinct()[:10]
+    exercise_list = exercise_list.filter(qset).distinct().order_by('-date')[:15]
     uqset = (
         Q(username__icontains=search_query)
     )
-    user_list = user_list.filter(uqset).distinct()[:10]
-    tag_list = tag_list.filter(name__icontains=search_query)[:10]
+    user_list = user_list.filter(uqset).distinct()[:15]
+    tag_list = tag_list.filter(name__icontains=search_query)[:15]
+    rqset = (
+        Q(name__icontains=search_query) |
+        Q(description__icontains=search_query)
+    )
+    route_list = route_list.filter(rqset).distinct()[:15]
 
 
     return render_to_response('turan/search.html', locals(), context_instance=RequestContext(request))

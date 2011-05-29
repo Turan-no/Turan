@@ -1,36 +1,48 @@
 {% extends "turan/base.html" %}
 {% load tagging_tags %}
 {% load i18n %}
+{% load avatar_tags %}
 {% block content %}
+<h1>{% trans "Matches for search" %} {{ search_query }}</h1>
 {% if user_list %}
-<div class="drop-shadow spacer lifted clearright">
+<div class="spacer floatleft">
+<h2>{% trans "Users" %}</h2>
 <ul class="iconlist spacer">
         {% for user in user_list %}
-        <li class="user"><a href="{{ user.get_absolute_url }}">{{ user }}</a></li>
+        <li class="user"><a href="{{ user.get_absolute_url }}">{% avatar user 30 %}{{ user }}</a></li>
         {% endfor %}
 </ul>
 </div>
 {% endif %}
 {% if exercise_list %}
-<div class="drop-shadow spacer lifted clearright">
+<div class="floatleft spacer">
+<h2>{% trans "Exercises" %}</h2>
 <ul class="iconlist spacer">
-        <li class="tag">
-            <img alt="Tag" src="{{ MEDIA_URL }}pinax/img/silk/icons/tag_blue.png" class="noborder" />
-        </li>
-        {% for exercise in exercise_list %}
-        <li class="exercise"><a href="{{ exercise.get_absolute_url }}">{{ exercise }}</a></li>
+    {% for exercise in exercise_list %}
+    <li class="exercise"><a href="{{ exercise.get_absolute_url }}"><img width="32" height="32" src="{{exercise.route.get_png_url}}">{{ exercise }}</a></li>
+    {% endfor %}
+</ul>
+</div>
+{% endif %}
+{% if route_list %}
+<div class="spacer floatleft">
+<h2>{% trans "Routes" %}</h2>
+<ul class="iconlist spacer">
+        {% for route in route_list %}
+        <li class=""><img widht="32" height="32" src="{{route.get_png_url}}"><a href="{{ route.get_absolute_url }}">{{ route }}</a></li>
         {% endfor %}
 </ul>
 </div>
 {% endif %}
 {% if tag_list %}
-<div class="drop-shadow spacer lifted clearright">
+<div class="spacer floatleft">
+<h2>{% trans "Tags" %}</h2>
 <ul class="iconlist spacer">
-        <li class="tag">
+        <li class="">
             <img alt="Tag" src="{{ MEDIA_URL }}pinax/img/silk/icons/tag_blue.png" class="noborder" />
         </li>
         {% for tag in tag_list %}
-        <li class="tag {{ tag }}"><a href="/tags/{{ tag }}">{{ tag }}</a></li>
+        <li class="{{ tag }}"><a href="/tags/{{ tag }}">{{ tag }}</a></li>
         {% endfor %}
 </ul>
 </div>
