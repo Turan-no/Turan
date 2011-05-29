@@ -1263,4 +1263,13 @@ p.description {
     position: absolute;
     right: 0;
     bottom: 0;
+    width: 110px;
+    padding: 6px 50px 6px 6px;
+    background: #000;
+    border:1px solid #609a43;
+    color: #fff;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+
 }
