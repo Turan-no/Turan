@@ -106,8 +106,11 @@ class HRMParser(object):
                     elif self.smode == '110111100':
                         hr, speed, cadence, power, wat = line.split('\t')
                         altitude = 0
+                    elif self.smode == '11111110': # Tacx
+                        hr, speed, cadence, altitude, power = line.split('\t')
                     else:
                         assert False, "Unknown smode (combination of sensors), please mail file to turan@turan.no"
+                    #has_speed, has_cadence, has_altitude, has_power, power_l_balance, power_ped, hrcc, imperial, air_pressure = list(self.smode)
 
                     hr = int(hr)
                     speed = float(speed)/10
