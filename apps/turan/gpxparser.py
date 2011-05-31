@@ -122,7 +122,7 @@ class GPXParser(object):
                     hr = 0
                     try:
                         hr_ele = trkpt.find('.//' +self.garmin_ns + 'hr')
-                        hr = int(hr_ele.text)
+                        hr = int(float(hr_ele.text))
                         self.avg_hr += hr
                         self.max_hr = max(hr, self.max_hr)
                     except AttributeError:
@@ -131,7 +131,7 @@ class GPXParser(object):
                     cad = 0
                     try:
                         cad_ele = trkpt.find('.//' +self.garmin_ns + 'cad')
-                        cad = int(cad_ele.text)
+                        cad = int(float(cad_ele.text))
                         self.avg_cadence += cad
                         self.max_cadence = max(cad, self.max_cadence)
                     except AttributeError:
