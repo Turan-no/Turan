@@ -786,6 +786,9 @@ table.month div.day {
 .toplist ol span.selected {
 	background-color: yellow;
 }
+.selected {
+	background-color: yellow;
+}
 
 li.tag {
 	list-style-type: none;

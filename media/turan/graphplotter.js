@@ -310,6 +310,9 @@ var GraphPlotter = {
             }
                 
             var x = pos.x;
+            var highlightedseries = null;
+            if (item) 
+                highlightedseries = item.series.label;
             
             var tooltipHtml = '<h3>Data at ' + that.xaxisformatter(x, plot.getAxes().xaxis) + '</h3><ul class="iconlist">';
             for (skey in that.datasets) {
@@ -322,9 +325,10 @@ var GraphPlotter = {
                     tickFormatter = axisformatters['power'];
                 var val = series['data'][posIndex][1]; // Must fetch this from datasets rather thatn the graph data itself because of multiple treshold splits up the indexes
                 if(tickFormatter != undefined) 
-                        
                     val = tickFormatter(val, plot.getAxes().xaxis);
                 var color = plot.getOptions().colors[series['color']];
+                if(label == highlightedseries) // Highlight if item selected
+                    skey += ' selected'
                 tooltipHtml += '<li class="'+skey+'"><span class="label">' + label + '</span>: ' + val + '</li>';
             }
             tooltipHtml += '</ul>';
