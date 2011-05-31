@@ -138,6 +138,10 @@ class GPXParser(object):
                         pass # no hr in file
 
                     if self.entries:
+                        # Check for missing elevation, this happens in endomondo export for exmaple
+                        if ele == None:
+                            # Missing element, set it to previous eleveation
+                            ele = self.entries[-1].altitude
                         this_distance = proj_distance(self.entries[-1].lat,
                                 self.entries[-1].lon,
                                 lat,
