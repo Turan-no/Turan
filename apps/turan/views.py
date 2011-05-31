@@ -421,17 +421,18 @@ def statistics(request, year=None, month=None, day=None, week=None):
     intervals = [5, 10, 30, 60, 300, 600, 1200, 1800, 3600]
     for i in intervals:
         userweight_tmp = []
-        #.filter(user__exercise__bestpowereffort__duration=i)\
         best_power_tmp = statsprofiles.filter(**tfilter)\
         .extra(where=['turan_bestpowereffort.duration = %s' %i])\
         .annotate( max_power = Max('user__exercise__bestpowereffort__power'))\
         .order_by('-max_power')
         for a in best_power_tmp:
             if a.get_weight():
-                userweight_tmp.append(a.max_power/a.get_weight())#(a.exercise.date))
+                userweight_tmp.append(a.max_power/a.get_weight())
             else:
                 userweight_tmp.append(0)
-        bestest_power.append(zip(best_power_tmp, userweight_tmp))
+        best_power_tmp = zip(best_power_tmp, userweight_tmp)
+        best_power_tmp = sorted(best_power_tmp, key=lambda x: -x[1])
+        bestest_power.append(best_power_tmp)
     bestest_power = zip(intervals, bestest_power)
 
     team_list = Tribe.objects.all()
