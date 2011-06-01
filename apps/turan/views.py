@@ -903,12 +903,14 @@ def json_trip_series(request, object_id, start=False):
         js = cache.get(cache_key)
     if not js:
         details = exercise.exercisedetail_set.all()
+        if start:
+            details = details[start:]
         if exercise.avg_power:
             generate_30s_power = power_30s_average(details)
         has_distance = filldistance(details)
         if not has_distance:
             time_xaxis = True
-        js = js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
+        js = js_trip_series(request, details, start=start, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
         js = js.encode('UTF-8')
         js = compress_string(js)
         if not start: # Do not cache slices
@@ -925,8 +927,6 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
 
     if not details:
         return
-
-
 
     # The JS arrays
     js_strings = {
@@ -1250,14 +1250,6 @@ def getgradients(values, d_offset=0):
     inclinesums = [ (k,inclinesums[k]) for k in sorted(inclinesums.keys())]
 
     return zip(distances, gradients), inclinesums
-
-
-#def getdistance(values, start, end):
-#    d = 0
-#    for i in xrange(start+1, end+1):
-#        delta_t = (values[i].time - values[i-1].time).seconds
-#        d += values[i].speed/3.6 * delta_t
-#    return d
 
 def exercise_permission_checks(request, exercise):
     '''Given a request object and a exercise object, return a tuple with
@@ -1919,7 +1911,7 @@ def exercise_update_live(request, object_id):
     if request.method == 'POST' or request.method == 'GET':
         data = request.raw_post_data
         data = simplejson.loads(data)
-        print 'JSON: %s' %data
+        #print 'JSON: %s' %data
         try:
             for item in data:
                 new_object = ExerciseDetail(**item)
@@ -1927,9 +1919,22 @@ def exercise_update_live(request, object_id):
                 new_object.exercise = exercise
                 new_object.save()
                 # Quickfix for enable values in graph 
-                if new_object.hr:
+                if new_object.hr and not exercise.avg_hr:
                     exercise.avg_hr = new_object.hr
-                    exercise.save()
+
+                if new_object.hr:
+                    exercise.max_hr = max(new_object.hr, exercise.max_hr)
+                if new_object.power:
+                    exercise.max_power = max(new_object.power, exercise.max_power)
+                if new_object.cadence:
+                    exercise.max_cadence = max(new_object.cadence, exercise.max_cadence)
+                if new_object.speed:
+                    exercise.max_speed = max(new_object.speed, exercise.max_speed)
+                if new_object.temperature:
+                    exercise.max_temperature = max(new_object.temperature, exercise.max_temperature)
+                    exercise.min_temperature = min(new_object.temperature, exercise.min_temperature)
+                exercise.save()
+
                 return HttpResponse('Saved OK')
         except Exception, e:
             return HttpResponse(str(e))
@@ -1951,7 +1956,7 @@ def exercise_player(request):
             # TODO Friend check
         exercises.append(exercise)
 
-    alt = tripdetail_js(None, exercise.id, 'altitude')
+    alt = tripdetail_js(exercise.id, 'altitude')
 
 
     datasets = []
