@@ -1180,13 +1180,15 @@ div.tooltip {
     z-index: 10;
     position: fixed;
     background-color: #fff;
-    -webkit-box-shadow: 3px 3px 12px rgb(40, 40, 40);
-    box-shadow: 3px 3px 12px rgb(40, 40, 40);
-    -moz-box-shadow: 3px 3px 12px rgb(40, 40, 40);
-    -webkit-border-radius: 1em;
-    -moz-border-radius: 1em;
-    border-radius: 1em;
-    border: 2px solid silver;
+    -webkit-box-shadow: 1px 1px 8px rgb(40, 40, 40);
+    box-shadow: 1px 1px 8px rgb(40, 40, 40);
+    -moz-box-shadow: 1px 1px 8px rgb(40, 40, 40);
+    -o-box-shadow: 1px 1px 8px rgb(40, 40, 40);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -o-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid #4f96ca;
     opacity: 0.9;
     padding: 5px;
 }
