@@ -4,7 +4,11 @@
         var map;
         $(document).ready(function(evt) {
             map = Mapper.init(
-                "{{ MEDIA_URL }}turan/{{ object.get_simplegpx_url }}", 
+                {% if object.get_simplegpx_url %}
+                    "{{ MEDIA_URL }}turan/{{ object.get_simplegpx_url }}", 
+                {% else %}
+                    false,
+                {% endif %}
                 {% if object.get_geojson_url %}
                 "{{ object.get_geojson_url }}",
                 {% else %}

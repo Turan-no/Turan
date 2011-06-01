@@ -10,13 +10,15 @@ var Mapper = {
     },
 
     init: function(gpx_file, geojson_url, start, end) {
-        var lgpx = new OpenLayers.Layer.GML("Route", gpx_file, {
-            format: OpenLayers.Format.GPX,
-            style: {strokeColor: "purple", strokeWidth: 5, strokeOpacity: 0.5, label: "Start"},
-            projection: this.projection
-        });
-        lgpx.events.register("loadend", this, this.resizeMapToLayerExtents);
-        this.lgpx = lgpx;
+        if (gpx_file) {
+            var lgpx = new OpenLayers.Layer.GML("Route", gpx_file, {
+                format: OpenLayers.Format.GPX,
+                style: {strokeColor: "purple", strokeWidth: 5, strokeOpacity: 0.5, label: "Start"},
+                projection: this.projection
+            });
+            lgpx.events.register("loadend", this, this.resizeMapToLayerExtents);
+            this.lgpx = lgpx;
+        }
 
 
         this.map = new OpenLayers.Map ({
@@ -82,10 +84,10 @@ var Mapper = {
         this.FKB = FKB;
 
 
-        var defaultlayers = [layerMapnik, layerCycleMap, layerTilesAtHome, FKB, FKBraster, lgpx, gphy, gmap, ghyb, gsat];
+        var defaultlayers = [layerMapnik, layerCycleMap, layerTilesAtHome, FKB, FKBraster, gphy, gmap, ghyb, gsat];
         if (start) {
             if (start[0] > 4 && start[1] > 57) { // Quickfix for checking for norwegian maps or not
-                defaultlayers = [FKB, FKBraster, layerMapnik, layerCycleMap, layerTilesAtHome, lgpx, gphy, gmap, ghyb, gsat];
+                defaultlayers = [FKB, FKBraster, layerMapnik, layerCycleMap, layerTilesAtHome, gphy, gmap, ghyb, gsat];
             }
         }
         this.map.addLayers(defaultlayers);
@@ -159,7 +161,8 @@ var Mapper = {
         }
         
         this.map.render("map");
-        this.lgpx.setVisibility(true); // Dunno why this was needed after openlayers 2.8
+        if (gpx_file)
+            this.lgpx.setVisibility(true); // Dunno why this was needed after openlayers 2.8
         return this.map;
     },
     deleteMarkers: function() {

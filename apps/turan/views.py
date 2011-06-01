@@ -1,6 +1,7 @@
 from models import *
 from tasks import smoothListGaussian, calcpower, power_30s_average \
-        , hr2zone, detailslice_info, search_trip_for_possible_segments_matches, filldistance
+        , hr2zone, detailslice_info, search_trip_for_possible_segments_matches, filldistance, \
+        create_gpx_from_details
 from itertools import groupby, islice
 from forms import ExerciseForm
 from profiles.models import Profile
@@ -1909,10 +1910,13 @@ def exercise_update_live(request, object_id):
     '''
 
     exercise = get_object_or_404(Exercise, id=object_id)
+    if not exercise.route.gpx_file:
+        create_gpx_from_details(exercise)
+
     if request.method == 'POST' or request.method == 'GET':
         data = request.raw_post_data
         data = simplejson.loads(data)
-        #print 'JSON: %s' %data
+        print 'JSON: %s' %data
         try:
             for item in data:
                 new_object = ExerciseDetail(**item)
@@ -1926,6 +1930,14 @@ def exercise_update_live(request, object_id):
                 if not exercise.date:
                     exercise.date = datetimedate(new_object.time.year, \
                             new_object.time.month, new_object.time.day)
+                if new_object.lon and not exercise.start_lon:
+                    exercise.route.start_lon = new_object.lon
+                if new_object.lat and not exercise.start_lat:
+                    exercise.route.start_lat = new_object.lat
+                if new_object.lon:
+                    exercise.route.end_lon = new_object.lon
+                if new_object.lat:
+                    exercise.route.end_lat = new_object.lat
 
                 old_duration = 0
                 try:
