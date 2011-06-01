@@ -114,7 +114,7 @@
     <div id="exercisers" class="spacer">
     <h2>{% trans "Top exercisers" %}</h2>
         {% for exerciser in user_list %}
-        <a class="profilehoverpoint" id="user_{{exerciser.id}}" title="{{exerciser.username}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
+        <a class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
         {{ exerciser|profile_hover }}
         {% endfor %}
     </div>
