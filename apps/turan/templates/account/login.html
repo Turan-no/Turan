@@ -35,9 +35,7 @@
             {% if redirect_field_value %}
                 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
-            <div class="form_block">
-                <input type="submit" value="{% trans "Log in &raquo;" %}" />
-            </div>
+                <button type="submit">{% trans "Log in &raquo;" %}</button>
         </fieldset>
     </form>
     
@@ -61,7 +59,7 @@
                 </div>
             {% endif %}
             <div class="form_block">
-                <input type="submit" value="{% trans "Log in &raquo;" %}" />
+                <button type="submit">{% trans "Log in &raquo;" %}</button>
             </div>
         </fieldset>
     </form>
