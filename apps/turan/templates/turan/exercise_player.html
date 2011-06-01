@@ -211,13 +211,14 @@ $(document).ready(function() {
 
     //Mapper.gsat.setVisibility(1);
     Mapper.map.setBaseLayer(Mapper.gsat);
-    Mapper.lgpx.setVisibility(0);
+    if (Mapper.lgpx != undefined)
+        Mapper.lgpx.setVisibility(0);
     //Mapper.map.removeLayer(Mapper.lgpx);
     // Focus le map
     $('#mapcontainer').focus();
 
     var updateInterval = 500;
-    var zoomLevel = 15;
+    var zoomLevel = 3;
     var nr_histvals = 30;
     var interval = 0;
     var mapUpdater = 0;

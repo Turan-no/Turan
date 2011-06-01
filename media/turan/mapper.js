@@ -161,8 +161,10 @@ var Mapper = {
         }
         
         this.map.render("map");
-        if (gpx_file)
+        if (gpx_file) {
+            this.map.addLayer(lgpx);
             this.lgpx.setVisibility(true); // Dunno why this was needed after openlayers 2.8
+        }
         return this.map;
     },
     deleteMarkers: function() {
