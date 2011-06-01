@@ -1,5 +1,5 @@
 from django import forms
-from models import Route, Exercise, Segment, Slope, SegmentDetail, ExerciseType
+from models import Route, Exercise, Segment, Slope, SegmentDetail, ExerciseType, permission_choices
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
@@ -21,6 +21,15 @@ class ImageSelect(forms.Select):
             escape(option_value), selected_html,
             conditional_escape(force_unicode(option_label)))
 
+class HorizRadioRenderer(forms.RadioSelect.renderer):
+    """ this overrides widget method to put radio buttons horizontally
+        instead of vertically.
+    """
+    def render(self):
+        """Outputs radios"""
+        return mark_safe(u'<div class="inlineLabels"' + u'\n'.join([u'%s\n' % w for w in self]) + u'</div>')
+
+
 
 class ExerciseForm(forms.ModelForm):
     route = forms.CharField(widget=forms.HiddenInput(),required=False)
@@ -32,7 +41,8 @@ class ExerciseForm(forms.ModelForm):
         model = Exercise
         fields = ['route', 'sensor_file', 'exercise_type', 'comment', 'tags', 'kcal','exercise_permission', 'url']
         widgets = { 
-                'exercise_type': ImageSelect()
+                'exercise_type': ImageSelect(),
+                'exercise_permission': forms.RadioSelect(renderer=HorizRadioRenderer)#,choices=permission_choices,label=_('Visible control'),max_length=1, default='A',help_text='Test')
                 }
 
     def clean_route(self):
