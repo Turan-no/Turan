@@ -54,6 +54,7 @@ from wakawaka.models import WikiPage, Revision
 import re
 from datetime import timedelta, datetime
 from datetime import date as datetimedate
+from datetime import time as datetimetime
 from time import mktime, strptime
 import locale
 
@@ -1918,22 +1919,60 @@ def exercise_update_live(request, object_id):
                 new_object.time = datetime.fromtimestamp(float(new_object.time))
                 new_object.exercise = exercise
                 new_object.save()
-                # Quickfix for enable values in graph 
-                if new_object.hr and not exercise.avg_hr:
-                    exercise.avg_hr = new_object.hr
+                new_time = datetimetime(new_object.time.hour, \
+                        new_object.time.minute, new_object.time.second)
+                if not exercise.time:
+                    exercise.time = new_time
+                if not exercise.date:
+                    exercise.date = datetimedate(new_object.time.year, \
+                            new_object.time.month, new_object.time.day)
+
+                old_duration = 0
+                try:
+                    old_duration = exercise.duration.seconds
+                except:
+                    pass # Object is Decimal first time around, stupid durationfield
+                #previous_time = exercise.time
+                #previous_sample = ExerciseDetail.objects.filter(exercise__id=exercise.pk).order_by('-time')[0]
+                #if previous_sample:
+                #    previous_time = previous_sample.time
+                new_duration = new_object.time - datetime.combine(exercise.date, exercise.time)
+                exercise.duration = new_duration
+                new_duration = new_duration.seconds
 
                 if new_object.hr:
                     exercise.max_hr = max(new_object.hr, exercise.max_hr)
+                    if exercise.avg_hr and exercise.duration:
+                        exercise.avg_hr = (exercise.avg_hr*old_duration+ new_object.hr) / new_duration
+                    else:
+                        exercise.avg_hr = new_object.hr
                 if new_object.power:
                     exercise.max_power = max(new_object.power, exercise.max_power)
+                    if exercise.avg_power and exercise.duration:
+                        exercise.avg_power = (exercise.avg_power*old_duration+ new_object.power) / new_duration
+                    else:
+                        exercise.avg_power = new_object.power
                 if new_object.cadence:
                     exercise.max_cadence = max(new_object.cadence, exercise.max_cadence)
+                    if exercise.avg_cadence and exercise.duration:
+                        exercise.avg_cadence = (exercise.avg_cadence*old_duration+ new_object.cadence) / new_duration
+                    else:
+                        exercise.avg_cadence = new_object.cadence
                 if new_object.speed:
                     exercise.max_speed = max(new_object.speed, exercise.max_speed)
-                if new_object.temperature:
-                    exercise.max_temperature = max(new_object.temperature, exercise.max_temperature)
-                    exercise.min_temperature = min(new_object.temperature, exercise.min_temperature)
-                exercise.save()
+                    if exercise.avg_speed and exercise.duration:
+                        exercise.avg_speed = (exercise.avg_speed*old_duration+ new_object.speed) / new_duration
+                    else:
+                        exercise.avg_speed = new_object.speed
+                if new_object.temp:
+                    exercise.max_temperature = max(new_object.temp, exercise.max_temperature)
+                    if exercise.temperature and exercise.duration:
+                        exercise.temperature = (exercise.temperature*old_duration+ new_object.temp) / new_duration
+                    else:
+                        exercise.temperature = new_object.temp
+                    exercise.min_temperature = min(new_object.temp, exercise.min_temperature)
+
+                exercise.save() # Update exercise with possibly new values
 
                 return HttpResponse('Saved OK')
         except Exception, e:
