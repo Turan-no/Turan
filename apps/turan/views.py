@@ -1,6 +1,6 @@
 from models import *
 from tasks import smoothListGaussian, calcpower, power_30s_average \
-        , hr2zone, detailslice_info, search_trip_for_possible_segments_matches
+        , hr2zone, detailslice_info, search_trip_for_possible_segments_matches, filldistance
 from itertools import groupby, islice
 from forms import ExerciseForm
 from profiles.models import Profile
@@ -107,7 +107,7 @@ def exercise_compare(request, exercise1, exercise2):
         return redirect_to_login(request.path)
         # TODO Friend check
 
-    alt = tripdetail_js(None, trip1.id, 'altitude')
+    alt = tripdetail_js(trip1.id, 'altitude')
     #alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
     datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False, use_constraints=False)
@@ -198,7 +198,7 @@ def route_detail(request, object_id):
 
             if trip.avg_speed and trip.get_details().exists() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
                                                              # and trip with details
-                alt = tripdetail_js(None, trip.id, 'altitude')
+                alt = tripdetail_js(trip.id, 'altitude')
                 alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
                 done_altitude_profile = True
 
@@ -828,7 +828,10 @@ def geojson(request, object_id):
     response['Content-Length'] = len(gjstr)
     return response
 
-def tripdetail_js(event_type, object_id, val, start=False, stop=False):
+def json_trip_details(request, object_id, start=False, stop=False):
+    pass
+
+def tripdetail_js(object_id, val, start=False, stop=False):
     if start:
         start = int(start)
     if stop:
@@ -849,15 +852,18 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
             previous_time = d['time']
         time = d['time'] - previous_time
         previous_time = d['time']
-        distance += ((d['speed']/3.6) * time.seconds)/1000
-        # time_xaxis = x += float(time.seconds)/60
         dval = d[val]
-        if dval > 0: # skip zero values (makes prettier graph)
+        if d['speed'] != None:
+            distance += ((d['speed']/3.6) * time.seconds)/1000
             js.append((distance, dval))
+        else:
+            x += float(time.seconds)/60
+            js.append((x, dval))
+        #time_xaxis = 
     return simplejson.dumps(js)
 
 #@profile("json_trip_series")
-def json_trip_series(request, object_id):
+def json_trip_series(request, object_id, start=False):
     ''' Generate a json file to be retrieved by web browsers and renderend in flot '''
     exercise = get_object_or_404(Exercise, pk=object_id)
 
@@ -873,6 +879,12 @@ def json_trip_series(request, object_id):
             smooth = int(req_s)
         except:
             smooth = 0
+    start =  request.GET.get('start', '')
+    if start:
+        try:
+            start = int(start)
+        except:
+            start = False
 
     if not exercise.user == request.user:  # Allow self
         is_friend = False
@@ -886,7 +898,9 @@ def json_trip_series(request, object_id):
     power_show = exercise_permission_checks(request, exercise)
 
     cache_key = 'json_trip_series_%s_%dtime_xaxis_%dpower_%dsmooth' %(object_id, time_xaxis, smooth, power_show)
-    js = cache.get(cache_key)
+    js = None
+    if not start: # Caching not involved in slices
+        js = cache.get(cache_key)
     if not js:
         details = exercise.exercisedetail_set.all()
         if exercise.avg_power:
@@ -897,7 +911,8 @@ def json_trip_series(request, object_id):
         js = js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
         js = js.encode('UTF-8')
         js = compress_string(js)
-        cache.set(cache_key, js, 86400)
+        if not start: # Do not cache slices
+            cache.set(cache_key, js, 86400)
     response = HttpResponse(js, mimetype='text/javascript')
     response['Content-Encoding'] = 'gzip'
     response['Content-Length'] = len(js)
@@ -1243,21 +1258,6 @@ def getgradients(values, d_offset=0):
 #        delta_t = (values[i].time - values[i-1].time).seconds
 #        d += values[i].speed/3.6 * delta_t
 #    return d
-
-def filldistance(values):
-    d = 0
-    if values.exists():
-        d_check = values[len(values)-1].distance
-        if d_check > 0:
-            return d_check
-        values[0].distance = 0
-        for i in xrange(1,len(values)):
-            delta_t = (values[i].time - values[i-1].time).seconds
-            if values[i].speed:
-                d += values[i].speed/3.6 * delta_t
-            values[i].distance = d
-    return d
-
 
 def exercise_permission_checks(request, exercise):
     '''Given a request object and a exercise object, return a tuple with
@@ -1923,7 +1923,7 @@ def exercise_update_live(request, object_id):
         try:
             for item in data:
                 new_object = ExerciseDetail(**item)
-                new_object.time = datetime.fromtimestamp(new_object.time)
+                new_object.time = datetime.fromtimestamp(float(new_object.time))
                 new_object.exercise = exercise
                 new_object.save()
                 # Quickfix for enable values in graph 
