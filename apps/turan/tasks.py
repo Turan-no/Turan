@@ -57,7 +57,7 @@ def find_parser(filename):
 
 def filldistance(values):
     d = 0
-    if values:
+    if values: #exists?
         values[0].distance = 0
         d_check = values[len(values)-1].distance
         if d_check > 0:
