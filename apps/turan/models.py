@@ -299,9 +299,9 @@ class ExerciseType(models.Model):
         ordering = ('name',)
 
 permission_choices = (
-            ('A', 'All'),
-            ('F', 'Friends'),
-            ('N', 'None'),
+            ('A', _('All')),
+            ('F', _('Friends')),
+            ('N', _('Only myself')),
                     )
 
 class Exercise(models.Model):
@@ -337,7 +337,7 @@ class Exercise(models.Model):
     max_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv)'))
 
-    exercise_permission = models.CharField(max_length=1, choices=permission_choices, default='A', help_text=_('Visibility choice'))
+    exercise_permission = models.CharField(max_length=1, choices=permission_choices, default='A', )
 
     object_id = models.IntegerField(null=True)
     content_type = models.ForeignKey(ContentType, null=True)
