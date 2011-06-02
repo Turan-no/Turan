@@ -1305,7 +1305,20 @@ a.profilehoverpoint>img {
 }
 #exercisers {
     padding: 0 0 10px 0;
+    width: 992px;
+    margin: 0 auto;
 }
 #exercisers img {
     padding-right: 2px;
+}
+
+#login_popdown {
+    background: white;
+    opacity: 0.95;
+    border: 1px solid #4F96CA;
+    border-radius: 10px;
+    z-index: 5;
+    padding: 10px;
+    position: absolute;
+    box-shadow: 2px 2px 8px black;
 }

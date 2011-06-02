@@ -59,7 +59,38 @@
     {% if user.is_authenticated %}
         <img alt="profile" src="{{MEDIA_URL}}/pinax/img/silk/icons/user_suit.png"><a href="{% url profile_detail user %}"><b> {{ user }}</b></a> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
     {% else %}
-        <a href="{% url acct_login %}">{% trans "Login" %}</a> {% ifsetting ACCOUNT_OPEN_SIGNUP %}{% trans "or" %} <a href="{% url acct_signup %}"><b>{% trans "Sign up" %}</b></a>{% endifsetting %}
+        <a id="login_activate" href="{% url acct_login %}">
+            {% trans "Login" %}
+        </a>
+        <script type="text/javascript">
+            jQuery("#login_activate").bind("click", function (evt) {
+                evt.preventDefault();
+                jQuery("#login_popdown").toggleClass("hidden");
+                jQuery("#login_username").focus();
+            });
+        </script>
+        <div id="login_popdown" class="hidden">
+            <form method="POST" action="{% url acct_login %}"> 
+                <ul>
+                    <li>
+                        <label for="login_username">{% trans "Username" %}</label>
+                        <input id="login_username" type="text" name="username" />
+                    </li>
+                    <li>
+                        <label for="login_password">{% trans "Password" %}</label>
+                        <input id="login_password" name="password" type="password" />
+                    </li>
+                    <li>
+                        <input type="checkbox" name="remember" id="login_remember" />
+                        <label for="login_remember">{% trans "Remember me" %}</label>
+                        <button type="submit">{% trans "Log in" %}</button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        {% ifsetting ACCOUNT_OPEN_SIGNUP %}
+        {% trans "or" %} <a href="{% url acct_signup %}"><b>{% trans "Sign up" %}</b></a>
+        {% endifsetting %}
     {% endif %}
 {% endblock %}
 {% comment %}
