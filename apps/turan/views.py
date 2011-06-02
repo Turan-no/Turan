@@ -1916,7 +1916,7 @@ def exercise_update_live(request, object_id):
     if request.method == 'POST' or request.method == 'GET':
         data = request.raw_post_data
         data = simplejson.loads(data)
-        print 'JSON: %s' %data
+        #print 'JSON: %s' %data
         try:
             for item in data:
                 new_object = ExerciseDetail(**item)
@@ -1944,10 +1944,16 @@ def exercise_update_live(request, object_id):
                     old_duration = exercise.duration.seconds
                 except:
                     pass # Object is Decimal first time around, stupid durationfield
-                #previous_time = exercise.time
-                #previous_sample = ExerciseDetail.objects.filter(exercise__id=exercise.pk).order_by('-time')[0]
-                #if previous_sample:
-                #    previous_time = previous_sample.time
+
+                # Use exercise start time as previous if no previous samples found (e.g. first sample)
+                previous_time = exercise.time
+                previous_sample = ExerciseDetail.objects.filter(exercise__id=exercise.pk).order_by('-time')[0]
+                if previous_sample:
+                    previous_time = previous_sample.time
+                # Find time delta, to be used in updating distance, ascent, etc
+                time_d = (new_object.time - previous_time).seconds
+
+                # Calculate duration, to be used in calculating new averages
                 new_duration = new_object.time - datetime.combine(exercise.date, exercise.time)
                 exercise.duration = new_duration
                 new_duration = new_duration.seconds
@@ -1971,6 +1977,9 @@ def exercise_update_live(request, object_id):
                     else:
                         exercise.avg_cadence = new_object.cadence
                 if new_object.speed:
+                    # Update new distance
+                    exercise.route.distance += new_object.speed * time_d
+
                     exercise.max_speed = max(new_object.speed, exercise.max_speed)
                     if exercise.avg_speed and exercise.duration:
                         exercise.avg_speed = (exercise.avg_speed*old_duration+ new_object.speed) / new_duration
@@ -1983,11 +1992,21 @@ def exercise_update_live(request, object_id):
                     else:
                         exercise.temperature = new_object.temp
                     exercise.min_temperature = min(new_object.temp, exercise.min_temperature)
+                if new_object.altitude and previous_sample:
+                    # We have a previous sample and an altitude reading, this 
+                    # means we can calculate new ascent or descent
+                    if new_object.altitude > previous_sample.altitude:
+                        exercise.route.ascent += new_object.altitude - previous_sample.altitude
+                    else:
+                        exercise.route.descent += previous_sample.altitude - new_object.altitude
+                    # Update max and min altitude
+                    exercise.route.max_altitude = max(new_object.altitude, exercise.route.altitude)
+                    exercise.route.min_altitude = min(new_object.altitude, exercise.route.altitude)
 
-                exercise.save() # Update exercise with possibly new values
-
+                exercise.save() # Finally save the new values
                 return HttpResponse('Saved OK')
         except Exception, e:
+            raise
             return HttpResponse(str(e))
 
     return HttpResponse('Nothing saved')
