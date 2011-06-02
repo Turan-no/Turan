@@ -1959,11 +1959,12 @@ def exercise_update_live(request, object_id):
                 new_duration = new_duration.seconds
 
                 if new_object.hr:
-                    exercise.max_hr = max(new_object.hr, exercise.max_hr)
+                    hr = int(new_object.hr)
+                    exercise.max_hr = max(hr, exercise.max_hr)
                     if exercise.avg_hr and exercise.duration:
-                        exercise.avg_hr = (exercise.avg_hr*old_duration+ new_object.hr) / new_duration
+                        exercise.avg_hr = (exercise.avg_hr*old_duration+ hr) / new_duration
                     else:
-                        exercise.avg_hr = new_object.hr
+                        exercise.avg_hr = hr
                 if new_object.power:
                     exercise.max_power = max(new_object.power, exercise.max_power)
                     if exercise.avg_power and exercise.duration:
