@@ -47,6 +47,12 @@
                 {% trans "Fast forward" %}
             </a>
         </li>
+        <li style="float: left">
+            <a id="control_live" href="#">
+                <img class="icons" src="{{ "control_fastforward"|silk_icon }}" alt="{% trans "Live" %}" />
+                {% trans "Go Live" %}
+            </a>
+        </li>
     </ul>
     {% comment %}
 <p id="choices">{% trans "Choose features" %}:</p>
@@ -99,6 +105,7 @@
 
 var index = 0;
 var indexoffsets = [];
+var fetchedindex = 0; // Store the index we last fetched here, used in live
 var speed = 1;
 
 $('#control_start').bind("click", function (evt) {
@@ -116,6 +123,10 @@ $('#control_play').bind("click", function (evt) {
 $('#control_fastforward').bind("click", function (evt) {
         evt.preventDefault();
         speed += 5;
+    });
+$('#control_live').bind("click", function (evt) {
+        evt.preventDefault();
+        index = iterations - 10;
     });
 
 
@@ -207,6 +218,9 @@ var math = {
         return Math.max.apply(Math, a);
     }
 };
+
+var interations;
+var interval = 0;
 $(document).ready(function() {
 
     //Mapper.gsat.setVisibility(1);
@@ -220,9 +234,9 @@ $(document).ready(function() {
     var updateInterval = 500;
     var zoomLevel = 3;
     var nr_histvals = 30;
-    var interval = 0;
+    var histvalindex = 0;
     var mapUpdater = 0;
-    var iterations = datasets[0]["lon"].length;
+    iterations = datasets[0]["lon"].length;
 
     $('#altdiv').bind("plotclick", function (evt, pos, item) {
         index = item.dataIndex;
@@ -287,10 +301,10 @@ $(document).ready(function() {
         if (!histvals[histvalkey]) {
             histvals[histvalkey] = [];
         }
-        histvals[histvalkey].push([index, val]);
-        if (histvals[histvalkey].length>nr_histvals-1) { // We only want last 30 values
-            histvals[histvalkey].shift()      // So we shift out
+        if (histvals[histvalkey].length>nr_histvals-1) {  // We only want last 30 values
+            histvals[histvalkey].shift()                  // So we shift out
         }
+        histvals[histvalkey].push([histvalindex+nr_histvals, val]);
 
 
         avg = math.avg(histvals[histvalkey]);
@@ -320,7 +334,36 @@ $(document).ready(function() {
                 thisindex =  index + indexoffsets[player]
             }
             if (thisindex >= iterations) {
+                // Stop player, start it again in the callback
                 clearInterval(interval);
+                // no more data, try and fetch more (e.g. live exercise)
+
+                // Get the previous fetched index and plus it with current index
+                fetchedindex += thisindex;
+                
+                $.getJSON("{% url json_trip_series object.id%}", { start: fetchedindex }, function (dataset)                   {
+                    datasets[player] = dataset;
+                    // Reset interations
+                    if (dataset["lon"])
+                        iterations = dataset["lon"].length;
+                    else // No data from backend
+                        iterations = 0;
+                    // Update index 
+                    index = 0;
+                    interval = setInterval(updateMapAndGraph, updateInterval);
+                    // Update altitude profile
+                    var altpoptions = { 
+                       yaxis: { tickFormatter: axisformatters['altitude'],  min: 0, max: {{ alt_max }}, },
+                       xaxis: { tickFormatter: axisformatters['distance']},
+                       grid: { clickable: true, hoverable: true },
+                       markers: [ ]
+                    };
+                    if (iterations > 0) {
+                        altitudeprofileplot = $.plot($("#altdiv"), [datasets[player]['altitude']], options);
+                    }
+
+                });
+                return;
             }
             var lon = datasets[player]["lon"][thisindex];
             var lat = datasets[player]["lat"][thisindex];
@@ -369,6 +412,7 @@ $(document).ready(function() {
         {% endfor %}
             
         index += speed;
+        histvalindex += 1;
         mapUpdater++;
     }
 
@@ -377,6 +421,6 @@ $(document).ready(function() {
 
 {% endlocalize %}
 </script>
-<div class="mapcontainer"><div style="width:1000px;height:800px" class="drop-shadow lifted" id="map"></div>
+<div class="mapcontainer"><div style="width:1000px;height:800px" class="drop-shadow raised" id="map"></div>
 {% endblock content %}
 
