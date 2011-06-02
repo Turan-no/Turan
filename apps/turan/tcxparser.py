@@ -216,6 +216,9 @@ class TCXParser(object):
                 if distance:
                     distdelta = distance - self.cur_distance
                     self.cur_distance = distance
+            if distdelta and not distance: # For gps_distance = True
+                distance = self.cur_distance + distdelta
+                self.cur_distance = distance
 
             if timedelta and distdelta:
                 speed = distdelta/timedelta * 3.6
@@ -241,10 +244,9 @@ class TCXParser(object):
             self.entries.append(t)
             self.cur_time = time
 
-        seconds = sum([self.laps[i].duration for i in xrange(0,len(self.laps))])
-        self.avg_speed = self.distance_sum / seconds * 3.6
         if self.gps_distance:
             self.max_speed = max([self.entries[i].speed for i in xrange(0,len(self.entries))])
+            self.distance_sum = self.entries[-1].distance
         else:
             try:
                 self.max_speed = max([self.laps[i].max_speed for i in xrange(0,len(self.laps))])
@@ -256,6 +258,8 @@ class TCXParser(object):
             except:
                 pass
 
+        seconds = sum([self.laps[i].duration for i in xrange(0,len(self.laps))])
+        self.avg_speed = self.distance_sum / seconds * 3.6
         try:
             self.max_cadence = max([self.entries[i].cadence for i in xrange(0,len(self.entries))])
         except:
@@ -277,7 +281,7 @@ if __name__ == '__main__':
 
     import pprint
     import sys
-    t = TCXParser(0)
+    t = TCXParser(gps_distance=1)
     t.parse_uploaded_file(file(sys.argv[1]))
 
     print "Time, Speed, Altitude, Hr, Cadence"
