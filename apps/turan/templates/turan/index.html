@@ -13,6 +13,14 @@
 {% endblock %}
 {% block content %}
 
+<div id="exercisers">
+    {% for exerciser in user_list %}
+    <a class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
+    {{ exerciser|profile_hover }}
+    {% endfor %}
+    <hr class="clearleft" />
+</div>
+
 <div class="half floatright">
     <h2>
         <a href="{% url exercises %}">{% trans "Latest exercises" %}</a>
@@ -111,13 +119,6 @@
             </a>
         </li>
     </ul>
-    <div id="exercisers" class="spacer">
-    <h2>{% trans "Top exercisers" %}</h2>
-        {% for exerciser in user_list %}
-        <a class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
-        {{ exerciser|profile_hover }}
-        {% endfor %}
-    </div>
     <div id="tabs">
         <ul>
             <li class="tab selected" id="tabs-select-1"><p>{% trans "Turan?" %}</p></li>
@@ -200,6 +201,8 @@
     </ul>
     <hr class="clear" />
 </div>
+
+
 {% endblock content %}
 
 {% block cloud %}

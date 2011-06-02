@@ -1248,14 +1248,21 @@ p.description {
     width: 32px;
 }
 
+#search input:hover,
+#search input:focus {
+    opacity: 1;
+}
 #search input {
+    opacity: 0.8;
+    outline: none;
+    border: 1px solid #4F96CA;
     background: #fff;
     color: #000;
     width: 190px;
     padding: 4px 9px;
     margin: 6px 2px 0 0;
     font-size: 12px;
-    box-shadow: 3px 3px 6px #777 inset;
+    box-shadow: 2px 2px 3px #ccc inset;
     -moz-border-radius: 19px;
     -webkit-border-radius: 19px;
     border-radius: 19px;
@@ -1264,9 +1271,12 @@ p.description {
     background: transparent;
     border: none;
     position: absolute;
-    right: 0;
+    right: 10px;
     bottom: 0;
     margin: 0;
+    padding: 0;
+    box-shadow: none;
+    min-width: 0;
 }
 button, input[type="button"], input[type="submit"] {
     border-radius: 3px;
@@ -1283,4 +1293,19 @@ button, input[type="button"], input[type="submit"] {
     margin-top: 5px;
     min-width: 4em;
     padding: 6px 24px 6px 24px;
+}
+a.profilehoverpoint {
+    line-height: 0;
+    float: left;
+}
+a.profilehoverpoint>img {
+    -webkit-box-reflect:below 0 -webkit-gradient(linear,0 0,0 100%,from(transparent),color-stop(.6,transparent),to(rgba(255,255,255,0.3)));
+    margin: 0px;
+    padding: 0px;
+}
+#exercisers {
+    padding: 0 0 10px 0;
+}
+#exercisers img {
+    padding-right: 2px;
 }
