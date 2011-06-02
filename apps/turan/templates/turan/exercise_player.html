@@ -332,20 +332,17 @@ $(document).ready(function() {
                     // Init the feature icon
                     markers.push(Mapper.createFeature(playerLayers[player], lon, lat, 90));
                 {% if forloop.first %}
-                    // Only move map every 4th sample, less cluttery looking
+                    // Don't move marker every sample, less cluttery looking
                     if (mapUpdater >= 10) {
                         //Mapper.zoomToPosMarker();
                         // Pan Map for the first linerider
                         Mapper.panTo(lon, lat);
                         mapUpdater = 0;
                     }
-                    //Mapper.updatePosMarker(datasets[player]["lon"][thisindex],datasets[player]["lat"][index]);
-
                 {% endif %}
                 if (p_lon != 0.0 && p_lat != 0.0) {
                     Mapper.drawLine(lineLayers[player], colors[{{forloop.counter}}], p_lon, p_lat, lon, lat);
                     // Move the markers
-                    //Mapper.moveMarker(markers[player], lon, lat);
                     var angle = Mapper.calculateAngle(p_lon, p_lat, lon, lat);
                     Mapper.moveFeature(markers[player], lon, lat, angle);
                 }
@@ -380,7 +377,6 @@ $(document).ready(function() {
 
 {% endlocalize %}
 </script>
-<div class="mapcontainer"><div style="width:1000px;height:800px" class="drop-shadow raised" id="map"></div>
-
+<div class="mapcontainer"><div style="width:1000px;height:800px" class="drop-shadow lifted" id="map"></div>
 {% endblock content %}
 
