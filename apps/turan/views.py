@@ -1931,13 +1931,13 @@ def exercise_update_live(request, object_id):
                     exercise.date = datetimedate(new_object.time.year, \
                             new_object.time.month, new_object.time.day)
                 if new_object.lon and not exercise.start_lon:
-                    exercise.route.start_lon = new_object.lon
+                    exercise.route.start_lon = float(new_object.lon)
                 if new_object.lat and not exercise.start_lat:
-                    exercise.route.start_lat = new_object.lat
+                    exercise.route.start_lat = float(new_object.lat)
                 if new_object.lon:
-                    exercise.route.end_lon = new_object.lon
+                    exercise.route.end_lon = float(new_object.lon)
                 if new_object.lat:
-                    exercise.route.end_lat = new_object.lat
+                    exercise.route.end_lat = float(new_object.lat)
 
                 old_duration = 0
                 try:
@@ -1966,43 +1966,48 @@ def exercise_update_live(request, object_id):
                     else:
                         exercise.avg_hr = hr
                 if new_object.power:
-                    exercise.max_power = max(new_object.power, exercise.max_power)
+                    power = int(new_object.power)
+                    exercise.max_power = max(power, exercise.max_power)
                     if exercise.avg_power and exercise.duration:
-                        exercise.avg_power = (exercise.avg_power*old_duration+ new_object.power) / new_duration
+                        exercise.avg_power = (exercise.avg_power*old_duration+ power) / new_duration
                     else:
-                        exercise.avg_power = new_object.power
+                        exercise.avg_power = power
                 if new_object.cadence:
-                    exercise.max_cadence = max(new_object.cadence, exercise.max_cadence)
+                    cadence = int(cadence)
+                    exercise.max_cadence = max(cadence, exercise.max_cadence)
                     if exercise.avg_cadence and exercise.duration:
-                        exercise.avg_cadence = (exercise.avg_cadence*old_duration+ new_object.cadence) / new_duration
+                        exercise.avg_cadence = (exercise.avg_cadence*old_duration+ cadence) / new_duration
                     else:
-                        exercise.avg_cadence = new_object.cadence
+                        exercise.avg_cadence = cadence
                 if new_object.speed:
+                    speed = float(new_object.speed)
                     # Update new distance
-                    exercise.route.distance += new_object.speed * time_d
+                    exercise.route.distance += speed * time_d
 
-                    exercise.max_speed = max(new_object.speed, exercise.max_speed)
+                    exercise.max_speed = max(speed, exercise.max_speed)
                     if exercise.avg_speed and exercise.duration:
-                        exercise.avg_speed = (exercise.avg_speed*old_duration+ new_object.speed) / new_duration
+                        exercise.avg_speed = (exercise.avg_speed*old_duration+ speed) / new_duration
                     else:
-                        exercise.avg_speed = new_object.speed
+                        exercise.avg_speed = speed
                 if new_object.temp:
-                    exercise.max_temperature = max(new_object.temp, exercise.max_temperature)
+                    temp = float(new_object.temp)
+                    exercise.max_temperature = max(temp, exercise.max_temperature)
                     if exercise.temperature and exercise.duration:
-                        exercise.temperature = (exercise.temperature*old_duration+ new_object.temp) / new_duration
+                        exercise.temperature = (exercise.temperature*old_duration+ temp) / new_duration
                     else:
-                        exercise.temperature = new_object.temp
-                    exercise.min_temperature = min(new_object.temp, exercise.min_temperature)
+                        exercise.temperature = temp
+                    exercise.min_temperature = min(temp, exercise.min_temperature)
                 if new_object.altitude and previous_sample:
+                    altitude = int(new_object.altitude) # float maybe TODO ?
                     # We have a previous sample and an altitude reading, this 
                     # means we can calculate new ascent or descent
-                    if new_object.altitude > previous_sample.altitude:
-                        exercise.route.ascent += new_object.altitude - previous_sample.altitude
+                    if altitude > previous_sample.altitude:
+                        exercise.route.ascent += altitude - previous_sample.altitude
                     else:
-                        exercise.route.descent += previous_sample.altitude - new_object.altitude
+                        exercise.route.descent += previous_sample.altitude - altitude
                     # Update max and min altitude
-                    exercise.route.max_altitude = max(new_object.altitude, exercise.route.altitude)
-                    exercise.route.min_altitude = min(new_object.altitude, exercise.route.altitude)
+                    exercise.route.max_altitude = max(altitude, exercise.route.altitude)
+                    exercise.route.min_altitude = min(altitude, exercise.route.altitude)
 
                 exercise.save() # Finally save the new values
                 return HttpResponse('Saved OK')
