@@ -2006,8 +2006,8 @@ def exercise_update_live(request, object_id):
                     else:
                         exercise.route.descent += previous_sample.altitude - altitude
                     # Update max and min altitude
-                    exercise.route.max_altitude = max(altitude, exercise.route.altitude)
-                    exercise.route.min_altitude = min(altitude, exercise.route.altitude)
+                    exercise.route.max_altitude = max(altitude, exercise.route.max_altitude)
+                    exercise.route.min_altitude = min(altitude, exercise.route.min_altitude)
 
                 exercise.save() # Finally save the new values
                 return HttpResponse('Saved OK')
