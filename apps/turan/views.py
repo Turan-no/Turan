@@ -1976,7 +1976,7 @@ def exercise_update_live(request, object_id):
                     else:
                         exercise.avg_power = power
                 if new_object.cadence:
-                    cadence = int(cadence)
+                    cadence = int(new_object.cadence)
                     exercise.max_cadence = max(cadence, exercise.max_cadence)
                     if exercise.avg_cadence and exercise.duration:
                         exercise.avg_cadence = (exercise.avg_cadence*old_duration+ cadence) / new_duration
