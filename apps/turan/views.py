@@ -1998,7 +1998,7 @@ def exercise_update_live(request, object_id):
                         exercise.temperature = temp
                     exercise.min_temperature = min(temp, exercise.min_temperature)
                 if new_object.altitude and previous_sample:
-                    altitude = int(new_object.altitude) # float maybe TODO ?
+                    altitude = int(float(new_object.altitude)) # float maybe TODO ?
                     # We have a previous sample and an altitude reading, this 
                     # means we can calculate new ascent or descent
                     if altitude > previous_sample.altitude:
