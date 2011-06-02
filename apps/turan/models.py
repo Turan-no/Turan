@@ -303,6 +303,11 @@ permission_choices = (
             ('F', _('Friends')),
             ('N', _('Only myself')),
                     )
+live_states = (
+            ('F', _('Finished')),
+            ('P', _('Paused')),
+            ('L', _('Live')),
+)
 
 class Exercise(models.Model):
 
@@ -338,6 +343,7 @@ class Exercise(models.Model):
     sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv)'))
 
     exercise_permission = models.CharField(max_length=1, choices=permission_choices, default='A', )
+    live_state = models.CharField(max_length=1, choices=live_states, default='F', blank=True, null=True)
 
     object_id = models.IntegerField(null=True)
     content_type = models.ForeignKey(ContentType, null=True)
