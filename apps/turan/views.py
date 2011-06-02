@@ -901,7 +901,7 @@ def json_trip_series(request, object_id, start=False):
 
     cache_key = 'json_trip_series_%s_%dtime_xaxis_%dpower_%dsmooth' %(object_id, time_xaxis, smooth, power_show)
     js = None
-    if not start: # Caching not involved in slices
+    if not start and not exercise.live_state == 'L': # Caching not involved in slices or live exercises
         js = cache.get(cache_key)
     if not js:
         details = exercise.exercisedetail_set.all()
@@ -917,7 +917,7 @@ def json_trip_series(request, object_id, start=False):
             return HttpResponse('{}', mimetype='text/javascript')
         js = js.encode('UTF-8')
         js = compress_string(js)
-        if not start: # Do not cache slices
+        if not start and not exercise.live_state == 'L': # Do not cache slices or live exercises
             cache.set(cache_key, js, 86400)
     response = HttpResponse(js, mimetype='text/javascript')
     response['Content-Encoding'] = 'gzip'
