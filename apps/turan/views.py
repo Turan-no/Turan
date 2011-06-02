@@ -913,6 +913,8 @@ def json_trip_series(request, object_id, start=False):
         if not has_distance:
             time_xaxis = True
         js = js_trip_series(request, details, start=start, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
+        if not js: # if start and no elements returner, we get None
+            return HttpResponse('{}', mimetype='text/javascript')
         js = js.encode('UTF-8')
         js = compress_string(js)
         if not start: # Do not cache slices
@@ -2010,7 +2012,7 @@ def exercise_update_live(request, object_id):
                     route.max_altitude = max(altitude, route.max_altitude)
                     route.min_altitude = min(altitude, route.min_altitude)
 
-                route.save()
+                route.save() # Save the route - save the world
                 exercise.save() # Finally save the new values
                 return HttpResponse('Saved OK')
         except Exception, e:
