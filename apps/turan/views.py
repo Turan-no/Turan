@@ -1912,6 +1912,7 @@ def exercise_update_live(request, object_id):
     exercise = get_object_or_404(Exercise, id=object_id)
     if not exercise.route.gpx_file:
         create_gpx_from_details(exercise)
+    route = exercise.route
 
     if request.method == 'POST' or request.method == 'GET':
         data = request.raw_post_data
@@ -1931,13 +1932,13 @@ def exercise_update_live(request, object_id):
                     exercise.date = datetimedate(new_object.time.year, \
                             new_object.time.month, new_object.time.day)
                 if new_object.lon and not exercise.start_lon:
-                    exercise.route.start_lon = float(new_object.lon)
+                    route.start_lon = float(new_object.lon)
                 if new_object.lat and not exercise.start_lat:
-                    exercise.route.start_lat = float(new_object.lat)
+                    route.start_lat = float(new_object.lat)
                 if new_object.lon:
-                    exercise.route.end_lon = float(new_object.lon)
+                    route.end_lon = float(new_object.lon)
                 if new_object.lat:
-                    exercise.route.end_lat = float(new_object.lat)
+                    route.end_lat = float(new_object.lat)
 
                 old_duration = 0
                 try:
@@ -1982,7 +1983,7 @@ def exercise_update_live(request, object_id):
                 if new_object.speed:
                     speed = float(new_object.speed)
                     # Update new distance
-                    exercise.route.distance += speed * time_d
+                    route.distance += speed * time_d
 
                     exercise.max_speed = max(speed, exercise.max_speed)
                     if exercise.avg_speed and exercise.duration:
@@ -2002,13 +2003,14 @@ def exercise_update_live(request, object_id):
                     # We have a previous sample and an altitude reading, this 
                     # means we can calculate new ascent or descent
                     if altitude > previous_sample.altitude:
-                        exercise.route.ascent += altitude - previous_sample.altitude
+                        route.ascent += altitude - previous_sample.altitude
                     else:
-                        exercise.route.descent += previous_sample.altitude - altitude
+                        route.descent += previous_sample.altitude - altitude
                     # Update max and min altitude
-                    exercise.route.max_altitude = max(altitude, exercise.route.max_altitude)
-                    exercise.route.min_altitude = min(altitude, exercise.route.min_altitude)
+                    route.max_altitude = max(altitude, route.max_altitude)
+                    route.min_altitude = min(altitude, route.min_altitude)
 
+                route.save()
                 exercise.save() # Finally save the new values
                 return HttpResponse('Saved OK')
         except Exception, e:
