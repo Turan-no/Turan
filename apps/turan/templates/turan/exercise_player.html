@@ -47,12 +47,16 @@
                 {% trans "Fast forward" %}
             </a>
         </li>
+        {% for object in exercises %}
+        {% if object.live_state == 'L' %}
         <li style="float: left">
             <a id="control_live" href="#">
                 <img class="icons" src="{{ "control_fastforward"|silk_icon }}" alt="{% trans "Live" %}" />
                 {% trans "Go Live" %}
             </a>
         </li>
+        {% endif %}
+        {% endfor %}
     </ul>
     {% comment %}
 <p id="choices">{% trans "Choose features" %}:</p>
