@@ -2004,10 +2004,11 @@ def exercise_update_live(request, object_id):
                     altitude = int(float(new_object.altitude)) # float maybe TODO ?
                     # We have a previous sample and an altitude reading, this 
                     # means we can calculate new ascent or descent
-                    if altitude > previous_sample.altitude:
-                        route.ascent += altitude - previous_sample.altitude
-                    else:
-                        route.descent += previous_sample.altitude - altitude
+                    if previous_sample.altitude:
+                        if altitude > previous_sample.altitude:
+                            route.ascent += altitude - previous_sample.altitude
+                        else:
+                            route.descent += previous_sample.altitude - altitude
                     # Update max and min altitude
                     route.max_altitude = max(altitude, route.max_altitude)
                     route.min_altitude = min(altitude, route.min_altitude)
