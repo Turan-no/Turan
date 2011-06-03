@@ -231,6 +231,8 @@ INSTALLED_APPS = (
 
 # TUUURAN
     'turan',
+    'piston',
+    'api', # turan piston API
     'rosetta',
     'south',
     'debug_toolbar',
