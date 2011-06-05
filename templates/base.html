@@ -23,6 +23,7 @@
 
         <link rel="stylesheet" href="{{ MEDIA_URL }}uni_form/uni-form.css" type="text/css" />
         {% endcompress %}
+
         {% if LANGUAGE_BIDI %}
         <style type="text/css" media="screen">
             div.right_panel {
@@ -54,11 +55,18 @@
                 {% block logo_link_image %}{% endblock %}
             </h1>
             <div class="sublogo">{% trans "What matters" %}</div>
-            <div class="login">{% block login %}{% endblock %}{% block locale_switcher %}{% endblock %}<div style="text-align: right;"></div></div>
+            <div class="login">
+                {% block login %}{% endblock %}
+                {% block locale_switcher %}{% endblock %}
+            </div>
             <div id="left_tabs" >{% block left_tabs %}{% endblock %}</div>
-            <div id="right_tabs" >{% block right_tabs %}{% endblock %}</div>
+            <div id="right_tabs" >
+                {% block right_tabs %}{% endblock %}
+            </div>
         </div>
-        <div id="subnav" class="clearfix">{% block subnav_base %}{% block subnav %}&nbsp;{% endblock %}{% endblock %}</div>
+        <div id="subnav" class="clearfix">
+            {% block subnav_base %}{% block subnav %}&nbsp;{% endblock %}{% endblock %}
+        </div>
         
         {% block body_outer %}
         <div id="body" class="drop-shadow raised">
@@ -76,7 +84,9 @@
         </div>
         {% endblock %}
         
-        <div id="footer">{% block footer %}{% endblock %}</div>
+        <div id="footer">
+            {% block footer %}{% endblock %}
+        </div>
         
         <script src="{{ MEDIA_URL }}uni_form/uni-form.jquery.js" type="text/javascript"></script>
         {% block extra_body_base %}
