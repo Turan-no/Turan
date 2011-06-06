@@ -10,6 +10,7 @@ class WorkoutCalendar(HTMLCalendar):
     sums = {
                 'kcal_sum': 0,
                 'distance_sum': 0,
+                'ascent_sum': 0,
                 'duration_sum': timedelta(0),
                 }
 
@@ -25,10 +26,10 @@ class WorkoutCalendar(HTMLCalendar):
 
         sums = self.sums.copy()
         for w, wsums in self.week_sums.items():
-            for attr in ('kcal_sum', 'distance_sum', 'duration_sum'):
+            for attr in ('kcal_sum', 'distance_sum', 'ascent_sum', 'duration_sum'):
                 sums[attr] += wsums[attr]
 
-        sums = ugettext('Distance: %(distance_sum).1f km, Duration: %(duration_sum)s, kcal: %(kcal_sum)s' %sums)
+        sums = ugettext('Distance: %(distance_sum).1f km, Ascent: %(ascent_sum).0f m, Duration: %(duration_sum)s, kcal: %(kcal_sum)s' %sums)
 
         return unicode(_('Month sums') + ': %s' %sums)
 
@@ -85,7 +86,11 @@ class WorkoutCalendar(HTMLCalendar):
                 try:
                     w_sums['distance_sum'] += workout.route.distance
                 except AttributeError:
-                    pass # some exercises doesn't have distance
+                    pass # some exercises do not have distance
+                try:
+                    w_sums['ascent_sum'] += workout.route.ascent
+                except AttributeError:
+                    pass # some exercises do noet have ascent
                 try:
                     w_sums['duration_sum'] += workout.duration
                 except TypeError:
@@ -113,7 +118,7 @@ class WorkoutCalendar(HTMLCalendar):
         week['distance_sum'] = round(week['distance_sum'], 1) # Haters
 
         # Translate 
-        for t_key in ('Week', 'Distance', 'Kcal', 'Duration'):
+        for t_key in ('Week', 'Distance', 'Ascent', 'Kcal', 'Duration'):
             week[t_key] = _(t_key)
 
         self.current_week += 1
@@ -121,6 +126,7 @@ class WorkoutCalendar(HTMLCalendar):
                 <p>\
                 <span class="label">%(Week)s:</span> %(week)s<br>\
                 <span class="label">%(Distance)s:</span> %(distance_sum)s<br>\
+                <span class="label">%(Ascent)s:</span> %(ascent_sum)s<br>\
                 <span class="label">%(Kcal)s:</span> %(kcal_sum)s<br>\
                 <span class="label">%(Duration)s:</span> %(duration_sum)s\
                 </p>\
