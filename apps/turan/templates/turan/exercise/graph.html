@@ -10,11 +10,11 @@
 <a href="{% url segmentdetail_create %}?exercise={{object.id }}" title="{% trans "Add segment for this selection" %}" class="hidden" id="segment_add" >
     <img id="segment_add_img" style="float: right" src="{{ MEDIA_URL }}pinax/img/silk/icons/world_add.png" /> 
 </a>
-<div id="tripdiv_legend" style="float:right; margin-right: 40px"></div>
+<div id="exercisegraph_legend" style="float:right; margin-right: 40px"></div>
 <hr class="clear" />
 
-<div id="scrollhacks">
-    <div id="tripdiv" style="width:980px;height:500px; background: white;">
+<div id="scrollhack">
+    <div id="exercisegraph" class="exercisegraph">
         <div align="center">
             <h2>{% trans "Loading graph" %}...</h2>
             <br />
@@ -50,7 +50,10 @@
         <li class="hidden temp"><span class="data temp__avg"></span> ℃</li>
         <li class="hidden temp"><span class="data temp__avg_est"></span> ℃</li>
     </ul>
-    <p style="float: right;" id="choices">{% trans "Graph" %}:</p>
+<a href="#" title="{% trans "Full screen graph" %}" id="fullscreen_button" >
+    <img class="floatright" src="{{MEDIA_URL}}turan/fs.png">
+</a>
+    <p class="floatleft" id="choices">{% trans "Graph" %}:</p>
     <hr class="clear" />
 </div>
 <script type="text/javascript">

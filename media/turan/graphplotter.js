@@ -58,7 +58,7 @@ var GraphPlotter = {
         });
 
         if (data.length > 0) {
-            plot = $.plot($("#tripdiv"), data, {
+            plot = $.plot($("#exercisegraph"), data, {
                 series: {
                     lines: {
                         lineWidth: 2, // less cluttere
@@ -75,7 +75,7 @@ var GraphPlotter = {
                     ],
                 xaxis: xaxisattrs,
                 legend: { 
-                    container: $("#tripdiv_legend"),
+                    container: $("#exercisegraph_legend"),
                     labelFormatter: function(label, series) {
                         // series is the series object for the label
                         return label;
@@ -240,15 +240,28 @@ var GraphPlotter = {
         });
         $("#reset_zoom").bind("click", function(evt) {
             evt.preventDefault();
-            $("#scrollhacks").css("overflow", "hidden");
-            $("#tripdiv").width( $("#tripdiv").width(980));
+            $("#scrollhack").css("overflow", "hidden");
+            $("#exercisegraph").removeClass('exercisegraphoverlay');
+            $("#exercisegraph").addClass('exercisegraph');
+            $("#exercisegraph").css("position", "relative"); // Somehow needed, even though it's set in the css
+            $("#scrollhack").after($('#exercisegraph'));
+            //$("#exercisegraph").width( $("#exercisegraph").width(980));
             that.setRange({});
             that.plot(); 
         });
         $("#enlarge").bind("click", function(evt) {
             evt.preventDefault();
-            $("#scrollhacks").css("overflow", "scroll");
-            $("#tripdiv").width( $("#tripdiv").width()*4);
+            $("#scrollhack").css("overflow", "scroll");
+            //$("#exercisegraph").width( $("#exercisegraph").width()*4);
+            $("#exercisegraph").css("overflow", "hidden");
+            $("#exercisegraph").css("position", "absolute"); // Somehow needed, even though it's set in the css
+            $("#exercisegraph").addClass('exercisegraphoverlay');
+            $("#exercisegraph").removeClass('exercisegraph');
+            $("#exercisegraph").appendTo('body');
+        });
+        $("#fullscreen_button").bind("click", function(evt) {
+            evt.preventDefault();
+            $("#enlarge").click()
         });
         //$("#segment_add").bind("click", function(evt) {
         //});
@@ -268,7 +281,7 @@ var GraphPlotter = {
         var previousPoint = null;
         this.updateLegendTimeout = null;
         this.latestPosition = null;
-        $("#tripdiv").bind("plothover", function (event, pos, item) {
+        $("#exercisegraph").bind("plothover", function (event, pos, item) {
             that.latestPosition = pos; 
   //          if (!that.updateLegendTimeout) that.updateLegendTimeout = setTimeout(that.updateLegend, 50); 
             //that.updateLegend(pos);
@@ -338,15 +351,18 @@ var GraphPlotter = {
         });
 
 
-        $("#tripdiv").bind("plotclick", function (event, pos, item) {
+        $("#exercisegraph").bind("plotclick", function (event, pos, item) {
             if (item) {
-                $("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
                 plot.highlight(item.series, item.datapoint);
             }
+            // reset zoom on click
+            $("#reset_zoom").click();
+            //that.setRange({});
+            //that.plot(); 
         });
 
 
-        $("#tripdiv").bind("plotselected", function (event, ranges) {
+        $("#exercisegraph").bind("plotselected", function (event, ranges) {
             that.setRange(ranges);
             that.plot();
         });
