@@ -1293,6 +1293,7 @@ button, input[type="button"], input[type="submit"] {
     margin-top: 5px;
     min-width: 4em;
     padding: 6px 24px 6px 24px;
+    -webkit-box-reflect:below 0 -webkit-gradient(linear,0 0,0 100%,from(transparent),color-stop(.6,transparent),to(rgba(255,255,255,0.3)));
 }
 a.profilehoverpoint {
     line-height: 0;
