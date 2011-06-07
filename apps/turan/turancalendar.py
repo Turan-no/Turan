@@ -90,7 +90,9 @@ class WorkoutCalendar(HTMLCalendar):
                 try:
                     w_sums['ascent_sum'] += workout.route.ascent
                 except AttributeError:
-                    pass # some exercises do noet have ascent
+                    pass # some exercises do not have ascent
+                except TypeError:
+                    pass # some execrise do not have ascent
                 try:
                     w_sums['duration_sum'] += workout.duration
                 except TypeError:
