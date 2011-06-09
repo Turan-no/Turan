@@ -175,7 +175,7 @@ $(function () {
         
             {% if user.is_authenticated %}
                 {% if is_me %}
-                        <p><button><span id="edit-profile-toggle">{% trans "Edit profile" %}</span></button></p>
+                        <p><button id="edit-profile-toggle"><span>{% trans "Edit profile" %}</span></button></p>
                     
                     <form class="uniForm" id="edit-profile" method="post" action="" style="display: none;">
                         <fieldset class="inlineLabels">
