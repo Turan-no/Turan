@@ -108,6 +108,8 @@ class GPXParser(object):
                             lon = self.entries[-1].lon
 
                     speed = self.val_or_none(trkpt, 'speed', return_zero=True)
+                    if speed:
+                        speed = speed * 3.6
                     try:
                         tstring = trkpt.find(ns + 'time').text
                     except AttributeError:
