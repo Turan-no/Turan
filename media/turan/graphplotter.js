@@ -175,7 +175,7 @@ var GraphPlotter = {
             left: x + 5,
             padding: '10px',
             opacity: 0.9
-        }).appendTo("body").fadeIn(500);
+        }).appendTo("body").delay(200).fadeIn(200);
     },
     init: function(args) {
         this.datasets = args.datasets;
@@ -240,28 +240,30 @@ var GraphPlotter = {
         });
         $("#reset_zoom").bind("click", function(evt) {
             evt.preventDefault();
-            $("#scrollhack").css("overflow", "hidden");
+            $("#gtooltip").remove(); // tooltips messes up pos
             $("#exercisegraph").removeClass('exercisegraphoverlay');
             $("#exercisegraph").addClass('exercisegraph');
             $("#exercisegraph").css("position", "relative"); // Somehow needed, even though it's set in the css
-            $("#scrollhack").after($('#exercisegraph'));
-            //$("#exercisegraph").width( $("#exercisegraph").width(980));
+            $("#exercisegraph").appendTo($('#graphcontainer'));
+
+            $("#averages").removeClass('extraoverlay');
+            $("#averages").appendTo($('#graphcontainer'));
             that.setRange({});
             that.plot(); 
         });
         $("#enlarge").bind("click", function(evt) {
             evt.preventDefault();
-            $("#scrollhack").css("overflow", "scroll");
+            $("#gtooltip").remove(); // tooltips messes up pos
+            //$("#scrollhack").css("overflow", "scroll");
             //$("#exercisegraph").width( $("#exercisegraph").width()*4);
-            $("#exercisegraph").css("overflow", "hidden");
+            $("#exercisegraph").appendTo('body');
             $("#exercisegraph").css("position", "absolute"); // Somehow needed, even though it's set in the css
             $("#exercisegraph").addClass('exercisegraphoverlay');
             $("#exercisegraph").removeClass('exercisegraph');
-            $("#exercisegraph").appendTo('body');
-        });
-        $("#fullscreen_button").bind("click", function(evt) {
-            evt.preventDefault();
-            $("#enlarge").click()
+            $("#exercisegraph").css("overflow", "hidden");
+
+            $("#averages").addClass('extraoverlay');
+            $("#averages").appendTo('body');
         });
         //$("#segment_add").bind("click", function(evt) {
         //});

@@ -43,9 +43,9 @@ h4 {
 	margin: 5px 0 2px;
     letter-spacing: 1px;
 }
-label {
+label, .baseLbl, .dataLbl  {
 	font-size: 110%;
-    color: #4F96CA; 
+    color: #4F96CA !important; 
     font-weight: bolder;
 }
 /* Tables */
@@ -845,6 +845,7 @@ table.month .fade {
 
 div.averages {
     padding: 5px;
+    height: 30px;
 }
 
 div.averages ul,
@@ -1189,6 +1190,7 @@ div.tooltip {
     border: 1px solid #4f96ca;
     opacity: 0.9;
     padding: 5px;
+    overflow: hidden;
 }
 div.slope-categories span {
     display: none;
@@ -1328,11 +1330,34 @@ a.profilehoverpoint>img {
     top:0;
     left:0;
     width:100%;
-    height:100%;
+    height:97%;
     z-index:2;
+    background: white;
+}
+.extraoverlay {
+    position:absolute;
+    top:97%; /* Same as .exercisegraphoverlay height */
+    left:0;
+    width:100%;
+    height:25px;
+    z-index:3;
+    padding-right: 10px;
     background: white;
 }
 .exercisegraph {
     width:980px;
     height: 500px;
+}
+.fullscreenicon {
+    margin-left: 5px;
+    width: 16px;
+    height: 16px;
+}
+.olControlLayerSwitcher .layersDiv {
+    color: black !important;
+    background: white !important;
+    border: 1px solid #4F96CA;
+    border-radius:5px;
+    opacity: 0.85 !important;
+    box-shadow: 2px 2px 8px black;
 }
