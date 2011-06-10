@@ -2104,6 +2104,7 @@ def search(request):
 
 
 
-    return HttpResponse(serializers.serialize('json', exercise_list, indent=4), mimetype='text/javascript')
+    if request.is_ajax():
+        return HttpResponse(serializers.serialize('json', exercise_list, indent=4), mimetype='text/javascript')
 
     return render_to_response('turan/search.html', locals(), context_instance=RequestContext(request))
