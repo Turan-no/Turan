@@ -184,6 +184,7 @@ var GraphPlotter = {
         this.markings = args.markings;
         this.xaxisformatter = axisformatters[args.xaxisformatter];
         this.posFeature = null;
+        this.fullscreen = false;
         function evaluate(y,threshold) { 
             return y < threshold;
         }
@@ -241,29 +242,40 @@ var GraphPlotter = {
         $("#reset_zoom").bind("click", function(evt) {
             evt.preventDefault();
             $("#gtooltip").remove(); // tooltips messes up pos
-            $("#exercisegraph").removeClass('exercisegraphoverlay');
-            $("#exercisegraph").addClass('exercisegraph');
-            $("#exercisegraph").css("position", "relative"); // Somehow needed, even though it's set in the css
-            $("#exercisegraph").appendTo($('#graphcontainer'));
-
-            $("#averages").removeClass('extraoverlay');
-            $("#averages").appendTo($('#graphcontainer'));
             that.setRange({});
             that.plot(); 
         });
         $("#enlarge").bind("click", function(evt) {
             evt.preventDefault();
             $("#gtooltip").remove(); // tooltips messes up pos
-            //$("#scrollhack").css("overflow", "scroll");
-            //$("#exercisegraph").width( $("#exercisegraph").width()*4);
-            $("#exercisegraph").appendTo('body');
-            $("#exercisegraph").css("position", "absolute"); // Somehow needed, even though it's set in the css
-            $("#exercisegraph").addClass('exercisegraphoverlay');
-            $("#exercisegraph").removeClass('exercisegraph');
-            $("#exercisegraph").css("overflow", "hidden");
+            if(!that.fullscreen) {
+                //$("#scrollhack").css("overflow", "scroll");
+                //$("#exercisegraph").width( $("#exercisegraph").width()*4);
+                $("#exercisegraph").appendTo('body');
+                $("#exercisegraph").css("position", "absolute"); // Somehow needed, even though it's set in the css
+                $("#exercisegraph").addClass('exercisegraphoverlay');
+                $("#exercisegraph").removeClass('exercisegraph');
+                $("#exercisegraph").css("overflow", "hidden");
 
-            $("#averages").addClass('extraoverlay');
-            $("#averages").appendTo('body');
+
+                $("#averages").addClass('extraoverlay');
+                $("#averages").appendTo('body');
+                that.fullscreen = true;
+            }
+            else {
+                $("#exercisegraph").removeClass('exercisegraphoverlay');
+                $("#exercisegraph").addClass('exercisegraph');
+                $("#exercisegraph").css("position", "relative"); // Somehow needed, even though it's set in the css
+                $("#exercisegraph").appendTo($('#graphcontainer'));
+
+                $("#averages").removeClass('extraoverlay');
+                $("#averages").appendTo($('#graphcontainer'));
+                that.fullscreen = false;
+
+            }
+            plot.resize();             
+            plot.setupGrid();          
+            plot.draw();               
         });
         //$("#segment_add").bind("click", function(evt) {
         //});
@@ -358,9 +370,8 @@ var GraphPlotter = {
                 plot.highlight(item.series, item.datapoint);
             }
             // reset zoom on click
-            $("#reset_zoom").click();
-            //that.setRange({});
-            //that.plot(); 
+            that.setRange({});
+            that.plot(); 
         });
 
 
