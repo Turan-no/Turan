@@ -446,7 +446,7 @@
 
                 // vary color if needed
                 var sign = variation % 2 == 1 ? -1 : 1;
-                c.scale('rgb', 1 + sign * Math.ceil(variation / 2) * 0.2)
+                c.scale('rgb', 1 + sign * Math.ceil(variation / 2) * 0.2);
 
                 // FIXME: if we're getting to close to something else,
                 // we should probably skip this one
@@ -633,6 +633,7 @@
                 s = series[i];
                 points = s.datapoints.points,
                 ps = s.datapoints.pointsize;
+                format = s.datapoints.format;
 
                 var xmin = topSentry, ymin = topSentry,
                     xmax = bottomSentry, ymax = bottomSentry;
@@ -735,8 +736,8 @@
         
         function setupCanvases() {
             var reused,
-                existingCanvas = placeholder.children("canvas.base"),
-                existingOverlay = placeholder.children("canvas.overlay");
+                existingCanvas = placeholder.children("canvas.flot-base"),
+                existingOverlay = placeholder.children("canvas.flot-overlay");
 
             if (existingCanvas.length == 0 || existingOverlay == 0) {
                 // init everything
@@ -750,8 +751,8 @@
 
                 getCanvasDimensions();
                 
-                canvas = makeCanvas(true, "base");
-                overlay = makeCanvas(false, "overlay"); // overlay canvas for interactive features
+                canvas = makeCanvas(true, "flot-base");
+                overlay = makeCanvas(false, "flot-overlay"); // overlay canvas for interactive features
 
                 reused = false;
             }
@@ -851,51 +852,49 @@
                 axisw = opts.labelWidth || 0, axish = opts.labelHeight || 0,
                 f = axis.font;
 
-            if (opts.labelWidth == null || opts.labelHeight == null) {
-                ctx.save();
-                ctx.font = f.style + " " + f.variant + " " + f.weight + " " + f.size + "px '" + f.family + "'";
-            
-                for (var i = 0; i < ticks.length; ++i) {
-                    var t = ticks[i];
+            ctx.save();
+            ctx.font = f.style + " " + f.variant + " " + f.weight + " " + f.size + "px '" + f.family + "'";
+
+            for (var i = 0; i < ticks.length; ++i) {
+                var t = ticks[i];
+                
+                t.lines = [];
+                t.width = t.height = 0;
+
+                if (!t.label)
+                    continue;
+
+                // accept various kinds of newlines, including HTML ones
+                // (you can actually split directly on regexps in Javascript,
+                // but IE is unfortunately broken)
+                var lines = t.label.replace(/<br ?\/?>|\r\n|\r/g, "\n").split("\n");
+                for (var j = 0; j < lines.length; ++j) {
+                    var line = { text: lines[j] },
+                        m = ctx.measureText(line.text);
                     
-                    t.lines = [];
-                    t.width = t.height = 0;
+                    line.width = m.width;
+                    // m.height might not be defined, not in the
+                    // standard yet
+                    line.height = m.height != null ? m.height : f.size;
 
-                    if (!t.label)
-                        continue;
+                    // add a bit of margin since font rendering is
+                    // not pixel perfect and cut off letters look
+                    // bad, this also doubles as spacing between
+                    // lines
+                    line.height += Math.round(f.size * 0.15);
 
-                    // accept various kinds of newlines, including HTML ones
-                    // (you can actually split directly on regexps in Javascript,
-                    // but IE is unfortunately broken)
-                    var lines = t.label.replace(/<br ?\/?>|\r\n|\r/g, "\n").split("\n");
-                    for (var j = 0; j < lines.length; ++j) {
-                        var line = { text: lines[j] },
-                            m = ctx.measureText(line.text);
-                        
-                        line.width = m.width;
-                        // m.height might not be defined, not in the
-                        // standard yet
-                        line.height = m.height != null ? m.height : f.size;
+                    t.width = Math.max(line.width, t.width);
+                    t.height += line.height;
 
-                        // add a bit of margin since font rendering is
-                        // not pixel perfect and cut off letters look
-                        // bad, this also doubles as spacing between
-                        // lines
-                        line.height += Math.round(f.size * 0.15);
-
-                        t.width = Math.max(line.width, t.width);
-                        t.height += line.height;
-
-                        t.lines.push(line);
-                    }
-
-                    if (opts.labelWidth == null)
-                        axisw = Math.max(axisw, t.width);
-                    if (opts.labelHeight == null)
-                        axish = Math.max(axish, t.height);
+                    t.lines.push(line);
                 }
-                ctx.restore();
+
+                if (opts.labelWidth == null)
+                    axisw = Math.max(axisw, t.width);
+                if (opts.labelHeight == null)
+                    axish = Math.max(axish, t.height);
             }
+            ctx.restore();
 
             axis.labelWidth = Math.ceil(axisw);
             axis.labelHeight = Math.ceil(axish);
@@ -932,7 +931,7 @@
                 
                 var innermost = $.inArray(axis, sameDirection) == 0;
                 if (innermost)
-                    tickLength = "full"
+                    tickLength = "full";
                 else
                     tickLength = 5;
             }
@@ -1002,7 +1001,7 @@
                     minMargin = Math.max(minMargin, 2 * (series[i].points.radius + series[i].points.lineWidth/2));
             }
 
-            margins.x = margins.y = minMargin;
+            margins.x = margins.y = Math.ceil(minMargin);
             
             // check axis labels, note we don't check the actual
             // labels but instead use the overall width/height to not
@@ -1010,7 +1009,7 @@
             $.each(allAxes(), function (_, axis) {
                 var dir = axis.direction;
                 if (axis.reserveSpace)
-                    margins[dir] = Math.max(margins[dir], (dir == "x" ? axis.labelWidth : axis.labelHeight) / 2);
+                    margins[dir] = Math.ceil(Math.max(margins[dir], (dir == "x" ? axis.labelWidth : axis.labelHeight) / 2));
             });
 
             plotOffset.left = Math.max(margins.x, plotOffset.left);
@@ -2562,7 +2561,7 @@
                     if (typeof c != "string") {
                         var co = $.color.parse(defaultColor);
                         if (c.brightness != null)
-                            co = co.scale('rgb', c.brightness)
+                            co = co.scale('rgb', c.brightness);
                         if (c.opacity != null)
                             co.a *= c.opacity;
                         c = co.toString();
