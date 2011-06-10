@@ -273,9 +273,11 @@ var GraphPlotter = {
                 that.fullscreen = false;
 
             }
+        /* resize.js plugin does this
             plot.resize();             
             plot.setupGrid();          
             plot.draw();               
+        */
         });
         //$("#segment_add").bind("click", function(evt) {
         //});
@@ -363,8 +365,6 @@ var GraphPlotter = {
             
 
         });
-
-
         $("#exercisegraph").bind("plotclick", function (event, pos, item) {
             if (item) {
                 plot.highlight(item.series, item.datapoint);
