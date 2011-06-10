@@ -586,7 +586,7 @@ def colorize_and_scale(request):
     sized.save(data, "png")
     data.seek(0)
     return HttpResponse(data.read(), mimetype='image/png',status=200)
-    
+
 
 def calendar(request):
     now = datetime.now()
@@ -2071,6 +2071,12 @@ def search(request):
     search_query = request.GET.get('q', '')
     if not search_query:
         raise Http404
+    start = request.GET.get('start', 0)
+    try:
+        start = int(start)
+    except:
+        start = 0
+    SLICE_SIZE = 20
 
     exercise_list = Exercise.objects.select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')
     comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')
@@ -2084,17 +2090,20 @@ def search(request):
         Q(comment__icontains=search_query) |
         Q(tags__contains=search_query)
     )
-    exercise_list = exercise_list.filter(qset).distinct().order_by('-date')[:15]
+    exercise_list = exercise_list.filter(qset).distinct().order_by('-date')[start:start+SLICE_SIZE]
     uqset = (
         Q(username__icontains=search_query)
     )
-    user_list = user_list.filter(uqset).distinct()[:15]
-    tag_list = tag_list.filter(name__icontains=search_query)[:15]
+    user_list = user_list.filter(uqset).distinct()[start:start+SLICE_SIZE]
+    tag_list = tag_list.filter(name__icontains=search_query)[start:start+SLICE_SIZE]
     rqset = (
         Q(name__icontains=search_query) |
         Q(description__icontains=search_query)
     )
-    route_list = route_list.filter(rqset).distinct()[:15]
+    route_list = route_list.filter(rqset).distinct()[start:start+SLICE_SIZE]
 
+
+
+    return HttpResponse(serializers.serialize('json', exercise_list, indent=4), mimetype='text/javascript')
 
     return render_to_response('turan/search.html', locals(), context_instance=RequestContext(request))
