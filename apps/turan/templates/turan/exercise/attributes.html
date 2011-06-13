@@ -52,11 +52,11 @@
             {% endifequal %}
             {% else %}
             {% endifequal %}
-            {% endif %}
             {% with object.route as object %}
                 {% include "turan/route/attributes.html" %}
             {% endwith %}
         </li>
+        {% endif %}
 
         {% if object.duration %} 
         <li class="duration">
@@ -144,10 +144,12 @@
             <li class="power">
                 <span class="label">{% trans "Normalized Power" %}:</span> {{ object.normalized_power }} {% trans "W" %}
             </li>
+            {% endif %}
             {% if object.get_intensityfactor %}
             <li class="intensity">
                 <span class="label">{% trans "Intensity Factor" %}:</span> {{ object.get_intensityfactor }}
             </li>
+            {% endif %}
             {% if object.max_power %}
             <li class="power">
                 <span class="label">{% trans "Max Power" %}:</span> {{ object.max_power }} {% trans "W" %}
@@ -155,8 +157,6 @@
             {% endif %}
         </ul>
         </li>
-        {% endif %}
-        {% endif %}
         {% endif %}
 
 
