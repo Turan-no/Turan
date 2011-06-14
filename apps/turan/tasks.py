@@ -276,17 +276,20 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
                     previous_end = end_distance
             elif found_start and found_end:
                 print "_________Found Segment %s" %se
+
                 # Iterate over the existing segments for this exercise
                 # Do not add the found segment if it's too close to existing
                 # If the start is within 500 meters, and the length is within 
                 # 500 meters we deem it coo close
-
                 duplicate = False
                 for old_segment in exercise.segmentdetail_set.all():
-                    if not (-500 < (old_segment.start-found_start) < 500 and
-                        -500 < (old_segment.distance-found_distance) < 500):
+                    if (-500 < (old_segment.start*1000-started_at_distance) < 500 and
+                        -500 < (old_segment.length-found_distance) < 500):
                         # If distance of found segment is within 500 meters of
                         # the lenght of the segment we accept it
+                        print "_____ Duplicate found, skipping"
+                        print "Found start: %s, Old Segment Start: %s" %(started_at_distance, old_segment.start*1000)
+                        print "Found distance: %s, Old Segment distance: %s" %(found_distance, old_segment.length)
                         duplicate = True
                         break
                 if -500 < found_distance-se.distance*1000 < 500 and not duplicate:
