@@ -12,8 +12,8 @@ xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata>
     <author>
-      <name>Rolf-Arne Schulze</name>
-      <email id="rolfas" domain="surrehuer.net"/>
+      <name>anon</name>
+      <email id="" domain="test.net"/>
     </author>
     <link href="http://www.endomondo.com">
       <text>Endomondo</text>
@@ -25,7 +25,7 @@ maxlon="10.754875"/>
   <trk>
     <name>Test</name>
     <src>http://www.endomondo.com/</src>
-    <link href="http://www.endomondo.com/workouts/sV63B60Zq7g">
+    <link href="http://www.endomondo.com/workouts/anon">
       <text>Test</text>
     </link>
     <type>CYCLING_SPORT</type>
