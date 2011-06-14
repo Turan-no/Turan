@@ -132,8 +132,8 @@ $(function () {
                     {% endifequal %}
             </td>
             <td>
-                <input type="checkbox" name="selected_routes" value="{{ object.exercise.id }}">
-                <input type="hidden" id="start{{object.exercise.id}}" value="{{object.start|unlocalize}}">
+                <input type="checkbox" name="selected_routes" value="{{ object.exercise.id }}-{{object.id}}">
+                <input type="hidden" id="start{{object.exercise.id}}-{{object.id}}" value="{{object.start|unlocalize}}">
             </td>
             <td>
                 <a href="{{ object.exercise.get_absolute_url }}">
@@ -173,10 +173,14 @@ $(function () {
     $('#route_form').bind("submit", function (ev) {
         ev.preventDefault();
         var selectedIds = [];
+        var selectedSegmentIds = [];
         var selectedStarts = [];
         $(this.selected_routes).each(function (i, elem) {
             if (elem.checked) {
-                selectedIds.push(elem.value);
+                var object_id = elem.value.split('-')[0];
+                var segment_id = elem.value.split('-')[1];
+                selectedIds.push(object_id);
+                selectedSegmentIds.push(segment_id);
             }
         });
         var player_url =  "/play/exercise/?id=" + selectedIds.join("&id=");
@@ -184,8 +188,7 @@ $(function () {
         player_url += '#';
         var index=0;
         for(id in selectedIds) {
-            var hashstr = 'start-' + index + '-' + $('#' + 'start' + selectedIds[id]).val();
-            console.log(hashstr);
+            var hashstr = 'start-' + index + '-' + $('#' + 'start' + selectedIds[id] + '-' + selectedSegmentIds[index]).val();
             selectedStarts.push (hashstr);
             index++;
         }
