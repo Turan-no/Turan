@@ -51,15 +51,15 @@ class RouteManager(models.Manager):
 
 
 class Route(models.Model):
-    name = models.CharField(max_length=160, blank=True, help_text=_('for example Opsangervatnet'))
-    distance = models.FloatField(help_text=_('in km'), default=0)
-    description = models.TextField(help_text=_('route description'))
-    route_url = models.URLField(blank=True) # gmaps?
+    name = models.CharField(_('Name'), max_length=160, blank=True, help_text=_('for example Opsangervatnet'))
+    distance = models.FloatField(_('Distance'),help_text=_('in km'), default=0)
+    description = models.TextField(_('Description'), help_text=_('route description'))
+    route_url = models.URLField(_('External URL'), blank=True, help_text=_('Added info for route in external URL')) # gmaps?
     gpx_file = models.FileField(upload_to='gpx', blank=True, storage=gpxstore)
-    ascent = models.IntegerField(blank=True, null=True) # m
-    descent = models.IntegerField(blank=True, null=True) # m
-    max_altitude = models.IntegerField(blank=True, null=True) # m
-    min_altitude = models.IntegerField(blank=True, null=True) # m
+    ascent = models.IntegerField(_('Ascent'), blank=True, null=True) # m
+    descent = models.IntegerField(_('Descent'), blank=True, null=True) # m
+    max_altitude = models.IntegerField(_('Maximum altitude'), blank=True, null=True) # m
+    min_altitude = models.IntegerField(_('Minimum altitude'), blank=True, null=True) # m
 
     start_lat = models.FloatField(blank=True, default=0.0)
     start_lon = models.FloatField(blank=True, default=0.0)
@@ -292,7 +292,6 @@ class ExerciseType(models.Model):
             return settings.MEDIA_URL + 'turan/%s' %(self.logo)
         return ''
 
-
     class Meta:
         verbose_name = _("Exercise Type")
         verbose_name_plural = _("Exercise Types")
@@ -312,14 +311,14 @@ live_states = (
 class Exercise(models.Model):
 
     user = models.ForeignKey(User)
-    exercise_type = models.ForeignKey(ExerciseType, default=13) # FIXME hardcoded to cycling
+    exercise_type = models.ForeignKey(ExerciseType, verbose_name=_('Exercise type'), default=13) # FIXME hardcoded to cycling
     route = models.ForeignKey(Route, blank=True, null=True, help_text=_("Search existing routes"))
-    duration = DurationField(blank=True, default=0, help_text='18h 30m 23s 10ms 150mis')
-    date = models.DateField(blank=True, null=True, help_text=_("year-mo-dy"))
-    time = models.TimeField(blank=True, null=True, help_text="00:00:00")
+    duration = DurationField(_('Duration'), blank=True, default=0, help_text='18h 30m 23s 10ms 150mis')
+    date = models.DateField(_('Date'), blank=True, null=True, help_text=_("year-mo-dy"))
+    time = models.TimeField(_('Start time'), blank=True, null=True, help_text="00:00:00")
 
-    comment = models.TextField(blank=True)
-    url = models.URLField(blank=True)
+    comment = models.TextField(_('Comment'), blank=True)
+    url = models.URLField(_('External URL'), blank=True)
 
     avg_speed = models.FloatField(blank=True, null=True) #kmt
     avg_cadence = models.IntegerField(blank=True, null=True) # rpm
@@ -340,7 +339,7 @@ class Exercise(models.Model):
     temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     min_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     max_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
-    sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv)'))
+    sensor_file = models.FileField(_('Exercise file'), upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, .gmd, .csv, .xml)'))
 
     exercise_permission = models.CharField(max_length=1, choices=permission_choices, default='A', )
     live_state = models.CharField(max_length=1, choices=live_states, default='F', blank=True, null=True)
@@ -349,7 +348,7 @@ class Exercise(models.Model):
     content_type = models.ForeignKey(ContentType, null=True)
     group = generic.GenericForeignKey("object_id", "content_type")
 
-    tags = TagField(help_text='f.eks. sol regn uhell punktering')
+    tags = TagField(verbose_name=_('Tags'), help_text='f.eks. sol regn uhell punktering')
 
     #objects = models.Manager() # default manager
 
@@ -566,7 +565,7 @@ merge_choices = (
 class MergeSensorFile(models.Model):
     exercise = models.ForeignKey(Exercise)
     merge_strategy = models.CharField(max_length=1, choices=merge_choices, default='M', help_text=_('Merge strategy. Merge = Merge on top of current, Append = Append to end, Prepend = Insert before current'))
-    sensor_file = models.FileField(upload_to='sensor', storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, .pwx, .xml, .fit)'))
+    sensor_file = models.FileField(_('Exercise file'), upload_to='sensor', storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, .pwx, .xml, .fit)'))
     hr = models.BooleanField(blank=True, default=0)
     power = models.BooleanField(blank=True, default=0)
     cadence = models.BooleanField(blank=True, default=0)
