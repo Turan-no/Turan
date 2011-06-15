@@ -38,6 +38,20 @@
 <div class="box spacer">
 {% include "turan/segment/attributes.html" %}
 </div>
+{% if slopes %}
+<h2>{% trans "Best times" %}</h2>
+<div class="toplist">
+<ol>
+{% for object in slopes|slice:":3" %}
+    <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
+<a href="{{ object.exercise.user.get_absolute_url }}" title="{{ object.exercise.user }}">
+{% avatar object.exercise.user 32 %}
+</a>{{ object.duration|durationformatshort}}, {{object.exercise.date}}
+</li>
+{% endfor %}
+</ol>
+</div>
+{% endif %}
 <ul class="photos hlist">
     {% for photo in object.get_photos %}
     <li>
@@ -56,8 +70,8 @@
 {% autosort object_list %}
 {% autopaginate object_list %}
 {% if object_list %}
-    <h2>{% trans "Duration" %}</h2>
-    <div id="durationdiv" style="width:420px;height:200px"></div>
+    <h2>{% trans "Duration graph" %}</h2>
+    <div id="durationdiv" style="width:460px;height:200px"></div>
     <script id="source" language="javascript" type="text/javascript">
 $(function () {
 
