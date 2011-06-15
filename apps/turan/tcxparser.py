@@ -164,7 +164,7 @@ class TCXParser(object):
                 ## TODO figure out why elements lack distance, make this smarter ?
                 #distance = self.cur_distance
 # 310 XT maybe fix??
-                continue
+                pass
                 distance = 0
 
             try:
