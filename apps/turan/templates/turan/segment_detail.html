@@ -35,11 +35,11 @@
 <h1>
     {{ object.name }}
 </h1>
-<div class="box spacer">
+<div class="spacer">
 {% include "turan/segment/attributes.html" %}
 </div>
 {% if slopes %}
-<h2>{% trans "Best times" %}</h2>
+<h2>{% trans "Best efforts" %}</h2>
 <div class="toplist">
 <ol>
 {% for object in slopes|slice:":3" %}
