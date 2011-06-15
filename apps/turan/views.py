@@ -216,6 +216,10 @@ def segment_detail(request, object_id):
     object = get_object_or_404(Segment, pk=object_id)
     usertimes = {}
     slopes = object.get_slopes().select_related('exercise', 'exercise__route', 'exercise__user__profile', 'segment', 'profile', 'exercise__user')
+    username = request.GET.get('username', '')
+    if username:
+        other_user = get_object_or_404(User, username=username)
+        slopes = slopes.filter(exercise__user=other_user)
     for slope in sorted(slopes, key=lambda x:x.exercise.date):
         if not slope.exercise.user in usertimes:
             usertimes[slope.exercise.user] = ''

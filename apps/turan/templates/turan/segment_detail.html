@@ -106,6 +106,10 @@ $(function () {
     <form id="route_form">
     <h2>{% trans "Rides on this segment" %}</h2>
     <input type="submit" value="{% trans "Compare"%}">
+{% if request.user.username %}
+<a href="?username={{request.user.username}}"><button>{% trans "My results" %}</button></a>
+{% endif %}
+
     <table class="fullsize">
         <tr>
             <th></th>
