@@ -120,6 +120,7 @@ var GraphPlotter = {
                                 e.text(val);
                                 e.parents(".hidden").removeClass("hidden");
                                 e.attr('title', key.replace(/_/g, ' '))
+                                e.parents('li').attr('title', key.replace(/_/g, ' '))
                             }
                         }
                     }
