@@ -71,7 +71,7 @@
 {% autopaginate object_list %}
 {% if object_list %}
     <h2>{% trans "Duration graph" %}</h2>
-    <div id="durationdiv" style="width:460px;height:200px"></div>
+    <div id="durationdiv" style="width:460px;height:100px"></div>
     <script id="source" language="javascript" type="text/javascript">
 $(function () {
 
@@ -100,8 +100,8 @@ $(function () {
     </script>
     {% include "turan/altitude_profile.html" %}
     <h2 style="clear: both">{% trans "Gradients" %}</h2>
-    <div id="gradientzonediv" style="width: 1000px; height:200px; float: right;"></div>
-    <div id="gradientzonetable" style="width:1px; height: 200px;"></div>
+    <div id="gradientzonediv" style="width: 1000px; height:100px; float: right;"></div>
+    <div id="gradientzonetable" style="width:1px; height: 100px;"></div>
     {% include "turan/exercise/gradient_tab.html" %}
     <form id="route_form">
     <h2>{% trans "Rides on this segment" %}</h2>

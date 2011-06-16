@@ -201,7 +201,7 @@ def route_detail(request, object_id):
             if trip.avg_speed and trip.get_details().exists() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
                                                              # and trip with details
                 alt = tripdetail_js(trip.id, 'altitude')
-                alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
+                alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']
                 done_altitude_profile = True
 
     except TypeError:
@@ -249,7 +249,7 @@ def segment_detail(request, object_id):
             #alt = tripdetail_js(None, trip.id, 'altitude', start=start, stop=stop)
             d_offset = tripdetails[start].distance
             alt = simplejson.dumps([((d.distance-d_offset)/1000, d.altitude) for d in tripdetails[start:stop]])
-            alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
+            alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']
             done_altitude_profile = True
         gradients, inclinesums = getgradients(tripdetails[start:stop],d_offset=d_offset)
     return render_to_response('turan/segment_detail.html', locals(), context_instance=RequestContext(request))
