@@ -247,6 +247,7 @@ var GraphPlotter = {
             that.setRange({});
             that.plot(); 
         });
+        $(window).bind("keyup", function(evt) { if (evt.keyCode == 70) { $('#enlarge').click() } });
         $("#enlarge").bind("click", function(evt) {
             evt.preventDefault();
             $("#gtooltip").remove(); // tooltips messes up pos
