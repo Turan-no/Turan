@@ -16,6 +16,15 @@
     </li>
 </ul>
 <h3>Step 1</h3>
+{% if error %}
+<div style="background: red; color: white; padding: 5px">
+    {% if error.code == 403 %}
+    {% trans "Your exercise is not public. It needs to be public for Turan to import it" %}
+    {% else %}
+        {% trans "Something went wrong while importing trip" %}: {{ error }}
+    {% endif %}
+</div>
+{% endif %}
 <form class="uniForm" action="" method="post">
     {{ form|as_uni_form }}
     <input type="submit" value="{% trans "Import exercise"%}" />

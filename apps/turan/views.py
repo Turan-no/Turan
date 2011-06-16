@@ -1708,6 +1708,7 @@ def import_data(request):
                 id = url.split("/")[-1].rstrip("/")
 
                 tripdata = urllib2.urlopen(url).read()
+
                 tripsoup = BeautifulSoup(tripdata, convertEntities=BeautifulSoup.HTML_ENTITIES)
                 # Lets hope these ones work for a while
                 gpx_url = base_url + "/proxy/activity-service-1.1/gpx/activity/%s?full=true" % ( id )
@@ -1732,7 +1733,11 @@ def import_data(request):
                 if gpx_url:
                     route = Route()
                     req = urllib2.Request(gpx_url, None, headers)
-                    content = ContentFile(urllib2.urlopen(req).read())
+                    try:
+                        content = ContentFile(urllib2.urlopen(req).read())
+                    except urllib2.HTTPError, e:
+
+                        return render_to_response("turan/import.html", {'form': form, 'error': e}, context_instance=RequestContext(request))
                     route.gpx_file.save("gpx/garmin_connect_" + id + ".gpx", content)
                     route.name = route_name
                     # Until we have option to match existing route set it to single serving
@@ -1741,7 +1746,11 @@ def import_data(request):
 
                 if tcx_url:
                     req = urllib2.Request(tcx_url, None, headers)
-                    content = ContentFile(urllib2.urlopen(req).read())
+                    try:
+                        content = ContentFile(urllib2.urlopen(req).read())
+                    except urllib2.HTTPError, e:
+
+                        return render_to_response("turan/import.html", {'form': form, 'error': e}, context_instance=RequestContext(request))
                     exercise_filename = 'sensor/garmin_connect_' + id + '.tcx'
 
                     exercise = Exercise()
