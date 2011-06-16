@@ -83,7 +83,7 @@ def bodyfat(value):
     return float(value)/7800
 
 @register.filter
-def retarddurationformat(value, longFormat=True):
+def retarddurationformat(value, longFormat=False):
     """ Converts a number of retarded ms to textual string """
     return durationformat(int(value / 1000000), longFormat)
 
