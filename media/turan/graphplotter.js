@@ -85,8 +85,9 @@ var GraphPlotter = {
                 grid: { 
                     hoverable: true, 
                     clickable: true,
-                    backgroundColor: { colors: ["#fff", "#eee"] }
-                    //markings: this.markings,
+                    backgroundColor: { colors: ["#fff", "#eee"] },
+                    markings: this.markings,
+                    markingsLineWidth: 1,
                 },
                 crosshair: { mode: "x" },
                 selection: { mode: "x" }

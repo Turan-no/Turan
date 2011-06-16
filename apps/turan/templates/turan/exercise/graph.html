@@ -67,10 +67,10 @@
     {% for interval in intervals %}
         {% if forloop.counter0 %}
         {% if time_xaxis %}
-        markings.push( { xaxis: { from: {{interval.get_relative_time_in_minutes}}, to: {{interval.get_relative_time_in_minutes}} }, color:  "#cccccc" });
+        markings.push( { xaxis: { from: {{interval.get_relative_time_in_minutes}}, to: {{interval.get_relative_time_in_minutes}} }, color:  "#000000" });
         {% else %}
         {% if interval.start %}
-        markings.push( { xaxis: { from: {{interval.start}}/1000, to: {{interval.start}}/1000 }, color:  "#cccccc" });
+        markings.push( { xaxis: { from: {{interval.start}}/1000, to: {{interval.start}}/1000 }, color:  "#000" });
         {% endif %}
         {% endif %}
         {% endif %}
