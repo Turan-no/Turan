@@ -250,6 +250,8 @@ var GraphPlotter = {
         $("#enlarge").bind("click", function(evt) {
             evt.preventDefault();
             $("#gtooltip").remove(); // tooltips messes up pos
+            // Press escape to leave fullscreen
+            $(window).bind("keyup", function(evt) { if (evt.keyCode == 27) { $('#enlarge').click() } });
             if(!that.fullscreen) {
                 //$("#scrollhack").css("overflow", "scroll");
                 //$("#exercisegraph").width( $("#exercisegraph").width()*4);
@@ -273,7 +275,6 @@ var GraphPlotter = {
                 $("#averages").removeClass('extraoverlay');
                 $("#averages").appendTo($('#graphcontainer'));
                 that.fullscreen = false;
-
             }
         /* resize.js plugin does this
             plot.resize();             
