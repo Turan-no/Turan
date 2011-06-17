@@ -2,7 +2,6 @@
 {% load threadedcommentstags %}
 {% load avatar_tags %}
 {% load tagging_tags %}
-{% load webdesign %}
 
 {% load humanize %}
 {% load i18n %}
@@ -58,8 +57,21 @@
             <img class="floatright" src="{{ object.route.get_png_url }}" width="32" height="32"/>
             {% endif %}
             <a href="{{ object.get_absolute_url }}">
-                {{ object|slice:":35" }}
+                {% if object.route %}
+                {{ object.route.name|slice:":40" }}
+                {% else %}
+                {{ object.exercise_type }}
+                {% endif %}
             </a>
+            {% if object.segmentdetail_set.exists %}
+            <p class="smaller fade floatright">
+
+            {% for sd in object.segmentdetail_set.all %}
+            <a href="{{ sd.get_absolute_url }}">{{sd.segment.name|slice:":15"}}</a>{% if not forloop.last %},{% endif%}
+            {% endfor %}
+
+            </p>
+            {% endif %}
             <p class="smaller fade">
                 {% if object.route.distance %}
                     {{ object.route.distance|floatformat }} {% trans "km" %}
@@ -69,15 +81,6 @@
                 {% endif %}
                 {{ object.date|naturalday}}
             </p>
-            {% if object.segmentdetail_set.exists %}
-            <p class="smaller fade">
-
-            {% for sd in object.segmentdetail_set.all %}
-            <a href="{{ sd.get_absolute_url }}">{{sd}}</a>
-            {% endfor %}
-
-            </p>
-            {% endif %}
             <hr class="clearright" />
         </li>
         {%endfor %}
