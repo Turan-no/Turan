@@ -884,6 +884,12 @@ class SegmentDetail(models.Model):
             return self.segment.category
 
 
+    def __unicode__(self):
+        if self.segment:
+            return unicode(self.segment)
+        return u''
+
+
 
 #class UserProfile(models.Model):
 #    user = models.ForeignKey(User, unique=True)

@@ -69,11 +69,20 @@
                 {% endif %}
                 {{ object.date|naturalday}}
             </p>
+            {% if object.segmentdetail_set.exists %}
+            <p class="smaller fade">
+
+            {% for sd in object.segmentdetail_set.all %}
+            <a href="{{ sd.get_absolute_url }}">{{sd}}</a>
+            {% endfor %}
+
+            </p>
+            {% endif %}
             <hr class="clearright" />
         </li>
         {%endfor %}
     </ul>
-    <p class="fade"><a href="{% url exercises %}">{% trans "View more exercises" %}</a></p>
+    <a href="{% url exercises %}">{% trans "View more exercises" %}</a>
 
     <ul class="routes">
         {% for object in route_list %}
