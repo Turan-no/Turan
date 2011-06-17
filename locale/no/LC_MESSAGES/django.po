@@ -2,19 +2,19 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-06-17 12:54+0200\n"
-"PO-Revision-Date: 2011-06-02 23:09\n"
-"Last-Translator: Simen Graaten <simeng@gmail.com>\n"
+"PO-Revision-Date: 2011-06-17 13:19\n"
+"Last-Translator:   <andreas@bach.li>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "X-Translated-Using: django-rosetta 0.6.0\n"
 
 #: apps/friends_app/views.py:25
@@ -135,7 +135,7 @@ msgstr "Du avviste venneforespørselen fra %(from_user)s "
 
 #: apps/profiles/templates/profile_hover.html:11
 msgid "Last 14 days"
-msgstr ""
+msgstr "Siste to uker"
 
 #: apps/profiles/templates/profile_hover.html:14
 #: apps/profiles/templates/profile_item.html:14
@@ -181,11 +181,11 @@ msgstr "Sykkel"
 
 #: apps/tribes/forms.py:11
 msgid ""
-"a short version of the name consisting only of letters, numbers, underscores "
-"and hyphens."
+"a short version of the name consisting only of letters, numbers, "
+"underscores and hyphens."
 msgstr ""
-"en kortversjon av navnet som bare består av bokstaver, tall, under- og "
-"bindestrek."
+"en kortversjon av navnet som bare består av bokstaver, tall, under- og"
+" bindestrek."
 
 #: apps/tribes/forms.py:16
 msgid "A team already exists with that slug."
@@ -255,20 +255,20 @@ msgstr "Du er allerede med i laget %(tribe_name)s "
 #: apps/tribes/templates/notification/tribes_created_new_member/notice.html:2
 #, python-format
 msgid ""
-"<a href=\"%(user_url)s\">%(user)s</a> has joined the tribe <a href="
-"\"%(tribe_url)s\">%(group)s</a>."
+"<a href=\"%(user_url)s\">%(user)s</a> has joined the tribe <a "
+"href=\"%(tribe_url)s\">%(group)s</a>."
 msgstr ""
-"<a href=\"%(user_url)s\">%(user)s</a> har blitt med på laget <a href="
-"\"%(tribe_url)s\">%(group)s</a>'."
+"<a href=\"%(user_url)s\">%(user)s</a> har blitt med på laget <a "
+"href=\"%(tribe_url)s\">%(group)s</a>'."
 
 #: apps/tribes/templates/notification/tribes_new_member/notice.html:2
 #, python-format
 msgid ""
-"<a href=\"%(user_url)s\">%(user)s</a> has joined the tribe <a href="
-"\"%(tribe_url)s\">%(tribe)s</a>."
+"<a href=\"%(user_url)s\">%(user)s</a> has joined the tribe <a "
+"href=\"%(tribe_url)s\">%(tribe)s</a>."
 msgstr ""
-"<a href=\"%(user_url)s\">%(user)s</a> har sluttet seg til stammen <a href="
-"\"%(tribe_url)s\">%(tribe)s</a>."
+"<a href=\"%(user_url)s\">%(user)s</a> har sluttet seg til stammen <a "
+"href=\"%(tribe_url)s\">%(tribe)s</a>."
 
 #: apps/tribes/templates/notification/tribes_new_tribe/notice.html:2
 #, python-format
@@ -342,11 +342,11 @@ msgstr "rutebeskrivelse"
 #: apps/turan/templates/turan/route/attributes.html:11
 #: apps/turan/templates/turan/segment/attributes.html:13
 msgid "External URL"
-msgstr ""
+msgstr "Ekstern lenke"
 
 #: apps/turan/models.py:57
 msgid "Added info for route in external URL"
-msgstr ""
+msgstr "Lagt til info for rute i ekstern lenke"
 
 #: apps/turan/models.py:59
 #: apps/turan/templates/turan/exercise/slope_tab.html:19
@@ -394,7 +394,7 @@ msgstr "Treningstyper"
 
 #: apps/turan/models.py:301
 msgid "All"
-msgstr ""
+msgstr "Alle"
 
 #: apps/turan/models.py:302
 #, fuzzy
@@ -407,7 +407,7 @@ msgstr ""
 
 #: apps/turan/models.py:306
 msgid "Finished"
-msgstr ""
+msgstr "Ferdig"
 
 #: apps/turan/models.py:307
 #, fuzzy
@@ -477,8 +477,8 @@ msgstr "Treningstid"
 #: apps/turan/models.py:342
 #, fuzzy
 msgid ""
-"File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, .gmd, ."
-"csv, .xml)"
+"File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, "
+".gmd, .csv, .xml)"
 msgstr "Fil fra treningsmonitor Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv)"
 
 #: apps/turan/models.py:351 apps/turan/templates/turan/search.html:39
@@ -520,17 +520,17 @@ msgstr "Legg til på slutten"
 
 #: apps/turan/models.py:567
 msgid ""
-"Merge strategy. Merge = Merge on top of current, Append = Append to end, "
-"Prepend = Insert before current"
+"Merge strategy. Merge = Merge on top of current, Append = Append to "
+"end, Prepend = Insert before current"
 msgstr "Sammenslåingstrategi. Slå sammen = Slå sammen på toppen av denne."
 
 #: apps/turan/models.py:568
 msgid ""
-"File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, .pwx, ."
-"xml, .fit)"
+"File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, "
+".pwx, .xml, .fit)"
 msgstr ""
-"Fil fra treningsmonitor Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, .pwx, ."
-"xml, .fit)"
+"Fil fra treningsmonitor Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, "
+".pwx, .xml, .fit)"
 
 #: apps/turan/models.py:681
 msgid "for example Alpe d'Huez"
@@ -539,11 +539,12 @@ msgstr "for eksempel Opsangervatnet"
 #: apps/turan/models.py:683
 msgid "Describe where it starts and ends and other noteworthy details"
 msgstr ""
-"Beskriv hvor starten og slutten befinner seg og andre nevneverdige detaljer"
+"Beskriv hvor starten og slutten befinner seg og andre nevneverdige "
+"detaljer"
 
 #: apps/turan/models.py:684
 msgid "E.g. added info for segment in external URL"
-msgstr ""
+msgstr "F.eks lagt til info for segment i ekstern lenke"
 
 #: apps/turan/models.py:785 apps/turan/models.py:852
 msgid "in m"
@@ -621,11 +622,11 @@ msgstr "<a href=\"%(what_next_url)s\">Hva nå</a>?"
 #: apps/turan/templates/homepage.html:38
 #, python-format
 msgid ""
-"You can <a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s"
-"\">Log in</a> to try out the site."
+"You can <a href=\"%(signup_url)s\">Sign up</a> and <a "
+"href=\"%(login_url)s\">Log in</a> to try out the site."
 msgstr ""
-"Du kan <a href=\"%(signup_url)s\">registrere deg</a> og <a href="
-"\"%(login_url)s\">Logge inn</a> for å prøve sida."
+"Du kan <a href=\"%(signup_url)s\">registrere deg</a> og <a "
+"href=\"%(login_url)s\">Logge inn</a> for å prøve sida."
 
 #: apps/turan/templates/homepage.html:40
 #, python-format
@@ -665,10 +666,11 @@ msgstr "importer data fra en annen nettside"
 
 #: apps/turan/templates/about/what_next.html:22
 msgid ""
-"Got your data stored public on another site? No worries, just import it!"
+"Got your data stored public on another site? No worries, just import "
+"it!"
 msgstr ""
-"Har du treningsdata lagret offentlig på en annen nettside? Ikke noe problem, "
-"bare importer den!"
+"Har du treningsdata lagret offentlig på en annen nettside? Ikke noe "
+"problem, bare importer den!"
 
 #: apps/turan/templates/about/what_next.html:24
 #: templates/profiles/profile.html:44
@@ -686,8 +688,8 @@ msgstr "bekreft epostadresse"
 
 #: apps/turan/templates/about/what_next.html:28
 msgid ""
-"So you can receive notifications, reset your password and so people can find "
-"you more easily."
+"So you can receive notifications, reset your password and so people can"
+" find you more easily."
 msgstr "slik at du kan få meldinger, nullstille passord, etc."
 
 #: apps/turan/templates/about/what_next.html:30
@@ -735,11 +737,11 @@ msgstr "Så flere kan bli med på moroa."
 #: apps/turan/templates/about/what_next.html:50
 #, python-format
 msgid ""
-"Start by <a href=\"%(signup_url)s\">signing up</a> and <a href="
-"\"%(login_url)s\">logging in</a>."
+"Start by <a href=\"%(signup_url)s\">signing up</a> and <a "
+"href=\"%(login_url)s\">logging in</a>."
 msgstr ""
-"Start ved å <a href=\"%(signup_url)s\">registrere</a> og <a href="
-"\"%(login_url)s\">logge inn</a>."
+"Start ved å <a href=\"%(signup_url)s\">registrere</a> og <a "
+"href=\"%(login_url)s\">logge inn</a>."
 
 #: apps/turan/templates/account/base.html:10
 msgid "E-Mail Addresses"
@@ -819,11 +821,11 @@ msgstr "Eller logg inn med OpenID"
 #: apps/turan/templates/account/login.html:67
 #, python-format
 msgid ""
-"If you have any trouble logging in to your account, contact us at <a href="
-"\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
+"If you have any trouble logging in to your account, contact us at <a "
+"href=\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
 msgstr ""
-"Hvis du har problemer med å logge inn kan du kontakte oss via <a href="
-"\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
+"Hvis du har problemer med å logge inn kan du kontakte oss via <a "
+"href=\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
 
 #: apps/turan/templates/account/other_services.html:10
 msgid "Twitter"
@@ -873,10 +875,11 @@ msgstr "Inviter noen nye til å bli med"
 
 #: apps/turan/templates/friends_app/invitations.html:14
 msgid ""
-"If you'd like to invite someone to join Turan, you can enter their email "
-"address and a message for them below:"
+"If you'd like to invite someone to join Turan, you can enter their "
+"email address and a message for them below:"
 msgstr ""
-"Om du vil invitere noen til Turan, skriv in epostadresse og melding under:"
+"Om du vil invitere noen til Turan, skriv in epostadresse og melding "
+"under:"
 
 #: apps/turan/templates/friends_app/invitations.html:21
 msgid "Someone with this email address has already joined:"
@@ -992,8 +995,8 @@ msgid ""
 "you received a private message from %(sender)s with\n"
 "the following contents:"
 msgstr ""
-"Hei %(recipient)s, du har mottatt en privat melding fra %(sender)s med "
-"følgende innhold:"
+"Hei %(recipient)s, du har mottatt en privat melding fra %(sender)s med"
+" følgende innhold:"
 
 #: apps/turan/templates/messages/new_message.html:9
 #, python-format
@@ -1024,11 +1027,11 @@ msgstr "gjenopprett"
 
 #: apps/turan/templates/messages/trash.html:23
 msgid ""
-"Deleted Messages are removed from the trash at unregular intervals, don't "
-"rely on this feature for long-time storage."
+"Deleted Messages are removed from the trash at unregular intervals, "
+"don't rely on this feature for long-time storage."
 msgstr ""
-"Slettede meldinger blir fjernet fra papirkurven med gjevne mellomrom, ikke "
-"bruk denne funksjonen til langtidslagring."
+"Slettede meldinger blir fjernet fra papirkurven med gjevne mellomrom, "
+"ikke bruk denne funksjonen til langtidslagring."
 
 #: apps/turan/templates/messages/view.html:4
 msgid "View Message"
@@ -1051,8 +1054,8 @@ msgid ""
 "<a href=\"%(user_url)s\">%(user)s</a> has commented on your exercise '<a "
 "href=\"%(exercise_url)s\">%(exercise)s</a>'."
 msgstr ""
-"<a href=\"%(user_url)s\">%(user)s</a> har kommentert treningen din '<a href="
-"\"%(exercise_url)s\">%(exercise)s</a>'."
+"<a href=\"%(user_url)s\">%(user)s</a> har kommentert treningen din '<a "
+"href=\"%(exercise_url)s\">%(exercise)s</a>'."
 
 #: apps/turan/templates/notification/exercise_create/notice.html:3
 msgid "New exercise"
@@ -1195,7 +1198,7 @@ msgstr "fett"
 #: apps/turan/templates/tags/index.html:14
 #: apps/turan/templates/tags/index.html:18
 msgid "Exercises and routes tagged with"
-msgstr ""
+msgstr "Treninger og ruter merket med"
 
 #: apps/turan/templates/tags/index.html:36
 msgid "No cycle trips matching tag"
@@ -1212,7 +1215,7 @@ msgstr "Foto"
 
 #: apps/turan/templates/tags/index.html:88
 msgid "Blog Posts"
-msgstr ""
+msgstr "Blogginnlegg"
 
 #: apps/turan/templates/tags/index.html:91
 msgid "These are blog posts from everyone:"
@@ -1257,11 +1260,11 @@ msgstr "opprett"
 #: apps/turan/templates/tribes/tribes.html:23
 #, python-format
 msgid ""
-"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in "
-"</a> to create your own tribe or join an existing one."
+"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in"
+" </a> to create your own tribe or join an existing one."
 msgstr ""
-"<a href=\"%(signup_url)s\">Registrer deg</a> og <a href=\"%(login_url)s"
-"\">Logg inn </a> for lagendringer."
+"<a href=\"%(signup_url)s\">Registrer deg</a> og <a "
+"href=\"%(login_url)s\">Logg inn </a> for lagendringer."
 
 #: apps/turan/templates/tribes/tribe.html:21
 #: apps/turan/templates/turan/team_list.html:30
@@ -1327,11 +1330,11 @@ msgstr "bli medlem"
 #: apps/turan/templates/tribes/tribe.html:98
 #, python-format
 msgid ""
-"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in "
-"</a> to join this tribe."
+"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in"
+" </a> to join this tribe."
 msgstr ""
-"<a href=\"%(signup_url)s\">Registrer deg</a> og <a href=\"%(login_url)s"
-"\">Logg inn </a> for å bli med."
+"<a href=\"%(signup_url)s\">Registrer deg</a> og <a "
+"href=\"%(login_url)s\">Logg inn </a> for å bli med."
 
 #: apps/turan/templates/tribes/tribe.html:103
 msgid "Discussion Topics"
@@ -1355,8 +1358,7 @@ msgstr "Wikiartikler"
 #, python-format
 msgid ""
 "\n"
-"                        None yet. Go to the <a href=\"%(wiki_url)s\" title="
-"\"wiki\">wiki</a> to start a new article.\n"
+"                        None yet. Go to the <a href=\"%(wiki_url)s\" title=\"wiki\">wiki</a> to start a new article.\n"
 "                    "
 msgstr ""
 "\n"
@@ -1375,13 +1377,11 @@ msgstr "%(commentcount)s kommentarer"
 #, python-format
 msgid ""
 "\n"
-"                        There are no photos associated to this tribe. You "
-"can <a href=\"%(photo_upload_url)s\">add a photo</a>.</a>\n"
+"                        There are no photos associated to this tribe. You can <a href=\"%(photo_upload_url)s\">add a photo</a>.</a>\n"
 "                    "
 msgstr ""
 "\n"
-"Ingen lagfoto. Du kan <a href=\"%(photo_upload_url)s\">legge til foto</a>.</"
-"a>"
+"Ingen lagfoto. Du kan <a href=\"%(photo_upload_url)s\">legge til foto</a>.</a>"
 
 #: apps/turan/templates/tribes/tribe_item.html:7
 msgid "Members:"
@@ -1838,11 +1838,13 @@ msgstr "Lag nytt segment"
 
 #: apps/turan/templates/turan/exercise_segments.html:33
 msgid ""
-"or add to an existing segment by zooming in the graph and clicking the globe "
-"icon in the top right corner of the graph and select the segment you want"
+"or add to an existing segment by zooming in the graph and clicking the "
+"globe icon in the top right corner of the graph and select the segment "
+"you want"
 msgstr ""
-"eller legg til et eksisterende segment ved å forstørre grafen og klikke på "
-"globusikonet i hjørnet øverst til høyre av grafen og velg segmentet du ønsker"
+"eller legg til et eksisterende segment ved å forstørre grafen og "
+"klikke på globusikonet i hjørnet øverst til høyre av grafen og velg "
+"segmentet du ønsker"
 
 #: apps/turan/templates/turan/exercise_segments.html:36
 msgid "Back to exercise"
@@ -1884,9 +1886,11 @@ msgstr "Importer trening fra en annen nettside"
 
 #: apps/turan/templates/turan/import.html:7
 msgid ""
-"Note: You can also upload file .tcx or .fit file directly from Garmin device"
+"Note: You can also upload file .tcx or .fit file directly from Garmin "
+"device"
 msgstr ""
-"Merk: Du kan også laste opp en .tcx eller .fit-fil rett fra Garmin-enheten"
+"Merk: Du kan også laste opp en .tcx eller .fit-fil rett fra Garmin-"
+"enheten"
 
 #: apps/turan/templates/turan/import.html:9
 msgid "Currently supported sites"
@@ -1894,7 +1898,8 @@ msgstr "Støttede nettsteder"
 
 #: apps/turan/templates/turan/import.html:22
 msgid ""
-"Your exercise is not public. It needs to be public for Turan to import it"
+"Your exercise is not public. It needs to be public for Turan to import "
+"it"
 msgstr ""
 
 #: apps/turan/templates/turan/import.html:24
@@ -1961,35 +1966,26 @@ msgstr "Logg"
 #: apps/turan/templates/turan/index.html:130
 msgid ""
 "\n"
-"            <b>T</b>uran is a hobby project created by a few exercise "
-"enthusiasts for logging and analyzing exercise data from heart rate "
-"monitors / cycle computers. It supports a variety of devices.\n"
+"            <b>T</b>uran is a hobby project created by a few exercise enthusiasts for logging and analyzing exercise data from heart rate monitors / cycle computers. It supports a variety of devices.\n"
 "            </p>\n"
 "            <p>\n"
-"            <b>T</b>uran is currently an invite only site. Contact a member "
-"you know for an invite.\n"
+"            <b>T</b>uran is currently an invite only site. Contact a member you know for an invite.\n"
 "            </p>\n"
 "            <p>\n"
-"            Garmin products are supported with file formats .tcx and .fit. "
-"FIT-format reccommended.\n"
-"            Polar from polar online (.xml) or from devices that exports ."
-"hrm\n"
+"            Garmin products are supported with file formats .tcx and .fit. FIT-format reccommended.\n"
+"            Polar from polar online (.xml) or from devices that exports .hrm\n"
 "            GPX-files can be used but are often suboptimal.\n"
 "            PWX and CSV also supported, but some features missing.\n"
 "            "
 msgstr ""
 "\n"
-"<b>T</b>uran er et hobbyprosjekt laget av noen treningsentusiaster for "
-"logging og analysering av treningsdata fra pulsklokke / sykkelkomputer. Vi "
-"støtter en rekke enheter.\n"
+"<b>T</b>uran er et hobbyprosjekt laget av noen treningsentusiaster for logging og analysering av treningsdata fra pulsklokke / sykkelkomputer. Vi støtter en rekke enheter.\n"
 "</p>\n"
 "<p>\n"
-"<b>T</b>uran er fortiden kun åpen via invitasjon. Kontakt et medlem du "
-"kjenner for å få en invitasjon.\n"
+"<b>T</b>uran er fortiden kun åpen via invitasjon. Kontakt et medlem du kjenner for å få en invitasjon.\n"
 "</p>\n"
 "<p>\n"
-"Garminprodukter med filformatene .tcx og .fit støttes, men .fit-formatet "
-"anbefales.\n"
+"Garminprodukter med filformatene .tcx og .fit støttes, men .fit-formatet anbefales.\n"
 "Polar fra Polar online (.xml) eller fra enheter som eksporterer .hrm\n"
 "GPX-filer kan brukes, men er ofte suboptimalt.\n"
 "PWX og CSV støttes også, men de mangler noen funksjoner."
@@ -1997,84 +1993,40 @@ msgstr ""
 #: apps/turan/templates/turan/index.html:144
 msgid ""
 "\n"
-"            <b>T</b>uran is currently categorized into different exercise "
-"types to provide statistics and information for each type separately. The "
-"system will retrieve some of the information directly from the file you "
-"provide, but you will have to enter the comment for the exercise, and maybe "
-"some tags to group it with other similar exercises, such as rainyday-trips, "
-"solo-trips, bunch-sprints, and trips you could've been without.\n"
+"            <b>T</b>uran is currently categorized into different exercise types to provide statistics and information for each type separately. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.\n"
 "            "
 msgstr ""
 "\n"
-"Turan er delt inn i sykkelturer, fotturer og andre treningstyper for å gi "
-"statistikk og informasjon som er spesifikk for hver type. Systemet vil hente "
-"mesteparten av informasjonen rett fra pulsklokkedatafilen, men du må skrive "
-"en liten kommentar og gjerne tagge treningen med f.eks. \"sol\", \"regnvær\" "
-"osv."
+"Turan er delt inn i sykkelturer, fotturer og andre treningstyper for å gi statistikk og informasjon som er spesifikk for hver type. Systemet vil hente mesteparten av informasjonen rett fra pulsklokkedatafilen, men du må skrive en liten kommentar og gjerne tagge treningen med f.eks. \"sol\", \"regnvær\" osv."
 
 #: apps/turan/templates/turan/index.html:152
 msgid ""
 "\n"
-"            Provided you have one of the supported devices you can analyze "
-"your training, kilometre by kilometre, or minute by minute if distance isn't "
-"relevant. You can, again provided your device supports it, graph everything "
-"the device records. Speed, altitude, cadence, heart rate, power, the whole "
-"<a href=\"http://www.urbandictionary.com/define.php?term=shebang\">shebang</"
-"a>. Obviously, analyzing means breaking down a complex issue into smaller "
-"parts, so zooming in on any part of any lenght is supported. Just click and "
-"mark an interesting part of the graph and drool on the immense depth of the "
-"data <strong>you</strong> have produced.\n"
+"            Provided you have one of the supported devices you can analyze your training, kilometre by kilometre, or minute by minute if distance isn't relevant. You can, again provided your device supports it, graph everything the device records. Speed, altitude, cadence, heart rate, power, the whole <a href=\"http://www.urbandictionary.com/define.php?term=shebang\">shebang</a>. Obviously, analyzing means breaking down a complex issue into smaller parts, so zooming in on any part of any lenght is supported. Just click and mark an interesting part of the graph and drool on the immense depth of the data <strong>you</strong> have produced.\n"
 "            "
 msgstr ""
 "\n"
-"    Hvis du har en av de støttede pulsklokkene kan du analysere turene dine "
-"kilometer til kilometer eller minutt til minutt hvis lengde ikke er "
-"relevant. Du kan også grafe alt pulsklokka lagrer. Fart, høyde, kadens, "
-"puls, effekt. Mao. hele <a href=\"http://nn.wikipedia.org/wiki/Sulamitt"
-"\">sulamitten</a>. Når du skal analysere må du såklart kikke på detaljene i "
-"turen og det er derfor støtte for zooming i grafene. Bare marker en "
-"intressant del av grafen og sikle på de saftige detaljene i dataene <u>du</"
-"u> har generert.\n"
+"    Hvis du har en av de støttede pulsklokkene kan du analysere turene dine kilometer til kilometer eller minutt til minutt hvis lengde ikke er relevant. Du kan også grafe alt pulsklokka lagrer. Fart, høyde, kadens, puls, effekt. Mao. hele <a href=\"http://nn.wikipedia.org/wiki/Sulamitt\">sulamitten</a>. Når du skal analysere må du såklart kikke på detaljene i turen og det er derfor støtte for zooming i grafene. Bare marker en intressant del av grafen og sikle på de saftige detaljene i dataene <u>du</u> har generert.\n"
 "\n"
 "    "
 
 #: apps/turan/templates/turan/index.html:160
 msgid ""
 "\n"
-"            The map serves two purposes. First and foremost the function of "
-"showing where you've been. That one's easy. The second is the killer: "
-"intensities during the exercises are embedded in the trace of the trip. The "
-"intensity of your exercise is indicated by the color, showing where which "
-"parts of your trip was relatively speaking the hardest. The levels are also "
-"relative to the user's own max-pulse, so make sure yours is correct.\n"
+"            The map serves two purposes. First and foremost the function of showing where you've been. That one's easy. The second is the killer: intensities during the exercises are embedded in the trace of the trip. The intensity of your exercise is indicated by the color, showing where which parts of your trip was relatively speaking the hardest. The levels are also relative to the user's own max-pulse, so make sure yours is correct.\n"
 "            "
 msgstr ""
 "\n"
-"Kartet har to funksjoner. Først og fremst for å se hvor du har vært. I "
-"tillegg har man killerfunksjonen med å se hvilken intensitet de ulike delene "
-"av turen har hatt. Intensiteten vises med en fargeskala som indikerer hvilke "
-"deler av turen som var den tyngste. Intensiteten lages relativ til brukerens "
-"makspuls så sørg for at denne er rett."
+"Kartet har to funksjoner. Først og fremst for å se hvor du har vært. I tillegg har man killerfunksjonen med å se hvilken intensitet de ulike delene av turen har hatt. Intensiteten vises med en fargeskala som indikerer hvilke deler av turen som var den tyngste. Intensiteten lages relativ til brukerens makspuls så sørg for at denne er rett."
 
 #: apps/turan/templates/turan/index.html:167
 msgid ""
 "\n"
-"            What good is training without progress? After a while you might "
-"want to look at the trends of your training. Turan(tm) provides several. "
-"Apart from the silly BMI-tracking-feature, you can view (and compare) "
-"different runs of the same route, comparing everything, speed, cadence and "
-"heart rate. Turan(tm) will also graph the time-usage of a spesific route as "
-"a function of time. In your profile you can view your own progress in terms "
-"of average speed, BMI and resting pulse.\n"
+"            What good is training without progress? After a while you might want to look at the trends of your training. Turan(tm) provides several. Apart from the silly BMI-tracking-feature, you can view (and compare) different runs of the same route, comparing everything, speed, cadence and heart rate. Turan(tm) will also graph the time-usage of a spesific route as a function of time. In your profile you can view your own progress in terms of average speed, BMI and resting pulse.\n"
 "            "
 msgstr ""
 "\n"
-"Hva er vitsen med trening uten fremgang? Om en stund kan det være lurt å "
-"sjekke trendene i treningen din. Turan(tm) har flere. Utover den lille BMI-"
-"grafefunksjonen kan du se og sammenligne flere turer på samme rute (fart, "
-"kadens og puls). Turan(tm) vil også grafe tidsbruk på en spesifikk rute som "
-"en funksjon av tid. I profilen din kan du se din egen fremgang i "
-"gjennomsnittlig fart, BMI og hvilepuls.\n"
+"Hva er vitsen med trening uten fremgang? Om en stund kan det være lurt å sjekke trendene i treningen din. Turan(tm) har flere. Utover den lille BMI-grafefunksjonen kan du se og sammenligne flere turer på samme rute (fart, kadens og puls). Turan(tm) vil også grafe tidsbruk på en spesifikk rute som en funksjon av tid. I profilen din kan du se din egen fremgang i gjennomsnittlig fart, BMI og hvilepuls.\n"
 "        "
 
 #: apps/turan/templates/turan/index.html:187
@@ -2183,8 +2135,8 @@ msgstr "Oppdater segment"
 
 #: apps/turan/templates/turan/segment_form.html:14
 msgid ""
-"Note: You have to add the first entry on this segment manually using zoom "
-"and the press the globe icon in the top right corner of the graph"
+"Note: You have to add the first entry on this segment manually using "
+"zoom and the press the globe icon in the top right corner of the graph"
 msgstr ""
 "Merk: Du må legge til første biten på dette segmentet manuelt ved å "
 "forstørre og trykke på globeikonet øverst til høyre av grafen"
@@ -2195,11 +2147,11 @@ msgstr "Lagre"
 
 #: apps/turan/templates/turan/segment_form.html:21
 msgid ""
-"Note: The rest of the data (ascent/grade/distance/etc) will be pull from the "
-"first entry you add to this segment"
+"Note: The rest of the data (ascent/grade/distance/etc) will be pull "
+"from the first entry you add to this segment"
 msgstr ""
-"Merk: Resten av dataene (stigning/gradering/distanse/osv) blir plukket fra "
-"første biten du legger til dette segmentet"
+"Merk: Resten av dataene (stigning/gradering/distanse/osv) blir plukket"
+" fra første biten du legger til dette segmentet"
 
 #: apps/turan/templates/turan/segment_list.html:9
 #: apps/turan/templates/turan/segment_list.html:18
@@ -2215,9 +2167,9 @@ msgstr ""
 
 #: apps/turan/templates/turan/segment_list.html:23
 msgid ""
-"create a segment</a> for your favourite climb, and then using GPS data Turan "
-"will find all rides for the segment and list the ride. Use this to compete "
-"with yourself or others."
+"create a segment</a> for your favourite climb, and then using GPS data "
+"Turan will find all rides for the segment and list the ride. Use this "
+"to compete with yourself or others."
 msgstr ""
 
 #: apps/turan/templates/turan/segmentdetail_form.html:10
@@ -2743,11 +2695,11 @@ msgstr "Tjenerfeil. Hamsteren slapp løs"
 
 #: templates/500.html:10
 msgid ""
-"We're sorry but a server error has occurred. We've been notified and will "
-"look into it as soon as possible."
+"We're sorry but a server error has occurred. We've been notified and "
+"will look into it as soon as possible."
 msgstr ""
-"Vi beklager, men en tjenerfeil har oppstått. Vi har fått beskjed og et par "
-"intelligente aper har blitt sendt ut for å fikse problemet."
+"Vi beklager, men en tjenerfeil har oppstått. Vi har fått beskjed og et"
+" par intelligente aper har blitt sendt ut for å fikse problemet."
 
 #: templates/500.html:15
 msgid "If you need assistance, you may reference this error as"
@@ -2755,11 +2707,11 @@ msgstr "Du kan referere til denne feilen med"
 
 #: templates/base.html:9
 msgid ""
-"Upload your exercises and analyze them. Play them back and compare them to "
-"prior efforts. Share and comment on your friends exercises."
+"Upload your exercises and analyze them. Play them back and compare them"
+" to prior efforts. Share and comment on your friends exercises."
 msgstr ""
-"Last opp treninger og analyser dem. Spill dem av og sammenlign med tidligere "
-"målinger. Del og kommenter dine venners treninger."
+"Last opp treninger og analyser dem. Spill dem av og sammenlign med "
+"tidligere målinger. Del og kommenter dine venners treninger."
 
 #: templates/base.html:48
 msgid "Hide announcement"
@@ -2828,11 +2780,11 @@ msgstr "Din avatar:"
 #: templates/avatar/change.html:26
 #, python-format
 msgid ""
-"Don&rsquo;t like these avatars? You can <a href=\"%(avatar_delete_url)s"
-"\">choose which ones to delete</a>."
+"Don&rsquo;t like these avatars? You can <a "
+"href=\"%(avatar_delete_url)s\">choose which ones to delete</a>."
 msgstr ""
-"Hvis du ikke liker disse avatarene så kan du <a href=\"%(avatar_delete_url)s"
-"\">velge og slette dem</a>."
+"Hvis du ikke liker disse avatarene så kan du <a "
+"href=\"%(avatar_delete_url)s\">velge og slette dem</a>."
 
 #: templates/avatar/change.html:31
 msgid "Upload an Avatar:"
@@ -2971,12 +2923,12 @@ msgstr " %(other_user)s  om å være en venn."
 #: templates/profiles/profile.html:309
 #, python-format
 msgid ""
-"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in "
-"</a> to add this person as a friend and see more of their content."
+"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in"
+" </a> to add this person as a friend and see more of their content."
 msgstr ""
-"<a href=\"%(signup_url)s\">Registrer deg</a> og <a href=\"%(login_url)s"
-"\">logg inn</a> for å legge til denne personen som en venn og se mer av "
-"innholdet deres."
+"<a href=\"%(signup_url)s\">Registrer deg</a> og <a "
+"href=\"%(login_url)s\">logg inn</a> for å legge til denne personen som "
+"en venn og se mer av innholdet deres."
 
 #: templates/profiles/profile_right_panel.html:16
 #, python-format
@@ -2989,11 +2941,11 @@ msgstr "Dine venner"
 
 #: templates/profiles/profile_right_panel.html:34
 msgid ""
-"None. You should look at the list of <a href=\"/profiles/\">profiles</a> and "
-"see if there's anyone you know."
+"None. You should look at the list of <a href=\"/profiles/\">profiles</a> "
+"and see if there's anyone you know."
 msgstr ""
-"Ingen. Du bør se på listen over <a href=\"/profiles/\">profiler</a> og se "
-"etter noen du kjenner."
+"Ingen. Du bør se på listen over <a href=\"/profiles/\">profiler</a> og "
+"se etter noen du kjenner."
 
 #: templates/profiles/profile_right_panel.html:41
 #, python-format
@@ -3216,10 +3168,10 @@ msgstr "Endre"
 #~ msgid "Log, analyze and graph your exercises"
 #~ msgstr "Logg, analyser og graf treninger"
 
-#~ msgid ""
-#~ "This value must contain only letters, numbers, underscores and hyphens."
+#~ msgid "This value must contain only letters, numbers, underscores and hyphens."
 #~ msgstr ""
-#~ "Denne verdien skal kun inneholde bokstaver, tall, under- og bindestreker."
+#~ "Denne verdien skal kun inneholde bokstaver, tall, under- og "
+#~ "bindestreker."
 
 #~ msgid "All Tribe Topics Matching <i>%(tag)s</i>"
 #~ msgstr "Alle lagdiskusjonar med merkelapp <i>%(tag)s</i>"
@@ -3253,18 +3205,11 @@ msgstr "Endre"
 
 #~ msgid ""
 #~ "\n"
-#~ "            Turan is a hobby project driven mostly by coffee and frozen "
-#~ "pizzas, but also by xt, N`Grath and si-m1. It supports a variety of "
-#~ "training computers, preferrably with a gps-module. If you want to, you "
-#~ "can use several devices and combine it here, as long as you're able to "
-#~ "retrieve the .tcx, .gpx, and/or .hrm from the device.\n"
+#~ "            Turan is a hobby project driven mostly by coffee and frozen pizzas, but also by xt, N`Grath and si-m1. It supports a variety of training computers, preferrably with a gps-module. If you want to, you can use several devices and combine it here, as long as you're able to retrieve the .tcx, .gpx, and/or .hrm from the device.\n"
 #~ "            "
 #~ msgstr ""
 #~ "\n"
-#~ "        Turan er et hobbyprosjekt drevet mest av kaffe og frossenpizzaer, "
-#~ "men også av xt, N`Grath og si-m1. Det støtter en rekke pulsklokker, som "
-#~ "helst har GPS. Du kan også bruke flere enheter og kombinere data fra dem "
-#~ "så lenge du får hentet ut tcx, .gpx, og/eller .hrm fra enhetene.\n"
+#~ "        Turan er et hobbyprosjekt drevet mest av kaffe og frossenpizzaer, men også av xt, N`Grath og si-m1. Det støtter en rekke pulsklokker, som helst har GPS. Du kan også bruke flere enheter og kombinere data fra dem så lenge du får hentet ut tcx, .gpx, og/eller .hrm fra enhetene.\n"
 #~ "        "
 
 #~ msgid "The supported devices are"
@@ -3362,62 +3307,26 @@ msgstr "Endre"
 
 #~ msgid ""
 #~ "\n"
-#~ "\t<p>Turan is a hobby project driven mostly by coffee and frozen pizzas, "
-#~ "but also by xt, N`Grath and si-m1. It supports a variety of training "
-#~ "computers, preferrably with a gps-module. If you want to, you can use "
-#~ "several devices and combine it here, as long as you're able to retrieve "
-#~ "the .tcx, .gpx, and/or .hrm from the device. The supported devices are:</"
-#~ "p>\n"
+#~ "\t<p>Turan is a hobby project driven mostly by coffee and frozen pizzas, but also by xt, N`Grath and si-m1. It supports a variety of training computers, preferrably with a gps-module. If you want to, you can use several devices and combine it here, as long as you're able to retrieve the .tcx, .gpx, and/or .hrm from the device. The supported devices are:</p>\n"
 #~ "\t<ul>\n"
-#~ "\t\t<li><img src=\"http://img.gfx.no/351/351865/garmin-edge-705-2.22x40!."
-#~ "jpg\" height=\"30\"><a href=\"http://www.hardware.no/sok/?query=garmin"
-#~ "+edge\">Garmin Edge</a></li>\n"
-#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/"
-#~ "medium/443/175/51840314640600011209892338671996175443.jpg\" height="
-#~ "\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?"
-#~ "siteSearchQuery=polar+rs\">Polar RS</a></li>\n"
-#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/"
-#~ "medium/795/523/3972572682238954048978020975365523795.jpg\" height="
-#~ "\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?"
-#~ "siteSearchQuery=powertap\">PowerTap</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.gfx.no/351/351865/garmin-edge-705-2.22x40!.jpg\" height=\"30\"><a href=\"http://www.hardware.no/sok/?query=garmin+edge\">Garmin Edge</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/medium/443/175/51840314640600011209892338671996175443.jpg\" height=\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=polar+rs\">Polar RS</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/medium/795/523/3972572682238954048978020975365523795.jpg\" height=\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=powertap\">PowerTap</a></li>\n"
 #~ "\t</ul>\n"
-#~ "    <p>Turan is currently categorized into cycletrips, hikes and other "
-#~ "exercises. Spinning and other indoor activity ends up in the latter "
-#~ "category. The system will retrieve some of the information directly from "
-#~ "the file you provide, but you will have to enter the comment for the "
-#~ "exercise, and maybe some tags to group it with other similar exercises, "
-#~ "such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've "
-#~ "been without.</p>\n"
+#~ "    <p>Turan is currently categorized into cycletrips, hikes and other exercises. Spinning and other indoor activity ends up in the latter category. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.</p>\n"
 #~ "    \n"
 #~ "    \n"
 #~ "        \n"
 #~ "        "
 #~ msgstr ""
 #~ "\n"
-#~ "\t<p>Turan er et hobbyprosjekt som stort sett er drevet av kaffe og "
-#~ "frossenpizza, men også av xt, N`Grath og si-m1. Det støtter en rekke "
-#~ "pulsklokker, helst med GPS. Du kan også bruke forskjellig utstyr og "
-#~ "kombinere dem her så lenge du får tak i .tcx, .gpx, og/eller .hrm fra "
-#~ "utstyret. De støttede enhetene er bl.a.:</p>\n"
+#~ "\t<p>Turan er et hobbyprosjekt som stort sett er drevet av kaffe og frossenpizza, men også av xt, N`Grath og si-m1. Det støtter en rekke pulsklokker, helst med GPS. Du kan også bruke forskjellig utstyr og kombinere dem her så lenge du får tak i .tcx, .gpx, og/eller .hrm fra utstyret. De støttede enhetene er bl.a.:</p>\n"
 #~ "\t<ul>\n"
-#~ "\t\t<li><img src=\"http://img.gfx.no/351/351865/garmin-edge-705-2.22x40!."
-#~ "jpg\" height=\"30\"><a href=\"http://www.hardware.no/sok/?query=garmin"
-#~ "+edge\">Garmin Edge</a></li>\n"
-#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/"
-#~ "medium/443/175/51840314640600011209892338671996175443.jpg\" height="
-#~ "\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?"
-#~ "siteSearchQuery=polar+rs\">Polar RS</a></li>\n"
-#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/"
-#~ "medium/795/523/3972572682238954048978020975365523795.jpg\" height="
-#~ "\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?"
-#~ "siteSearchQuery=powertap\">PowerTap</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.gfx.no/351/351865/garmin-edge-705-2.22x40!.jpg\" height=\"30\"><a href=\"http://www.hardware.no/sok/?query=garmin+edge\">Garmin Edge</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/medium/443/175/51840314640600011209892338671996175443.jpg\" height=\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=polar+rs\">Polar RS</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/medium/795/523/3972572682238954048978020975365523795.jpg\" height=\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=powertap\">PowerTap</a></li>\n"
 #~ "\t</ul>\n"
-#~ "    <p>Turan er fortiden delt inn i sykkelturer, gåturer og andre "
-#~ "treninger. Spinning og andre innendørsaktiviteter havner i siste "
-#~ "kategorien. Systemet vil hente noe av informasjonen rett fra filen du "
-#~ "laster opp, men du må skrive en kommentar til treningen, og gjerne noen "
-#~ "merkelapper for å gruppere den med andre treninger som regntur, solotur, "
-#~ "gruppesprint og turer du aldri skulle tatt.</p>\n"
+#~ "    <p>Turan er fortiden delt inn i sykkelturer, gåturer og andre treninger. Spinning og andre innendørsaktiviteter havner i siste kategorien. Systemet vil hente noe av informasjonen rett fra filen du laster opp, men du må skrive en kommentar til treningen, og gjerne noen merkelapper for å gruppere den med andre treninger som regntur, solotur, gruppesprint og turer du aldri skulle tatt.</p>\n"
 #~ "    \n"
 #~ "    \n"
 #~ "        \n"
