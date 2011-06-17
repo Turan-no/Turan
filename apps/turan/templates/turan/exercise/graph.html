@@ -37,25 +37,17 @@
         <li class="hidden temp"><span class="data temp__avg"></span> ℃</li>
         <li class="hidden temp"><span class="data temp__avg_est"></span> ℃</li>
     </ul>
-<ul class="buttons">
-    <li>
-<a href="#" title="{% trans "Full screen graph" %}" id="enlarge" >
-    <img class="fullscreenicon floatright" src="{{MEDIA_URL}}turan/fs.png">
-</a>
-    </li>
-    <li>
-<a href="#" title="{% trans "Zoom out" %}" id="reset_zoom" >
-    <img style="float: right" src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_out.png" /> 
-</a>
-    </li>
-    <li>
-<a href="{% url segmentdetail_create %}?exercise={{object.id }}" title="{% trans "Add segment for this selection" %}" class="hidden" id="segment_add" >
-    <img id="segment_add_img" style="float: right" src="{{ MEDIA_URL }}pinax/img/silk/icons/world_add.png" /> {% trans "Add segment" %}
-</a>
-    </li>
-</ul>
-<div id="exercisegraph_legend" style="float:right; margin-right: 40px"></div>
-    <p class="floatleft" id="choices">{% trans "Graph" %}:</p>
+        <a class="floatright" href="#" title="{% trans "Full screen graph" %}" id="enlarge" >
+            <img class="fullscreenicon" src="{{MEDIA_URL}}turan/fs.png">
+        </a>
+        <a class="floatright" href="#" title="{% trans "Zoom out" %}" id="reset_zoom" >
+            <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_out.png" /> 
+        </a>
+        <a class="floatright hidden" href="{% url segmentdetail_create %}?exercise={{object.id }}" title="{% trans "Add segment for this selection" %}" id="segment_add" >
+            <img id="segment_add_img" src="{{ MEDIA_URL }}pinax/img/silk/icons/world_add.png" /> {% trans "Add segment" %}
+        </a>
+<div id="exercisegraph_legend"></div>
+    <p class="" id="choices">{% trans "Graph" %}:</p>
 </div>
 <script type="text/javascript">
 {% comment %}

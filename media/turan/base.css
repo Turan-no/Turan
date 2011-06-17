@@ -852,10 +852,10 @@ div.averages {
 
 div.averages ul,
 div.averages h4,
-div.averages li {
+div.averages>ul.iconlist>li {
     float: left;
 }
-div.averages li {
+div.averages>ul.iconlist>li {
     margin-left: 30px;
 }
 div.averages h4 {
