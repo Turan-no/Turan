@@ -47,4 +47,14 @@
 </ul>
 </div>
 {% endif %}
+{% if segment_list %}
+<div class="spacer floatleft">
+<h2>{% trans "Segments" %}</h2>
+<ul class="iconlist spacer">
+        {% for segment in segment_list %}
+        <li class=""><img widht="32" height="32" src="{{segment.get_png_url}}"><a href="{{ segment.get_absolute_url }}">{{ segment }}</a></li>
+        {% endfor %}
+</ul>
+</div>
+{% endif %}
 {% endblock %}

@@ -2135,6 +2135,11 @@ def search(request):
         Q(description__icontains=search_query)
     )
     route_list = route_list.filter(rqset).distinct()[start:start+SLICE_SIZE]
+    sset = (
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query)
+    )
+    segment_list = segment_list.filter(sset).distinct()[start:start+SLICE_SIZE]
 
 
 
