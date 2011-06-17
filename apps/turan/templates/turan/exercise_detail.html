@@ -227,6 +227,7 @@
     {% if object.comment %}
     commentcount += 1;
     {% endif %}
+    $('#tabs-select-2').html('<p>{% trans "Comments" %} <span class="floatright">' + commentcount + '</span></p>');
 
 $(document).ready(function() {
     if (Mapper.map) {
