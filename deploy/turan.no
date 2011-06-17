@@ -1,0 +1,18 @@
+#!/bin/sh
+
+WORKON_HOME=/home/turan.no/
+PROJECT_ROOT=/home/turan.no/turansite
+PIDFILE=/var/run/turan/turan.pid
+
+# activate virtual environment
+. $WORKON_HOME/bin/activate
+
+cd $PROJECT_ROOT
+
+# Kill Existing
+if [ -f $PIDFILE ]; then
+    kill `cat -- $PIDFILE`>/dev/null
+    rm -f -- $PIDFILE>/dev/null
+fi
+
+python manage.py runfcgi pidfile=/var/run/turan/turan.pid minspare=8 maxspare=20 maxchildren=100 host=127.0.0.1 port=8080 
