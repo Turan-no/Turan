@@ -87,7 +87,7 @@
         <li id="tabs-select-3">
             <p>
                 <img alt="Intervals" src="{{MEDIA_URL}}pinax/img/silk/icons/timeline_marker.png">
-                {% trans "Intervals" %}
+                {% trans "Intervals" %}<span class="floatright">{{ intervals|length }}</span>
             </p>
         </li>
         {% endif %}
@@ -108,7 +108,8 @@
         <li id="tabs-select-6">
             <p>
                 <img alt="Slopes" src="{{MEDIA_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
-                {% trans "Slopes" %}
+                {% trans "Slopes" %} <span class="floatright">{{ slopes|length }}</span>
+
             </p>
         </li>
         {% endif %}
@@ -226,9 +227,6 @@
     {% if object.comment %}
     commentcount += 1;
     {% endif %}
-    $('#tabs-select-2').html('<p>{% trans "Comments" %} (' + commentcount + ')</p>');
-
-
 
 $(document).ready(function() {
     if (Mapper.map) {

@@ -474,6 +474,9 @@ ul.comments li {
     cursor: pointer;
     font-weight: bold;
 }
+.zoom-select {
+    cursor: pointer;
+}
 
 .modify {
     float: right;
