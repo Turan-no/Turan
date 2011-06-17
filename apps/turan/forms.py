@@ -91,6 +91,7 @@ class FullSegmentForm(forms.ModelForm):
 class SegmentDetailForm(forms.ModelForm):
     class Meta:
         model = SegmentDetail
+        fields = ('segment', 'comment' )
 
 class FullSlopeForm(forms.ModelForm):
     class Meta:

@@ -889,6 +889,9 @@ class SegmentDetail(models.Model):
             return unicode(self.segment)
         return u''
 
+    def is_segmentdetail(self):
+        return True
+
 
 
 #class UserProfile(models.Model):
