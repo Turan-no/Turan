@@ -2114,7 +2114,7 @@ msgid ""
 "exercisers. You can for example "
 msgstr ""
 "Segment er deler av treninger, segmenta er felles og delet mellom "
-"utøvarane. Du kan til dømes"
+"utøvarane. Du kan til dømes "
 
 #: apps/turan/templates/turan/segment_list.html:23
 msgid ""
