@@ -1819,7 +1819,7 @@ msgid ""
 "you want"
 msgstr ""
 "eller legg til eit eksisterande segmed ved å gjere eit utval i grafen "
-"og klikk på globe-ikon nederst til venstre i grafen"
+"og klikk på globe-ikon nederst til høgre i grafen"
 
 #: apps/turan/templates/turan/exercise_segments.html:36
 msgid "Back to exercise"
