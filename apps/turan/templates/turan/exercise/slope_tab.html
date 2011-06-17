@@ -5,8 +5,6 @@
     <table class="fullsize">
         <tr>
             <th>
-            </th>
-            <th>
                 {% trans "Name" %}
             </th>
             <th>
@@ -51,9 +49,9 @@
             </th>
         </tr>
         {% for slope in slopes %}
-        <tr class="{% cycle "odd" "even" %}">
+        <tr id="slopetd{{slope.id}}" class="{% cycle "odd" "even" %}">
             <td>
-                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select" />
+                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="{% trans "Zoom"%}" title="{% trans "Zoom" %}" id="zoom{{forloop.counter0}}-link-1" class="zoom-select floatleft" />
                 <script type="text/javascript">
                     $('#zoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
                         plot.setSelection({ 
@@ -62,26 +60,30 @@
                             }
                         });
                     });
+                {% if object.user == request.user and slope.is_segmentdetail %}
+                    $('#slopetd{{slope.id}}').hover (
+                            function () {
+                                $('#segmentbuttons{{slope.id}}').removeClass('hidden');
+                            },
+                            function () {
+                                $('#segmentbuttons{{slope.id}}').addClass('hidden');
+                            }
+                            );
+                {% endif %}
                 </script>
 
-                {% comment %}
 
-                {% ifequal object.user request.user %}
-                <a href="{% url slope_update slope.id %}">
-                <img title="{% trans "Modify slope"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
-                </a>
-                {% else %}
-                {% if user.is_superuser %}
-                <a href="{% url slope_update slope.id %}">
-                <img title="{% trans "Modify slope"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
-                </a>
-                {% endif %}
-                {% endifequal %}
-
-                {% endcomment %}
-            </td>
-            <td>
             {% if slope.segment %}
+                {% if object.user == request.user and slope.is_segmentdetail %}
+                <div class="floatleft hidden" id="segmentbuttons{{slope.id}}">
+                    <a href="{% url segmentdetail_update slope.id %}">
+                    <img title="{% trans "Modify segment"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
+                    </a>
+                    <a href="{% url segmentdetail_delete slope.id %}">
+                    <img title="{% trans "Delete segment"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
+                    </a>
+                </div>
+                {% endif %}
                 <a href="{{slope.segment.get_absolute_url}}">
                     {{ slope.segment.name }}
                 </a>
@@ -138,7 +140,7 @@
         </tr>
         {% endfor %}
     </table>
-{% if object.user == request.user %}
+{% if object.user == request.user or request.user.is_superuser %}
 <hr>
 <a href="{% url exercise_segment_search object.id %}">{% trans "Search for named segments" %}</a>
 {% endif %}
