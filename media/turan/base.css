@@ -142,7 +142,10 @@ a:visited {
 a:hover {
 	color: #933;
 }
-
+p>a {
+	color: #933;
+    text-decoration: underline;
+}
 /* Images */
 img {
 	border: 0;

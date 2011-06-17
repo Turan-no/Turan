@@ -8,6 +8,12 @@
         <span class="label">{% trans "Description" %}:</span> 
         <p>{{ object.description }}</p>
     </li>
+    {% if object.segment_url %}
+    <li class="url">
+        <span class="label">{% trans "External URL" %}:</span> 
+        <p>{{ object.segment_url|urlize }}</p>
+    {% endif %}
+    </li>
     {% if object.ascent %}
     <li class="ascent"><span class="label">{% trans "Ascent" %}:</span> {{ object.ascent }} {% trans "m" %}
         {% if object.distance %}

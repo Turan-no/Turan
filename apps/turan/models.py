@@ -681,6 +681,7 @@ class Segment(models.Model):
     name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))
     distance = models.FloatField(help_text=_('in km'), default=0)
     description = models.TextField(help_text=_('Describe where it starts and ends and other noteworthy details'))
+    segment_url = models.URLField(_('External URL'), blank=True, help_text=_('E.g. added info for segment in external URL'))
     gpx_file = models.FileField(upload_to='gpx', blank=True, storage=gpxstore)
 
     ascent = models.IntegerField(blank=True, null=True) # m
@@ -709,6 +710,13 @@ class Segment(models.Model):
             else:
                 url = self.gpx_file
         return url
+
+    def get_png_url(self):
+        if self.gpx_file:
+            filename = 'svg/segment/%s.png' %self.id
+            if gpxstore.exists(filename):
+                return '%sturan/%s' %(settings.MEDIA_URL, filename)
+        return '/empty.gif'
 
     def get_absolute_url(self):
         return reverse('segment', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
@@ -744,6 +752,12 @@ class Segment(models.Model):
                         filename = 'gpx/segment/%s.gpx' %self.id
                         self.gpx_file.save(filename, ContentFile(g.xml), save=True)
                         break
+
+        # generate png if it doesn't exist (after save, it uses id for filename)
+        if self.gpx_file:
+            filename = 'svg/segment/%s.png' %self.id
+            if not gpxstore.exists(filename):
+                create_png_from_gpx.delay(self.gpx_file.path, filename)
 
         for attr in ('ascent', 'grade', 'length', 'start_lon', 'start_lat', 'end_lon', 'end_lat'):
             for slope in self.get_slopes():

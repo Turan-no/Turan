@@ -6,27 +6,27 @@
 {% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
-{% trans "Segments" %}
+{% trans "Segment list" %}
 {% endblock %}
 {% block content %}
 
 {% autosort object_list %}
 {% autopaginate object_list %}
 
+
+<h1>
+    {% trans "Segment list" %}
+</h1>
 <div class="floatright" style="clear: right;">
 {% paginate %}
 </div>
+<p>{% trans "Segments are parts of exercises that are public and shared between exercisers. You can for example "%}<a href="{% url segment_create %}">{% blocktrans %}create a segment</a> for your favourite climb, and then using GPS data Turan will find all rides for the segment and list the ride. Use this to compete with yourself or others.{% endblocktrans %}</p>
 
-<h1>
-    {% trans "Segments" %}
-</h1>
 <table class="fullsize">
     <tr>
+        <th>{% trans "Plot" %}</th>
         <th>
             {% anchortrans Name %}
-        </th>
-        <th>
-            {% anchortrans description %}
         </th>
         <th>
             {% anchortrans distance "Distance" %}
@@ -41,13 +41,15 @@
             {% anchortrans category "Category" %}
         </th>
         <th>
-            {% anchortrans tcount "Trip count" %}
+            {% anchortrans tcount "Count" %}
         </th>
     </tr>
 {% for object in object_list %}
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
-    <td><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a></td>
-    <td>{{object.description}}</td>
+    <td><img src="{{ object.get_png_url }}"></td>
+    <td><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a>
+        <p class="smaller">{{object.description}}</p>
+    </td>
     <td>{{ object.distance|floatformat }} {% trans "km" %} </td>
     <td>{{object.ascent}} {% trans "m" %}</td>
     <td>{{object.grade|floatformat}} %</td>
