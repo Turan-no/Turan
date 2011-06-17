@@ -19,6 +19,11 @@
 </h1>
 <div class="floatright" style="clear: right;">
 {% paginate %}
+<ul class="buttons">
+<li class="floatleft">
+<a href="{% url segment_create %}">{% trans "Create new segment" %}</a>
+</li>
+</ul>
 </div>
 <p>{% trans "Segments are parts of exercises that are public and shared between exercisers. You can for example "%}<a href="{% url segment_create %}">{% blocktrans %}create a segment</a> for your favourite climb, and then using GPS data Turan will find all rides for the segment and list the ride. Use this to compete with yourself or others.{% endblocktrans %}</p>
 
@@ -58,12 +63,7 @@
 </tr>
 {%endfor %}
 </table>
-{% paginate %}
 <hr>
-<ul class="buttons">
-<li class="floatleft">
-<a href="{% url segment_create %}">{% trans "Create new segment" %}</a>
-</li>
-</ul>
+{% paginate %}
 {% endblock content %}
 
