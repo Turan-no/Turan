@@ -1863,6 +1863,26 @@ def exercise_segment_search(request, object_id):
     return render_to_response('turan/exercise_segments.html', locals(), context_instance=RequestContext(request))
 
 @login_required
+def segment_exercise_search(request, object_id):
+    ''' View to display exercises found for a segment and make user able to
+    add '''
+
+    if request.user.is_superuser:
+
+        segment = get_object_or_404(Segment, id=object_id)
+        segments = {}
+        for e in Exercise.objects.all():
+            if len(segments) > 19:
+                break
+            if e.route and e.route.gpx_file:
+                found_segments = search_trip_for_possible_segments_matches(e, search_in_segments=[segment])
+                if found_segments:
+                    segments[e] = found_segments
+
+        return render_to_response('turan/segment_exercise_finder.html', locals(), context_instance=RequestContext(request))
+    return HttpResponseForbidden()
+
+@login_required
 def exercise_parse_progress(request, object_id, task_id):
     ''' View to display progress on parsing and redirect user
     to fully parsed exercised when done '''

@@ -220,18 +220,21 @@ def slice_to_segmentdetail(exercise, segment, start, stop):
     new_object = SegmentDetail(**data)
     new_object.save()
 
-def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_offset=90):
+def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_offset=90, search_in_segments=None):
     ''' For every segment
             iterate every detail searching for pos matching the start pos
             then find match for end pos if distance elapsed doesn't exceed segment distance
                 finally save the segment found if start and stop pos found '''
     Segment = get_model('turan', 'Segment')
     SegmentDetail = get_model('turan', 'SegmentDetail')
+
+    if not search_in_segments:
+        search_in_segments = Segment.objects.all()
     # Only works for exercises with distance
     details = exercise.get_details().filter(lon__gt=0).filter(lat__gt=0).filter(distance__gt=0).values('distance','lon','lat')
     segments = [] #'[(segment, start, stop)...'
     #old_segmentdetails = exercise.segmentdetail_set.all()
-    for se in Segment.objects.all():
+    for se in search_in_segments:
         previous_start = 0
         started_at_distance = 0
         found_start = 0
@@ -250,6 +253,7 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
                     previous_start = start_distance
                 elif start_distance > 300000: # If start distance is further away than 300km we stop searching
                     print "Skipped segment, start was %s m away" %start_distance
+                    print "Decimal distance was: %s" %(d['lat'] - se.start_lat)
                     break
             elif not found_end:
                 end_distance = proj_distance(se.end_lat, se.end_lon, d['lat'], d['lon'])
