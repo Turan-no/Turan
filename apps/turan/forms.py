@@ -91,7 +91,12 @@ class FullSegmentForm(forms.ModelForm):
 class SegmentDetailForm(forms.ModelForm):
     class Meta:
         model = SegmentDetail
-        fields = ('segment', 'comment' )
+        widgets = { 
+                'exercise': forms.HiddenInput(),
+            }
+
+        #fields = ('segment', 'comment' )
+#   TODO Need two forms
 
 class FullSlopeForm(forms.ModelForm):
     class Meta:

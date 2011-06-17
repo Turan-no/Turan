@@ -195,7 +195,6 @@ def match_slopes(se, offset=70):
                     s.segment = se
                     s.save()
 
-
 def slice_to_segmentdetail(exercise, segment, start, stop):
     SegmentDetail = get_model('turan', 'SegmentDetail')
     ret = detailslice_info(exercise.get_details().all()[start:stop+1])
@@ -217,11 +216,10 @@ def slice_to_segmentdetail(exercise, segment, start, stop):
     data['end_lat'] = ret['end_lat']
     data['power_per_kg'] = ret['power_per_kg']
     data['segment'] = segment
-    data['comment'] = 'Auto'
+    #data['comment'] = 'Auto'
     new_object = SegmentDetail(**data)
     new_object.save()
 
-@task
 def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_offset=90):
     ''' For every segment
             iterate every detail searching for pos matching the start pos
@@ -903,6 +901,10 @@ def parse_sensordata(exercise, callback=None):
     if hasattr(route, 'ascent') and route.ascent > 0:
         getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date))
     populate_interval_info(exercise)
+    for segment in search_trip_for_possible_segments_matches(exercise):
+        slice_to_segmentdetail(exercise, segment[0], segment[1], segment[2])
+        # TODO: send notifications notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
+
 
 
 @task

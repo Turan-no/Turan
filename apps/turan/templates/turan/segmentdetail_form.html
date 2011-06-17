@@ -7,7 +7,17 @@
 {% trans "Segment" %}
 {% endblock %}
 {% block content %}
+{% if object %}
 <h1>{% trans "Segment modification" %}</h1>
+{% else %}
+<h1>{% trans "Add segment" %}</h1>
+<p>{% trans "Note: if this is a new segment you will first have to create a segment" %}.</p>
+<ul class="buttons">
+<li class="">
+<a href="{% url segment_create %}">{% trans "Create new segment" %}</a>
+</li>
+</ul>
+{% endif %}
 <form class="uniForm" enctype="multipart/form-data" method="post">
 {{ form|as_uni_form}}
 </table>

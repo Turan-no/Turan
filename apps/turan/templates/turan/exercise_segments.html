@@ -23,16 +23,21 @@
     <h3>{% trans "No segments found in exercise"%} {{ exercise }}</h3>
 {% endfor %}
 
-
 <br>
 <br>
 
-<p>
+<ul class="buttons">
+<li class="">
 <a href="{% url segment_create %}">{% trans "Create new segment" %}</a>
-</p>
-{% trans "or add to an existing segment by zooming in the graph and clicking the globe icon in the top right corner of the graph and select the segment you want" %}
-<p>
+</li>
+</ul>
 
+
+{% trans "or add to an existing segment by zooming in the graph and clicking the globe icon in the top right corner of the graph and select the segment you want" %}
+<ul class="buttons">
+
+<li>
 <a href="{{exercise.get_absolute_url}}">{% trans "Back to exercise" %}</a>
-</p>
+</li>
+</ul>
 {% endblock content %}

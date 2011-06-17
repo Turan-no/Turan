@@ -140,8 +140,15 @@
         </tr>
         {% endfor %}
     </table>
-{% if object.user == request.user or request.user.is_superuser %}
 <hr>
+<ul class="buttons">
+{% if object.user == request.user or request.user.is_superuser %}
+<li class="floatleft">
 <a href="{% url exercise_segment_search object.id %}">{% trans "Search for named segments" %}</a>
+</li>
 {% endif %}
+<li class="floatleft">
+<a href="{% url segment_create %}">{% trans "Create new segment" %}</a>
+</li>
+</ul>
 </div>

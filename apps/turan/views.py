@@ -1470,8 +1470,8 @@ def create_object(request, model=None, template_name=None,
 
                 task = new_object.parse()
                 if task:
-                    if request.user.is_authenticated():
-                        request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": model._meta.verbose_name})
+                    #if request.user.is_authenticated():
+                    #    request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": model._meta.verbose_name})
                     return HttpResponseRedirect(\
                             reverse('exercise_parse_progress', kwargs = {
                                 'object_id': new_object.id,
@@ -1521,6 +1521,7 @@ def create_object(request, model=None, template_name=None,
                 data['segment'] = Segment.objects.get(pk=segment)
                 new_object = SegmentDetail(**data)
                 new_object.save()
+                request.user.message_set.create(message=ugettext("The %(verbose_name)s was added successfully.") % {"verbose_name": _('Segment')})
                 return HttpResponseRedirect(new_object.get_absolute_url())
             form = form_class(initial=data)
         else:
