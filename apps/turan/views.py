@@ -122,9 +122,9 @@ def exercise_compare(request, exercise1, exercise2):
     return render_to_response('turan/exercise_compare.html', locals(), context_instance=RequestContext(request))
 
 class TripsFeed(Feed):
-    title = "lart.no turan exercises"
-    link = "http://turan.no/turan/"
-    description = "Exercises from turan.no/turan"
+    title = "Turan.no exercises"
+    link = "http://turan.no/"
+    description = "Exercises from http://turan.no"
 
     def items(self):
         return Exercise.objects.order_by('-date')[:20]
