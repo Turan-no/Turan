@@ -7,13 +7,6 @@
 
 <script type="text/javascript">
 {% localize off %}
-    var options = {
-        selection: { mode: "x" },
-        grid: { 
-            hoverable: true, 
-            clickable: true,
-        }
-    };
     var options2 = {
         selection: { mode: "x" },
         grid: { 
@@ -34,13 +27,56 @@
          {yaxis: { from: 20.0},color: "#C11B17"},
         ]
         */
+    function evaluate(y,threshold) { 
+        return y < threshold;
+    }
+    var constraints = [
+        {
+            threshold: 3,
+            color: colors[0],
+            evaluate : evaluate
+        },
+        {
+            threshold: 6,
+            color: colors[1],
+            evaluate : evaluate
+        },
+        {
+            threshold: 8,
+            color: colors[2],
+            evaluate : evaluate
+        },
+        {
+            threshold: 10,
+            color: colors[3],
+            evaluate : evaluate
+        },
+        {
+            threshold: 15,
+            color: colors[4],
+            evaluate : evaluate
+        },
+        {
+            threshold: 20,
+            color: colors[5],
+            evaluate : evaluate
+        },
+        {
+            threshold: 25,
+            color: colors[6],
+            evaluate : evaluate
+        }
+
+    ]
     var gradientzonedata = [
         {
             color: 3,
             lines: { fill: 0.7, },
             data: [
             {% for km, gradient in gradients %}[{{ km }},{{ gradient }}],{% endfor %}
-            ]
+               ],
+            "constraints": constraints
+
         }, 
         {
         }
