@@ -420,6 +420,11 @@ class FITParser(object):
                     if distance != None:
                         distance = distance / 100.
 
+                    if distance == None or spd == None:
+                        # Do not export samples like this
+                        # Observed in site_media/turan/sensor/2011-06-18-12-55-11.fit
+                        continue
+
                     self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon, distance))
                 elif global_msg_type == 21:
                     '''
