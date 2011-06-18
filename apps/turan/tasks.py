@@ -26,6 +26,7 @@ from csvparser import CSVParser
 from pwxparser import PWXParser
 from fitparser import FITParser
 from polaronlineparser import POLParser
+from suuntoxlsxparser import SuuntoXLSXParser
 
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
@@ -51,6 +52,8 @@ def find_parser(filename):
         parser = FITParser()
     elif f_lower.endswith('.xml'): # Polar online
         parser = POLParser()
+    elif filename.endswith('xlsx'): # Suunto Web export
+        parser = SuuntoXLSXParser()
     else:
         raise Exception('Parser not found') # Maybe warn user somehow?
     return parser
