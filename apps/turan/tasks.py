@@ -61,10 +61,10 @@ def find_parser(filename):
 def filldistance(values):
     d = 0
     if values: #exists?
-        values[0].distance = 0
         d_check = values[len(values)-1].distance
         if d_check > 0:
             return d_check
+        values[0].distance = 0
         for i in xrange(1,len(values)):
             delta_t = (values[i].time - values[i-1].time).seconds
             if values[i].speed:
@@ -82,6 +82,7 @@ def getavghr(values, start, end):
             hr += values[i].hr*delta_t
     delta_t = (values[end].time - values[start].time).seconds
     return float(hr)/delta_t
+
 
 def getavgpwr(values, start, end):
     pwr = 0
