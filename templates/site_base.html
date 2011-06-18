@@ -58,7 +58,7 @@
 
 {% block login %}
     {% if user.is_authenticated %}
-        <img alt="profile" src="{{MEDIA_URL}}/pinax/img/silk/icons/user_suit.png"><a href="{% url profile_detail user %}"><b> {{ user }}</b></a> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
+        <img alt="profile" src="{{MEDIA_URL}}/pinax/img/silk/icons/user_suit.png"><a href="{% url profile_redirect %}"><b> {{ user }}</b></a> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
     {% else %}
         <a id="login_activate" href="{% url acct_login %}">
             {% trans "Login" %}
@@ -84,7 +84,15 @@
                     <li>
                         <input type="checkbox" name="remember" id="login_remember" />
                         <label for="login_remember">{% trans "Remember me" %}</label>
-                        <button type="submit">{% trans "Log in" %}</button>
+                        <button type="submit">{% trans "Log in" %} &raquo;</button>
+                    </li>
+                </ul>
+            </form>
+            <form method="POST" action="{% url begin "facebook" %}"> 
+                <ul>
+                    <li>
+                        <label for="login_fb">{% trans "Log in using Facebook" %}</label>
+                        <button id="login_fb"><img src="{{MEDIA_URL}}turan/fbbutton.png" height="32" width="32"></button>
                     </li>
                 </ul>
             </form>

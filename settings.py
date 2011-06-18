@@ -62,7 +62,7 @@ TIME_ZONE = 'Europe/Oslo'
 # Language code for this installation. All choices can be found here:
 # http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
 # http://blogs.law.harvard.edu/tech/stories/storyReader$15
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'nn'
 
 SITE_ID = 1
 
@@ -154,6 +154,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
 #    "staticfiles.context_processors.static_url",
+#    "social_auth.context_processors.facebook_api_key",
 
 #"pinax.core.context_processors.contact_email",
 #"pinax.core.context_processors.site_name",
@@ -167,6 +168,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "messages.context_processors.inbox",
     "friends_app.context_processors.invitations",
     "turansite.context_processors.combined_inbox_count",
+
 )
 
 COMBINED_INBOX_COUNT_SOURCES = (
@@ -239,6 +241,8 @@ INSTALLED_APPS = (
     
     # internal (for now)
     #
+    #
+    'social_auth',
 
     "pinax.apps.account",
     "pinax.apps.signup_codes",
@@ -291,7 +295,7 @@ WIKI_MARKUP_CHOICES = MARKUP_CHOICES
 AUTH_PROFILE_MODULE = 'profiles.Profile'
 NOTIFICATION_LANGUAGE_MODULE = 'account.Account'
 
-ACCOUNT_OPEN_SIGNUP = False
+ACCOUNT_OPEN_SIGNUP = True
 ACCOUNT_REQUIRED_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = False
 
@@ -306,6 +310,7 @@ SERVER_EMAIL = CONTACT_EMAIL
 SITE_NAME = "Turan"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "profile_redirect"
+LOGIN_REDIRECT_URL = '/profiles/redirect/'
 
 INTERNAL_IPS = (
     '10.2.4.100',
@@ -364,6 +369,22 @@ CELERYD_CONCURRENCY = 1
 CELERYD_LOG_FILE = 'celeryd.log'
 CELERY_ALWAYS_EAGER = False
 
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.twitter.TwitterBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+#    'social_auth.backends.google.GoogleOAuthBackend',
+#    'social_auth.backends.google.GoogleOAuth2Backend',
+    'social_auth.backends.google.GoogleBackend',
+#    'social_auth.backends.yahoo.YahooBackend',
+    'social_auth.backends.contrib.linkedin.LinkedinBackend',
+#    'social_auth.backends.contrib.LiveJournalBackend',
+#    'social_auth.backends.contrib.orkut.OrkutBackend',
+#    'social_auth.backends.contrib.orkut.FoursquareBackend',
+    'social_auth.backends.OpenIDBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+import random
+SOCIAL_AUTH_DEFAULT_USERNAME = lambda: random.choice(['cipo', 'ilpirate', 'elefantino', 'pistelero', 'gruber'])
 
 
 # local_settings.py can be used to override environment-specific settings
