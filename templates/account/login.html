@@ -38,7 +38,21 @@
                 <button type="submit">{% trans "Log in &raquo;" %}</button>
         </fieldset>
     </form>
+
+    <br>
+
+    <form method="POST" action="{% url begin "facebook" %}"> 
+        <ul>
+            <li>
+                <label for="login_fb">{% trans "Log in using Facebook" %}</label>
+            </li>
+            <li>
+                <button id="login_fb"><img src="{{MEDIA_URL}}turan/fbbutton.png" height="32" width="32"></button>
+            </li>
+        </ul>
+    </form>
     
+    <br>
     <p>{% trans "Or sign in with your OpenID" %}:</p>
     {# @@@ why isn't this just does as a form object ? #}
     <form class="login uniForm" action="/openid/register/" method="POST">
