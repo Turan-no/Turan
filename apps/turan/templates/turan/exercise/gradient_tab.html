@@ -11,8 +11,8 @@
         selection: { mode: "x" },
         grid: { 
             hoverable: true, 
-            clickable: true,
-            backgroundColor: { colors: ["#eee", "#eee"] },
+            clickable: true
+         //   backgroundColor: { colors: ["#eee", "#eee"] },
        },
        yaxis: { tickFormatter: axisformatters['percent'] },
        xaxis: { tickFormatter: axisformatters['distance'] }
@@ -32,39 +32,32 @@
     }
     var altconstraints = [
         {
-            threshold: 3,
-            color: colors[0],
-            evaluate : evaluate
+            below: 3,
+            color: colors[0]
         },
         {
-            threshold: 6,
-            color: colors[1],
-            evaluate : evaluate
+            below: 6,
+            color: colors[1]
         },
         {
-            threshold: 8,
-            color: colors[2],
-            evaluate : evaluate
+            below: 8,
+            color: colors[2]
         },
         {
-            threshold: 10,
-            color: colors[3],
-            evaluate : evaluate
+            below: 10,
+            color: colors[3]
         },
         {
-            threshold: 15,
-            color: colors[4],
-            evaluate : evaluate
+            below: 15,
+            color: colors[4]
         },
         {
-            threshold: 20,
-            color: colors[5],
-            evaluate : evaluate
+            below: 20,
+            color: colors[5]
         },
         {
-            threshold: 25,
-            color: colors[6],
-            evaluate : evaluate
+            below: 25,
+            color: colors[6]
         }
 
     ]
@@ -75,7 +68,7 @@
             data: [
             {% for km, gradient in gradients %}[{{ km }},{{ gradient }}],{% endfor %}
                ],
-            "constraints": altconstraints
+            "threshold": altconstraints
 
         }, 
         {
