@@ -30,7 +30,7 @@
     function evaluate(y,threshold) { 
         return y < threshold;
     }
-    var constraints = [
+    var altconstraints = [
         {
             threshold: 3,
             color: colors[0],
@@ -75,7 +75,7 @@
             data: [
             {% for km, gradient in gradients %}[{{ km }},{{ gradient }}],{% endfor %}
                ],
-            "constraints": constraints
+            "constraints": altconstraints
 
         }, 
         {
