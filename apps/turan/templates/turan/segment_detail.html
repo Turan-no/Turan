@@ -169,7 +169,9 @@ $(function () {
             <td>
                 {% if object.avg_hr and object.exercise.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.exercise.user.get_profile.max_hr }} 
                 {% else%}
-                {{ object.avg_hr }}&nbsp;bpm 
+                {% if object.avg_hr %}
+                    {{ object.avg_hr }}&nbsp;bpm 
+                {% endif %}
                 {% endif %}
             </td>
             <td>{{ object.speed|floatformat }}&nbsp;{% trans "km/h" %}</td>
