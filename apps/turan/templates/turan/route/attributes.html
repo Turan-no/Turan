@@ -8,7 +8,7 @@
         <span class="label">{% trans "Description" %}: </span>{{ object.description }}
     </li>
     {% if object.route_url %}
-    <li class="url"><span class="label">{% trans "External URL" %}:</span> {{ object.route_url|urlize }}</li>
+    <li class="url"><span class="label">{% trans "External URL" %}:</span> {{ object.route_url|urlizetrunc:60 }}</li>
     {% endif %}
     {% if object.ascent %}
     <li class="ascent"><span class="label">{% trans "Ascent" %}:</span> {{ object.ascent }} {% trans "m" %}
