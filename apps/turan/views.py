@@ -1708,7 +1708,11 @@ def import_data(request):
                 base_url = "http://connect.garmin.com"
                 id = url.split("/")[-1].rstrip("/")
 
-                tripdata = urllib2.urlopen(url).read()
+                try:
+                    tripdata = urllib2.urlopen(url).read()
+                except urllib2.HTTPError, e:
+
+                    return render_to_response("turan/import.html", {'form': form, 'error': e}, context_instance=RequestContext(request))
 
                 tripsoup = BeautifulSoup(tripdata, convertEntities=BeautifulSoup.HTML_ENTITIES)
                 # Lets hope these ones work for a while
