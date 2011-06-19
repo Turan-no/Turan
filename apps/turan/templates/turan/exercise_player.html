@@ -74,32 +74,32 @@
 <span class="title" id="speedval{{forloop.counter0}}"></span>
 </p>
 <div class="playergraph speed floatleft drop-shadow" id="speeddiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
-<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="hrval{{forloop.counter0}}"</span></p>
+<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="hrval{{forloop.counter0}}"></span></p>
 <div class="playergraph hr floatleft drop-shadow" id="hrdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% if object.max_cadence %}
-<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="cadenceval{{forloop.counter0}}"</span></p>
+<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="cadenceval{{forloop.counter0}}"></span></p>
 <div class="playergraph cadence floatleft drop-shadow" id="cadencediv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% endif %}
-<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="altitudeval{{forloop.counter0}}"</span></p>
+<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="altitudeval{{forloop.counter0}}"></span></p>
 <div class="playergraph altitude floatleft drop-shadow" id="altitudediv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% if object.avg_power %}
-<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="powerval{{forloop.counter0}}"</span></p>
+<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="powerval{{forloop.counter0}}"></span></p>
 <div class="playergraph power floatleft drop-shadow" id="powerdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% endif %}
 <hr class="clearleft">
 
 <p class="graphheader speed floatleft">{% trans "Speed" %}<br><span class="title" id="2speedval{{forloop.counter0}}"></span></p>
 <div class="drop-shadow playergraph speed floatleft" id="2speeddiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
-<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="2hrval{{forloop.counter0}}"</span></p>
+<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="2hrval{{forloop.counter0}}"></span></p>
 <div class="drop-shadow playergraph hr floatleft" id="2hrdiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
 {% if object.max_cadence %}
-<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="2cadenceval{{forloop.counter0}}"</span></p>
+<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="2cadenceval{{forloop.counter0}}"></span></p>
 <div class="drop-shadow playergraph cadence floatleft" id="2cadencediv{{forloop.counter0}}" style="width:130px;height:60px"></div>
 {% endif %}
-<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="2altitudeval{{forloop.counter0}}"</span></p>
+<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="2altitudeval{{forloop.counter0}}"></span></p>
 <div class="drop-shadow playergraph altitude floatleft" id="2altitudediv{{forloop.counter0}}" style="width:130px;height:60px"></div>
 {% if object.avg_power %}
-<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="2powerval{{forloop.counter0}}"</span></p>
+<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="2powerval{{forloop.counter0}}"></span></p>
 <div class="drop-shadow playergraph power floatleft" id="2powerdiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
 {% endif %}
 
@@ -289,7 +289,7 @@ $(document).ready(function() {
             htmlval=val.toFixed(0);
         }
         //  Update HTML text display of val
-        $('#'+key+'val'+player).html(htmlval);
+        $('#'+key+'val'+player).text(htmlval);
         plot = plots[key+player];
         data = [{ 'color': color, 'data': [[val, 0]]}];
         if (plot) {
@@ -297,7 +297,9 @@ $(document).ready(function() {
             plot.draw();
         }
         else {
-            plot = $.plot($("#"+key+"div"+player),data, graphoptions[player][key]);
+            try { 
+                plot = $.plot($("#"+key+"div"+player),data, graphoptions[player][key]);
+            }catch (er) {}
         }
 
         // Save the current value to histvals for usage in history graph
