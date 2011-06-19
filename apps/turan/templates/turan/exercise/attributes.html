@@ -1,13 +1,16 @@
 {% load i18n %}
 {% load turan_extras %}
 {% load avatar_tags %}
-<div class="box spacer" style="width: 458px">
-    <img class="floatright" alt="Exerciselogo" src="{{object.icon}}" />
-    <a class="floatright" href="{{object.user.get_profile.get_absolute_url }}">
-        {% avatar object.user %}
-    </a>
+<div class="box spacer" style="width: 458px" itemscope itemtype="http://schema.org/SportsEvent">
+    <div itemscope itemtype="http://schema.org/Person">
+        <img class="floatright" alt="Exerciselogo" src="{{object.icon}}" />
+        <a itemprop="url" class="floatright" href="{{object.user.get_profile.get_absolute_url }}">
+            {% avatar object.user %}
+        </a>
+        <meta itemprop="name" content="{{ object.user.username }}" />
+    </div>
     <h1>
-        {{ object.route.name }}
+        <span itemprop="name">{{ object.route.name }}</span>
         {% ifequal object.exercise_permission "N" %}
         <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock.png">
         {% else %}
@@ -60,7 +63,8 @@
 
         {% if object.duration %} 
         <li class="duration">
-            <span class="label">{% trans "Duration" %}:</span> {{ object.duration }}
+            <span class="label">{% trans "Duration" %}:</span>
+            {{ object.duration }}
         <ul class="extra">
 
         <li class="date">
@@ -69,7 +73,12 @@
 
         {% if object.time %}
         <li class="time">
-            <span class="label">{% trans "Start time" %}:</span> {{ object.time }}
+            <span class="label">
+                {% trans "Start time" %}:
+            </span>
+            <span itemprop="startDate" datetime="{{ object.date|date:"Y-m-d" }}T{{ object.time|time:"H:i:s" }}Z">
+                {{ object.time }}
+            </span>
         </li>
         {% endif %}
         </ul>
@@ -188,7 +197,9 @@
 
         {% if object.comment %}
         <li class="comment">{{ object.user }} {% trans "writes" %}:
-            <p>{{ object.comment|linebreaks }}</p>
+            <p itemprop="description">
+                {{ object.comment|linebreaksbr }}
+            </p>
         </li>
         {% endif %}
     </ul>
