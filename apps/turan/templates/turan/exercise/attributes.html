@@ -9,7 +9,7 @@
         </a>
         <meta itemprop="name" content="{{ object.user.username }}" />
     </div>
-    <h1>
+    <h2>
         <span itemprop="name">{{ object.route.name }}</span>
         {% ifequal object.exercise_permission "N" %}
         <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock.png">
@@ -25,7 +25,7 @@
             <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}">
         </a>
         {% endifequal %}
-    </h1>
+    </h2>
 
     <div style="clear: left"></div>
 
@@ -65,6 +65,7 @@
         <li class="duration">
             <span class="label">{% trans "Duration" %}:</span>
             {{ object.duration }}
+            </span>
         <ul class="extra">
 
         <li class="date">
