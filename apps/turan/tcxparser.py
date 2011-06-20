@@ -284,7 +284,7 @@ if __name__ == '__main__':
     t = TCXParser(gps_distance=1)
     t.parse_uploaded_file(file(sys.argv[1]))
 
-    print "Time, Speed, Altitude, Hr, Cadence"
+    print "Time, Speed, Altitude, Hr, Cadence, Distance"
     for x in t.entries:
         print x.time, x.speed, x.altitude, x.hr, x.cadence, x.distance
 

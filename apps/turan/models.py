@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8
 from django.db import models
+from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
+from django.db.models.signals import pre_save, post_save
+from django.contrib.contenttypes.models import ContentType
 
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
@@ -10,10 +13,8 @@ from django.core.urlresolvers import reverse
 #from django.template.defaultfilters import slugify
 from turan.templatetags.turan_extras import u_slugify as slugify
 from django.core.files.storage import FileSystemStorage
-from django.db.models.signals import pre_save, post_save
 from django.conf import settings
 from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
 from tagging.fields import TagField
 import types
@@ -724,6 +725,10 @@ class Segment(models.Model):
     def get_slopes(self):
         return self.segmentdetail_set.all().order_by('duration')
 
+    def get_toplist(self):
+        return User.objects.filter(exercise__segmentdetail__segment__exact=self.id).annotate(duration=Min('exercise__segmentdetail__duration')).order_by('duration')[:3]
+        #return SegmentDetail.objects.filter(segment=self.id).values('exercise__user').annotate(duration=Min('duration')).order_by('duration')
+
     def save(self, *args, **kwargs):
         ''' Calculate extra values before save '''
 
@@ -776,6 +781,7 @@ class Segment(models.Model):
 
     def __unicode__(self):
         return u'%s' % (self.name)
+
 
 class Slope(models.Model):
     exercise = models.ForeignKey(Exercise)
@@ -891,6 +897,9 @@ class SegmentDetail(models.Model):
 
     def is_segmentdetail(self):
         return True
+
+    class Meta:
+        ordering = ('duration',)
 
 
 

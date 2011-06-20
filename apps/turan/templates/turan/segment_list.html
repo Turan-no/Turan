@@ -52,8 +52,22 @@
 {% for object in object_list %}
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
     <td><img src="{{ object.get_png_url }}"></td>
-    <td><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a>
-        <p class="smaller">{{object.description}}</p>
+    <td><h4><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a></h4>
+        <span class="smaller">{{object.description}}</span>
+        <div class="toplist">
+        <ol style="list-style-position: inside">
+        {% for user in object.get_toplist %}
+            <li style="width: 140px" class="floatleft {% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
+                <p class="smaller">
+                    {{ user.duration|durationformatshort}}:
+                    <a href="{{ user.get_absolute_url }}" title="{{ user }}">
+                        {{ user }}
+                    </a>
+                </p>
+            </li>
+        {% endfor %}
+        </ol>
+        </div>
     </td>
     <td>{{ object.distance|floatformat }} {% trans "km" %} </td>
     <td>{{object.ascent}} {% trans "m" %}</td>
