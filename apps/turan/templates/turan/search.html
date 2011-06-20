@@ -70,8 +70,8 @@
 {% endif %}
 
 <script type="text/javascript">
-    var route_i = 15;
-    var exercise_i = 15;
+    var route_i = {{SLICE_SIZE}};
+    var exercise_i = {{SLICE_SIZE}};
     var query = "{{ search_query }}";
 
     jQuery("#more_routes").bind("click", function(evt) {
@@ -82,7 +82,7 @@
                ul.append(data[k].fields.comment);
            }
        });
-       route_i += 10;
+       route_i += {{SLICE_SIZE}};
     });
     jQuery("#more_exercises").bind("click", function(evt) {
        var ul = jQuery(this).prev();
@@ -92,7 +92,7 @@
                ul.append(data[k].fields.comment);
            }
        });
-       exercise_i += 10;
+       exercise_i += {{SLICE_SIZE}};
     });
 </script>
 {% endblock %}
