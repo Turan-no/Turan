@@ -577,8 +577,8 @@ div.map {
     height: 500px;
 }
 div.mapcontainer {
-    padding-top: 1px; /* Adjust for misalignment mirage */
     float: right;
+    padding-top: -2px;
 }
 
 .toplist ol li.first {

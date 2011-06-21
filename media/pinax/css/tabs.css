@@ -12,7 +12,7 @@
 }
 
 ul.tabs a, ul.tabs a:visited {
-    color: #ccc; /* unselected tab text colour */
+    color: #eee; /* unselected tab text colour */
     text-decoration: none;
     display: block;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4f96ca', endColorstr='#1d3853'); /* for IE */
