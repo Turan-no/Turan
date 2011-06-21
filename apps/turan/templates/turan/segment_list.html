@@ -69,6 +69,19 @@
                 </p>
             </li>
         {% endfor %}
+        {% with object.get_latest|slice:"1" as latest_list %}
+        {% for latest in latest_list %}
+        <li style="width: 140px" class="segment floatleft">
+            <p class="smaller">
+                {% trans "Newest" %}:
+                {{ latest.duration|durationformatshort}}:
+                    <a href="{{ latest.exercise.get_absolute_url }}">
+                        {{ latest.exercise.user}}
+                    </a>
+            </p>
+        </li>
+        {% endfor %}
+        {% endwith %}
         </ol>
         </div>
     </td>

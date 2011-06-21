@@ -729,6 +729,9 @@ class Segment(models.Model):
         return User.objects.filter(exercise__segmentdetail__segment__exact=self.id).annotate(duration=Min('exercise__segmentdetail__duration')).order_by('duration')[:3]
         #return SegmentDetail.objects.filter(segment=self.id).values('exercise__user').annotate(duration=Min('duration')).order_by('duration')
 
+    def get_latest(self):
+        return SegmentDetail.objects.filter(segment=self.id).order_by('-exercise__date','-exercise__time')
+
     def save(self, *args, **kwargs):
         ''' Calculate extra values before save '''
 

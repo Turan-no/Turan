@@ -593,6 +593,10 @@ div.mapcontainer {
     list-style-image: url(/site_media/pinax/img/silk/icons/medal_bronze_1.png);
     font-size: 1.1em;
 }
+.toplist ol li.segment {
+    list-style-image: url(/site_media/pinax/img/silk/icons/shape_rotate_clockwise.png);
+    font-size: 1.1em;
+}
 #tabs>div {
     /* HACK: Flot fails at display: none */
     position: absolute;
