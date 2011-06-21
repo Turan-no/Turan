@@ -1821,6 +1821,9 @@ def segments(request, queryset):
         )
         queryset = queryset.filter(qset).distinct()
 
+    # Order by last ridden
+    queryset = queryset.annotate(last_ride=Max('segmentdetail__exercise__date')).order_by('-last_ride')
+
     latitude = request.GET.get('lat', '')
     longitude = request.GET.get('lon', '')
 
