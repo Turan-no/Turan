@@ -747,6 +747,10 @@ def normalize_altitude(exercise):
 def parse_sensordata(exercise, callback=None):
     ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
 
+
+    # TODO change into proper logging
+    print "Parsing Exercise: %s, with file: %s" %(exercise.id, exercise.sensor_file)
+
     ExerciseDetail = get_model('turan', 'ExerciseDetail')
     Interval = get_model('turan', 'Interval')
 
