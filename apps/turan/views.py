@@ -85,8 +85,22 @@ def datetime2jstimestamp(obj):
 def index(request):
     ''' Index view for Turan '''
 
-    exercise_list = Exercise.objects.select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')[:10]
-    comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')[:5]
+
+    e_lookup_kwargs =  {}
+    u_lookup_kwargs = {}
+    c_lookup_kwargs = {}
+    if 'friends' in request.GET:
+        if request.user.is_authenticated():
+            friend_set = friend_set_for(request.user.id)  
+            friend_set = list(friend_set)
+            friend_set.append(request.user)
+            e_lookup_kwargs['user__in'] = friend_set
+            usernames = [u.username for u in friend_set]
+            u_lookup_kwargs['username__in'] = usernames
+            c_lookup_kwargs = e_lookup_kwargs
+
+    exercise_list = Exercise.objects.filter(**e_lookup_kwargs).select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')[:10]
+    comment_list = ThreadedComment.objects.filter(**c_lookup_kwargs).filter(is_public=True).order_by('-date_submitted')[:5]
 
     route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])[:12]
     #route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
@@ -97,7 +111,7 @@ def index(request):
     today = datetimedate.today()
     days = timedelta(days=14)
     begin = today - days
-    user_list = User.objects.filter(exercise__date__range=(begin, today)).annotate(Sum('exercise__duration')).exclude(exercise__duration__isnull=True).order_by('-exercise__duration__sum')[:16]
+    user_list = User.objects.filter(**u_lookup_kwargs).filter(exercise__date__range=(begin, today)).annotate(Sum('exercise__duration')).exclude(exercise__duration__isnull=True).order_by('-exercise__duration__sum')[:16]
 
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))
 
