@@ -905,6 +905,13 @@ class SegmentDetail(models.Model):
         ordering = ('duration',)
 
 
+    def end(self):
+        ''' Helper so we don't have to calculate end in templates '''
+
+        return self.start + self.length/1000
+
+
+
 
 #class UserProfile(models.Model):
 #    user = models.ForeignKey(User, unique=True)

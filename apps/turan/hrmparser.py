@@ -117,6 +117,7 @@ class HRMParser(object):
                     cadence = int(cadence)
                     altitude = int(altitude)
                     power = int(power)
+                    distance = 0
 
                     self.power_sum += power
                     self.max_power = max(power, self.max_power)

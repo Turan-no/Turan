@@ -99,7 +99,6 @@ $(function () {
     });
     </script>
     {% include "turan/altitude_profile.html" %}
-    <br>
     <div id="gradientzonediv" style="width: 1000px; height:200px"></div>
     {% include "turan/exercise/gradient_tab.html" %}
     <form id="route_form">
@@ -121,10 +120,10 @@ $(function () {
             <th>{% anchortrans avg_hr "Avg HR" %}</th>
             <th>{% anchortrans avg_speed "Avg Speed" %}</th>
             <th> {% anchortrans ascent "Ascent" %} </th>
-        <th> {% anchortrans act_power "Avg power (actual)" %} </th>
-        <th> {% anchortrans est_power "Avg power (est)" %} </th>
-        <th> {% anchortrans power_per_kg "Avg power/kg" %} </th>
-        <th> {% anchortrans vam "VAM" %} </th>
+        <th>{% anchortrans act_power "Avg power (actual)" %}</th>
+        <th>{% anchortrans est_power "Avg power (est)" %}</th>
+        <th>{% anchortrans power_per_kg "Avg power/kg" %}</th>
+        <th>{% anchortrans vam "VAM" %}</th>
         <th>{% trans "Comment" %}</th>
         </tr>
         {% for object in object_list %}
@@ -153,9 +152,9 @@ $(function () {
                 <input type="hidden" id="start{{object.exercise.id}}-{{object.id}}" value="{{object.start|unlocalize}}">
             </td>
             <td>
-                <a href="{{ object.exercise.get_absolute_url }}">
-                {{ object.exercise.route }}
+                <a href="{{ object.exercise.get_absolute_url }}#graph-zoom-{{object.start|unlocalize}}-{{object.end|unlocalize}}">
                     <img src="/site_media/pinax/img/silk/icons/zoom.png" />
+                    {{ object.exercise.route }}
                 </a>
             </td>
             <td>
