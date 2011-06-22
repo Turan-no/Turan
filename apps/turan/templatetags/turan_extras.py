@@ -4,7 +4,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
-from django.template.defaultfilters import floatformat
+from django.template.defaultfilters import floatformat, stringfilter
 from django_sorting.templatetags.sorting_tags import SortAnchorNode
 from time import mktime
 import simplejson as json
@@ -282,3 +282,20 @@ def silk_icon(name):
 @register.filter
 def as_json(obj):
     return json.dumps(obj)
+
+@register.filter(name='truncatechars')
+@stringfilter
+def truncatechars(value, arg):
+    """
+    Truncates a string after a certain number of chars.
+
+    Argument: Number of chars to truncate after.
+    """
+    try:
+        length = int(arg)
+    except ValueError: # Invalid literal for int().
+        return value # Fail silently.
+    if len(value) > length:
+        return value[:length] + '...'
+    return value
+truncatechars.is_safe = True

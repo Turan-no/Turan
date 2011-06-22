@@ -50,7 +50,7 @@
         </tr>
         {% for slope in slopes %}
         <tr id="slopetd{{slope.id}}" class="{% cycle "odd" "even" %}">
-            <td>
+            <td style="width: 145px">
                 <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="{% trans "Zoom"%}" title="{% trans "Zoom" %}" id="zoom{{forloop.counter0}}-link-1" class="zoom-select floatleft" />
                 <script type="text/javascript">
                     $('#zoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
@@ -74,6 +74,9 @@
 
 
             {% if slope.segment %}
+                <a style="float: left" href="{{slope.segment.get_absolute_url}}">
+                    {{ slope.segment.name|truncatechars:"15" }}
+                </a>
                 {% if object.user == request.user and slope.is_segmentdetail %}
                 <div class="floatleft hidden" id="segmentbuttons{{slope.id}}">
                     <a href="{% url segmentdetail_update slope.id %}">
@@ -84,9 +87,6 @@
                     </a>
                 </div>
                 {% endif %}
-                <a href="{{slope.segment.get_absolute_url}}">
-                    {{ slope.segment.name }}
-                </a>
             {% endif%}
             </td>
             <td>
