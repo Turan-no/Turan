@@ -133,9 +133,13 @@
                 {% endif %}
             </td>
             <td>
-                {% if object.user.get_profile.max_hr %}
-                {{ slope.avg_hr|percent:object.user.get_profile.max_hr }}
-                {% endif %} 
+                {% if object.avg_hr %}
+                    {% if object.user.get_profile.max_hr %}
+                        {{ slope.avg_hr|percent:object.user.get_profile.max_hr }}
+                    {% else %}
+                        {{ slope.avg_hr %}
+                    {% endif %} 
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
