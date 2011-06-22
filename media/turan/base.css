@@ -708,9 +708,14 @@ li.even {
 li.odd {
     background: #ffffff;
 }
+ul.iconlist {
+    margin-top: 5px;
+}
 ul.iconlist li {
     list-style-type: none;
     margin-bottom: 0px;
+    margin-left: 5px;
+    list-style-position: inside;
 }
 ul.iconlist>li>ul.extra>li {
     font-size: 75%;

@@ -2,14 +2,8 @@
 {% load turan_extras %}
 {% load avatar_tags %}
 <div class="box spacer" style="width: 482px" itemscope itemtype="http://schema.org/SportsEvent">
-    <div itemprop="performers" itemscope itemtype="http://schema.org/Person">
-        <img class="floatright" alt="Exerciselogo" src="{{object.icon}}" />
-        <a itemprop="url" class="floatright" href="{{object.user.get_profile.get_absolute_url }}">
-            {% avatar object.user %}
-        </a>
-        <meta itemprop="name" content="{{ object.user.username }}" />
-    </div>
     <h2>
+        <img height="32" width="32" class="floatleft" style="padding: 0 2px" alt="Exerciselogo" src="{{object.icon}}" />
         <span itemprop="name">{{ object.route.name }}</span>
         {% ifequal object.exercise_permission "N" %}
         <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock.png">
@@ -26,6 +20,13 @@
         </a>
         {% endifequal %}
     </h2>
+
+    <div class="floatright" itemprop="performers" itemscope itemtype="http://schema.org/Person">
+        <a itemprop="url" href="{{object.user.get_profile.get_absolute_url }}">
+            {% avatar object.user %}
+        </a>
+        <meta itemprop="name" content="{{ object.user.username }}" />
+    </div>
 
     <div style="clear: left"></div>
 
