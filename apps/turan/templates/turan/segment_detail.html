@@ -129,15 +129,7 @@ $(function () {
         {% for object in object_list %}
         <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
             <td>
-                    {% ifequal object.exercise.user request.user %}
-                    <a href="{% url segmentdetail_update object.id %}">
-                    <img title="{% trans "Modify segment entry"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
-                    </a>
-                    <a href="{% url segmentdetail_delete object.id %}">
-                    <img title="{% trans "Delete segment entry"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
-                    </a>
-                    {% else %}
-                    {% if user.is_superuser %}
+                    {% if object.exercise.user == request.user or request.user.is_superuser %}
                     <a href="{% url segmentdetail_update object.id %}">
                     <img title="{% trans "Modify segment entry"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
                     </a>
@@ -145,7 +137,6 @@ $(function () {
                     <img title="{% trans "Delete segment entry"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
                     </a>
                     {% endif%}
-                    {% endifequal %}
             </td>
             <td>
                 <input type="checkbox" name="selected_routes" value="{{ object.exercise.id }}-{{object.id}}">
@@ -154,7 +145,7 @@ $(function () {
             <td>
                 <a href="{{ object.exercise.get_absolute_url }}#graph-zoom-{{object.start|unlocalize}}-{{object.end|unlocalize}}">
                     <img src="/site_media/pinax/img/silk/icons/zoom.png" />
-                    {{ object.exercise.route }}
+                    {{ object.exercise.route|truncatechars:"15" }}
                 </a>
             </td>
             <td>
@@ -163,7 +154,7 @@ $(function () {
                 </a>
             </td>
             <td><a href="{{ object.get_absolute_url }}">{{object.exercise.date|naturalday}}</a></td>
-            <td>{{ object.duration|durationformat }}</td>
+            <td>{{ object.duration|durationformatshort }}</td>
             <td>
                 {% if object.avg_hr and object.exercise.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.exercise.user.get_profile.max_hr }} 
                 {% else%}
