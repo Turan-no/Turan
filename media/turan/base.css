@@ -581,6 +581,13 @@ div.mapcontainer {
     padding-top: -2px;
 }
 
+.toplist ol {
+    margin: 0;
+}
+.toplist .duration {
+    padding: 2px;
+    margin-right: 2px;
+}
 .toplist ol li.first {
     list-style-image: url(/site_media/pinax/img/silk/icons/medal_gold_3.png);
     font-size: 1.2em;

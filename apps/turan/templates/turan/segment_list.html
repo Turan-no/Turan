@@ -1,4 +1,5 @@
 {% extends "turan/base.html" %}
+{% load turanwaka_tags %}
 {% load humanize %}
 {% load i18n %}
 {% load turan_extras %}
@@ -22,13 +23,15 @@
 {% paginate %}
 </div>
 <ul class="buttons">
-<li class="floatleft">
-<a href="{% url segment_create %}">
-    <img alt="Segment" src="{{MEDIA_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
-    {% trans "Create new segment" %}</a>
-</li>
+    <li class="floatleft">
+        <a href="{% url segment_create %}">
+            <img alt="Segment" src="{{MEDIA_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
+            {% trans "Create new segment" %}
+        </a>
+        {{ "WhatAreSegments"|wiki_help }}
+    </li>
 </ul>
-<p>{% trans "Segments are parts of exercises that are public and shared between exercisers. You can for example "%}<a href="{% url segment_create %}">{% blocktrans %}create a segment</a> for your favourite climb, and then using GPS data Turan will find all rides for the segment and list the ride. Use this to compete with yourself or others.{% endblocktrans %}</p>
+
 
 <table class="fullsize">
     <tr>
@@ -55,35 +58,38 @@
 {% for object in object_list %}
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
     <td><img src="{{ object.get_png_url }}"></td>
-    <td><h4><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a></h4>
-        <span class="smaller">{{object.description}}</span>
+    <td>
         <div class="toplist">
-        <ol style="list-style-position: inside">
-        {% for user in object.get_toplist %}
-            <li style="width: 140px" class="floatleft {% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
+            <ol style="float: right">
+            {% for user in object.get_toplist %}
+                <li style="width: 140px" class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
+                    <p class="smaller">
+                        <span class="duration">
+                            {{ user.duration|durationformatshort}}
+                        </span>
+                        <a href="{{ user.get_absolute_url }}" title="{{ user }}">
+                            {{ user }}
+                        </a>
+                    </p>
+                </li>
+            {% endfor %}
+            {% with object.get_latest|slice:"1" as latest_list %}
+            {% for latest in latest_list %}
+            <li style="width: 140px; margin-left: -22px" class="floatleft">
                 <p class="smaller">
-                    {{ user.duration|durationformatshort}}:
-                    <a href="{{ user.get_absolute_url }}" title="{{ user }}">
-                        {{ user }}
-                    </a>
+                    {% trans "Newest" %}:
+                    {{ latest.duration|durationformatshort}}:
+                        <a href="{{ latest.exercise.get_absolute_url }}">
+                            {{ latest.exercise.user}}
+                        </a>
                 </p>
             </li>
-        {% endfor %}
-        {% with object.get_latest|slice:"1" as latest_list %}
-        {% for latest in latest_list %}
-        <li style="width: 140px" class="segment floatleft">
-            <p class="smaller">
-                {% trans "Newest" %}:
-                {{ latest.duration|durationformatshort}}:
-                    <a href="{{ latest.exercise.get_absolute_url }}">
-                        {{ latest.exercise.user}}
-                    </a>
-            </p>
-        </li>
-        {% endfor %}
-        {% endwith %}
-        </ol>
+            {% endfor %}
+            {% endwith %}
+            </ol>
         </div>
+        <h4><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a></h4>
+        <span class="smaller">{{object.description}}</span>
     </td>
     <td>{{ object.distance|floatformat }} {% trans "km" %} </td>
     <td>{{object.ascent}} {% trans "m" %}</td>
