@@ -4,6 +4,7 @@ from celery.task.sets import subtask
 from subprocess import call
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
+from django.core.cache import cache
 from django.conf import settings
 from django.db.models import get_model
 from django.db import connection, transaction
@@ -764,6 +765,17 @@ def parse_sensordata(exercise, callback=None):
 
     if exercise.slope_set.count(): # If the exercise has slopes, delete them too
         exercise.slope_set.all().delete()
+
+
+    # Delete cache
+    # TODO: Fix better cache key stuffs
+    cache_keys = (
+            'json_trip_series_%s_%dtime_xaxis_%dpower_%dsmooth' %(exercise.id, 0, 0, 1),
+            'json_trip_series_%s_%dtime_xaxis_%dpower_%dsmooth' %(exercise.id, 1, 0, 1),
+            'json_trip_series_%s_%dtime_xaxis_%dpower_%dsmooth' %(exercise.id, 0, 0, 0),
+            'json_trip_series_%s_%dtime_xaxis_%dpower_%dsmooth' %(exercise.id, 1, 0, 0)
+            )
+    cache.delete_many(cache_keys)
 
 
     exercise.sensor_file.file.seek(0)
