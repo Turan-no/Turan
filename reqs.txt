@@ -95,3 +95,4 @@ docutils
 django-kombu
 aggdraw
 django-social-auth
+django-piston

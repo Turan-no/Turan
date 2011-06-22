@@ -242,6 +242,7 @@ msgstr "Lag"
 msgid "Tribe %(tribe_name)s deleted."
 msgstr "Stammen %(tribe_name)s ble slettet."
 
+
 #: apps/tribes/views.py:117
 #, python-format
 msgid "You have joined the team %(tribe_name)s"
