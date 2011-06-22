@@ -110,8 +110,6 @@ $(function () {
 
     <table class="fullsize">
         <tr>
-            <th></th>
-
             <th>{% trans "CMP" %}</th>
             <th>{% trans "Trip" %}</th>
             <th>{% anchortrans exercise__user Exerciser %}</th>
@@ -129,6 +127,10 @@ $(function () {
         {% for object in object_list %}
         <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
             <td>
+                <input type="checkbox" name="selected_routes" value="{{ object.exercise.id }}-{{object.id}}">
+                <input type="hidden" id="start{{object.exercise.id}}-{{object.id}}" value="{{object.start|unlocalize}}">
+            </td>
+            <td>
                     {% if object.exercise.user == request.user or request.user.is_superuser %}
                     <a href="{% url segmentdetail_update object.id %}">
                     <img title="{% trans "Modify segment entry"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
@@ -137,12 +139,6 @@ $(function () {
                     <img title="{% trans "Delete segment entry"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
                     </a>
                     {% endif%}
-            </td>
-            <td>
-                <input type="checkbox" name="selected_routes" value="{{ object.exercise.id }}-{{object.id}}">
-                <input type="hidden" id="start{{object.exercise.id}}-{{object.id}}" value="{{object.start|unlocalize}}">
-            </td>
-            <td>
                 <a href="{{ object.exercise.get_absolute_url }}#graph-zoom-{{object.start|unlocalize}}-{{object.end|unlocalize}}">
                     <img src="/site_media/pinax/img/silk/icons/zoom.png" />
                     {{ object.exercise.route|truncatechars:"15" }}
