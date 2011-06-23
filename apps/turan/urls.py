@@ -69,10 +69,10 @@ urlpatterns = patterns('',
     url(r'^search/?', search, name='search'),
 
 # The Feeds
+    (r'^feed/team/(?P<slug>\w+)',TeamTripsFeed()),
     (r'^feed/(?P<url>.*)/?$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
     url(r'^feeds/ical/(?P<username>\w+)/?$', ical, name='ical'),
 )
-
 # Lists and details
 urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^route/?$', turan_object_list, { 'queryset': Route.objects.select_related().filter(distance__gt=0).filter(single_serving=0).exclude(name='').extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' })}, name='routes'),
