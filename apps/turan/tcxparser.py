@@ -128,6 +128,9 @@ class TCXParser(object):
         pedaling_power_seconds = 0
         self.powersum = 0
         need_initial_altitude = 0
+        last_lat = 0
+        last_lon = 0
+        last_alt = 0
         for e in t.getiterator(tag=garmin_ns + "Trackpoint"):
             try:
                 tstring = e.find(garmin_ns + "Time").text
@@ -163,7 +166,7 @@ class TCXParser(object):
             except AttributeError:
                 ## TODO figure out why elements lack distance, make this smarter ?
                 #distance = self.cur_distance
-# 310 XT maybe fix??
+                # 310 XT maybe fix??
                 pass
                 distance = 0
 
@@ -194,6 +197,9 @@ class TCXParser(object):
             # Check for silly 310XT only pos values
             # as in trackpoints with only lon, lat and altitude, but no other values
             if lat and lon and altitude and not (distance or hr or power or cadence):
+                last_lon = lon
+                last_lat = lat
+                last_alt = altitude
                 continue
 
 
@@ -203,15 +209,17 @@ class TCXParser(object):
             distdelta = 0
             if self.gps_distance or (not distance and lon and lat):
                  # Didn't find DistanceMeterElement..but we have lon/lat, so calculate
-                if self.entries:
-                    #assert False, (timedelta, distance, lon, lat, altitude, power, hr, cadence)
-                    o = self.entries[-1]
-                    if o.lon and o.lat:
-                        try:
-                            hdelta = self.geod.inv(lon, lat, o.lon, o.lat)[2]
-                            distdelta = hypot(hdelta, o.altitude-altitude)
-                        except ValueError:
-                            distdelta = 0
+                #assert False, (timedelta, distance, lon, lat, altitude, power, hr, cadence)
+                if last_lon and last_lat and last_alt and lon and lat and altitude:
+                    try:
+                        hdelta = self.geod.inv(lon, lat, last_lon, last_lat)[2]
+                        distdelta = hypot(hdelta, last_alt-altitude)
+                    except ValueError:
+                        distdelta = 0
+                last_lon = lon
+                last_lat = lat
+                last_alt = altitude
+
             if not distdelta:
                 if distance:
                     distdelta = distance - self.cur_distance
@@ -220,10 +228,13 @@ class TCXParser(object):
                 distance = self.cur_distance + distdelta
                 self.cur_distance = distance
 
+            if not distdelta and not distance:
+                distance = self.cur_distance
+
             if timedelta and distdelta:
                 speed = distdelta/timedelta * 3.6
                 if speed >= 200: #FIXME oh so naive
-                    if self.entries:
+                    if len(self.entries) > 1 and self.entries[-1].speed:
                         speed = self.entries[-1].speed
                     else:
                         speed = 0
@@ -281,6 +292,7 @@ if __name__ == '__main__':
 
     import pprint
     import sys
+    print sys.argv[1]
     t = TCXParser(gps_distance=1)
     t.parse_uploaded_file(file(sys.argv[1]))
 
