@@ -114,10 +114,10 @@ def durationformatshort(value):
         minStr = ":"
         string = u"%s%02d%s" % (string, mins, minStr)
 
-    if value > 0:
-        secs = value
-        sStr = ":"
-        string = u"%s%02d%s" % (string, secs, sStr)
+    #if value > 0:
+    secs = value
+    sStr = ":"
+    string = u"%s%02d%s" % (string, secs, sStr)
 
     if len(string) == 0:
         string = '0'
