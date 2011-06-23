@@ -10,12 +10,14 @@ None of this should be run as root except apt-get.
 
 ~$ virtualenv turan-env
 
-~$ . pinax-env/bin/activate
+~$ mv turansite turan-env/
+
+~$ . turan-env/bin/activate
 
 (pinax-env) ~$ pip install Pinax
 
 # Alternativly you can clone their git repo and link it into
-# pinax-env/lib/python*/site-packages
+# turan-env/lib/python*/site-packages
 
 (pinax-env) ~$ pip install -r turansite/reqs.txt
 
