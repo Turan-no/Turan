@@ -237,16 +237,17 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
         search_in_segments = Segment.objects.all()
     # Only works for exercises with distance
     details = exercise.get_details().filter(lon__gt=0).filter(lat__gt=0).filter(distance__gt=0).values('distance','lon','lat')
+    i_len = len(details)
     segments = [] #'[(segment, start, stop)...'
     #old_segmentdetails = exercise.segmentdetail_set.all()
     for se in search_in_segments:
         previous_start = 0
         started_at_distance = 0
-        found_start = 0
+        found_start = -1
         previous_end = 0
         found_end = 0
         for i, d in enumerate(details):
-            if not found_start:
+            if found_start < 0:
                 start_distance = proj_distance(se.start_lat, se.start_lon, d['lat'], d['lon'])
                 if start_distance < start_offset:
                     print i, start_distance
@@ -269,7 +270,7 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
                     print started_at_distance, d['distance'], search_distance
                     print "Didn't find end, resetting state"
                     # reset start
-                    found_start, found_end, previous_start, started_at_distance, previous_end = 0, 0, 0, 0, 0
+                    found_start, found_end, previous_start, started_at_distance, previous_end = -1, 0, 0, 0, 0
                     continue
                 if end_distance < end_offset: # We are closing in on end
                     print i, end_distance
@@ -280,8 +281,11 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
                         if end_distance > previous_end:
                             found_end = i-1 # subtract, indexed used in list slice later
                             print "End of %s at index %s" %(se, found_end)
-                    previous_end = end_distance
-            elif found_start and found_end:
+                        print i_len, i
+                    if i_len-1 == i: # We reached end of details, but we are withing segment
+                        found_end = i
+                        print "End of %s at index %s" %(se, found_end)
+            if found_start>=0 and found_end:
                 print "_________Found Segment %s" %se
 
                 # Iterate over the existing segments for this exercise
@@ -301,7 +305,7 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
                         break
                 if -500 < found_distance-se.distance*1000 < 500 and not duplicate:
                     segments.append((se, found_start, found_end, started_at_distance, found_distance))
-                found_start, found_end, previous_start, started_at_distance, previous_end = 0, 0, 0, 0, 0
+                found_start, found_end, previous_start, started_at_distance, previous_end = -1, 0, 0, 0, 0
 
     return segments
 
