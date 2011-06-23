@@ -225,7 +225,7 @@ def slice_to_segmentdetail(exercise, segment, start, stop):
     new_object = SegmentDetail(**data)
     new_object.save()
 
-def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_offset=90, search_in_segments=None):
+def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_offset=90, dupedistance=200, search_in_segments=None):
     ''' For every segment
             iterate every detail searching for pos matching the start pos
             then find match for end pos if distance elapsed doesn't exceed segment distance
@@ -290,12 +290,12 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
 
                 # Iterate over the existing segments for this exercise
                 # Do not add the found segment if it's too close to existing
-                # If the start is within 500 meters, and the length is within 
-                # 500 meters we deem it coo close
+                # If the start is within dupedistance=300 meters, and the length is within 
+                # we deem it coo close
                 duplicate = False
                 for old_segment in exercise.segmentdetail_set.all():
-                    if (-500 < (old_segment.start*1000-started_at_distance) < 500 and
-                        -500 < (old_segment.length-found_distance) < 500):
+                    if (-dupedistance < (old_segment.start*1000-started_at_distance) < dupedistance and
+                        -dupedistance < (old_segment.length-found_distance) < dupedistance):
                         # If distance of found segment is within 500 meters of
                         # the lenght of the segment we accept it
                         print "_____ Duplicate found, skipping"
