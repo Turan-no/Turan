@@ -4,9 +4,12 @@ from django.http import Http404
 from datetime import datetime
 
 from models import Route, Exercise
+from tribes.models import Tribe
 
 from ical import ICalendarFeed
 from django.contrib.syndication.feeds import Feed
+from django.contrib.syndication import views
+from django.utils.translation import ugettext_lazy as _
 
 class ExerciseCalendar(ICalendarFeed):
     ''' Return ical for one user '''
@@ -73,3 +76,32 @@ class UserTripsFeed(Feed):
 
     def item_author_name(self, obj):
         return obj.user
+
+
+class TeamTripsFeed(views.Feed):
+
+    def get_object(self, request, slug):
+        result = Tribe.objects.get(slug=slug)
+        return result
+
+    def title(self, obj):
+        return _("Events for %s") % obj.name
+
+    def link(self, obj):
+        if not obj:
+            raise FeedDoesNotExist
+        return obj.get_absolute_url()
+
+    def description(self, obj):
+        return "Exercises for team %s" % obj.name
+
+    def items(self, obj):
+        statsusers = obj.members.all()
+        return Exercise.objects.filter(user__in=statsusers)[:20]
+
+    def item_pubdate(self, obj):
+        try:
+            return datetime(obj.date.year, obj.date.month, obj.date.day, obj.time.hour, obj.time.minute, obj.time.second)
+        except AttributeError:
+            pass # Some trips just doesn't have time set
+        return
