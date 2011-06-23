@@ -50,10 +50,19 @@ var GraphPlotter = {
         $("#choices").find("input:checked").each(function () {
             var key = $(this).attr("name");
             if (key && that.datasets[key]) {
-                if (key == 'hr')
-                    that.datasets[key]['constraints'] = [that.constraint0, that.constraint1, that.constraint2, that.constraint3, that.constraint4, that.constraint5];
-                if (key != 'lon' && key != 'lat') // lon and lat doesn't go in the graph
+                if (key == 'hr') {
+                    //that.datasets[key]['constraints'] = that.hrconstraints;
+                    //
+                  that.datasets[key]['threshold']= that.newhrconstraints;
+                }
+                else if (key == 'altitude') {
+                    //that.datasets[key]['constraints'] = segmentconstraints;
+
+                }
+
+                if (key != 'lon' && key != 'lat') { // lon and lat doesn't go in the graph
                     data.push(that.datasets[key]);
+                }
             }
         });
 
@@ -190,36 +199,61 @@ var GraphPlotter = {
         function evaluate(y,threshold) { 
             return y < threshold;
         }
-        this.constraint0 = {
-            threshold: this.max_hr*0.6,
-            color: colors[0],
-            evaluate : evaluate
-        }
-        this.constraint1 = {
-            threshold: this.max_hr*0.72,
-            color: colors[1],
-            evaluate : evaluate
-        }
-        this.constraint2 = {
-            threshold: this.max_hr*0.82,
-            color: colors[2],
-            evaluate : evaluate
-        }
-        this.constraint3 = {
-            threshold: this.max_hr*0.87,
-            color: colors[3],
-            evaluate : evaluate
-        }
-        this.constraint4 = {
-            threshold: this.max_hr*0.92,
-            color: colors[4],
-            evaluate : evaluate
-        }
-        this.constraint5 = {
-            threshold: this.max_hr*0.97,
-            color: colors[5],
-            evaluate : evaluate
-        }
+        this.hrconstraints = [{
+                threshold: this.max_hr*0.6,
+                color: colors[0],
+                evaluate : evaluate
+            },
+            {
+                threshold: this.max_hr*0.72,
+                color: colors[1],
+                evaluate : evaluate
+            },
+            {
+                threshold: this.max_hr*0.82,
+                color: colors[2],
+                evaluate : evaluate
+            },
+            {
+                threshold: this.max_hr*0.87,
+                color: colors[3],
+                evaluate : evaluate
+            },
+            {
+                threshold: this.max_hr*0.92,
+                color: colors[4],
+                evaluate : evaluate
+            },
+            {
+                threshold: this.max_hr*0.97,
+                color: colors[5],
+                evaluate : evaluate
+        }]
+
+        this.newhrconstraints = [{
+                below: this.max_hr*0.6,
+                color: colors[0]
+            },
+            {
+                below: this.max_hr*0.72,
+                color: colors[1]
+            },
+            {
+                below: this.max_hr*0.82,
+                color: colors[2]
+            },
+            {
+                below: this.max_hr*0.87,
+                color: colors[3]
+            },
+            {
+                below: this.max_hr*0.92,
+                color: colors[4]
+            },
+            {
+                below: this.max_hr*0.97,
+                color: colors[5]
+        }]
 
         var that = this;
         this.backendUrl = backendUrl;

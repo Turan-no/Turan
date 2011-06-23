@@ -94,4 +94,6 @@ django-wikiapp
 docutils
 django-kombu
 aggdraw
-
+django-social-auth
+django-piston
+django-groups

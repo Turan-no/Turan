@@ -37,11 +37,18 @@
 <h1>
     {% trans "Events" %}
 </h1>
-
 <div class="floatright">
 {% paginate %}
 </div>
 
+<ul class="buttons">
+    <li>
+        <a href="{% url exercise_create %}">
+            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
+            {% trans "Add an exercise" %}
+        </a>
+    </li>
+</ul>
 <table class="fullsize">
     <tr class="{% cycle odd,even %}">
         <th>

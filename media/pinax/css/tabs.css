@@ -12,7 +12,7 @@
 }
 
 ul.tabs a, ul.tabs a:visited {
-    color: #ccc; /* unselected tab text colour */
+    color: #eee; /* unselected tab text colour */
     text-decoration: none;
     display: block;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4f96ca', endColorstr='#1d3853'); /* for IE */
@@ -40,6 +40,7 @@ ul.tabs a:focus {
 body.profile ul.tabs #tab_profile a,
 body.turan ul.tabs #tab_turan a,
 body.routes #tab_routes a,
+body.segments #tab_segments a,
 body.exercises #tab_exercises a,
 body.tribes ul.tabs #tab_tribes a 
 body.inbox #tab_inbox a {

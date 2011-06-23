@@ -99,9 +99,7 @@ $(function () {
     });
     </script>
     {% include "turan/altitude_profile.html" %}
-    <h2 style="clear: both">{% trans "Gradients" %}</h2>
-    <div id="gradientzonediv" style="width: 1000px; height:100px; float: right;"></div>
-    <div id="gradientzonetable" style="width:1px; height: 100px;"></div>
+    <div id="gradientzonediv" style="width: 1000px; height:200px"></div>
     {% include "turan/exercise/gradient_tab.html" %}
     <form id="route_form">
     <h2>{% trans "Rides on this segment" %}</h2>
@@ -112,34 +110,28 @@ $(function () {
 
     <table class="fullsize">
         <tr>
-            <th></th>
-
             <th>{% trans "CMP" %}</th>
             <th>{% trans "Trip" %}</th>
             <th>{% anchortrans exercise__user Exerciser %}</th>
-            <th>{% anchortrans date %}</th>
+            <th>{% anchortrans exercise__date "Date" %}</th>
             <th>{% anchortrans duration %}</th>
             <th>{% anchortrans avg_hr "Avg HR" %}</th>
             <th>{% anchortrans avg_speed "Avg Speed" %}</th>
             <th> {% anchortrans ascent "Ascent" %} </th>
-        <th> {% anchortrans act_power "Avg power (actual)" %} </th>
-        <th> {% anchortrans est_power "Avg power (est)" %} </th>
-        <th> {% anchortrans power_per_kg "Avg power/kg" %} </th>
-        <th> {% anchortrans vam "VAM" %} </th>
+        <th>{% anchortrans act_power "Power" %}</th>
+        <th>{% anchortrans est_power "Power (est)" %}</th>
+        <th>{% anchortrans power_per_kg "Avg power/kg" %}</th>
+        <th>{% anchortrans vam "VAM" %}</th>
         <th>{% trans "Comment" %}</th>
         </tr>
         {% for object in object_list %}
         <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
             <td>
-                    {% ifequal object.exercise.user request.user %}
-                    <a href="{% url segmentdetail_update object.id %}">
-                    <img title="{% trans "Modify segment entry"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
-                    </a>
-                    <a href="{% url segmentdetail_delete object.id %}">
-                    <img title="{% trans "Delete segment entry"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
-                    </a>
-                    {% else %}
-                    {% if user.is_superuser %}
+                <input type="checkbox" name="selected_routes" value="{{ object.exercise.id }}-{{object.id}}">
+                <input type="hidden" id="start{{object.exercise.id}}-{{object.id}}" value="{{object.start|unlocalize}}">
+            </td>
+            <td>
+                    {% if object.exercise.user == request.user or request.user.is_superuser %}
                     <a href="{% url segmentdetail_update object.id %}">
                     <img title="{% trans "Modify segment entry"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
                     </a>
@@ -147,16 +139,9 @@ $(function () {
                     <img title="{% trans "Delete segment entry"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
                     </a>
                     {% endif%}
-                    {% endifequal %}
-            </td>
-            <td>
-                <input type="checkbox" name="selected_routes" value="{{ object.exercise.id }}-{{object.id}}">
-                <input type="hidden" id="start{{object.exercise.id}}-{{object.id}}" value="{{object.start|unlocalize}}">
-            </td>
-            <td>
-                <a href="{{ object.exercise.get_absolute_url }}">
-                {{ object.exercise.route }}
+                <a href="{{ object.exercise.get_absolute_url }}#graph-zoom-{{object.start|unlocalize}}-{{object.end|unlocalize}}">
                     <img src="/site_media/pinax/img/silk/icons/zoom.png" />
+                    {{ object.exercise.route|truncatechars:"15" }}
                 </a>
             </td>
             <td>
@@ -165,11 +150,13 @@ $(function () {
                 </a>
             </td>
             <td><a href="{{ object.get_absolute_url }}">{{object.exercise.date|naturalday}}</a></td>
-            <td>{{ object.duration|durationformat }}</td>
+            <td>{{ object.duration|durationformatshort }}</td>
             <td>
                 {% if object.avg_hr and object.exercise.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.exercise.user.get_profile.max_hr }} 
                 {% else%}
-                {{ object.avg_hr }}&nbsp;bpm 
+                {% if object.avg_hr %}
+                    {{ object.avg_hr }}&nbsp;bpm 
+                {% endif %}
                 {% endif %}
             </td>
             <td>{{ object.speed|floatformat }}&nbsp;{% trans "km/h" %}</td>

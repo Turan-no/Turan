@@ -67,16 +67,21 @@
     {% for interval in intervals %}
         {% if forloop.counter0 %}
         {% if time_xaxis %}
-        markings.push( { xaxis: { from: {{interval.get_relative_time_in_minutes}}, to: {{interval.get_relative_time_in_minutes}} }, color:  "#000000" });
+        markings.push( { xaxis: { from: {{interval.get_relative_time_in_minutes}}, to: {{interval.get_relative_time_in_minutes}} }, color:  "#ccccccc" });
         {% else %}
         {% if interval.start %}
-        markings.push( { xaxis: { from: {{interval.start}}/1000, to: {{interval.start}}/1000 }, color:  "#000" });
+        markings.push( { xaxis: { from: {{interval.start}}/1000, to: {{interval.start}}/1000 }, color:  "#cccccc" });
         {% endif %}
         {% endif %}
         {% endif %}
     {% endfor %}
 
     {% endif %}
+{% comment %}
+    var segmentconstraints = [];
+    {% for segment in slopes %}
+    {% endfor %}
+{% endcomment %}
 
     $(document).ready(function () {
         // Get datasets from json
