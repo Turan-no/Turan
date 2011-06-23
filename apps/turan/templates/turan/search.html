@@ -2,6 +2,7 @@
 {% load tagging_tags %}
 {% load i18n %}
 {% load avatar_tags %}
+{% load turan_extras %}
 {% block content %}
 
 <h1>{% trans "Matches for search" %} {{ search_query }}</h1>
@@ -22,7 +23,7 @@
     <h2>{% trans "Exercises" %}</h2>
     <ul class="iconlist spacer">
         {% for exercise in exercise_list %}
-        <li class="exercise"><a href="{{ exercise.get_absolute_url }}"><img width="32" height="32" src="{{exercise.route.get_png_url}}">{{ exercise }}</a></li>
+        <li class="exercise"><a href="{{ exercise.get_absolute_url }}"><img width="32" height="32" src="{{exercise.route.get_png_url}}">{{ exercise|truncatechars:"35" }}</a></li>
         {% endfor %}
     </ul>
     {% if exercise_list|length >= 15 %}
@@ -36,7 +37,7 @@
     <h2>{% trans "Routes" %}</h2>
     <ul class="iconlist spacer">
             {% for route in route_list %}
-            <li class=""><img widht="32" height="32" src="{{route.get_png_url}}"><a href="{{ route.get_absolute_url }}">{{ route }}</a></li>
+            <li class=""><img widht="32" height="32" src="{{route.get_png_url}}"><a href="{{ route.get_absolute_url }}">{{ route|truncatechars:"35" }}</a></li>
             {% endfor %}
     </ul>
     {% if route_list|length >= 15 %}
