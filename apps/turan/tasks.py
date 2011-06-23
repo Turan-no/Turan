@@ -281,7 +281,7 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
                         if end_distance > previous_end:
                             found_end = i-1 # subtract, indexed used in list slice later
                             print "End of %s at index %s" %(se, found_end)
-                        print i_len, i
+                    previous_end = end_distance
                     if i_len-1 == i: # We reached end of details, but we are withing segment
                         found_end = i
                         print "End of %s at index %s" %(se, found_end)
