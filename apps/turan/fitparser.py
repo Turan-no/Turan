@@ -330,7 +330,7 @@ class FITParser(object):
                         no sensible values anyways.
                         '''
                         continue
-                    
+
                     time = datetime.fromtimestamp(get_field_value(fields, fit_lap, 'timestamp'))
                     time = time + timestamp_offset
                     start_time = get_field_value(fields, fit_lap, 'start_time')
@@ -420,10 +420,10 @@ class FITParser(object):
                     if distance != None:
                         distance = distance / 100.
 
-                    if distance == None or spd == None:
+                    #if distance == None or spd == None:
                         # Do not export samples like this
                         # Observed in site_media/turan/sensor/2011-06-18-12-55-11.fit
-                        continue
+                    #    continue
 
                     self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon, distance))
                 elif global_msg_type == 21:
@@ -437,7 +437,7 @@ class FITParser(object):
                 else:
                     print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
                 '''
-            elif msg_type == 1:                
+            elif msg_type == 1:
                 def_hdr = f.read(5)
                 (arch,) = struct.unpack('B',def_hdr[1:2])
                 if arch == 0:
