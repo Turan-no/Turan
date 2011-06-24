@@ -750,7 +750,11 @@ ul.segmenticons li {
     padding: 5px;
     margin-left: 40px;
 }
-ul.segmenticons h3 {
+ul.segmenticons li>h3 {
+    font-size: 1em;
+}
+ul.segmenticons li{
+    font-weight: bold;
 }
 ul.iconlist>li>ul.extra>li {
     font-size: 75%;
