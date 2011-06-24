@@ -35,12 +35,12 @@
     <li class="grade"><h3 class="">{% trans "Grade" %}</h3> {{ object.grade|floatformat }} %</li>
     {% endif %}
     {% if object.category %}
-    <li class="category">
+    <li class="">
         <h3 class="">
             {% trans "Category" %}
             {{ "SlopeCategory"|wiki_help }}
         </h3>
-        <p>
+        <p class="categorybutton">
             {{ object.category }}
         </p>
     </li>

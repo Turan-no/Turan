@@ -42,7 +42,7 @@
                 VAM
             </th>
             <th>
-                Category
+                {% trans "Category" %}
             </th>
             <th>
                 {% trans "Avg HR" %}
@@ -127,8 +127,8 @@
             </td>
             <td>
                 {% if slope.category >= 0 %}
-                <div class="slope-categories slope-category-{{slope.category}}">
-                    <span>{{slope.category}}</span>
+                <div class="categorybutton">
+                    {{slope.category}}
                 </div>
                 {% endif %}
             </td>
