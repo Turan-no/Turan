@@ -57,11 +57,7 @@
             <img class="floatright" src="{{ object.route.get_png_url }}" width="32" height="32"/>
             {% endif %}
             <a href="{{ object.get_absolute_url }}">
-                {% if object.route %}
-                {{ object.route.name|slice:":60" }}
-                {% else %}
-                {{ object.exercise_type }}
-                {% endif %}
+                {{ object.get_name }}
             </a>
             {% if object.segmentdetail_set.exists %}
             <p class="smaller fade floatright">
