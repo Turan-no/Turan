@@ -10,8 +10,6 @@ None of this should be run as root except apt-get.
 
 ~$ virtualenv turan-env
 
-~$ mv turansite turan-env/
-
 ~$ . turan-env/bin/activate
 
 (pinax-env) ~$ pip install Pinax
