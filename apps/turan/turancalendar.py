@@ -56,7 +56,7 @@ class WorkoutCalendar(HTMLCalendar):
                     body.append('<li class="hoverpoint" id="workout_%s">' %workout.id)
                     body.append('<a href="%s">' % workout.get_absolute_url())
                     body.append('<img src="' + workout.icon() + '" />')
-                    body.append(esc(workout))
+                    body.append(esc(workout.get_name()))
                     body.append('</a>')
                     body.append('<p class="fade">')
                     if workout.route and workout.route.distance:
