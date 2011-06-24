@@ -249,7 +249,7 @@ $(function () {
                     {{ trip.route.distance|floatformat}} km
                     {%endif%}
                     {{ trip.duration }}
-                    {{ trip.date|naturalday }}
+                    <span class="floatright">{{ trip.date }}</span>
                     </li>
                 {% endfor %}
                     </ul>
