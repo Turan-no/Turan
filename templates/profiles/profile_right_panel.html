@@ -37,7 +37,7 @@
 {% endif %}
 
 {% if is_friend %}
-    <div class="groups">
+    <div class="groups box spacer">
         <h2>{% blocktrans %}{{ other_user_display }}'s Tribes{% endblocktrans %}</h2>
         {% if other_user.tribes.all %}
             {% for tribe in other_user.tribes.all %}
@@ -47,7 +47,7 @@
             <p>{% blocktrans %}Not yet a member of any tribes.{% endblocktrans %}</p>
         {% endif %}
     </div>
-    <div class="friends">
+    <div class="friends box spacer">
         <h2>{% blocktrans %}{{ other_user_display }}'s Friends{% endblocktrans %}</h2>
         <table width="100%">
             {% for friendship in other_friends %}
