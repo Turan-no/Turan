@@ -491,6 +491,9 @@ class Exercise(models.Model):
         ordering = ('-date','-time')
 
     def __unicode__(self):
+        return u'%s, %s %s' %(self.get_name(), _('by'), self.user.get_profile().name)
+
+    def get_name(self):
         name = _('Unnamed trip')
         if self.route and self.route.name:
             name = self.route.name
@@ -499,8 +502,7 @@ class Exercise(models.Model):
                 name = unicode(self.exercise_type)
         else:
             name = unicode(self.exercise_type)
-
-        return u'%s, %s %s' %(name, _('by'), self.user)
+        return name
 
     def delete(self, *args, **kwargs):
         ''' Also delete single serving route '''
