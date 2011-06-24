@@ -393,7 +393,7 @@ class FITParser(object):
                         gap somewhere earlier, but as of now we just give up
                         and drop the current sample if that is the case.
                         '''
-                        if (len(self.entries) == 1 or (self.entries[-1].time - self.entries[-2].time).seconds != 1):
+                        if (len(self.entries) == 1 or len(self.entries)>1 and (self.entries[-1].time - self.entries[-2].time).seconds != 1):
                             self.entries[-1].time = self.entries[-1].time - timedelta(seconds=1)
                         else:
                             continue
