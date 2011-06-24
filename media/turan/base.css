@@ -488,10 +488,6 @@ ul.comments li {
     float: right;
     list-style-image: url('/site_media/pinax/img/silk/icons/wrench.png');
 }
-.third {
-    width: 33.3%;
-    margin: 0;
-}
 .half {
     width: 49%;
     margin: 0;
@@ -597,10 +593,14 @@ div.mapcontainer {
 }
 
 .toplist ol {
-    margin: 0;
+    padding-left: 10px;
+    font-size: 11px;
+    width: 180px;
+}
+h3.segmenttoplist {
+    margin-bottom: 20px;
 }
 .segmenttoplist li {
-    float: left;
     list-style-position: inside;
 }
 .segmenttoplist span {

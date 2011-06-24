@@ -1,10 +1,9 @@
 {% load i18n %}
 {% load turan_extras %}
 {% load turanwaka_tags %}
-<ul class="segmenticons iconlist">
-<li class="description" style="font-weight:normal">{{ object.description }}
-</li>
-</ul>
+<h3 class="segmenttoplist">
+    {{ object.description }}
+</h3>
 <hr class="clearleft" />
 <ul class="segmenticons iconlist">
     {% if object.distance %}
