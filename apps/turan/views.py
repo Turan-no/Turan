@@ -1697,7 +1697,6 @@ def import_data(request):
                     content = ContentFile(urllib2.urlopen(url).read())
 
                     route.gpx_file.save("gpx/sporty_" + id + ".gpx", content)
-                    form.save()
 
                     return HttpResponseRedirect(route.get_absolute_url())
                 else:

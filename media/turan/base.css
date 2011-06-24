@@ -1416,3 +1416,31 @@ a.profilehoverpoint>img {
     opacity: 0.85 !important;
     box-shadow: 2px 2px 8px black;
 }
+.tooltip_help img:hover {
+    opacity: 1;
+}
+.tooltip_help img {
+    opacity: 0.5;
+}
+.tooltip_help {
+    width: 16px;
+    height: 16px;
+    float: right;
+    cursor: pointer; 
+    padding: 0 4px; 
+    position: relative;
+}
+.tooltip_help_box {
+    display: none; 
+    position: absolute; 
+    height: 250px; 
+    width: 200px; 
+    overflow: auto; 
+    background: white; 
+    border: 1px solid black; 
+    box-shadow: 3px 3px 8px #555;
+    z-index: 1; 
+    padding: 5px;
+    font-size: 12px;
+    font-family: tahoma;
+}

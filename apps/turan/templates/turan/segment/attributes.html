@@ -37,8 +37,13 @@
     {% endif %}
     {% if object.category %}
     <li class="category">
-    <h3 class="">{% trans "Category" %}</h3> {{ object.category }}
-    {{ "SlopeCategory"|wiki_help }}
+        <h3 class="">
+            {% trans "Category" %}
+            {{ "SlopeCategory"|wiki_help }}
+        </h3>
+        <p>
+            {{ object.category }}
+        </p>
     </li>
     {% endif %}
 </ul>
