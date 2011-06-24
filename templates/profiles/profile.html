@@ -35,30 +35,30 @@
         <li>
             <a href="{% url import_data %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="menu_button" />
-                {% trans "import data from another site"%}
+                {% trans "Import exercises from another site"%}
             </a>
         </li>
         <li>
             <a href="{% url userprofiledetail_create %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/cake.png" alt="menu_button" />
-                {% trans "lost weight?"%}
+                {% trans "Update weight / resting HR"%}
             </a>
         </li>
         <li>
             <a href="{% url acct_email %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/email_go.png" alt="menu_button" />
-                {% trans "verify an email address"%}
+                {% trans "Verify an email address"%}
             </a>
         </li>
         <li>
             <a href="{% url avatar_change %}">
                 <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/photo.png" alt="menu_button" />
-                {% trans "add an avatar"%}
+                {% trans "Add an avatar"%}
             </a>
         </li>
         <li><a href="{% url invitations %}">
             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/user_go.png" alt="menu_button" />
-            {% trans "invite more people to the site"%}</a>
+            {% trans "Invite people"%}</a>
         </li>
         {% endif %}
     </ul>
