@@ -463,6 +463,7 @@ span.motto {
     float: right;
     font-style: italic;
     font-size: 1.5em;
+    padding: 5px;
 }
 #locale_switcher div {
     margin-left: 9px;
