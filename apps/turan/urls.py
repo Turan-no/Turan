@@ -97,6 +97,7 @@ urlpatterns += patterns('django.views.generic.create_update',
     url(r'^exercise/r/create/$', create_exercise_with_route,  name='exercise_route_create'),
     url(r'^segment/create/$', create_object, {'login_required': True, 'form_class': SegmentForm},name='segment_create'),
     url(r'^segmentdetail/create/', create_object, {'login_required': True, 'form_class': SegmentDetailForm},name='segmentdetail_create'),
+    url(r'^equipment/create/', create_object, {'login_required': True, 'user_required': True, 'form_class': FullEquipmentForm},name='equipment_create'),
 
 
     url(r'^route/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': FullRouteForm},name='route_update'),

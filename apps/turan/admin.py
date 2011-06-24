@@ -39,4 +39,8 @@ admin.site.register(ExercisePermission)
 admin.site.register(MergeSensorFile)
 admin.site.register(Segment)
 #admin.site.register(Teamsport)
+admin.site.register(Equipment)
+admin.site.register(EquipmentType)
+admin.site.register(Component)
+admin.site.register(ComponentType)
 

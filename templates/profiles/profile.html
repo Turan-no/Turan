@@ -220,6 +220,20 @@ $(function () {
         {% endif %}
         <br />
     </div>
+    {% if other_user.equipment_set.exists %}
+    <div class="box spacer">
+            <div class="box spacer">
+                <a class="tools" href="{% url equipment_create %}">{%trans "Add equipment" %}</a>
+        <h2>{% trans "Exercise equipment" %}</h2>
+        <ul>
+        {% for equipment in other_user.equipment_set.all %}
+            {% include "equipment/equipment_attributes.html" %}
+        {% endfor %}
+        </ul>
+    </ul>
+
+    </div>
+    {% endif %}
 
             {% if exerciseqs.count %}
             <div class="box spacer">

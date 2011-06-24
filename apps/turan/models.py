@@ -43,6 +43,71 @@ else:
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 AUTOROUTE_DESCRIPTION = "Autoroute"
 
+class EquipmentType(models.Model):
+    name = models.CharField(max_length=140)
+    description = models.TextField(_('Description'), help_text=_('Equipment description'), blank=True, null=True)
+    icon = models.ImageField(upload_to='equipment', null=True, blank=True, storage=gpxstore)
+
+    def __unicode__(self):
+        return unicode(self.name)
+
+    class Meta:
+        verbose_name = _("Equipment Type")
+        verbose_name_plural = _("Equipment Types")
+
+class Equipment(models.Model):
+    user = models.ForeignKey(User)
+    equipmenttype = models.ForeignKey(EquipmentType)
+    image = models.ImageField(upload_to='equipment', blank=True, storage=gpxstore)
+    url = models.URLField(_('External URL'), blank=True, help_text=_('Added info in external URL'))
+    brand = models.CharField(_('Brand'), max_length=140)
+    model = models.CharField(_('Model'), max_length=140)
+    weight = models.FloatField(_('Weight'), blank=True, help_text=_('in kg'))
+    notes = models.TextField(_('Notes'), help_text=_('Equipment description'), blank=True, null=True)
+
+    def __unicode__(self):
+        return unicode('%s %s %s' %(self.equipmenttype, self.brand, self.model))
+
+    class Meta:
+        verbose_name = _("Equipment")
+        verbose_name_plural = _("Equipment")
+
+    def get_distance(self):
+        ''' Get the exercises with routes and sum the distance '''
+        return self.exercise_set.exclude(route__isnull=True).aggregate(sum=Sum('route__distance'))['sum']
+
+    def get_absolute_url(self):
+        return reverse('profile_redirect')
+
+class ComponentType(models.Model):
+    name = models.CharField(max_length=140)
+    description = models.TextField(_('Description'), help_text=_('Component description'), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("Component Type")
+        verbose_name_plural = _("Component Types")
+
+    def __unicode__(self):
+        return unicode(self.name)
+
+class Component(models.Model):
+    equipment= models.ForeignKey(Equipment)
+    componenttype = models.ForeignKey(ComponentType)
+    brand = models.CharField(_('Brand'), max_length=140)
+    model = models.CharField(_('Model'), max_length=140)
+    weight = models.FloatField(_('Weight'), default=0, blank=True, help_text=_('in kg'))
+    added = models.DateTimeField(_('Added'))
+    removed = models.DateTimeField(_('Removed'),null=True,blank=True)
+    notes = models.TextField(_('Notes'), help_text=_('Component description'), blank=True, null=True)
+
+    def __unicode__(self):
+        return unicode('%s %s %s' %(self.componenttype, self.brand, self.model))
+
+    class Meta:
+        verbose_name = _("Component")
+        verbose_name_plural = _("Components")
+
+
 class RouteManager(models.Manager):
     ''' Primary purpose to remove the /dev/null route. Will also hide "one time routes" '''
 
@@ -344,6 +409,7 @@ class Exercise(models.Model):
 
     exercise_permission = models.CharField(max_length=1, choices=permission_choices, default='A', )
     live_state = models.CharField(max_length=1, choices=live_states, default='F', blank=True, null=True)
+    equipment = models.ForeignKey(Equipment, null=True, blank=True)
 
     object_id = models.IntegerField(null=True)
     content_type = models.ForeignKey(ContentType, null=True)
@@ -1030,3 +1096,4 @@ class AutoTranslateField(models.CharField):
 
     def to_python(self, value):
         return str(_(value))
+

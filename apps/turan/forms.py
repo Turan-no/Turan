@@ -1,5 +1,5 @@
 from django import forms
-from models import Route, Exercise, Segment, Slope, SegmentDetail, ExerciseType, permission_choices
+from models import Route, Exercise, Segment, Slope, SegmentDetail, ExerciseType, permission_choices, Equipment
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
@@ -101,3 +101,8 @@ class SegmentDetailForm(forms.ModelForm):
 class FullSlopeForm(forms.ModelForm):
     class Meta:
         model = Slope
+
+class FullEquipmentForm(forms.ModelForm):
+    class Meta:
+        model = Equipment
+        exclude = ('user',)
