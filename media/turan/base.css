@@ -1425,10 +1425,10 @@ a.profilehoverpoint>img {
 .tooltip_help {
     width: 16px;
     height: 16px;
-    float: right;
     cursor: pointer; 
     padding: 0 4px; 
     position: relative;
+    display: inline;
 }
 .tooltip_help_box {
     display: none; 
@@ -1443,4 +1443,6 @@ a.profilehoverpoint>img {
     padding: 5px;
     font-size: 12px;
     font-family: tahoma;
+    color: black;
+    font-weight: normal;
 }

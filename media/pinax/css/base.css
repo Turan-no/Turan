@@ -30,7 +30,6 @@ td {
     padding: 10px;
     width: 1000px;
     background: white;
-    overflow: auto;
 }
 #footer {
     color: #999; /* footer text colour */
