@@ -99,7 +99,7 @@ def index(request):
             u_lookup_kwargs['username__in'] = usernames
             c_lookup_kwargs = e_lookup_kwargs
 
-    exercise_list = Exercise.objects.filter(**e_lookup_kwargs).select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')[:10]
+    exercise_list = Exercise.objects.exclude(exercise_permission='N').filter(**e_lookup_kwargs).select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')[:10]
     comment_list = ThreadedComment.objects.filter(**c_lookup_kwargs).filter(is_public=True).order_by('-date_submitted')[:5]
 
     route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])[:12]
