@@ -552,6 +552,12 @@ ul.iconlist>li.height,
 ul.iconlist>li.ascent {
     list-style-image: url('/site_media/pinax/img/silk/icons/arrow_up.png');
 }
+ul.iconlist>li.grade {
+    list-style-image: url(/site_media/pinax/img/silk/icons/shape_rotate_clockwise.png);
+}
+ul.iconlist>li.category {
+    list-style-image: url(/site_media/pinax/img/silk/icons/exclamation.png);
+}
 ul.iconlist>li.descent {
     list-style-image: url('/site_media/pinax/img/silk/icons/arrow_down.png')
 }
@@ -729,13 +735,22 @@ ul.iconlist {
 }
 ul.iconlist li {
     list-style-type: none;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     margin-left: 5px;
     list-style-position: inside;
+    padding: 5px;
 }
-ul.segmenticons li, .segmenticons span, .segmenticons p {
+ul.segmenticons {
+    width: 100%;
+}
+ul.segmenticons>:first-child {
+    margin-left: 0;
+}
+ul.segmenticons li {
     float: left;
-    list-style-position: inside;
+    margin-left: 40px;
+}
+ul.segmenticons h3 {
 }
 ul.iconlist>li>ul.extra>li {
     font-size: 75%;
