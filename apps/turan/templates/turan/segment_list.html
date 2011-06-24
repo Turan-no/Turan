@@ -94,7 +94,7 @@
     <td>{{ object.distance|floatformat }} {% trans "km" %} </td>
     <td>{{object.ascent}} {% trans "m" %}</td>
     <td>{{object.grade|floatformat}} %</td>
-    <td><div class="slope-categories slope-category-{{object.category}}"><span>{{object.category}}</span></div></td> 
+    <td><div class="categorybutton">{{object.category}}</div></td> 
     <td>{{object.tcount}}</td>
 </tr>
 {%endfor %}
