@@ -1,0 +1,47 @@
+{% load i18n %}
+{% load humanize %}
+
+<li>
+    <table class="fullsize">
+        <tr>
+        <th></th>
+        <th>{% trans "Brand" %}</th>
+        <th>{% trans "Model" %}</th>
+        <th>{% trans "Distance" %}</th>
+    </tr>
+    <tr>
+        <td>
+            {{equipment.equipmenttype }}
+        </td>
+        <td>
+            {{equipment.brand}}
+        </td>
+        <td>
+            {{equipment.model }} 
+        </td>
+        <td>
+            {{ equipment.get_distance|floatformat }} km
+        </td>
+        </tr>
+
+    <ul>
+    {% for component in equipment.component_set.all %}
+    <tr>
+        <td>
+            {{component.componenttype }}
+        </td>
+        <td>
+            {{component.brand}}
+        </td>
+        <td>
+            {{component.model }} 
+        </td>
+        <td>
+            {{ component.added|naturalday}}
+        </td>
+    </tr>
+    
+    {% endfor %}
+    </ul>
+</table>
+</li>
