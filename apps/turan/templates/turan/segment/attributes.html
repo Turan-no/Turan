@@ -1,13 +1,14 @@
 {% load i18n %}
 {% load turan_extras %}
-<ul class="iconlist">
+<ul class="segmenticons iconlist">
+<li class="description">{{ object.description }}
+</li>
+</ul>
+<hr class="clearleft" />
+<ul class="segmenticons iconlist">
     {% if object.distance %}
     <li class="distance"><span class="label">{% trans "Distance" %}:</span> {{ object.distance|floatformat }} {% trans "km" %}</li>
     {% endif %}
-    <li class="description">
-        <span class="label">{% trans "Description" %}:</span> 
-        <p>{{ object.description }}</p>
-    </li>
     {% if object.segment_url %}
     <li class="url">
         <span class="label">{% trans "External URL" %}:</span> 

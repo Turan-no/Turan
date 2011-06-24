@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import floatformat, stringfilter
 from django_sorting.templatetags.sorting_tags import SortAnchorNode
+from friends.models import Friendship
 from time import mktime
 import simplejson as json
 import re
@@ -299,3 +300,21 @@ def truncatechars(value, arg):
         return value[:length] + '...'
     return value
 truncatechars.is_safe = True
+
+@register.filter
+def exercise_view_permission(exercise, user):
+    if exercise.user == user:  # Allow self
+        return True
+    if exercise.exercise_permission == 'N':
+        return False
+        if exercise.exercise_permission == 'F':
+            if user.is_authenticated():
+                is_friend = Friendship.objects.are_friends(user, exercise.user)
+                if is_friend:
+                    return True
+                else:
+                    return False
+
+            else:
+                return False
+    return True

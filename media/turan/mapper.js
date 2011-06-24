@@ -13,7 +13,7 @@ var Mapper = {
         if (gpx_file) {
             var lgpx = new OpenLayers.Layer.GML("Route", gpx_file, {
                 format: OpenLayers.Format.GPX,
-                style: {strokeColor: "purple", strokeWidth: 5, strokeOpacity: 0.5, label: "Start"},
+                style: {strokeColor: "#1d3853", strokeWidth: 6, strokeOpacity: 0.8, label: "Start"},
                 projection: this.projection
             });
             lgpx.events.register("loadend", this, this.resizeMapToLayerExtents);
@@ -90,6 +90,7 @@ var Mapper = {
                 defaultlayers = [FKB, FKBraster, layerMapnik, layerCycleMap, layerTilesAtHome, gphy, gmap, ghyb, gsat];
             }
         }
+        this.defaultlayers = defaultlayers;
         this.map.addLayers(defaultlayers);
         
 

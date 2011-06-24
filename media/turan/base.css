@@ -53,11 +53,11 @@ table.fullsize {
 table.fullsize tr th {
     background: #4F96CA; 
     color: white;
+    border: 1px solid #AAA;
     border-radius: 3px;
     -webkit-box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.1);
     -o-box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.1);
-    border: 1px solid #AAA;
     font-size: 0.9em;
     margin-bottom: 0px;
     margin-top: 5px;
@@ -593,6 +593,13 @@ div.mapcontainer {
 .toplist ol {
     margin: 0;
 }
+.segmenttoplist li {
+    float: left;
+    list-style-position: inside;
+}
+.segmenttoplist span {
+    margin-left: 5px;
+}
 .toplist .duration {
     padding: 2px;
     margin-right: 2px;
@@ -724,6 +731,10 @@ ul.iconlist li {
     list-style-type: none;
     margin-bottom: 0px;
     margin-left: 5px;
+    list-style-position: inside;
+}
+ul.segmenticons li, .segmenticons span, .segmenticons p {
+    float: left;
     list-style-position: inside;
 }
 ul.iconlist>li>ul.extra>li {
@@ -1261,7 +1272,7 @@ p.description {
     width: 40px;
 }
 
-.olLayerGoogleCopyright {
+.olLayerGoogleCopyright, .olLayerGooglePoweredBy {
     display: none
 }
 

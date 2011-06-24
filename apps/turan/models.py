@@ -487,6 +487,8 @@ class Exercise(models.Model):
         return self.user.get_profile().get_weight(self.date)
 
 
+
+
 class ExercisePermission(models.Model):
     exercise = models.OneToOneField(Exercise, primary_key=True)
     speed = models.CharField(max_length=1, choices=permission_choices, default='A')

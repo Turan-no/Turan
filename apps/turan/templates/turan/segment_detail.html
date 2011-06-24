@@ -26,22 +26,19 @@
 {% endblock %}
 {% block content %}
 
-{% if object.gpx_file %}
-<div class="mapcontainer"><div class="map drop-shadow raised" id="map"></div>
-        <a href="{{MEDIA_URL}}turan/{{ object.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
-    </div>
-{% endif %}
-
 <h1>
     {{ object.name }}
 </h1>
-<div class="spacer">
+<div class="box spacer">
 {% include "turan/segment/attributes.html" %}
-</div>
+<hr class="clearleft" />
+
 {% if slopes %}
-<h2>{% trans "Best efforts" %}</h2>
-<div class="toplist">
-<ol>
+<div class="segmenttoplist toplist">
+<span class="title">{% trans "Best efforts" %}</span>
+    <ol>
+    <li>
+    </li>
 {% for object in slopes|slice:":3" %}
     <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
 <a href="{{ object.exercise.user.get_absolute_url }}" title="{{ object.exercise.user }}">
@@ -52,6 +49,14 @@
 </ol>
 </div>
 {% endif %}
+</div>
+<hr class="clearleft" />
+{% if object.gpx_file %}
+<div ><div style="width:100%; height: 500px" class="drop-shadow raised" id="map"></div>
+        <a href="{{MEDIA_URL}}turan/{{ object.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
+    </div>
+{% endif %}
+
 <ul class="photos hlist">
     {% for photo in object.get_photos %}
     <li>
@@ -201,6 +206,19 @@ $(function () {
         document.location = player_url;
 
     });
+
+$(document).ready(function() {
+    //Add Overview map control 
+    if (Mapper.map) {
+        var options = {
+            maximized: false,
+        };
+        var ovmap = new OpenLayers.Control.OverviewMap(options);
+        Mapper.map.addControl(ovmap);
+    }
+});
+
+
     </script>
 {% paginate %}
 {% endif %}
