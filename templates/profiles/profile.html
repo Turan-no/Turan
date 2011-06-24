@@ -2,14 +2,16 @@
 
 {% load i18n %}
 {% load avatar_tags %}
+{% load account_tags %}
 {% load uni_form_tags %}
 {% load microblogging_tags %}
 {% load turan_extras %}
 {% load humanize %}
 
-{% block head_title %}{% blocktrans %}Profile for {{ other_user }}{% endblocktrans %}{% endblock %}
+{% block head_title %}{% blocktrans %}Profile for{% endblocktrans %} {% user_display other_user %}{% endblock %}
 
 {% block body %}
+{% user_display other_user as other_user_display %}
     <div class="right_panel">
 <div class="spacer box drop-shadow lifted">
     <h2>{% trans "What Next?" %}</h2>
@@ -17,7 +19,7 @@
         <li>
             <a href="{% url calendar-index %}?username={{ other_user }}">
             <img alt="calendar" src="{{MEDIA_URL}}/pinax/img/silk/icons/calendar.png">
-            {% trans "Show" %} {{ other_user }}{% trans "'s calendar" %}</a>
+            {% trans "Show" %} {{ other_user_display }}{% trans "'s calendar" %}</a>
         </li>
         {% if user.is_authenticated and is_me %}
         <li>
@@ -162,7 +164,7 @@ $(function () {
     </div>
     
     <div class="left_panel">
-        {% if other_user.get_profile.name %}<h1><span class="fn">{{ other_user.get_profile.name }}</span></h1>{% endif %}
+        {% if other_user_display %}<h1><span class="fn">{{ other_user_display }}</span></h1>{% endif %}
         {% if other_user.get_profile.motto %}
             <span class="motto">«{{ other_user.get_profile.motto }}»</span>
         {% endif %}
@@ -170,7 +172,7 @@ $(function () {
 
         <div class="box spacer">
         <div id="profile_avatar">
-            <div><img src="{% avatar_url other_user 120 %}" alt="Photo of {{ other_user }}" class="photo" /></div>
+            <div><img src="{% avatar_url other_user 120 %}" alt="Photo of {{ other_user_display }}" class="photo" /></div>
             {% if is_me %}
             <a href="{% url avatar_change %}" id="avatar_replace">(replace)</a>
             {% endif %}
@@ -273,7 +275,7 @@ $(function () {
                     
                     {# @@@ this should be an inclusion tag #}
                     {% if is_friend %}
-                        <p>{% blocktrans %}You are friends with {{ other_user }}.{% endblocktrans %} <a href="{% url messages_compose %}{{ other_user }}/">{% trans "Send a message" %}</a>.</p>
+                        <p>{% blocktrans %}You are friends with{% endblocktrans %} {{ other_user_display }}. <a href="{% url messages_compose %}{{ other_user }}/">{% trans "Send a message" %}</a>.</p>
                         <div>
                             <form method="post" action="">
                                 <input type="hidden" name="action" value="remove" /><input type="submit" value="{% trans "remove from friends" %}"/>
@@ -281,7 +283,7 @@ $(function () {
                         </div>
                     {% else %}
                         {% if previous_invitations_from %}
-                            <p>{% blocktrans %}{{ other_user }} has requested friendship.{% endblocktrans %}</p>
+                            <p>{{ other_user_display }}{% blocktrans %}has requested friendship.{% endblocktrans %}</p>
                             {% for invitation in previous_invitations_from %}
                                 <div class="friendship_request">
                                     <p>From <a href="{% url profile_detail invitation.from_user.username %}">{{ invitation.from_user }}</a> ({{ invitation.sent }}):</p>
@@ -309,7 +311,7 @@ $(function () {
                                         <div class="form_block">
                                             <input type="hidden" name="action" value="invite" />
                                             <input type="submit" value="{% trans "invite" %}"/>
-                                            {% blocktrans %}{{ other_user }} to be a friend.{%  endblocktrans %}
+                                            {% blocktrans %}{{ other_user_display }} to be a friend.{%  endblocktrans %}
                                         </div>
                                     </fieldset>
                                 </form>
