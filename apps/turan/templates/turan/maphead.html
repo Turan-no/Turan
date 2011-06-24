@@ -1,4 +1,6 @@
 {% load i18n %}
+{% load l10n %}
+{% localize off %}
 {% if gpx_file %}
     <script type="text/javascript">
         var map;
@@ -20,3 +22,4 @@
         });
     </script>
 {% endif %} 
+{% endlocalize %}
