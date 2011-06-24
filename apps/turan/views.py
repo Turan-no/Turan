@@ -37,7 +37,6 @@ from django.utils.datastructures import SortedDict
 from django.middleware.gzip import GZipMiddleware
 
 from django.core.files.base import ContentFile
-from turan.models import Route
 from turan.middleware import Http403
 from tempfile import NamedTemporaryFile
 import urllib2

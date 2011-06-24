@@ -62,8 +62,8 @@
             {% if object.segmentdetail_set.exists %}
             <p class="smaller fade floatright">
 
-            {% for sd in object.segmentdetail_set.all %}
-                <a href="{{ sd.get_absolute_url }}">{{sd.segment.name|truncatechars:":15"}}</a>{% if not forloop.last %},{% endif%}
+            {% for sd in object.segmentdetail_set.select_related %}
+            <a href="{% url segment sd.segment.id %}">{{sd.segment.name|truncatechars:":15"}}</a>{% if not forloop.last %},{% endif%}
             {% endfor %}
 
             </p>
