@@ -99,6 +99,15 @@ def index(request):
             u_lookup_kwargs['username__in'] = usernames
             c_lookup_kwargs = e_lookup_kwargs
 
+    team =  request.GET.get('team', '')
+    if team:
+        friend_set =  get_object_or_404(Tribe, slug=team)
+        friend_set = friend_set.members.all()
+        e_lookup_kwargs['user__in'] = friend_set
+        usernames = [u.username for u in friend_set]
+        u_lookup_kwargs['username__in'] = usernames
+        c_lookup_kwargs = e_lookup_kwargs
+
     exercise_list = Exercise.objects.exclude(exercise_permission='N').filter(**e_lookup_kwargs).select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')[:10]
     comment_list = ThreadedComment.objects.filter(**c_lookup_kwargs).filter(is_public=True).order_by('-date_submitted')[:5]
 
