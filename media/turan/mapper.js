@@ -101,12 +101,11 @@ var Mapper = {
             var startlonlat = new OpenLayers.LonLat(start[0],start[1]).transform(this.projection, this.map.getProjectionObject());
             var endlonlat = new OpenLayers.LonLat(end[0],end[1]).transform(this.projection, this.map.getProjectionObject());
 
-            var stop_icon = new OpenLayers.Icon('http://turan.no/site_media/pinax/images/silk/icons/flag_red.png',size,offset);
-            var start_icon = new OpenLayers.Icon('http://turan.no/site_media/pinax/images/silk/icons/flag_green.png',size,offset);
-            var pos_icon = new OpenLayers.Icon('http://turan.no/site_media/pinax/images/silk/icons/flag_yellow.png',size,offset);
-            layerMarkers = new OpenLayers.Layer.Markers("Markers");
-            this.layerMarkers = layerMarkers;
-            this.map.addLayer(layerMarkers);
+            var stop_icon = new OpenLayers.Icon('http://turan.no/site_media/pinax/images/silk/icons/flag_red.png', size, offset);
+            var start_icon = new OpenLayers.Icon('http://turan.no/site_media/pinax/images/silk/icons/flag_green.png', size, offset);
+            var pos_icon = new OpenLayers.Icon('http://turan.no/site_media/pinax/images/silk/icons/flag_yellow.png', size, offset);
+            this.layerMarkers = new OpenLayers.Layer.Markers("Markers");
+            this.map.addLayer(this.layerMarkers);
             this.start_icon = start_icon;
             this.stop_icon = stop_icon;
             this.pos_icon = pos_icon;
@@ -117,8 +116,8 @@ var Mapper = {
             this.stopMarker = new OpenLayers.Marker(endlonlat, stop_icon);
             this.posMarker = null;
 
-            layerMarkers.addMarker(this.startMarker);
-            layerMarkers.addMarker(this.stopMarker);
+            this.layerMarkers.addMarker(this.startMarker);
+            this.layerMarkers.addMarker(this.stopMarker);
         } 
         this.geojson_url = geojson_url;
         if (geojson_url) {
@@ -168,30 +167,6 @@ var Mapper = {
         }
         return this.map;
     },
-    deleteMarkers: function() {
-        var i=0;
-        var myMarkers = this.layerMarkers.markers;
-        while (i<myMarkers.length) {
-            var myMarker = myMarkers[i];
-            if (myMarker != this.startMarker && myMarker != this.stopMarker) {
-                this.layerMarkers.removeMarker(myMarker);
-            } else {
-                    i=i+1;
-           }
-        }
-    },
-    updatePosMarker: function(x, y) {
-        if (x != undefined && y != undefined ) {
-            this.deleteMarkers();
-            lonlat = new OpenLayers.LonLat(x, y).transform(this.projection, this.map.getProjectionObject());
-            this.posMarker = new OpenLayers.Marker(lonlat, this.pos_icon.clone());
-            this.layerMarkers.addMarker(this.posMarker);
-        }
-    },
-    zoomToPosMarker: function() {
-        lonlat = this.posMarker.lonlat;
-        this.map.setCenter(lonlat);
-    }, 
     panTo: function(x1, y1) {
         lonlat =new OpenLayers.LonLat(x1,y1 ).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());;
         this.map.panTo(lonlat);
