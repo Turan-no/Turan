@@ -26,7 +26,7 @@ class Profile(models.Model):
     cycle_image = models.ImageField(upload_to='turan', blank=True)
 
     def __unicode__(self):
-        return get_name()
+        return self.get_name()
 
     def get_name(self):
         if self.name and self.name.strip() != "":
