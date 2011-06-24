@@ -738,7 +738,6 @@ ul.iconlist li {
     margin-bottom: 0;
     margin-left: 5px;
     list-style-position: inside;
-    padding: 5px;
 }
 ul.segmenticons {
     width: 100%;
@@ -748,6 +747,7 @@ ul.segmenticons>:first-child {
 }
 ul.segmenticons li {
     float: left;
+    padding: 5px;
     margin-left: 40px;
 }
 ul.segmenticons h3 {
