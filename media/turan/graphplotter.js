@@ -126,7 +126,9 @@ var GraphPlotter = {
                             var e = $(elem);
                             var val = avgs[key];
                             if (val) {
-                                val = Math.round(val * 10) / 10;
+                                if (typeof(val) == 'number') {
+                                    val = Math.round(val * 10) / 10;
+                                }
                                 e.text(val);
                                 e.parents(".hidden").removeClass("hidden");
                                 e.attr('title', key.replace(/_/g, ' '))

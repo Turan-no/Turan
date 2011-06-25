@@ -729,6 +729,11 @@ def powerjson(request, object_id):
     d = filldistance(details) # FIXME
 
     ret = detailslice_info(details)
+    # Post proc for nicer numbers
+    if ret['distance'] >= 1000:
+        ret['distance'] = '%s %s' %(round(ret['distance']/1000,2), 'km')
+    else:
+        ret['distance'] = '%s %s' %(round(ret['distance'],2), 'm')
 
     return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
