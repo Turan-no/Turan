@@ -491,7 +491,7 @@ class Exercise(models.Model):
         ordering = ('-date','-time')
 
     def __unicode__(self):
-        return u'%s, %s %s' %(self.get_name(), _('by'), self.user.get_profile().name)
+        return u'%s, %s %s' %(self.get_name(), _('by'), self.user.get_profile().get_name())
 
     def get_name(self):
         name = _('Unnamed trip')
