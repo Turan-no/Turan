@@ -37,9 +37,9 @@
         <th>
             {% trans "Avg power/kg" %}
         </th>
-        <th> {% anchortrans max_power "Max power" %} </th>
+        <th>{% anchortrans max_power "Max power" %}</th>
         {% endif %}
-        {% if interval.avg_hr %}
+        {% if object.avg_hr %}
         <th>
             {% anchortrans avg_hr "Avg HR" %}
         </th>
@@ -92,15 +92,15 @@
         <td>{{interval.get_avg_power_per_kg|floatformat}} {% trans "W/kg" %}</td>
         <td>{{interval.max_power|floatformat}} {% trans "W" %} </td>
         {% endif %}
-            {% if interval.avg_hr %}
+        {% if interval.avg_hr %}
         <td>
-                {% if max_hr %}
-                    {{ interval.avg_hr|percent:max_hr }}
-                {% else %}
-                    {{interval.avg_hr|floatformat}} {% trans "BPM" %}
-                {% endif %}
-        </td>
+            {% if max_hr %}
+                {{ interval.avg_hr|percent:max_hr }}
+            {% else %}
+                {{interval.avg_hr|floatformat}} {% trans "BPM" %}
             {% endif %}
+        </td>
+        {% endif %}
         {% if interval.avg_pedaling_cadence %}
         <td>{{interval.avg_pedaling_cadence}} {% trans "RPM" %}</td>
         <td>{{interval.max_cadence}} {% trans "RPM" %}</td>
