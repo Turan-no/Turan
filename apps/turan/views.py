@@ -59,6 +59,7 @@ from time import mktime, strptime
 import locale
 
 from turancalendar import WorkoutCalendar
+from templatetags.turan_extras import durationformatshort
 from feeds import ExerciseCalendar
 
 import simplejson
@@ -734,6 +735,9 @@ def powerjson(request, object_id):
         ret['distance'] = '%s %s' %(round(ret['distance']/1000,2), 'km')
     else:
         ret['distance'] = '%s %s' %(round(ret['distance'],2), 'm')
+    if ret['duration']:
+        ret['duration'] = durationformatshort(ret['duration'])
+
 
     return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
