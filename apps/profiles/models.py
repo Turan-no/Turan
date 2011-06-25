@@ -2,7 +2,10 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.db.models import Count
 from django.utils.translation import ugettext_lazy as _
+from django.utils import simplejson
+from django.utils.safestring import mark_safe
 
 from timezones.fields import TimeZoneField
 
@@ -37,6 +40,9 @@ class Profile(models.Model):
         return ('profile_detail', None, {'username': self.user.username})
     get_absolute_url = models.permalink(get_absolute_url)
     
+    def get_exercise_types_by_count_json(self):
+        return mark_safe(simplejson.dumps(list(self.user.exercise_set.values('exercise_type__id').annotate(c=Count('exercise_type__id')).order_by('-c'))[:3]))
+
     class Meta:
         verbose_name = _('profile')
         verbose_name_plural = _('profiles')
