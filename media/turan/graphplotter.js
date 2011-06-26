@@ -383,7 +383,7 @@ var GraphPlotter = {
             if (item) 
                 highlightedseries = item.series.label;
             
-            var tooltipHtml = '<h3>Data at ' + that.xaxisformatter(x, plot.getAxes().xaxis) + '</h3><ul class="iconlist">';
+            var tooltipHtml = '<h3>'+ that.xaxisformatter(x, plot.getAxes().xaxis) + '</h3><ul class="iconlist">';
             for (skey in that.datasets) {
                 if (skey == 'lon' || skey == 'lat') 
                     continue;
