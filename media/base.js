@@ -52,11 +52,20 @@ var axisformatters = {
     },
     time: function(val, axis) {
         var hours = Math.floor(val / 60);
-        var minutes = val;
+        var minutes = Math.floor(val - hours * 60);
+	var seconds = Math.round(60 * (val - Math.floor(val)));
+
+	var r = "";
 
         if (hours)
-                return hours + 'h ' + minutes + 'm';
-        return minutes + 'm';
+            r += hours + 'h ';
+
+	if (minutes)
+	    r += minutes + 'm ';
+
+	if (seconds)
+	    r += seconds + 's';
+	return $.trim(r);
     },
     duration: function(val, axis) {
         var days    = parseInt((val / (60*60*24)));
