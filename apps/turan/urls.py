@@ -12,6 +12,7 @@ from djcelery import views as celery_views
 sitemaps = {
         'trips': GenericSitemap({'queryset': Exercise.objects.all(), 'date_field': 'date'}, priority=0.5),
     'routes': GenericSitemap({'queryset': Route.objects.all(), 'date_field': 'created'}, priority=0.5),
+    'segments': GenericSitemap({'queryset': Segment.objects.all(), 'date_field': 'created'}, priority=0.5),
 }
 
 feeds = {
