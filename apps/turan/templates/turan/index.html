@@ -63,7 +63,9 @@
             <p class="smaller fade floatright">
 
             {% for sd in object.segmentdetail_set.select_related %}
-            <a href="{% url segment sd.segment.id %}">{{sd.segment.name|truncatechars:":15"}}</a>{% if not forloop.last %},{% endif%}
+            {% if sd.segment%}
+                <a href="{% url segment sd.segment.id %}">{{sd.segment.name|truncatechars:":15"}}</a>{% if not forloop.last %},{% endif%}
+            {% endif %}
             {% endfor %}
 
             </p>
