@@ -91,7 +91,7 @@
                 backendUrl: "{% url powerjson object.id %}",
                 max_hr: {{ max_hr }},
                 markings: markings,
-                xaxisformatter: {% if time_xaxis %}"time"{%else%}"length"{%endif%}
+                xaxisformatter: {% if time_xaxis %}"time"{%else%}"distance"{%endif%}
             });
             var orly = window.location.hash.split('-')
             if (orly) {
