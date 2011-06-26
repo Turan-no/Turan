@@ -33,10 +33,10 @@ var axisformatters = {
         return (val).toFixed(axis.tickDecimals) + ' m';
     },
     length: function(val, axis) {
-        return (val).toFixed(axis.tickDecimals) + ' km';
+        return (Math.round(val*100)/100) + ' km';
     },
     distance: function(val, axis) {
-        return (val).toFixed(axis.tickDecimals) + ' km';
+        return (Math.round(val*100)/100) + ' km';
     },
     power: function(val, axis) {
         return (val).toFixed(axis.tickDecimals) + ' W';
