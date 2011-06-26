@@ -52,6 +52,13 @@
             <div style="text-align: right; float: right"> {{ object.date }}</div>
         </li>
 
+        {% if object.route.ascent %}
+        <li class="ascent">
+            <span class="label">{% trans "Ascent" %}:</span>
+            <div style="text-align: right; float: right"> {{ object.route.ascent }} {% trans "m" %}</div>
+        </li>
+        {% endif %}
+
         {% if object.avg_pedaling_cad %}
         <li class="cadence">
             <span class="label">{% trans "Avg Pedaling Cadence" %}:</span>
