@@ -17,16 +17,16 @@ class Profile(models.Model):
     location = models.CharField(_('location'), max_length=40, null=True, blank=True)
     website = models.URLField(_('website'), null=True, blank=True, verify_exists=False)
     
-    height = models.IntegerField(blank=True, default=0, help_text=_('in cm'))
-    weight = models.FloatField(blank=True, default=0, help_text=_('in kg'))
-    resting_hr = models.IntegerField(blank=True, default=0, help_text=_('beats per minute'))
+    height = models.IntegerField(_('Height'), blank=True, default=0, help_text=_('in cm'))
+    weight = models.FloatField(_('Weight'),blank=True, default=0, help_text=_('in kg, used to calculate power'))
+    resting_hr = models.IntegerField(_('Resting HR'), blank=True, default=0, help_text=_('beats per minute'))
     ftp = models.IntegerField(blank=True,null=True, help_text=_('Functional Threshold Power'))
-    max_hr = models.IntegerField(blank=True, default=0, help_text=_('beats per minute'))
-    motto = models.CharField(max_length=160)
+    max_hr = models.IntegerField(_('Max HR'), blank=True, default=0, help_text=_('beats per minute'))
+    motto = models.CharField(_('Motto'), max_length=160)
 
-    image = models.ImageField(upload_to='turan', blank=True)
-    cycle = models.CharField(max_length=99, blank=True)
-    cycle_image = models.ImageField(upload_to='turan', blank=True)
+    #image = models.ImageField(upload_to='turan', blank=True)
+    #cycle = models.CharField(max_length=99, blank=True)
+    #cycle_image = models.ImageField(upload_to='turan', blank=True)
 
     def __unicode__(self):
         return self.get_name()

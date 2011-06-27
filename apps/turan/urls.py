@@ -106,6 +106,7 @@ urlpatterns += patterns('django.views.generic.create_update',
     url(r'^segment/update/(?P<object_id>\d+)', 'update_object', {'login_required': True, 'form_class': FullSegmentForm},name='segment_update'),
     url(r'^exercise/update/(?P<object_id>\d+)', update_object_user, {'login_required': True, 'form_class': FullExerciseForm},name='exercise_update'),
     url(r'^segmentdetail/update/(?P<object_id>\d+)/?$', 'update_object', {'login_required': True, 'form_class': SegmentDetailForm},name='segmentdetail_update'),
+    url(r'^equipment/update/(?P<object_id>\d+)/?$', 'update_object', {'login_required': True, 'form_class': FullEquipmentForm},name='equipment_update'),
 
     url(r'^exercise/delete/(?P<object_id>\d+)', turan_delete_object, {'model': Exercise, 'login_required': True,},name='exercise_delete'),
     url(r'^segmentdetail/delete/(?P<object_id>\d+)', turan_delete_object, {'model': SegmentDetail, 'login_required': True,},name='segmentdetail_delete'),

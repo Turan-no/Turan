@@ -43,6 +43,30 @@ else:
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 AUTOROUTE_DESCRIPTION = "Autoroute"
 
+class ExerciseType(models.Model):
+
+    name = models.CharField(max_length=40)
+    logo = models.ImageField(upload_to='exerciselogos', blank=True, storage=gpxstore)
+    altitude = models.BooleanField(blank=True, default=0)
+    slopes = models.BooleanField(blank=True, default=0)
+
+    def __unicode__(self):
+        return ugettext(self.name)
+
+    def __repr__(self):
+        return unicode(self.name)
+
+    def icon(self):
+        # FIXME use media url
+        if self.logo:
+            return settings.MEDIA_URL + 'turan/%s' %(self.logo)
+        return ''
+
+    class Meta:
+        verbose_name = _("Exercise Type")
+        verbose_name_plural = _("Exercise Types")
+        ordering = ('name',)
+
 class EquipmentType(models.Model):
     name = models.CharField(max_length=140)
     description = models.TextField(_('Description'), help_text=_('Equipment description'), blank=True, null=True)
@@ -64,6 +88,8 @@ class Equipment(models.Model):
     model = models.CharField(_('Model'), max_length=140)
     weight = models.FloatField(_('Weight'), blank=True, help_text=_('in kg'))
     notes = models.TextField(_('Notes'), help_text=_('Equipment description'), blank=True, null=True)
+    aquired = models.DateField(_('Aquired'), help_text=_('Date you aquired the equipment'))
+    exercise_type = models.ForeignKey(ExerciseType, verbose_name=_('Exercise type'), blank=True, null=True)
 
     def __unicode__(self):
         return unicode('%s %s %s' %(self.equipmenttype, self.brand, self.model))
@@ -71,6 +97,7 @@ class Equipment(models.Model):
     class Meta:
         verbose_name = _("Equipment")
         verbose_name_plural = _("Equipment")
+        ordering = _('-aquired',)
 
     def get_distance(self):
         ''' Get the exercises with routes and sum the distance '''
@@ -96,8 +123,8 @@ class Component(models.Model):
     brand = models.CharField(_('Brand'), max_length=140)
     model = models.CharField(_('Model'), max_length=140)
     weight = models.FloatField(_('Weight'), default=0, blank=True, help_text=_('in kg'))
-    added = models.DateTimeField(_('Added'))
-    removed = models.DateTimeField(_('Removed'),null=True,blank=True)
+    added = models.DateField(_('Added'))
+    removed = models.DateField(_('Removed'),null=True,blank=True)
     notes = models.TextField(_('Notes'), help_text=_('Component description'), blank=True, null=True)
 
     def __unicode__(self):
@@ -339,29 +366,6 @@ class ExerciseManager(models.Manager):
 #    class Meta:
 #        verbose_name = _("Team Membership")
 #        verbose_name_plural = _("Team Memberships")
-class ExerciseType(models.Model):
-
-    name = models.CharField(max_length=40)
-    logo = models.ImageField(upload_to='exerciselogos', blank=True, storage=gpxstore)
-    altitude = models.BooleanField(blank=True, default=0)
-    slopes = models.BooleanField(blank=True, default=0)
-
-    def __unicode__(self):
-        return ugettext(self.name)
-
-    def __repr__(self):
-        return unicode(self.name)
-
-    def icon(self):
-        # FIXME use media url
-        if self.logo:
-            return settings.MEDIA_URL + 'turan/%s' %(self.logo)
-        return ''
-
-    class Meta:
-        verbose_name = _("Exercise Type")
-        verbose_name_plural = _("Exercise Types")
-        ordering = ('name',)
 
 permission_choices = (
             ('A', _('All')),
@@ -1098,4 +1102,3 @@ class AutoTranslateField(models.CharField):
 
     def to_python(self, value):
         return str(_(value))
-

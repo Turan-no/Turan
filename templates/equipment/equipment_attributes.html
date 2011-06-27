@@ -1,15 +1,26 @@
 {% load i18n %}
 {% load humanize %}
+{% load turan_extras %}
 
 <li>
     <table class="fullsize">
         <tr>
-        <th></th>
-        <th>{% trans "Brand" %}</th>
-        <th>{% trans "Model" %}</th>
-        <th>{% trans "Distance" %}</th>
-    </tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>{% trans "Brand" %}</th>
+            <th>{% trans "Model" %}</th>
+            <th>{% trans "Distance" %}</th>
+        </tr>
     <tr>
+        <td>
+            {% if equipment.image %}
+            <img src="{{MEDIA_URL}}{{equipment.image}}">
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url equipment_update equipment.id %}"><img title="{% trans "Modify" %}" src="{{ "wrench"|silk_icon }}"></a>
+        </td>
         <td>
             {{equipment.equipmenttype }}
         </td>
