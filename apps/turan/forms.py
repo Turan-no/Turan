@@ -79,6 +79,13 @@ class FullExerciseForm(forms.ModelForm):
         model = Exercise
         exclude = ('user', 'content_type', 'object_id')
 
+    def __init__(self, *args, **kwargs):
+        super(FullExerciseForm, self).__init__(*args, **kwargs)
+        try:
+            self.fields['equipment'].queryset = Equipment.objects.filter(user = self.instance.user)
+        except:
+            pass
+
 class SegmentForm(forms.ModelForm):
     class Meta:
         model = Segment
