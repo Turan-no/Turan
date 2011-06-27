@@ -67,10 +67,7 @@ class ExerciseForm(forms.ModelForm):
     '''This might come in handy, but field is not visible yet - still in alpha'''
     #def __init__(self, *args, **kwargs):
     #    super(ExerciseForm, self).__init__(*args, **kwargs)
-    #    try:
-    #        self.fields['equipment'].queryset = Equipment.objects.filter(user = self.instance.user)
-    #    except:
-    #        pass
+    #    self.fields['equipment'].queryset = Equipment.objects.filter(user = self.instance.user)
 
 
 class RouteForm(forms.ModelForm):
@@ -89,10 +86,7 @@ class FullExerciseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(FullExerciseForm, self).__init__(*args, **kwargs)
-        try:
-            self.fields['equipment'].queryset = Equipment.objects.filter(user = self.instance.user)
-        except:
-            pass
+        self.fields['equipment'].queryset = Equipment.objects.filter(user = self.instance.user)
 
 class SegmentForm(forms.ModelForm):
     class Meta:
