@@ -413,7 +413,7 @@ class Exercise(models.Model):
 
     exercise_permission = models.CharField(_('Exercise permission'), max_length=1, choices=permission_choices, default='A', )
     live_state = models.CharField(max_length=1, choices=live_states, default='F', blank=True, null=True)
-    equipment = models.ForeignKey(Equipment, verbose_name=_('Equipment'), null=True, blank=True)
+    equipment = models.ForeignKey(Equipment, help_text=_('Select the equipment used for this exercise, for statistics and tracking'), verbose_name=_('Equipment'), null=True, blank=True)
 
     object_id = models.IntegerField(null=True)
     content_type = models.ForeignKey(ContentType, null=True)
