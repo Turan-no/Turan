@@ -41,6 +41,7 @@ class Profile(models.Model):
     get_absolute_url = models.permalink(get_absolute_url)
     
     def get_exercise_types_by_count_json(self):
+        ''' Used in exercise create form to autoselect the most used exercise types '''
         return mark_safe(simplejson.dumps(list(self.user.exercise_set.values('exercise_type__id').annotate(c=Count('exercise_type__id')).order_by('-c'))[:3]))
 
     class Meta:
