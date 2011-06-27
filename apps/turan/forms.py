@@ -64,6 +64,14 @@ class ExerciseForm(forms.ModelForm):
                 return None
         return data
 
+    '''This might come in handy, but field is not visible yet - still in alpha'''
+    #def __init__(self, *args, **kwargs):
+    #    super(ExerciseForm, self).__init__(*args, **kwargs)
+    #    try:
+    #        self.fields['equipment'].queryset = Equipment.objects.filter(user = self.instance.user)
+    #    except:
+    #        pass
+
 
 class RouteForm(forms.ModelForm):
     class Meta:
