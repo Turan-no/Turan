@@ -1555,6 +1555,11 @@ def create_object(request, model=None, template_name=None,
                 request.user.message_set.create(message=ugettext("The %(verbose_name)s was added successfully.") % {"verbose_name": _('Segment')})
                 return HttpResponseRedirect(new_object.get_absolute_url())
             form = form_class(initial=data)
+        elif model == Exercise:
+            data = {}
+            #data['equipment']= Equipment.objects.filter(user=request.user)
+            form = form_class(initial=data)
+            form.fields['equipment'].queryset = Equipment.objects.filter(user=request.user)
         else:
             form = form_class()
 

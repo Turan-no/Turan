@@ -36,10 +36,13 @@ class ExerciseForm(forms.ModelForm):
 #    exercise_type = forms.ModelChoiceField(widget=ImageSelect())
 #    exercise_type = forms.ChoiceField(label=_("Exercise Type"), choices=(),
 #                                                    widget=forms.Select(attrs={'class':'selector'}))
+    #def __init__(self, *args, **kwargs):
+    #    super(ExerciseForm, self).__init__(*args, **kwargs)
+    #    self.fields['equipment'].queryset = Equipment.objects.filter(user= self.instance.user)
 
     class Meta:
         model = Exercise
-        fields = ['route', 'sensor_file', 'exercise_type', 'comment', 'tags', 'kcal','exercise_permission', 'url']
+        fields = ['route', 'sensor_file', 'exercise_type', 'equipment', 'comment', 'tags', 'url', 'kcal','exercise_permission' ]
         widgets = { 
                 'exercise_type': ImageSelect(),
                 'exercise_permission': forms.RadioSelect(renderer=HorizRadioRenderer)#,choices=permission_choices,label=_('Visible control'),max_length=1, default='A',help_text='Test')
@@ -64,10 +67,6 @@ class ExerciseForm(forms.ModelForm):
                 return None
         return data
 
-    '''This might come in handy, but field is not visible yet - still in alpha'''
-    #def __init__(self, *args, **kwargs):
-    #    super(ExerciseForm, self).__init__(*args, **kwargs)
-    #    self.fields['equipment'].queryset = Equipment.objects.filter(user = self.instance.user)
 
 
 class RouteForm(forms.ModelForm):

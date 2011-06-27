@@ -97,7 +97,7 @@ class Equipment(models.Model):
     class Meta:
         verbose_name = _("Equipment")
         verbose_name_plural = _("Equipment")
-        ordering = _('-aquired',)
+        ordering = ('-aquired',)
 
     def get_distance(self):
         ''' Get the exercises with routes and sum the distance '''
@@ -411,9 +411,9 @@ class Exercise(models.Model):
     max_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     sensor_file = models.FileField(_('Exercise file'), upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, .gmd, .csv, .xml)'))
 
-    exercise_permission = models.CharField(max_length=1, choices=permission_choices, default='A', )
+    exercise_permission = models.CharField(_('Exercise permission'), max_length=1, choices=permission_choices, default='A', )
     live_state = models.CharField(max_length=1, choices=live_states, default='F', blank=True, null=True)
-    equipment = models.ForeignKey(Equipment, null=True, blank=True)
+    equipment = models.ForeignKey(Equipment, verbose_name=_('Equipment'), null=True, blank=True)
 
     object_id = models.IntegerField(null=True)
     content_type = models.ForeignKey(ContentType, null=True)
