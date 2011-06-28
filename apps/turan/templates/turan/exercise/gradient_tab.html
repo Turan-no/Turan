@@ -2,35 +2,21 @@
 {% load l10n %}
 {% load turan_extras %}
 <div id="gradientinfo"></div>
-
 <div id="gradientinfo2"></div>
 
 <script type="text/javascript">
 {% localize off %}
-    var options2 = {
+    var gradplotoptions = {
         selection: { mode: "x" },
         grid: { 
             hoverable: true, 
             clickable: true
-         //   backgroundColor: { colors: ["#eee", "#eee"] },
        },
        legend: { position: 'nw' },
        yaxis: { tickFormatter: axisformatters['percent'] },
        xaxis: { tickFormatter: axisformatters['distance'] }
 
     };
-/*
-            markings: [
-         {yaxis: { from: 0.0, to: 6.0 },color: "#842DCE"},
-         {yaxis: { from: 6.0, to: 10.0 },color: "#4AA02C"},
-         {yaxis: { from: 10.0, to: 15.0 },color: "#736AFF"},
-         {yaxis: { from: 15.0, to: 20.0 },color: "#FDD017"},
-         {yaxis: { from: 20.0},color: "#C11B17"},
-        ]
-        */
-    function evaluate(y,threshold) { 
-        return y < threshold;
-    }
     var altconstraints = [
         {
             below: 3,
@@ -71,27 +57,27 @@
             {% for km, gradient in gradients %}[{{ km }},{{ gradient }}],{% endfor %}
                ],
             "threshold": altconstraints
-
         }, 
-        {
-        }
     ];
 
-    $.plot($("#gradientzonediv"), gradientzonedata, options2);
+    var gradientplot = $.plot($("#gradientzonediv"), gradientzonedata, gradplotoptions);
 
     $("#gradientzonediv").bind("plotselected", function (event, ranges) {            
-        plot = $.plot(
+        $("#gradientinfo").text(ranges.xaxis.from.toFixed(1) + " {% trans "to" %} " + ranges.xaxis.to.toFixed(1));
+        $("#gradientinfo2").text( "{% trans "Click graph to reset selection" %}");
+        
+        var newplot = $.plot(
             $("#gradientzonediv"), 
             gradientzonedata, 
-            $.extend(true, {}, options2, { 
+            $.extend(true, {}, gradplotoptions, { 
                 xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
             })
         );
-        $("#gradientinfo").text(ranges.xaxis.from.toFixed(1) + " {% trans "to" %} " + ranges.xaxis.to.toFixed(1));
-        $("#gradientinfo2").text( "{% trans "Click graph to reset selection" %}");
+        //gradientplot.setSelection(ranges, true );
+        
     });                                                                      
     $("#gradientzonediv").bind("plotclick", function (event, pos, item) {
-        plot = $.plot($("#gradientzonediv"), gradientzonedata, options2);
+        plot = $.plot($("#gradientzonediv"), gradientzonedata, gradplotoptions);
         $("#gradientinfo").text("");
         $("#gradientinfo2").text("");
     });
