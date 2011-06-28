@@ -36,7 +36,8 @@ xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/
                 return ''
             self.points += 1
             xmlp = '<trkpt lat="%s" lon="%s">\n' %(lat, lon)
-            xmlp+= ' <ele>%.1f</ele>\n' %alt
+            if alt != None: # Do not save None-values
+                xmlp+= ' <ele>%.1f</ele>\n' %alt
             timestring = '0001-01-01T00:00:00Z'
             if not self.anon_time:
                 timestring = time.strftime('%Y-%m-%dT%H:%M:%SZ')
