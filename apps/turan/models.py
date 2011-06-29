@@ -442,7 +442,10 @@ class Exercise(models.Model):
                 r.save() # Double save, think maybe geo_title needs this, FIXME, bad code
         # set avg_speed if distance and duration is given
         if self.route and self.route.distance and self.duration and not self.avg_speed:
-            self.avg_speed = float(self.route.distance)/(float(self.duration.seconds)/60/60)
+            tmp_seconds = self.duration.seconds
+            if self.duration.days:
+                tmp_seconds += 86400
+            self.avg_speed = float(self.route.distance)/(float(tmp_seconds)/60/60)
 
         super(Exercise, self).save(*args, **kwargs)
 
