@@ -8,6 +8,8 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import StrAndUnicode, force_unicode
 from django.utils.html import escape, conditional_escape
+from cStringIO import StringIO
+import zipfile
 
 
 class ImageSelect(forms.Select):
@@ -114,3 +116,33 @@ class FullEquipmentForm(forms.ModelForm):
     class Meta:
         model = Equipment
         exclude = ('user',)
+
+class ImportForm(forms.Form):
+    import_url = forms.CharField(label='Url to external exercise', required=True)
+
+def clean_zipfile(zip_file, wat):
+    if not zip_file.name.endswith('.zip'):
+        msg = _('File upload must be a valid ZIP archive.')
+        raise forms.ValidationError( msg )
+    else:
+        try:
+            zip = zipfile.ZipFile( zip_file)
+        except:
+            raise forms.ValidationError( _("Could not unzip file." ))
+        bad_file = zip.testzip()
+        zip.close()
+        del zip
+        if bad_file:
+            raise forms.ValidationError( msg )
+    return zip_file # Return the clean zip_file
+
+class BulkImportForm(forms.Form):
+
+    zip_file = forms.FileField(label=_('ZIP file containing multiple exercise files'))
+
+
+    # The line below hooks the function above into the base form.
+    # When the form calls full_clean() it will automatically clean the 
+    # zip_file field and add it to the form's clean_data dictionary.
+    zip_file.clean = clean_zipfile
+

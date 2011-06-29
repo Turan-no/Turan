@@ -29,4 +29,12 @@
     {{ form|as_uni_form }}
     <input type="submit" value="{% trans "Import exercise"%}" />
 </form>
+
+
+<h2>{% trans "Bulk import" %}</h2>
+<p>{% trans "Zip all your exercise files into a .zip-file and upload." %}</p>
+<form enctype="multipart/form-data" class="uniForm" action="{% url import_bulk %}" method="post">
+    {{ bulkform|as_uni_form }}
+    <input type="submit" value="{% trans "Import exercises"%}" />
+</form>
 {% endblock %}

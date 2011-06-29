@@ -36,6 +36,7 @@ urlpatterns = patterns('',
     url(r'^segment/(?P<object_id>\d+)', segment_detail, name='segment'),
     url(r'^week/(?P<week>\d+)', week, name='week-all'),
     url(r'^week/(?P<week>\d+)/(?P<user_id>)', week, name='week'),
+    url(r'^import/bulk/?$$', 'turan.views.import_bulk', name='import_bulk'),
     url(r'^import/$', 'turan.views.import_data', name='import_data'),
 
     url(r'^calendar/(?P<year>\d+)/(?P<month>\d+)', calendar_month, name='calendar'),

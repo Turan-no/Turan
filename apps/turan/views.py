@@ -3,7 +3,7 @@ from tasks import smoothListGaussian, calcpower, power_30s_average \
         , hr2zone, detailslice_info, search_trip_for_possible_segments_matches, filldistance, \
         create_gpx_from_details
 from itertools import groupby, islice
-from forms import ExerciseForm
+from forms import ExerciseForm, ImportForm, BulkImportForm
 from profiles.models import Profile
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseForbidden, Http404, HttpResponseServerError
@@ -21,6 +21,8 @@ from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 from django.contrib.syndication.feeds import Feed
 from threadedcomments.models import ThreadedComment
 from django.core.files.storage import FileSystemStorage
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.base import ContentFile
 from django.utils.safestring import mark_safe
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
@@ -36,13 +38,13 @@ from django.views.decorators.gzip import gzip_page
 from django.utils.datastructures import SortedDict
 from django.middleware.gzip import GZipMiddleware
 
-from django.core.files.base import ContentFile
 from turan.middleware import Http403
 from tempfile import NamedTemporaryFile
 import urllib2
 import cookielib
 import urllib
 import os
+import zipfile
 
 from BeautifulSoup import BeautifulSoup
 
@@ -1690,8 +1692,39 @@ def turan_delete_detailset_value(request, model, object_id, value=False):
 
     return HttpResponseRedirect(obj.get_absolute_url())
 
-class ImportForm(forms.Form):
-    import_url = forms.CharField(label='Url to external exercise', required=True)
+@login_required
+def import_bulk(request):
+    if request.method == 'POST':
+        form = BulkImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            exercises = []
+            zfile = zipfile.ZipFile( request.FILES['zip_file'])
+            for info in zfile.infolist():
+                fname = info.filename
+                content = zfile.read(fname)
+                content = ContentFile(content)
+                fname = fname.lower()
+                exercise_filename = os.path.join('sensor', fname)
+
+                exercise = Exercise()
+                exercise.user = request.user
+                exercise.sensor_file.save(exercise_filename, content)
+                exercise.save()
+                exercises.append(exercise)
+            # Done saving, now parse them all
+            for e in exercises:
+                task = e.parse()
+            if task: # Display progress for last task
+                return HttpResponseRedirect(\
+                reverse('exercise_parse_progress', kwargs = {
+                    'object_id': e.id,
+                    'task_id': task.task_id}))
+
+    form = ImportForm()
+    bulkform = BulkImportForm()
+
+    return render_to_response("turan/import.html", {'form': form, 'bulkform': bulkform}, context_instance=RequestContext(request))
+
 
 @login_required
 def import_data(request):
@@ -1806,8 +1839,9 @@ def import_data(request):
                 return render_to_response("turan/import_stage2.html", {'route': route, 'exercise': exercise}, context_instance=RequestContext(request))
     else:
         form = ImportForm()
+        bulkform = BulkImportForm()
 
-    return render_to_response("turan/import.html", {'form': form}, context_instance=RequestContext(request))
+    return render_to_response("turan/import.html", {'form': form, 'bulkform': bulkform}, context_instance=RequestContext(request))
 
 
 def slopes(request, queryset):

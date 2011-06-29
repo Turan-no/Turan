@@ -227,8 +227,10 @@ class Route(models.Model):
         return url
 
     def get_absolute_url(self):
-        #if not self.single_serving:
-        return reverse('route', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
+        url =  reverse('route', kwargs={ 'object_id': self.id })
+        if self.name:
+            url += '/' + slugify(self.name)
+        return url
 
     def get_svg_url(self):
         if self.gpx_file:
@@ -467,7 +469,7 @@ class Exercise(models.Model):
 
     def get_absolute_url(self):
         route_name = ''
-        if self.route:
+        if self.route and self.route.name:
             route_name = slugify(self.route.name)
         return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + route_name
 
