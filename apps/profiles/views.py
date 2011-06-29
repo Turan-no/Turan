@@ -427,7 +427,7 @@ def profile_statistics(request, username, template_name="profiles/statistics.htm
         trips = len(exercises)
         for exercise in exercises:
             if exercise.duration:
-                duration += exercise.duration.seconds/60
+                duration += exercise.duration.total_seconds()/60
             if exercise.route:
                 if exercise.route.distance:
                     km += exercise.route.distance
