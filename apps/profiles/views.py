@@ -43,7 +43,7 @@ def profiles(request, template_name="profiles/profiles.html", extra_context=None
     search_terms = request.GET.get('search', '')
     order = request.GET.get('order')
     if not order:
-        order = 'recent'
+        order = 'name'
     else:
         if not order == 'recent':
             users = users.annotate(duration=Sum('exercise__duration'))
