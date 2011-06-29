@@ -43,7 +43,11 @@ def profiles(request, template_name="profiles/profiles.html", extra_context=None
     search_terms = request.GET.get('search', '')
     order = request.GET.get('order')
     if not order:
-        order = 'date'
+        order = 'recent'
+    else:
+        if not order == 'recent':
+            users = users.annotate(duration=Sum('exercise__duration'))
+
     if search_terms:
         users = users.filter(username__icontains=search_terms)
     if order == 'date':
@@ -51,7 +55,16 @@ def profiles(request, template_name="profiles/profiles.html", extra_context=None
     elif order == 'name':
         users = users.order_by("username")
     elif order == 'time':
-        users = users.annotate(e = Sum('exercise__duration')).order_by("-e")
+        users = users.order_by("-duration")
+    elif order == 'recent':
+        # Top exercisers last 14 days
+        today = datetimedate.today()
+        days = timedelta(days=14)
+        begin = today - days
+        users = users.filter(exercise__date__range=(begin, today))
+        users = users.annotate(duration=Sum('exercise__duration')).order_by('-duration')
+
+
     return render_to_response(template_name, dict({
         'users': users,
         'order': order,
