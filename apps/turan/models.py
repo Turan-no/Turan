@@ -144,7 +144,7 @@ class RouteManager(models.Manager):
 
 
 class Route(models.Model):
-    name = models.CharField(_('Name'), max_length=160, blank=True, help_text=_('for example Opsangervatnet'))
+    name = models.CharField(_('Name'), max_length=160, blank=True, null=True, help_text=_('for example Opsangervatnet'))
     distance = models.FloatField(_('Distance'),help_text=_('in km'), default=0)
     description = models.TextField(_('Description'), help_text=_('route description'))
     route_url = models.URLField(_('External URL'), blank=True, help_text=_('Added info for route in external URL')) # gmaps?
@@ -185,7 +185,11 @@ class Route(models.Model):
                     if not self.ascent:
                         self.ascent = g.ascent
                         self.descent = g.descent
-        self.set_geo_description()
+        # FIXME enable this in some fasion later: self.set_geo_description()
+
+        # Check for single serving that really are not
+        if self.single_serving and self.exercise_set.count():
+            self.single_serving = False
         super(Route, self).save(force_insert, force_update)
         if self.gpx_file:
             # generate svg if it doesn't exist (after save, it uses id for filename)
@@ -434,15 +438,16 @@ class Exercise(models.Model):
         if self.sensor_file:
             if not self.route and str(self.exercise_type) not in ("Puls", "Spinning",  "Rollers", 'Svømming', 'Volleyball', 'Basketball', 'Elliptical'):
                 r = Route()
-                r.name = str(self.user) + " " + datetime.now().strftime('%d%m%y')
                 r.description = AUTOROUTE_DESCRIPTION
                 r.single_serving = True
                 r.save()
                 self.route = r
-                r.save() # Double save, think maybe geo_title needs this, FIXME, bad code
         # set avg_speed if distance and duration is given
         if self.route and self.route.distance and self.duration and not self.avg_speed:
             self.avg_speed = float(self.route.distance)/(float(self.duration.total_seconds())/60/60)
+        # Save Route, just in case it needs something done
+        if self.route:
+            self.route.save()
 
         super(Exercise, self).save(*args, **kwargs)
 
@@ -498,11 +503,10 @@ class Exercise(models.Model):
         return u'%s, %s %s' %(self.get_name(), _('by'), self.user.get_profile().get_name())
 
     def get_name(self):
-        name = _('Unnamed trip')
+        name = _('Untitled')
         if self.route and self.route.name:
             name = self.route.name
-# FIXME 
-            if name == '/dev/null':
+            if name == '/dev/null': # TODO: Remove this old hack from db
                 name = unicode(self.exercise_type)
         else:
             name = unicode(self.exercise_type)
@@ -512,8 +516,8 @@ class Exercise(models.Model):
         ''' Also delete single serving route '''
         if self.route:
             if self.route.single_serving:
-                r = self.route
-                r.delete()
+                if not self self.route.exercise_set.count() > 1: # Do not delete single serving routes that have multiple exercises attachted
+                    r.delete()
         super(Exercise, self).delete(*args, **kwargs)
 
     def get_intensityfactor(self):
