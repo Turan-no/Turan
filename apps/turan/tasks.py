@@ -792,7 +792,6 @@ def sanitize_entries(entries):
         for index, e in enumerate(entries):
             time_d = (e.time - prev.time).seconds
             if time_d > 1 and time_d < 30: # more than 30s is break, deal with it
-                #print "Start of miss", index, e.time
                 missed += 1
                 missed_seconds += time_d
                 deltas = {}
@@ -810,14 +809,13 @@ def sanitize_entries(entries):
                             newattr = getattr(prev, vt) + deltas[vt]*s
                             setattr(fake_entry, vt, newattr)
 
-                    print "f", fake_entry.lon
                     entries.insert(prevIndex+s, fake_entry)
-                print e.lon
 
             prevIndex = index
             prev = e
 
-        print "Parser: Missed samples: %s, Missed seconds: %s" %(missed, missed_seconds)
+        if missed:
+            print "Parser: Missed samples: %s, Missed seconds: %s" %(missed, missed_seconds)
         return entries
 
     def gps_lost_fixer(entries):
