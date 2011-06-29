@@ -824,7 +824,7 @@ def sanitize_entries(entries):
         ''' Do not export entires with lon,lat == 0'''
         return entries
 
-    def power_spikes_fixer(entries).
+    def power_spikes_fixer(entries):
         ''' Remove insane power spikes from entries '''
         return entries
 
