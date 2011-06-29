@@ -13,6 +13,7 @@ from django.template import RequestContext, Context, loader
 from django.contrib.auth.decorators import login_required
 from django.utils.text import compress_string
 
+
 from django.contrib.auth import logout
 from django import forms
 from django.forms.models import inlineformset_factory
@@ -28,6 +29,7 @@ from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import redirect_to_login
 from django.views.generic.create_update import get_model_and_form_class, apply_extra_context, redirect, update_object, lookup_object, delete_object
+from django.db.models import get_model
 from django.views.generic.list_detail import object_list
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
@@ -52,6 +54,10 @@ from tagging.models import Tag
 from tribes.models import Tribe
 from friends.models import Friendship
 from wakawaka.models import WikiPage, Revision
+from photos.models import Pool, Image
+from photos.forms import PhotoUploadForm 
+
+
 
 import re
 from datetime import timedelta, datetime
@@ -2223,3 +2229,28 @@ def search(request):
         return HttpResponse(serializers.serialize('json', exercise_list, indent=4), mimetype='text/javascript')
 
     return render_to_response('turan/search.html', locals(), context_instance=RequestContext(request))
+
+
+@login_required
+def photo_add(request, content_type, object_id):
+    content_type = get_model('turan', content_type)
+    object = get_object_or_404(content_type, pk=object_id)
+    photo_form = form_class()
+
+    if request.method == "POST":
+        if request.POST.get("action") == "upload":
+            photo_form = form_class(request.user, request.POST, request.FILES)
+            if photo_form.is_valid():
+                photo = photo_form.save(commit=False)
+                photo.member = request.user
+                photo.save()
+                pool = Pool(content_object=content_object, image=photo)
+                pool.photo = photo
+                pool.save()
+                messages.add_message(request, messages.SUCCESS,
+                    ugettext(_"Successfully uploaded photo '%s'") % photo.title
+                )
+    return redirect(object.get_absolute_url())
+
+
+

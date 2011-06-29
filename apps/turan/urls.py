@@ -93,6 +93,10 @@ urlpatterns += patterns('django.views.generic.simple',
     url(r'^todo/', 'direct_to_template', {'template': 'turan/todo.html'}, name='todo'),
 )
 
+urlpatterns += patterns('',
+    url(r'photo/add/(?P<content_type>\w+)/(?P<object_id>\d+)', photo_add, name='photo_add'),
+)
+
 urlpatterns += patterns('django.views.generic.create_update',
     url(r'^route/create/$', create_object, {'login_required': True, 'form_class': RouteForm},name='route_create'),
     url(r'^exercise/create/$', create_object, {'login_required': True, 'form_class': ExerciseForm, 'user_required':True}, name='exercise_create'),
