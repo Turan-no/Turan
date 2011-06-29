@@ -633,7 +633,7 @@ def getzones(exercise):
             zones[zone] += time.seconds
     else:
         if exercise.duration:
-            zones[0] = exercise.duration.seconds
+            zones[0] = exercise.duration.total_seconds()
 
     return zones
 
@@ -997,7 +997,7 @@ def create_tcx_from_details(event):
                 cadence = event.avg_pedaling_cad
             elif event.avg_cadence:
                 cadence = event.avg_cadence
-            g = TCXWriter(details, event.route.distance*1000, event.avg_hr, event.max_hr, event.kcal, event.max_speed, event.duration.seconds, details[0].time, cadence)
+            g = TCXWriter(details, event.route.distance*1000, event.avg_hr, event.max_hr, event.kcal, event.max_speed, event.duration.total_seconds(), details[0].time, cadence)
             filename = '/tmp/%s.tcx' %event.id
 
             file(filename, 'w').write(g.xml)

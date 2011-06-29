@@ -215,7 +215,7 @@ def route_detail(request, object_id):
             if not trip.user in usertimes:
                 usertimes[trip.user] = ''
             try:
-                time = trip.duration.seconds/60
+                time = trip.duration.total_seconds()/60
                 if trip.avg_speed: # Or else graph bugs with None-values
                     usertimes[trip.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed))
             except AttributeError:
@@ -1196,7 +1196,7 @@ def gethrhzones(exercise, values, max_hr):
     #    filtered_zones[i] = 0
 
     if exercise.duration:
-        total_seconds = exercise.duration.seconds
+        total_seconds = exercise.duration.total_seconds()
         for hr in sorted(zones):
             #if 100*float(zones[hr])/total_seconds > 0:
             if hr > 40 and hr < 101:
@@ -2020,7 +2020,7 @@ def exercise_update_live(request, object_id):
 
                 old_duration = 0
                 try:
-                    old_duration = exercise.duration.seconds
+                    old_duration = exercise.duration.total_seconds()
                 except:
                     pass # Object is Decimal first time around, stupid durationfield
 
