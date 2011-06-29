@@ -516,7 +516,7 @@ class Exercise(models.Model):
         ''' Also delete single serving route '''
         if self.route:
             if self.route.single_serving:
-                if not self self.route.exercise_set.count() > 1: # Do not delete single serving routes that have multiple exercises attachted
+                if not self.route.exercise_set.count() > 1: # Do not delete single serving routes that have multiple exercises attachted
                     r.delete()
         super(Exercise, self).delete(*args, **kwargs)
 
