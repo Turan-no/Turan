@@ -2247,9 +2247,9 @@ def photo_add(request, content_type, object_id):
                 pool = Pool(content_object=content_object, image=photo)
                 pool.photo = photo
                 pool.save()
-                messages.add_message(request, messages.SUCCESS,
-                    ugettext(_"Successfully uploaded photo '%s'") % photo.title
-                )
+                #messages.add_message(request, messages.SUCCESS,
+                #    ugettext(_"Successfully uploaded photo '%s'") % photo.title
+                #)
     return redirect(object.get_absolute_url())
 
 
