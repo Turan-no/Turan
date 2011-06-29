@@ -11,6 +11,7 @@ from django.db import connection, transaction
 from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 from django.utils.datastructures import SortedDict
 
+from copy import deepcopy
 import numpy
 from collections import deque
 from datetime import timedelta
@@ -747,6 +748,93 @@ def normalize_altitude(exercise):
             r.max_altitude = altitude_max
         r.save()
 
+def sanitize_entries(entries):
+    ''' Try and sanitize and work around different quirks in different parsers
+    '''
+
+    def distance_offset_fixer(entries):
+        ''' Some parsers return non-zero distance for the first sample
+         We make assumption that the user wants his trip to show as starting at 0 km
+         The cause of this can be tcx-files that have laps cut out'''
+        distance_offset = 0
+
+        if hasattr(entries[0], 'distance'):
+            if entries[0].distance > 100: # We don't care about small values
+                distance_offset = entries[0].distance
+                print "Parser: Offset distance" %distance_offset
+                for e in entries:
+                    if e.distance != None:
+                        e.distance -= distance_offset
+        return entries
+
+    def distance_inc_fixer(entries):
+        ''' Do not accept distances that do not increase '''
+
+        prev = entries[0].distance
+        for index, e in enumerate(entries):
+            if e.distance == None or e.distance < prev:
+                print "Parser: Changed fucked distance: %s at index %s" %(e.distance, index)
+                e.distance = prev
+                e.speed = 0
+            prev = e.distance
+        return entries
+
+
+    def interpolate_to_1s(entires):
+        ''' Interpolate skips in files to 1s, if not breaks for over 30s in series '''
+
+        val_types = ('distance', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power', 'temp')
+
+        missed = 0
+        missed_seconds = 0
+        prev = entries[0]
+        prevIndex = 0
+        for index, e in enumerate(entries):
+            time_d = (e.time - prev.time).seconds
+            if time_d > 1 and time_d < 30: # more than 30s is break, deal with it
+                #print "Start of miss", index, e.time
+                missed += 1
+                missed_seconds += time_d
+                deltas = {}
+                for vt in val_types:
+                    if hasattr(e, vt) and getattr(e, vt):
+                        deltas[vt] = (getattr(e, vt) - getattr(prev, vt)) / time_d
+                for s in xrange(1, time_d):
+                    fake_entry = deepcopy(prev)
+                    fake_entry.time = fake_entry.time + timedelta(0,s)
+                    for vt in val_types:
+                        if vt == 'lon' or vt == 'lat':  # Do not interpolate between missed samples
+                            if not fake_entry.lon or not fake_entry.lat:
+                                continue
+                        if hasattr(fake_entry, vt) and vt in deltas:
+                            newattr = getattr(prev, vt) + deltas[vt]*s
+                            setattr(fake_entry, vt, newattr)
+
+                    print "f", fake_entry.lon
+                    entries.insert(prevIndex+s, fake_entry)
+                print e.lon
+
+            prevIndex = index
+            prev = e
+
+        print "Parser: Missed samples: %s, Missed seconds: %s" %(missed, missed_seconds)
+        return entries
+
+    def gps_lost_fixer(entries):
+        ''' Do not export entires with lon,lat == 0'''
+        return entries
+
+    def power_spikes_fixer(entries).
+        ''' Remove insane power spikes from entries '''
+        return entries
+
+    entries = distance_offset_fixer(entries)
+    entries = distance_inc_fixer(entries)
+    entries = gps_lost_fixer(entries)
+    entries = interpolate_to_1s(entries)
+    return entries
+
+
 @task
 def parse_sensordata(exercise, callback=None):
     ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
@@ -790,27 +878,16 @@ def parse_sensordata(exercise, callback=None):
     parser = find_parser(exercise.sensor_file.name)
     parser.parse_uploaded_file(exercise.sensor_file.file)
 
-
-    # Some parsers return non-zero distance for the first sample
-    # We make assumption that the user wants his trip to show as starting at 0 km
-    # The cause of this can be tcx-files that have laps cut out
-    distance_offset = 0
-
-    if hasattr(parser.entries[0], 'distance'):
-        if parser.entries[0].distance > 100: # We don't care about small values
-            distance_offset = parser.entries[0].distance
-
+    saner_entries = sanitize_entries(parser.entries) # Sanity will prevail
     for val in parser.entries:
         detail = ExerciseDetail()
         detail.exercise_id = exercise.id
-
         # Figure out which values the parser has
         for v in ('distance', 'time', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power', 'temp'):
             if hasattr(val, v):
-                if v == 'distance' and distance_offset: # Subtract the distance offsett
-                    val.distance = val.distance - distance_offset
                 setattr(detail, v, getattr(val, v))
         detail.save()
+
     # Parse laps/intervals
     for val in parser.laps:
         interval = Interval()
