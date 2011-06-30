@@ -101,6 +101,8 @@ def calcpower(userweight, eqweight, gradient, speed,
         rollingresistance = 0.006 ,
         airdensity = 1.22 ,
         frontarea = 0.7 ):
+    if not userweight: # Do not even bother
+        return 0
     tot_weight = userweight+eqweight
     gforce = tot_weight * gradient/100 * 9.81
     frictionforce = rollingresistance * tot_weight * 9.81
