@@ -798,7 +798,7 @@ def sanitize_entries(entries):
                 missed_seconds += time_d
                 deltas = {}
                 for vt in val_types:
-                    if hasattr(e, vt) and getattr(e, vt):
+                    if hasattr(e, vt) and getattr(e, vt) and getattr(prev, vt): #could be none
                         deltas[vt] = (getattr(e, vt) - getattr(prev, vt)) / time_d
                 for s in xrange(1, time_d):
                     fake_entry = deepcopy(prev)
