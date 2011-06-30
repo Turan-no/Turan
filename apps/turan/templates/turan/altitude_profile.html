@@ -1,17 +1,21 @@
 {% load i18n %}
 {% load l10n %}
+    {% localize off %}
     <div id="altdiv" style="height: 150px; clear: both;"></div>
 <script id="source" language="javascript" type="text/javascript">
-    {% localize off %}
     var alt = { data: {{ alt }}, color: 3, lines: { fill: 0.7 } };
     var options = { 
-        yaxis: { tickFormatter: axisformatters['altitude'],  min: 0, max: {{ alt_max }}, },
-       xaxis: { tickFormatter: axisformatters['distance']},
-       grid: { clickable: true, hoverable: true },
-       legend: {
+        yaxis: { 
+           tickFormatter: axisformatters['altitude'],  
+           min: {{ alt_min }}, 
+           max: {{ alt_max }}, 
+       },
+        xaxis: { tickFormatter: axisformatters['distance']},
+        grid: { clickable: true, hoverable: true },
+        legend: {
             position: 'nw'
         },
-       markers: [ ]
+        markers: [ ]
     };
     {% for object in exercises %}
     var marker = {};
