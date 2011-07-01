@@ -155,6 +155,12 @@
             series: {
                 lines: { lineWidth: 3}
             },
+            xaxis: {
+             transform: function (v) {
+                 return Math.log(v);
+             },
+             inverseTransform: function (v) { return Math.exp(v); }
+            },
             yaxis: { tickFormatter: axisformatters.power }
     });
     function showTooltip (x, y, contents) {
