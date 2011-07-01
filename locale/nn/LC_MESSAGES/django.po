@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-25 18:37+0200\n"
-"PO-Revision-Date: 2011-06-25 18:42\n"
+"POT-Creation-Date: 2011-07-01 15:57+0200\n"
+"PO-Revision-Date: 2011-07-01 16:07\n"
 "Last-Translator: Tor Hveem <tor@hveem.no>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgstr "%(total)s kontaktar med epost funne, %(imported)s kontaktar importert."
 msgid "slug"
 msgstr "kortnamn"
 
-#: apps/oldgroups/base.py:35 apps/profiles/models.py:12
+#: apps/oldgroups/base.py:35 apps/profiles/models.py:15
 msgid "name"
 msgstr "namn"
 
@@ -57,81 +57,110 @@ msgstr "oppretta"
 msgid "description"
 msgstr "skildringa"
 
-#: apps/profiles/models.py:11
+#: apps/profiles/models.py:14
 msgid "user"
 msgstr "brukar"
 
-#: apps/profiles/models.py:12
+#: apps/profiles/models.py:15
 msgid "Optional real name"
 msgstr "Valfritt fullstendig namn"
 
-#: apps/profiles/models.py:13
+#: apps/profiles/models.py:16
 msgid "about"
 msgstr "om"
 
-#: apps/profiles/models.py:14
+#: apps/profiles/models.py:17
 msgid "location"
 msgstr "stad"
 
-#: apps/profiles/models.py:15
+#: apps/profiles/models.py:18
 msgid "website"
 msgstr "nettstad"
 
-#: apps/profiles/models.py:17
+#: apps/profiles/models.py:20 apps/profiles/templates/profile_item.html:27
+#: templates/profiles/profile.html:191
+msgid "Height"
+msgstr "Høgd"
+
+#: apps/profiles/models.py:20
 msgid "in cm"
 msgstr "i cm"
 
-#: apps/profiles/models.py:18 apps/profiles/models.py:70
-#: apps/turan/models.py:65 apps/turan/models.py:98
-msgid "in kg"
-msgstr "i kg"
+#: apps/profiles/models.py:21 apps/profiles/templates/profile_item.html:30
+#: apps/turan/models.py:89 apps/turan/models.py:125
+#: templates/profiles/profile.html:188
+msgid "Weight"
+msgstr "Vekt"
 
-#: apps/profiles/models.py:19 apps/profiles/models.py:21
-#: apps/profiles/models.py:71
+#: apps/profiles/models.py:21
+msgid "in kg, used to calculate power"
+msgstr "i kg, brukt til å rekne ut effekt"
+
+#: apps/profiles/models.py:22
+msgid "Resting HR"
+msgstr "Kvilepuls"
+
+#: apps/profiles/models.py:22 apps/profiles/models.py:24
+#: apps/profiles/models.py:78
 msgid "beats per minute"
 msgstr "slag i minuttet"
 
-#: apps/profiles/models.py:20 apps/profiles/models.py:72
-#: templates/profiles/profile.html:202
+#: apps/profiles/models.py:23 apps/profiles/models.py:79
+#: templates/profiles/profile.html:203
 msgid "Functional Threshold Power"
 msgstr "FTP (Terskelwatt)"
 
-#: apps/profiles/models.py:41
+#: apps/profiles/models.py:24
+#: apps/turan/templates/turan/exercise/attributes.html:116
+#: templates/profiles/profile.html:200
+msgid "Max HR"
+msgstr "Makspuls"
+
+#: apps/profiles/models.py:25 apps/profiles/templates/profile_hover.html:20
+#: apps/profiles/templates/profile_item.html:12
+msgid "Motto"
+msgstr "Motto"
+
+#: apps/profiles/models.py:48
 msgid "profile"
 msgstr "profil"
 
-#: apps/profiles/models.py:42
+#: apps/profiles/models.py:49
 msgid "profiles"
 msgstr "profilar"
 
-#: apps/profiles/models.py:69
+#: apps/profiles/models.py:76
 msgid "2009-08-27 08:00:00, time optional"
 msgstr "2009-08-27 08:00:00, tid valfritt"
 
-#: apps/profiles/models.py:90
+#: apps/profiles/models.py:77 apps/turan/models.py:89 apps/turan/models.py:125
+msgid "in kg"
+msgstr "i kg"
+
+#: apps/profiles/models.py:97
 msgid "Profile Detail"
 msgstr "Profildetalje"
 
-#: apps/profiles/models.py:91
+#: apps/profiles/models.py:98
 msgid "Profile Details"
 msgstr "Profildetaljar"
 
-#: apps/profiles/views.py:94
+#: apps/profiles/views.py:106
 #, python-format
 msgid "You have removed %(from_user)s from friends"
 msgstr "Du har fjerna %(from_user)s frå vener"
 
-#: apps/profiles/views.py:98 apps/profiles/views.py:110
-#: apps/profiles/views.py:135
+#: apps/profiles/views.py:110 apps/profiles/views.py:122
+#: apps/profiles/views.py:147
 msgid "Let's be friends!"
 msgstr "Bli ven!"
 
-#: apps/profiles/views.py:118
+#: apps/profiles/views.py:130
 #, python-format
 msgid "You have accepted the friendship request from %(from_user)s"
 msgstr "Du har akseptert venskap-førespurnad frå %(from_user)s"
 
-#: apps/profiles/views.py:128
+#: apps/profiles/views.py:140
 #, python-format
 msgid "You have declined the friendship request from %(from_user)s"
 msgstr "Du har avslått venskap-førespurnad frå %(from_user)s"
@@ -141,135 +170,22 @@ msgid "Last 14 days"
 msgstr "Site to veker"
 
 #: apps/profiles/templates/profile_hover.html:14
-#: apps/profiles/templates/profile_item.html:14
+#: apps/profiles/templates/profile_item.html:15
 #: apps/turan/templates/turan/todo.html:4 templates/site_base.html:152
-#: templates/about/about.html:4 templates/profiles/profile.html:181
-#: templates/profiles/profile.html:205
+#: templates/about/about.html:4 templates/profiles/profile.html:182
+#: templates/profiles/profile.html:206
 msgid "About"
 msgstr "Om"
 
 #: apps/profiles/templates/profile_hover.html:17
-#: apps/profiles/templates/profile_item.html:17 apps/turan/models.py:1047
-#: templates/profiles/profile.html:182
+#: apps/profiles/templates/profile_item.html:21 apps/turan/models.py:1069
+#: templates/profiles/profile.html:183
 msgid "Location"
 msgstr "Stad"
 
-#: apps/profiles/templates/profile_hover.html:20
-#: apps/profiles/templates/profile_item.html:29
-msgid "Motto"
-msgstr "Motto"
-
-#: apps/profiles/templates/profile_item.html:11 apps/turan/models.py:120
-#: apps/turan/templates/turan/event_list.html:58
-#: apps/turan/templates/turan/team_list.html:15
-#: apps/turan/templates/turan/exercise/slope_tab.html:8
-#: templates/profiles/profiles.html:24
-msgid "Name"
-msgstr "Namn"
-
-#: apps/profiles/templates/profile_item.html:23
-#: templates/profiles/profile.html:190
-msgid "Height"
-msgstr "Høgd"
-
-#: apps/profiles/templates/profile_item.html:26 apps/turan/models.py:65
-#: apps/turan/models.py:98 templates/profiles/profile.html:187
-msgid "Weight"
-msgstr "Vekt"
-
-#: apps/profiles/templates/profile_item.html:32
-#: templates/profiles/profile.html:193
-msgid "Cycle"
-msgstr "Sykkel"
-
-#: apps/tribes_old/forms.py:11
-msgid ""
-"a short version of the name consisting only of letters, numbers, "
-"underscores and hyphens."
-msgstr "kortnamn, berre bokstavar, tal eller bindestrekar."
-
-#: apps/tribes_old/forms.py:16
-msgid "A team already exists with that slug."
-msgstr ""
-
-#: apps/tribes_old/forms.py:21 apps/tribes_old/forms.py:38
-msgid "A team already exists with that name."
-msgstr ""
-
-#: apps/tribes_old/management.py:9
-msgid "New Team Member"
-msgstr ""
-
-#: apps/tribes_old/management.py:9
-msgid "a team you are a member of has a new member"
-msgstr ""
-
-#: apps/tribes_old/management.py:10
-msgid "New Member Of Team You Created"
-msgstr ""
-
-#: apps/tribes_old/management.py:10
-msgid "a tribe you created has a new member"
-msgstr ""
-
-#: apps/tribes_old/management.py:11
-msgid "New Team Created"
-msgstr ""
-
-#: apps/tribes_old/management.py:11
-msgid "a new team has been created"
-msgstr ""
-
-#: apps/tribes_old/models.py:10
-msgid "members"
-msgstr "medlemmer"
-
-#: apps/tribes_old/models.py:11
-msgid "No pain - no gain"
-msgstr "No pain - no gain"
-
-#: apps/tribes_old/models.py:22
-msgid "Team"
-msgstr "Lag"
-
-#: apps/tribes_old/models.py:23 apps/turan/templates/turan/team_list.html:5
-#: apps/turan/templates/turan/team_list.html:10
-msgid "Teams"
-msgstr "Lag"
-
-#: apps/tribes_old/views.py:86
-#, python-format
-msgid "Tribe %(tribe_name)s deleted."
-msgstr ""
-
-#: apps/tribes_old/views.py:117
-#, python-format
-msgid "You have joined the team %(tribe_name)s"
-msgstr ""
-
-#: apps/tribes_old/views.py:123
-#, python-format
-msgid "You have already joined team %(tribe_name)s"
-msgstr ""
-
-#: apps/tribes_old/templates/notification/tribes_created_new_member/notice.html:2
-#, python-format
-msgid ""
-"<a href=\"%(user_url)s\">%(user)s</a> has joined the tribe <a "
-"href=\"%(tribe_url)s\">%(group)s</a>."
-msgstr ""
-
-#: apps/tribes_old/templates/notification/tribes_new_member/notice.html:2
-#, python-format
-msgid ""
-"<a href=\"%(user_url)s\">%(user)s</a> has joined the tribe <a "
-"href=\"%(tribe_url)s\">%(tribe)s</a>."
-msgstr ""
-
-#: apps/tribes_old/templates/notification/tribes_new_tribe/notice.html:2
-#, python-format
-msgid "A new group <a href=\"%(group_url)s\">%(group)s</a> has been created."
-msgstr ""
+#: apps/profiles/templates/profile_item.html:18
+msgid "Exercise duration"
+msgstr "Treningstid"
 
 #: apps/turan/durationformfield.py:78
 msgid "Enter a valid duration."
@@ -291,9 +207,21 @@ msgid "Events for %(username)s"
 msgstr "Treninger for %(username)s"
 
 #: apps/turan/feeds.py:88
-#, fuzzy, python-format
+#, python-format
 msgid "Events for %s"
-msgstr "Treninger for %(username)s"
+msgstr "Treninger for %s"
+
+#: apps/turan/forms.py:125
+msgid "File upload must be a valid ZIP archive."
+msgstr "Opplasta fl må vere eit gyldig ZIP-arkiv."
+
+#: apps/turan/forms.py:131
+msgid "Could not unzip file."
+msgstr "Kunne ikkje pakka ut fil."
+
+#: apps/turan/forms.py:141
+msgid "ZIP file containing multiple exercise files"
+msgstr "ZIP-fil som inneheld fleir trenings-filer."
 
 #: apps/turan/management.py:9
 msgid "New exercise logged"
@@ -311,145 +239,165 @@ msgstr "Ny kommentar på trening"
 msgid "a comment was made on one of your exercises"
 msgstr "ny kommentar på ein av treningane dine"
 
-#: apps/turan/models.py:48 apps/turan/models.py:84 apps/turan/models.py:122
-#: apps/turan/models.py:754 apps/turan/templates/turan/team_list.html:18
+#: apps/turan/models.py:66
+msgid "Exercise Type"
+msgstr "Treningstype"
+
+#: apps/turan/models.py:67
+msgid "Exercise Types"
+msgstr "Treningstypar"
+
+#: apps/turan/models.py:72 apps/turan/models.py:111 apps/turan/models.py:149
+#: apps/turan/models.py:776 apps/turan/templates/turan/team_list.html:18
 #: apps/turan/templates/turan/route/attributes.html:8
 msgid "Description"
 msgstr "Skildring"
 
-#: apps/turan/models.py:48 apps/turan/models.py:66
-#, fuzzy
+#: apps/turan/models.py:72 apps/turan/models.py:90
 msgid "Equipment description"
-msgstr "Ruteskildring"
+msgstr "Utstyrskildring"
 
-#: apps/turan/models.py:55
+#: apps/turan/models.py:79
 msgid "Equipment Type"
 msgstr "Utstyrstype"
 
-#: apps/turan/models.py:56
-#, fuzzy
+#: apps/turan/models.py:80
 msgid "Equipment Types"
-msgstr "Treningstypar"
+msgstr "Utstyrstypar"
 
-#: apps/turan/models.py:62 apps/turan/models.py:123 apps/turan/models.py:387
-#: apps/turan/models.py:755
+#: apps/turan/models.py:86 apps/turan/models.py:150 apps/turan/models.py:409
+#: apps/turan/models.py:777
 #: apps/turan/templates/turan/route/attributes.html:11
 #: apps/turan/templates/turan/segment/attributes.html:14
 msgid "External URL"
 msgstr "Ekstern lenke"
 
-#: apps/turan/models.py:62
-#, fuzzy
+#: apps/turan/models.py:86
 msgid "Added info in external URL"
-msgstr "Ekstra informasjon via ekstern lenke"
+msgstr "Ekstra informasjon i ekstern lenke"
 
-#: apps/turan/models.py:63 apps/turan/models.py:96
-#: templates/equipment/equipment_attributes.html:8
+#: apps/turan/models.py:87 apps/turan/models.py:123
+#: templates/equipment/equipment_attributes.html:11
 msgid "Brand"
 msgstr "Merke"
 
-#: apps/turan/models.py:64 apps/turan/models.py:97
-#: templates/equipment/equipment_attributes.html:9
+#: apps/turan/models.py:88 apps/turan/models.py:124
+#: templates/equipment/equipment_attributes.html:12
 msgid "Model"
 msgstr "Modell"
 
-#: apps/turan/models.py:66 apps/turan/models.py:101
-#, fuzzy
+#: apps/turan/models.py:90 apps/turan/models.py:128
 msgid "Notes"
-msgstr "Merk"
+msgstr "Merknadar"
 
-#: apps/turan/models.py:72 apps/turan/models.py:73
+#: apps/turan/models.py:91
+msgid "Aquired"
+msgstr "Anskaffa"
+
+#: apps/turan/models.py:91
+msgid "Date you aquired the equipment"
+msgstr "Dato du fekk utstyret"
+
+#: apps/turan/models.py:92 apps/turan/models.py:402
+msgid "Exercise type"
+msgstr "Treningstype"
+
+#: apps/turan/models.py:98 apps/turan/models.py:99 apps/turan/models.py:434
 #: apps/turan/templates/turan/equipment_form.html:7
 msgid "Equipment"
 msgstr "Utstyr"
 
-#: apps/turan/models.py:84 apps/turan/models.py:101
-#, fuzzy
+#: apps/turan/models.py:111 apps/turan/models.py:128
 msgid "Component description"
-msgstr "Ruteskildring"
+msgstr "Komponentskildring"
 
-#: apps/turan/models.py:87
+#: apps/turan/models.py:114
 msgid "Component Type"
 msgstr "Komponenttype"
 
-#: apps/turan/models.py:88
-#, fuzzy
+#: apps/turan/models.py:115
 msgid "Component Types"
-msgstr "Alle innhaldstypar"
+msgstr "Komponenttypar"
 
-#: apps/turan/models.py:99
+#: apps/turan/models.py:126
 msgid "Added"
 msgstr "Lagt til"
 
-#: apps/turan/models.py:100
+#: apps/turan/models.py:127
 msgid "Removed"
 msgstr "Fjerna"
 
-#: apps/turan/models.py:107
-#, fuzzy
+#: apps/turan/models.py:134
 msgid "Component"
-msgstr "Samanlikn"
+msgstr "Komponent"
 
-#: apps/turan/models.py:108
-#, fuzzy
+#: apps/turan/models.py:135
 msgid "Components"
-msgstr "Kommentarar"
+msgstr "Komponentar"
 
-#: apps/turan/models.py:120
+#: apps/turan/models.py:147 apps/turan/templates/turan/event_list.html:58
+#: apps/turan/templates/turan/team_list.html:15
+#: apps/turan/templates/turan/exercise/slope_tab.html:8
+#: templates/profiles/profiles.html:24
+msgid "Name"
+msgstr "Namn"
+
+#: apps/turan/models.py:147
 msgid "for example Opsangervatnet"
 msgstr "til dømes Opsangervatnet"
 
-#: apps/turan/models.py:121 apps/turan/templates/turan/event_list.html:61
+#: apps/turan/models.py:148 apps/turan/templates/turan/event_list.html:61
 #: apps/turan/templates/turan/exercise/incline_tab.html:13
 #: apps/turan/templates/turan/exercise/mouseover.html:31
 #: apps/turan/templates/turan/route/attributes.html:5
 #: apps/turan/templates/turan/segment/attributes.html:10
-#: templates/equipment/equipment_attributes.html:10
+#: templates/equipment/equipment_attributes.html:13
 msgid "Distance"
 msgstr "Lengd"
 
-#: apps/turan/models.py:121 apps/turan/models.py:669 apps/turan/models.py:671
-#: apps/turan/models.py:753 apps/turan/models.py:862 apps/turan/models.py:863
-#: apps/turan/models.py:929 apps/turan/models.py:930
+#: apps/turan/models.py:148 apps/turan/models.py:691 apps/turan/models.py:693
+#: apps/turan/models.py:775 apps/turan/models.py:884 apps/turan/models.py:885
+#: apps/turan/models.py:951 apps/turan/models.py:952
 msgid "in km"
 msgstr "i km"
 
-#: apps/turan/models.py:122
+#: apps/turan/models.py:149
 msgid "route description"
 msgstr "Ruteskildring"
 
-#: apps/turan/models.py:123
+#: apps/turan/models.py:150
 msgid "Added info for route in external URL"
 msgstr "Ekstra informasjon via ekstern lenke"
 
-#: apps/turan/models.py:125
+#: apps/turan/models.py:152
+#: apps/turan/templates/turan/exercise/mouseover.html:57
 #: apps/turan/templates/turan/exercise/slope_tab.html:17
 #: apps/turan/templates/turan/route/attributes.html:14
 #: apps/turan/templates/turan/segment/attributes.html:19
 msgid "Ascent"
 msgstr "Stigning"
 
-#: apps/turan/models.py:126
+#: apps/turan/models.py:153
 #: apps/turan/templates/turan/route/attributes.html:23
 #: apps/turan/templates/turan/segment/attributes.html:26
 msgid "Descent"
 msgstr "Nedstigning"
 
-#: apps/turan/models.py:127
+#: apps/turan/models.py:154
 msgid "Maximum altitude"
 msgstr "Høgaste høgd"
 
-#: apps/turan/models.py:128
+#: apps/turan/models.py:155
 msgid "Minimum altitude"
 msgstr "Lågaste høgd"
 
-#: apps/turan/models.py:218 apps/turan/templates/turan/import_stage2.html:11
+#: apps/turan/models.py:251 apps/turan/templates/turan/import_stage2.html:11
 #: apps/turan/templates/turan/route_detail.html:11
 #: apps/turan/templates/turan/exercise/attributes.html:48
 msgid "Route"
 msgstr "Rute"
 
-#: apps/turan/models.py:219 apps/turan/templates/tags/index.html:42
+#: apps/turan/models.py:252 apps/turan/templates/tags/index.html:42
 #: apps/turan/templates/turan/route_form.html:7
 #: apps/turan/templates/turan/route_list.html:9
 #: apps/turan/templates/turan/route_list.html:68
@@ -457,47 +405,35 @@ msgstr "Rute"
 msgid "Routes"
 msgstr "Ruter"
 
-#: apps/turan/models.py:362
-msgid "Exercise Type"
-msgstr "Treningstype"
-
-#: apps/turan/models.py:363
-msgid "Exercise Types"
-msgstr "Treningstypar"
-
-#: apps/turan/models.py:367
+#: apps/turan/models.py:389
 msgid "All"
 msgstr "Alle"
 
-#: apps/turan/models.py:368
+#: apps/turan/models.py:390
 msgid "Friends"
 msgstr "Vener"
 
-#: apps/turan/models.py:369
+#: apps/turan/models.py:391
 msgid "Only myself"
 msgstr "Berre meg sjølv"
 
-#: apps/turan/models.py:372
+#: apps/turan/models.py:394
 msgid "Finished"
 msgstr "Ferdig"
 
-#: apps/turan/models.py:373
+#: apps/turan/models.py:395
 msgid "Paused"
 msgstr "Pausa"
 
-#: apps/turan/models.py:374 apps/turan/templates/turan/exercise_player.html:54
+#: apps/turan/models.py:396 apps/turan/templates/turan/exercise_player.html:54
 msgid "Live"
 msgstr "Live"
 
-#: apps/turan/models.py:380
-msgid "Exercise type"
-msgstr "Treningstype"
-
-#: apps/turan/models.py:381
+#: apps/turan/models.py:403
 msgid "Search existing routes"
 msgstr "Søk i ruter"
 
-#: apps/turan/models.py:382 apps/turan/templates/turan/event_list.html:64
+#: apps/turan/models.py:404 apps/turan/templates/turan/event_list.html:64
 #: apps/turan/templates/turan/exercise/attributes.html:68
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:15
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:79
@@ -508,7 +444,7 @@ msgstr "Søk i ruter"
 msgid "Duration"
 msgstr "Tid"
 
-#: apps/turan/models.py:383
+#: apps/turan/models.py:405
 #: apps/turan/templates/turan/exercise/attributes.html:74
 #: apps/turan/templates/turan/exercise/mouseover.html:51
 #: templates/messages/trash.html:12 templates/messages/view.html:16
@@ -516,34 +452,34 @@ msgstr "Tid"
 msgid "Date"
 msgstr "Dato"
 
-#: apps/turan/models.py:383
+#: apps/turan/models.py:405
 msgid "year-mo-dy"
 msgstr "år-mnd-dag"
 
-#: apps/turan/models.py:384
+#: apps/turan/models.py:406
 #: apps/turan/templates/turan/exercise/attributes.html:80
 #: apps/turan/templates/turan/exercise/mouseover.html:45
 msgid "Start time"
 msgstr "Starttid"
 
-#: apps/turan/models.py:386 apps/turan/templates/turan/route_detail.html:107
+#: apps/turan/models.py:408 apps/turan/templates/turan/route_detail.html:107
 #: apps/turan/templates/turan/segment_detail.html:127
 msgid "Comment"
 msgstr "Kommentar"
 
-#: apps/turan/models.py:404
+#: apps/turan/models.py:426
 msgid "Only needed for Polar products"
 msgstr "Berre naudsynt om du har Polar-utstyr"
 
-#: apps/turan/models.py:405 apps/turan/models.py:406 apps/turan/models.py:407
+#: apps/turan/models.py:427 apps/turan/models.py:428 apps/turan/models.py:429
 msgid "Celsius"
 msgstr "Celsius"
 
-#: apps/turan/models.py:408 apps/turan/models.py:639
+#: apps/turan/models.py:430 apps/turan/models.py:661
 msgid "Exercise file"
 msgstr "Treningsfil"
 
-#: apps/turan/models.py:408
+#: apps/turan/models.py:430
 msgid ""
 "File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, "
 ".gmd, .csv, .xml)"
@@ -551,51 +487,61 @@ msgstr ""
 "Fil frå treningscomputer som Garmin/Polar/anna (.fit, .tcx, .gpx, "
 ".hrm, .gmd, .csv, .xml)"
 
-#: apps/turan/models.py:418 apps/turan/templates/turan/search.html:51
+#: apps/turan/models.py:432
+msgid "Exercise permission"
+msgstr "Treningtilgong"
+
+#: apps/turan/models.py:434
+msgid ""
+"Select the equipment used for this exercise, for statistics and "
+"tracking"
+msgstr "Vel utstyr du brukte, for statistikk m.m."
+
+#: apps/turan/models.py:440 apps/turan/templates/turan/search.html:51
 #: apps/turan/templates/turan/tags.html:9
 msgid "Tags"
 msgstr "Merke"
 
-#: apps/turan/models.py:489 apps/turan/templates/turan/exercise_compare.html:7
+#: apps/turan/models.py:512 apps/turan/templates/turan/exercise_compare.html:7
 #: apps/turan/templates/turan/import_stage2.html:15
 msgid "Exercise"
 msgstr "Trening"
 
-#: apps/turan/models.py:490 apps/turan/templates/tags/index.html:20
+#: apps/turan/models.py:513 apps/turan/templates/tags/index.html:20
 #: apps/turan/templates/turan/exercise_list.html:9
 #: apps/turan/templates/turan/exercise_list.html:14
 #: apps/turan/templates/turan/search.html:23 templates/site_base.html:138
 msgid "Exercises"
 msgstr "Treninger"
 
-#: apps/turan/models.py:494 templates/pybb/forum_details.html:66
+#: apps/turan/models.py:517 templates/pybb/forum_details.html:66
 #: templates/pybb/forum_details.html:75 templates/pybb/index.html:38
 msgid "by"
 msgstr "av"
 
-#: apps/turan/models.py:497
-msgid "Unnamed trip"
-msgstr "Namnlaus tur"
+#: apps/turan/models.py:520
+msgid "Untitled"
+msgstr "Namnlaus"
 
-#: apps/turan/models.py:631
+#: apps/turan/models.py:653
 msgid "Merge"
 msgstr "Flett"
 
-#: apps/turan/models.py:632
+#: apps/turan/models.py:654
 msgid "Prepend"
 msgstr "Pre-fletting"
 
-#: apps/turan/models.py:633
+#: apps/turan/models.py:655
 msgid "Append"
 msgstr "Post-fletting"
 
-#: apps/turan/models.py:638
+#: apps/turan/models.py:660
 msgid ""
 "Merge strategy. Merge = Merge on top of current, Append = Append to "
 "end, Prepend = Insert before current"
 msgstr ""
 
-#: apps/turan/models.py:639
+#: apps/turan/models.py:661
 msgid ""
 "File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, "
 ".pwx, .xml, .fit)"
@@ -603,27 +549,27 @@ msgstr ""
 "Fil frå treningscomputer som Garmin/Polar/PowerTap (.gpx, .tcx, .hrm, "
 ".gmd, .csv, .pwx, .xml, .fit)"
 
-#: apps/turan/models.py:752
+#: apps/turan/models.py:774
 msgid "for example Alpe d'Huez"
 msgstr "til dømes Alpe d'Huez"
 
-#: apps/turan/models.py:754
+#: apps/turan/models.py:776
 msgid "Describe where it starts and ends and other noteworthy details"
 msgstr "Skildre kvar segmentet startar og sluttar og anna nyttig informasjon"
 
-#: apps/turan/models.py:755
+#: apps/turan/models.py:777
 msgid "E.g. added info for segment in external URL"
 msgstr "T.d. ekstra informasjon for segmentet via ekstern lenke"
 
-#: apps/turan/models.py:864 apps/turan/models.py:931
+#: apps/turan/models.py:886 apps/turan/models.py:953
 msgid "in m"
 msgstr "i m"
 
-#: apps/turan/models.py:928
+#: apps/turan/models.py:950
 msgid "Optionally add this selection to a shared public segment"
 msgstr "Link segmentet til eit delt felles segment"
 
-#: apps/turan/models.py:1048
+#: apps/turan/models.py:1070
 msgid "Locations"
 msgstr "Stadar"
 
@@ -640,21 +586,21 @@ msgstr ""
 msgid "Month sums"
 msgstr "Månadsum"
 
-#: apps/turan/views.py:140
+#: apps/turan/views.py:149
 msgid "Missing exercise details."
 msgstr "Manglar treningsdetaljar"
 
-#: apps/turan/views.py:1453 apps/turan/views.py:1942
+#: apps/turan/views.py:1473 apps/turan/views.py:1999
 #, python-format
 msgid "The %(verbose_name)s was created successfully."
 msgstr "%(verbose_name)s vart lagt til."
 
-#: apps/turan/views.py:1546
-#, fuzzy, python-format
+#: apps/turan/views.py:1566
+#, python-format
 msgid "The %(verbose_name)s was added successfully."
 msgstr "%(verbose_name)s vart lagt til."
 
-#: apps/turan/views.py:1546 apps/turan/templates/turan/segment_detail.html:11
+#: apps/turan/views.py:1566 apps/turan/templates/turan/segment_detail.html:11
 #: apps/turan/templates/turan/segment_form.html:7
 #: apps/turan/templates/turan/segmentdetail_form.html:7
 msgid "Segment"
@@ -715,7 +661,7 @@ msgstr "Du kan <a href=\"%(login_url)s\">Logg inn</a> for å starte."
 
 #: apps/turan/templates/about/what_next.html:6
 #: apps/turan/templates/about/what_next.html:9
-#: templates/profiles/profile.html:17
+#: templates/profiles/profile.html:18
 msgid "What Next?"
 msgstr "Kva no?"
 
@@ -881,7 +827,7 @@ msgid "Someone with this email address has already joined:"
 msgstr "Ein brukar med den epost-adressa er allereie medlem:"
 
 #: apps/turan/templates/friends_app/invitations.html:36
-#: templates/profiles/profile.html:314
+#: templates/profiles/profile.html:315
 msgid "invite"
 msgstr "inviter"
 
@@ -890,12 +836,12 @@ msgid "Friendship Requests Received"
 msgstr "Ven-førespurnad motteke."
 
 #: apps/turan/templates/friends_app/invitations.html:55
-#: templates/profiles/profile.html:295
+#: templates/profiles/profile.html:296
 msgid "accept"
 msgstr "aksepter"
 
 #: apps/turan/templates/friends_app/invitations.html:60
-#: templates/profiles/profile.html:300
+#: templates/profiles/profile.html:301
 msgid "decline"
 msgstr "avslå"
 
@@ -954,12 +900,12 @@ msgid "Upload a Photo"
 msgstr "Last opp bilete"
 
 #: apps/turan/templates/profile/statistics.html:4
-#: templates/profiles/profile.html:77
+#: templates/profiles/profile.html:78
 msgid "Total Duration"
 msgstr "Total tid"
 
 #: apps/turan/templates/profile/statistics.html:5
-#: templates/profiles/profile.html:78
+#: templates/profiles/profile.html:79
 msgid "Total Distance"
 msgstr "Total Lengd"
 
@@ -967,8 +913,8 @@ msgstr "Total Lengd"
 #: apps/turan/templates/profile/statistics.html:8
 #: apps/turan/templates/turan/event_list.html:90
 #: apps/turan/templates/turan/exercise_list.html:75
-#: apps/turan/templates/turan/index.html:73
-#: apps/turan/templates/turan/index.html:112
+#: apps/turan/templates/turan/index.html:75
+#: apps/turan/templates/turan/index.html:114
 #: apps/turan/templates/turan/segment_list.html:94
 #: apps/turan/templates/turan/slope_list.html:88
 #: apps/turan/templates/turan/statistics.html:154
@@ -981,12 +927,12 @@ msgstr "Total Lengd"
 #: apps/turan/templates/turan/exercise/slope_tab.html:96
 #: apps/turan/templates/turan/route/attributes.html:5
 #: apps/turan/templates/turan/segment/attributes.html:10
-#: templates/profiles/profile.html:78 templates/profiles/profile.html.py:81
+#: templates/profiles/profile.html:79 templates/profiles/profile.html.py:82
 msgid "km"
 msgstr "km"
 
 #: apps/turan/templates/profile/statistics.html:6
-#: templates/profiles/profile.html:79
+#: templates/profiles/profile.html:80
 msgid "Total Avg Speed"
 msgstr "Total gj. fart"
 
@@ -1007,23 +953,23 @@ msgstr "Total gj. fart"
 #: apps/turan/templates/turan/exercise/interval_tab.html:86
 #: apps/turan/templates/turan/exercise/mouseover.html:18
 #: apps/turan/templates/turan/exercise/slope_tab.html:108
-#: templates/profiles/profile.html:79
+#: templates/profiles/profile.html:80
 msgid "km/h"
 msgstr "km/t"
 
 #: apps/turan/templates/profile/statistics.html:7
-#: templates/profiles/profile.html:80
+#: templates/profiles/profile.html:81
 msgid "Total exercise count"
 msgstr "Totalt treningstal"
 
 #: apps/turan/templates/profile/statistics.html:7
 #: apps/turan/templates/turan/exercise_form.html:101
-#: templates/profiles/profile.html:80
+#: templates/profiles/profile.html:81
 msgid "trips"
 msgstr "turar"
 
 #: apps/turan/templates/profile/statistics.html:8
-#: templates/profiles/profile.html:81
+#: templates/profiles/profile.html:82
 msgid "Longest trip"
 msgstr "Lengste tur"
 
@@ -1048,7 +994,7 @@ msgid "Avg time/day"
 msgstr "Gj. tid/dag"
 
 #: apps/turan/templates/profile/statistics.html:12
-#: templates/profiles/profile.html:82
+#: templates/profiles/profile.html:83
 msgid "Total energy expenditure"
 msgstr "Total energibruk"
 
@@ -1056,18 +1002,18 @@ msgstr "Total energibruk"
 #: apps/turan/templates/turan/exercise_list.html:68
 #: apps/turan/templates/turan/statistics.html:201
 #: apps/turan/templates/turan/exercise/attributes.html:197
-#: apps/turan/templates/turan/exercise/mouseover.html:79
-#: templates/profiles/profile.html:82
+#: apps/turan/templates/turan/exercise/mouseover.html:86
+#: templates/profiles/profile.html:83
 msgid "kcal"
 msgstr "kcal"
 
 #: apps/turan/templates/profile/statistics.html:12
-#: templates/profiles/profile.html:82
+#: templates/profiles/profile.html:83
 msgid "kg"
 msgstr "kg"
 
 #: apps/turan/templates/profile/statistics.html:12
-#: templates/profiles/profile.html:82
+#: templates/profiles/profile.html:83
 msgid "fat"
 msgstr "fett"
 
@@ -1101,7 +1047,7 @@ msgstr "Dette er blogg-postane frå alle:"
 msgid "Tribes"
 msgstr "Lag"
 
-#: apps/turan/templates/turan/altitude_profile.html:23
+#: apps/turan/templates/turan/altitude_profile.html:27
 msgid "Altitude profile"
 msgstr "Høgdeprofil"
 
@@ -1114,7 +1060,7 @@ msgstr "Bakkar"
 
 #: apps/turan/templates/turan/base.html:18
 #: apps/turan/templates/turan/statistics.html:7
-#: templates/profiles/profile.html:75
+#: templates/profiles/profile.html:76
 msgid "Statistics"
 msgstr "Statistikk"
 
@@ -1148,11 +1094,11 @@ msgstr "km/h / kg"
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:53
 #: apps/turan/templates/turan/exercise/interval_tab.html:90
 #: apps/turan/templates/turan/exercise/interval_tab.html:93
-#: apps/turan/templates/turan/exercise/mouseover.html:65
 #: apps/turan/templates/turan/exercise/mouseover.html:72
+#: apps/turan/templates/turan/exercise/mouseover.html:79
 #: apps/turan/templates/turan/exercise/slope_tab.html:113
 #: apps/turan/templates/turan/exercise/slope_tab.html:118
-#: templates/profiles/profile.html:202
+#: templates/profiles/profile.html:203
 msgid "W"
 msgstr "W"
 
@@ -1208,7 +1154,7 @@ msgstr "dagar"
 
 #: apps/turan/templates/turan/calendar.html:87
 #: apps/turan/templates/turan/calendar.html:91
-#: apps/turan/templates/turan/exercise/best_effort_tab.html:181
+#: apps/turan/templates/turan/exercise/best_effort_tab.html:198
 msgid "minutes"
 msgstr "minutt"
 
@@ -1237,15 +1183,13 @@ msgid "Delete"
 msgstr "Slett"
 
 #: apps/turan/templates/turan/equipment_form.html:11
-#, fuzzy
 msgid "Equipment modification"
-msgstr "Endre segment"
+msgstr "Endre utstyr"
 
 #: apps/turan/templates/turan/equipment_form.html:13
-#: templates/profiles/profile.html:231
-#, fuzzy
+#: templates/profiles/profile.html:232
 msgid "Add equipment"
-msgstr "Kommenter"
+msgstr "Legg til utstyr"
 
 #: apps/turan/templates/turan/equipment_form.html:18
 #: apps/turan/templates/turan/segment_form.html:18
@@ -1282,8 +1226,8 @@ msgstr "Mine treninger"
 #: apps/turan/templates/turan/event_list.html:47
 #: apps/turan/templates/turan/event_list.html:48
 #: apps/turan/templates/turan/index.html:29
-#: apps/turan/templates/turan/index.html:30 templates/profiles/profile.html:27
-#: templates/profiles/profile.html.py:28
+#: apps/turan/templates/turan/index.html:30 templates/profiles/profile.html:28
+#: templates/profiles/profile.html.py:29
 msgid "Add an exercise"
 msgstr "Ny trening"
 
@@ -1308,6 +1252,7 @@ msgstr "mot"
 #: apps/turan/templates/turan/exercise_player.html:73
 #: apps/turan/templates/turan/exercise_player.html:92
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:82
+#: apps/turan/templates/turan/exercise/hrhzone_tab.html:68
 #: apps/turan/templates/turan/exercise/slope_tab.html:26
 #: apps/turan/templates/turan/player/graphs.html:3
 #: apps/turan/templates/turan/player/graphs.html:22
@@ -1325,6 +1270,7 @@ msgstr "Puls"
 #: apps/turan/templates/turan/exercise_compare.html:16
 #: apps/turan/templates/turan/exercise_player.html:81
 #: apps/turan/templates/turan/exercise_player.html:97
+#: apps/turan/templates/turan/exercise/hrhzone_tab.html:57
 #: apps/turan/templates/turan/player/graphs.html:11
 #: apps/turan/templates/turan/player/graphs.html:27
 msgid "Cadence"
@@ -1334,19 +1280,20 @@ msgstr "Kadens"
 #: apps/turan/templates/turan/exercise_player.html:87
 #: apps/turan/templates/turan/exercise_player.html:103
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:18
+#: apps/turan/templates/turan/exercise/hrhzone_tab.html:46
 #: apps/turan/templates/turan/player/graphs.html:17
 #: apps/turan/templates/turan/player/graphs.html:33
 msgid "Power"
 msgstr "Effekt"
 
 #: apps/turan/templates/turan/exercise_compare.html:93
-#: apps/turan/templates/turan/exercise/gradient_tab.html:90
+#: apps/turan/templates/turan/exercise/gradient_tab.html:66
 #: templates/pybb/topic_details.html:44
 msgid "to"
 msgstr "til"
 
 #: apps/turan/templates/turan/exercise_compare.html:94
-#: apps/turan/templates/turan/exercise/gradient_tab.html:91
+#: apps/turan/templates/turan/exercise/gradient_tab.html:67
 msgid "Click graph to reset selection"
 msgstr "Klikk på grafen for å fjerna utvalet"
 
@@ -1363,6 +1310,7 @@ msgstr "Endre trening"
 #: apps/turan/templates/turan/exercise_detail.html:33
 #: apps/turan/templates/turan/route_detail.html:24
 #: apps/turan/templates/turan/segment_detail.html:24
+#: templates/equipment/equipment_attributes.html:22
 msgid "Modify"
 msgstr "Endre"
 
@@ -1392,7 +1340,7 @@ msgid "Graph"
 msgstr "Graf"
 
 #: apps/turan/templates/turan/exercise_detail.html:84
-#: apps/turan/templates/turan/exercise_detail.html:230
+#: apps/turan/templates/turan/exercise_detail.html:227
 msgid "Comments"
 msgstr "Kommentarar"
 
@@ -1418,11 +1366,11 @@ msgstr "Toppskjema"
 
 #: apps/turan/templates/turan/exercise_detail.html:144
 #: apps/turan/templates/turan/exercise/attributes.html:202
-#: apps/turan/templates/turan/exercise/mouseover.html:85
+#: apps/turan/templates/turan/exercise/mouseover.html:92
 msgid "writes"
 msgstr "skriv"
 
-#: apps/turan/templates/turan/exercise_detail.html:235
+#: apps/turan/templates/turan/exercise_detail.html:232
 #: apps/turan/templates/turan/exercise_player.html:252
 msgid "Position"
 msgstr "Posisjon"
@@ -1459,6 +1407,7 @@ msgstr "Lagre trening"
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:66
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:122
 #: apps/turan/templates/turan/exercise/interval_tab.html:85
+#: apps/turan/templates/turan/exercise/mouseover.html:58
 #: apps/turan/templates/turan/exercise/slope_tab.html:99
 #: apps/turan/templates/turan/route/attributes.html:14
 #: apps/turan/templates/turan/route/attributes.html:23
@@ -1482,7 +1431,7 @@ msgstr "m"
 #: apps/turan/templates/turan/exercise/graph.html:21
 #: apps/turan/templates/turan/exercise/interval_tab.html:100
 #: apps/turan/templates/turan/exercise/mouseover.html:25
-#: templates/profiles/profile.html:196 templates/profiles/profile.html:199
+#: templates/profiles/profile.html:197 templates/profiles/profile.html:200
 msgid "BPM"
 msgstr "Slag/m"
 
@@ -1517,7 +1466,6 @@ msgstr "Avspeling av trening"
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:24
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:85
 #: apps/turan/templates/turan/exercise/slope_tab.html:11
-#: templates/wakawaka.old/base.html:9
 msgid "Start"
 msgstr "Start"
 
@@ -1648,6 +1596,18 @@ msgstr "Ein feil oppstod under import"
 msgid "Import exercise"
 msgstr "Importer trening"
 
+#: apps/turan/templates/turan/import.html:34
+msgid "Bulk import"
+msgstr "Bulkimport"
+
+#: apps/turan/templates/turan/import.html:35
+msgid "Zip all your exercise files into a .zip-file and upload."
+msgstr "Pakk alle treningsfilene dine i eit .zip-arkiv og last opp."
+
+#: apps/turan/templates/turan/import.html:38
+msgid "Import exercises"
+msgstr "Importer treningar"
+
 #: apps/turan/templates/turan/import_stage2.html:9
 msgid "Imported the following data"
 msgstr "Importerte følgande data"
@@ -1663,35 +1623,35 @@ msgstr "Turan: Det som tælle"
 msgid "Add route"
 msgstr "Ny rute"
 
-#: apps/turan/templates/turan/index.html:84
+#: apps/turan/templates/turan/index.html:86
 msgid "View more exercises"
 msgstr "Vis fleire treningar"
 
-#: apps/turan/templates/turan/index.html:115
+#: apps/turan/templates/turan/index.html:117
 msgid "ascent"
 msgstr "stigning"
 
-#: apps/turan/templates/turan/index.html:125
+#: apps/turan/templates/turan/index.html:127
 msgid "View more routes"
 msgstr "Vis fleire ruter"
 
-#: apps/turan/templates/turan/index.html:131
+#: apps/turan/templates/turan/index.html:133
 msgid "Turan?"
 msgstr "Turan?"
 
-#: apps/turan/templates/turan/index.html:132
+#: apps/turan/templates/turan/index.html:134
 msgid "Analyze"
 msgstr "Analyser"
 
-#: apps/turan/templates/turan/index.html:133
+#: apps/turan/templates/turan/index.html:135
 msgid "Map"
 msgstr "Kart"
 
-#: apps/turan/templates/turan/index.html:134
+#: apps/turan/templates/turan/index.html:136
 msgid "Log"
 msgstr "Logg"
 
-#: apps/turan/templates/turan/index.html:144
+#: apps/turan/templates/turan/index.html:146
 msgid ""
 "\n"
 "            <b>T</b>uran is a hobby project created by a few exercise enthusiasts for logging and analyzing exercise data from heart rate monitors / cycle computers. It supports a variety of devices.\n"
@@ -1704,35 +1664,35 @@ msgid ""
 "            "
 msgstr ""
 
-#: apps/turan/templates/turan/index.html:155
+#: apps/turan/templates/turan/index.html:157
 msgid ""
 "\n"
 "            <b>T</b>uran is currently categorized into different exercise types to provide statistics and information for each type separately. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.\n"
 "            "
 msgstr ""
 
-#: apps/turan/templates/turan/index.html:163
+#: apps/turan/templates/turan/index.html:165
 msgid ""
 "\n"
 "            Provided you have one of the supported devices you can analyze your training, kilometre by kilometre, or minute by minute if distance isn't relevant. You can, again provided your device supports it, graph everything the device records. Speed, altitude, cadence, heart rate, power, the whole <a href=\"http://www.urbandictionary.com/define.php?term=shebang\">shebang</a>. Obviously, analyzing means breaking down a complex issue into smaller parts, so zooming in on any part of any lenght is supported. Just click and mark an interesting part of the graph and drool on the immense depth of the data <strong>you</strong> have produced.\n"
 "            "
 msgstr ""
 
-#: apps/turan/templates/turan/index.html:171
+#: apps/turan/templates/turan/index.html:173
 msgid ""
 "\n"
 "            The map serves two purposes. First and foremost the function of showing where you've been. That one's easy. The second is the killer: intensities during the exercises are embedded in the trace of the trip. The intensity of your exercise is indicated by the color, showing where which parts of your trip was relatively speaking the hardest. The levels are also relative to the user's own max-pulse, so make sure yours is correct.\n"
 "            "
 msgstr ""
 
-#: apps/turan/templates/turan/index.html:178
+#: apps/turan/templates/turan/index.html:180
 msgid ""
 "\n"
 "            What good is training without progress? After a while you might want to look at the trends of your training. Turan(tm) provides several. Apart from the silly BMI-tracking-feature, you can view (and compare) different runs of the same route, comparing everything, speed, cadence and heart rate. Turan(tm) will also graph the time-usage of a spesific route as a function of time. In your profile you can view your own progress in terms of average speed, BMI and resting pulse.\n"
 "            "
 msgstr ""
 
-#: apps/turan/templates/turan/index.html:198
+#: apps/turan/templates/turan/index.html:200
 msgid "Latest comments"
 msgstr "Siste kommentarar"
 
@@ -1801,15 +1761,15 @@ msgstr "Utøvarar"
 
 #: apps/turan/templates/turan/search.html:30
 #: apps/turan/templates/turan/search.html:44
-#, fuzzy
 msgid "Show more"
-msgstr "Vis"
+msgstr "Vis fleire"
 
 #: apps/turan/templates/turan/search.html:64 templates/site_base.html:140
 msgid "Segments"
 msgstr "Segment"
 
-#: apps/turan/templates/turan/search_head.html:5 templates/pybb/base.html:43
+#: apps/turan/templates/turan/search_head.html:5
+#: templates/profiles/profiles.html:16 templates/pybb/base.html:43
 msgid "Search"
 msgstr "Søk"
 
@@ -1864,9 +1824,8 @@ msgstr "Endre segment"
 
 #: apps/turan/templates/turan/segmentdetail_form.html:13
 #: apps/turan/templates/turan/exercise/graph.html:47
-#, fuzzy
 msgid "Add segment"
-msgstr "Legg til dette segmentet"
+msgstr "Legg til segment"
 
 #: apps/turan/templates/turan/segmentdetail_form.html:14
 msgid "Note: if this is a new segment you will first have to create a segment"
@@ -2006,7 +1965,7 @@ msgstr "Mest energi brukt"
 
 #: apps/turan/templates/turan/statistics.html:201
 #: apps/turan/templates/turan/exercise/attributes.html:197
-#: apps/turan/templates/turan/exercise/mouseover.html:79
+#: apps/turan/templates/turan/exercise/mouseover.html:86
 msgid "bodyfat"
 msgstr "kropsfett"
 
@@ -2056,6 +2015,11 @@ msgstr "Logo"
 msgid "Function"
 msgstr "Rolle"
 
+#: apps/turan/templates/turan/team_list.html:5
+#: apps/turan/templates/turan/team_list.html:10
+msgid "Teams"
+msgstr "Lag"
+
 #: apps/turan/templates/turan/team_list.html:21
 msgid "Slogan"
 msgstr "Slogan"
@@ -2102,17 +2066,12 @@ msgstr "Maksfart"
 msgid "Avg HR"
 msgstr "Puls"
 
-#: apps/turan/templates/turan/exercise/attributes.html:116
-#: templates/profiles/profile.html:199
-msgid "Max HR"
-msgstr "Makspuls"
-
 #: apps/turan/templates/turan/exercise/attributes.html:121
 msgid "Normalized HR"
 msgstr "Normalisert HR"
 
 #: apps/turan/templates/turan/exercise/attributes.html:129
-#: apps/turan/templates/turan/exercise/mouseover.html:57
+#: apps/turan/templates/turan/exercise/mouseover.html:64
 msgid "Avg Pedaling Cadence"
 msgstr "Kadens"
 
@@ -2124,7 +2083,7 @@ msgstr "Kadens"
 #: apps/turan/templates/turan/exercise/graph.html:29
 #: apps/turan/templates/turan/exercise/interval_tab.html:105
 #: apps/turan/templates/turan/exercise/interval_tab.html:106
-#: apps/turan/templates/turan/exercise/mouseover.html:58
+#: apps/turan/templates/turan/exercise/mouseover.html:65
 msgid "RPM"
 msgstr "RPM"
 
@@ -2137,7 +2096,7 @@ msgid "Max Cadence"
 msgstr "Makskadens"
 
 #: apps/turan/templates/turan/exercise/attributes.html:146
-#: apps/turan/templates/turan/exercise/mouseover.html:64
+#: apps/turan/templates/turan/exercise/mouseover.html:71
 msgid "Avg Pedaling Power"
 msgstr "Tråkkeffekt"
 
@@ -2146,7 +2105,7 @@ msgid "Avg Power"
 msgstr "Snitteffekt"
 
 #: apps/turan/templates/turan/exercise/attributes.html:157
-#: apps/turan/templates/turan/exercise/mouseover.html:71
+#: apps/turan/templates/turan/exercise/mouseover.html:78
 msgid "Normalized Power"
 msgstr "Normalisert effekt"
 
@@ -2177,7 +2136,7 @@ msgid "Max Temperature"
 msgstr "Maks temp."
 
 #: apps/turan/templates/turan/exercise/attributes.html:197
-#: apps/turan/templates/turan/exercise/mouseover.html:78
+#: apps/turan/templates/turan/exercise/mouseover.html:85
 msgid "Used kcal"
 msgstr "Brukt kcal"
 
@@ -2206,23 +2165,24 @@ msgstr "Lengd"
 msgid "Elevation"
 msgstr "Høgd"
 
-#: apps/turan/templates/turan/exercise/best_effort_tab.html:135
+#: apps/turan/templates/turan/exercise/best_effort_tab.html:136
 msgid "This exercise"
 msgstr "Denne treninga"
 
-#: apps/turan/templates/turan/exercise/best_effort_tab.html:142
+#: apps/turan/templates/turan/exercise/best_effort_tab.html:144
+#: apps/turan/templates/turan/exercise/best_effort_tab.html:152
 msgid "All time best"
 msgstr "Personleg best"
 
-#: apps/turan/templates/turan/exercise/best_effort_tab.html:181
+#: apps/turan/templates/turan/exercise/best_effort_tab.html:198
 msgid "at"
 msgstr "ved"
 
-#: apps/turan/templates/turan/exercise/best_effort_tab.html:181
+#: apps/turan/templates/turan/exercise/best_effort_tab.html:198
 msgid "is"
 msgstr "er"
 
-#: apps/turan/templates/turan/exercise/gradient_tab.html:69
+#: apps/turan/templates/turan/exercise/gradient_tab.html:55
 msgid "Gradients"
 msgstr "Helling"
 
@@ -2241,6 +2201,22 @@ msgstr "Zoom ut"
 #: apps/turan/templates/turan/exercise/graph.html:46
 msgid "Add segment for this selection"
 msgstr "Legg til segment for dette utvalet"
+
+#: apps/turan/templates/turan/exercise/hrhzone_tab.html:5
+msgid "Percentage of time spent in different HR, colored by zones"
+msgstr "Prosentvis fordeling i ulike puls-soner"
+
+#: apps/turan/templates/turan/exercise/hrhzone_tab.html:9
+msgid "Power by time"
+msgstr ""
+
+#: apps/turan/templates/turan/exercise/hrhzone_tab.html:14
+msgid "Cadence by time"
+msgstr ""
+
+#: apps/turan/templates/turan/exercise/hrhzone_tab.html:19
+msgid "Speed by time"
+msgstr ""
 
 #: apps/turan/templates/turan/exercise/incline_tab.html:16
 #: apps/turan/templates/turan/exercise/slope_tab.html:20
@@ -2263,12 +2239,10 @@ msgid "Category"
 msgstr "Kategori"
 
 #: apps/turan/templates/turan/exercise/slope_tab.html:83
-#, fuzzy
 msgid "Modify segment"
 msgstr "Endre segment"
 
 #: apps/turan/templates/turan/exercise/slope_tab.html:86
-#, fuzzy
 msgid "Delete segment"
 msgstr "Slett segment"
 
@@ -2503,9 +2477,8 @@ msgid "E-Mail Addresses"
 msgstr "epost-adresser"
 
 #: templates/account/base.html:11 templates/django_openid/associations.html:5
-#, fuzzy
 msgid "Authentication Associations"
-msgstr "OpenID-assosiasjonar"
+msgstr "Autentiserings-assosiasjonar"
 
 #: templates/account/base.html:13
 msgid "Change Password"
@@ -2579,13 +2552,12 @@ msgid "Sign Up"
 msgstr "Registrer deg"
 
 #: templates/account/signup.html:12
-#, fuzzy
 msgid "You are already logged in."
-msgstr "du er allereie logga inn som %(user_display)s."
+msgstr "Du er allereie logga inn."
 
 #: templates/account/signup.html:14
 msgid "Already have an account?"
-msgstr ""
+msgstr "Har du alt ein konto?"
 
 #: templates/account/signup.html:31
 msgid "Register using your Facebook account"
@@ -2645,9 +2617,8 @@ msgstr "Autentiser"
 
 #: templates/django_openid/associations.html:16
 #: templates/django_openid/associations.html:32
-#, fuzzy
 msgid "Remove association"
-msgstr "OpenID-assosiasjonar"
+msgstr "Fjern assosiasjon"
 
 #: templates/django_openid/associations.html:21
 #, python-format
@@ -2673,14 +2644,12 @@ msgid "Authenticate and associate with this account"
 msgstr ""
 
 #: templates/messages/base.html:5 templates/messages/base.html.py:15
-#, fuzzy
 msgid "Notices"
-msgstr "Notis"
+msgstr "Notisar"
 
 #: templates/messages/base.html:11
-#, fuzzy
 msgid "Compose"
-msgstr "Samanlikn"
+msgstr "Ny melding"
 
 #: templates/messages/base.html:13 templates/messages/outbox.html:12
 msgid "Sent"
@@ -2719,7 +2688,6 @@ msgstr "Aksjon"
 
 #: templates/messages/inbox.html:24 templates/messages/outbox.html:21
 #: templates/messages/trash.html:21 templates/messages/view.html:17
-#: templates/wakawaka.old/page.html:45
 msgid "DATETIME_FORMAT"
 msgstr ""
 
@@ -2750,7 +2718,6 @@ msgid "undelete"
 msgstr "gjenopprett"
 
 #: templates/messages/trash.html:28
-#, fuzzy
 msgid ""
 "Deleted Messages are removed from the trash at irregular intervals, "
 "don't rely on this feature for long-time storage."
@@ -2825,141 +2792,136 @@ msgstr "Din profil"
 msgid "All Profiles"
 msgstr "Alle profilar"
 
-#: templates/profiles/profile.html:11
-#, fuzzy
+#: templates/profiles/profile.html:12
 msgid "Profile for"
-msgstr "Profil"
+msgstr "Profil for"
 
-#: templates/profiles/profile.html:22
+#: templates/profiles/profile.html:23
 msgid "Show"
 msgstr "Vis"
 
-#: templates/profiles/profile.html:22
+#: templates/profiles/profile.html:23
 msgid "'s calendar"
 msgstr " sin kalender"
 
-#: templates/profiles/profile.html:34
+#: templates/profiles/profile.html:35
 msgid "Add a route"
 msgstr "Ny rute"
 
-#: templates/profiles/profile.html:40
-#, fuzzy
+#: templates/profiles/profile.html:41
 msgid "Import exercises from another site"
 msgstr "Importer trening frå anna nettstad"
 
-#: templates/profiles/profile.html:46
+#: templates/profiles/profile.html:47
 msgid "Update weight / resting HR"
 msgstr "Oppdater vekt / kvilepuls / FTP"
 
-#: templates/profiles/profile.html:50
-#, fuzzy
+#: templates/profiles/profile.html:51
 msgid "Add exercise equipment"
-msgstr "Ny trening"
+msgstr "Legg til treningsutstyr"
 
-#: templates/profiles/profile.html:55
-#, fuzzy
+#: templates/profiles/profile.html:56
 msgid "Verify an email address"
-msgstr "stadfest epost-adresse"
+msgstr "Stadfest epost-adresse"
 
-#: templates/profiles/profile.html:61
-#, fuzzy
+#: templates/profiles/profile.html:62
 msgid "Add an avatar"
-msgstr "legg til brukarbilete"
+msgstr "Legg til brukarbilete"
 
-#: templates/profiles/profile.html:66
+#: templates/profiles/profile.html:67
 msgid "Invite people"
 msgstr "Inviter folk"
 
-#: templates/profiles/profile.html:74 templates/profiles/profile.html:245
+#: templates/profiles/profile.html:75 templates/profiles/profile.html:246
 msgid "Show all"
 msgstr "Vis alle"
 
-#: templates/profiles/profile.html:114
+#: templates/profiles/profile.html:115
 msgid "Cycle trips"
 msgstr "Sykkelturar"
 
-#: templates/profiles/profile.html:116
+#: templates/profiles/profile.html:117
 msgid "Avg speed trend: cycling"
 msgstr "Gj. fartstrend: sykling"
 
-#: templates/profiles/profile.html:118
+#: templates/profiles/profile.html:119
 msgid "Avg HR trend overall"
 msgstr "Gj. trend for puls"
 
-#: templates/profiles/profile.html:120
-#, fuzzy
+#: templates/profiles/profile.html:121
 msgid "BMI"
-msgstr "Slag/m"
+msgstr "BMI"
 
-#: templates/profiles/profile.html:122 templates/profiles/profile.html:196
+#: templates/profiles/profile.html:123 templates/profiles/profile.html:197
 msgid "Resting pulse"
 msgstr "Kvilepuls"
 
-#: templates/profiles/profile.html:125
-#, fuzzy
+#: templates/profiles/profile.html:126
 msgid "FTP"
-msgstr "FTP %"
+msgstr "FTP"
 
-#: templates/profiles/profile.html:180
+#: templates/profiles/profile.html:181
 msgid "Date joined"
 msgstr "Vart medlem"
 
-#: templates/profiles/profile.html:180
+#: templates/profiles/profile.html:181
 msgid "F j, Y"
 msgstr ""
 
-#: templates/profiles/profile.html:183
+#: templates/profiles/profile.html:184
 msgid "Website"
 msgstr "Nettstad"
 
-#: templates/profiles/profile.html:213
+#: templates/profiles/profile.html:194
+msgid "Cycle"
+msgstr "Sykkel"
+
+#: templates/profiles/profile.html:214
 msgid "Edit profile"
 msgstr "Rediger profil"
 
-#: templates/profiles/profile.html:220
+#: templates/profiles/profile.html:221
 msgid "update"
 msgstr "oppdater"
 
-#: templates/profiles/profile.html:232
-#, fuzzy
+#: templates/profiles/profile.html:233
 msgid "Exercise equipment"
-msgstr "Treningstid"
+msgstr "Treningsutstyr"
 
-#: templates/profiles/profile.html:246
+#: templates/profiles/profile.html:247
 msgid "Latest exercises"
 msgstr "Siste treninger"
 
-#: templates/profiles/profile.html:279
-#, fuzzy
+#: templates/profiles/profile.html:280
 msgid "You are friends with"
-msgstr "Du er ven med %(other_user)s."
+msgstr "Du er ven med"
 
-#: templates/profiles/profile.html:279
+#: templates/profiles/profile.html:280
 msgid "Send a message"
 msgstr "Send melding"
 
-#: templates/profiles/profile.html:282
+#: templates/profiles/profile.html:283
 msgid "remove from friends"
 msgstr "Fjern som ven"
 
-#: templates/profiles/profile.html:287
+#: templates/profiles/profile.html:288
 msgid "has requested friendship."
 msgstr ""
 
-#: templates/profiles/profile.html:306
+#: templates/profiles/profile.html:307
 msgid "Friendship request sent."
 msgstr "Veneførspurnad sendt."
 
-#: templates/profiles/profile.html:308
+#: templates/profiles/profile.html:309
 msgid "Add As Friend"
 msgstr "Legg til som ven"
 
-#: templates/profiles/profile.html:315
+#: templates/profiles/profile.html:316
 #, fuzzy, python-format
 msgid "%(other_user_display)s to be a friend."
 msgstr "Venene til %(other_user_display)s"
 
-#: templates/profiles/profile.html:329
+#: templates/profiles/profile.html:330
 #, python-format
 msgid ""
 "<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in"
@@ -3007,17 +2969,29 @@ msgstr "Venene til %(other_user_display)s"
 msgid "Profiles"
 msgstr "Profilar"
 
-#: templates/profiles/profiles.html:23 templates/tribes_old/tribes.html:36
-msgid "Order by:"
+#: templates/profiles/profiles.html:18
+msgid "Clear Search Terms"
+msgstr "Slett søkeuttrykk"
+
+#: templates/profiles/profiles.html:23
+msgid "Order by"
 msgstr "Sorter etter:"
 
 #: templates/profiles/profiles.html:26
-msgid "Exercise time"
-msgstr "Treningstid"
+msgid "Total exercise duration"
+msgstr "Totalt treningstid"
 
-#: templates/profiles/profiles.html:35
+#: templates/profiles/profiles.html:27
+msgid "Recent exercise duration"
+msgstr "Nyleg treningstid"
+
+#: templates/profiles/profiles.html:36
 msgid "MONTH_DAY_FORMAT"
 msgstr "MONTH_DAY_FORMAT"
+
+#: templates/profiles/profiles.html:51
+msgid "No profile were found"
+msgstr ""
 
 #: templates/profiles/statistics.html:8
 #, python-format
@@ -3092,7 +3066,7 @@ msgstr ""
 #: templates/pybb/base.html:45
 #, fuzzy
 msgid "My profile"
-msgstr "profil"
+msgstr "Min profil"
 
 #: templates/pybb/base.html:47
 #, fuzzy
@@ -3511,45 +3485,36 @@ msgstr "Medlemsliste"
 msgid "Topics:"
 msgstr "Emne:"
 
+#: templates/tribes_old/tribes.html:36
+msgid "Order by:"
+msgstr "Sorter etter:"
+
 #: templates/tribes_old/your_tribes.html:13
 msgid "These are the tribes you participate in."
 msgstr "Dette er dine lagmedlemskap."
 
-#: templates/wakawaka.old/base.html:10
-msgid "Recent revisions"
-msgstr ""
+#~ msgid ""
+#~ "a short version of the name consisting only of letters, numbers, "
+#~ "underscores and hyphens."
+#~ msgstr "kortnamn, berre bokstavar, tal eller bindestrekar."
 
-#: templates/wakawaka.old/base.html:11
-msgid "All Pages"
-msgstr ""
+#~ msgid "members"
+#~ msgstr "medlemmer"
 
-#: templates/wakawaka.old/page.html:15
-msgid "Edit this page"
-msgstr ""
+#~ msgid "No pain - no gain"
+#~ msgstr "No pain - no gain"
 
-#: templates/wakawaka.old/page.html:28
-msgid "You are viewing an older revision!"
-msgstr ""
+#~ msgid "Team"
+#~ msgstr "Lag"
 
-#: templates/wakawaka.old/page.html:30
-msgid "See the latest version"
-msgstr ""
+#~ msgid "Unnamed trip"
+#~ msgstr "Namnlaus tur"
 
-#: templates/wakawaka.old/page.html:45
-#, python-format
-msgid ""
-"\n"
-"                Recently modified by <em>%(creator)s</em>: %(modified)s\n"
-"            "
-msgstr ""
+#~ msgid "History"
+#~ msgstr "Historikk"
 
-#: templates/wakawaka.old/page.html:49
-msgid "History"
-msgstr "Historikk"
-
-#: templates/wakawaka.old/page.html:54
-msgid "Edit"
-msgstr "Endre"
+#~ msgid "Edit"
+#~ msgstr "Endre"
 
 #~ msgid "New Message"
 #~ msgstr "Ny melding"
