@@ -596,6 +596,7 @@ div.mapcontainer {
     padding-left: 10px;
     font-size: 11px;
     width: 190px;
+    list-style-position: inside;
 }
 h3.segmenttoplist {
     margin-bottom: 20px;
