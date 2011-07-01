@@ -7,6 +7,7 @@
 {% load microblogging_tags %}
 {% load turan_extras %}
 {% load humanize %}
+{% load turanwaka_tags %}
 
 {% block head_title %}{% blocktrans %}Profile for{% endblocktrans %} {% user_display other_user %}{% endblock %}
 
@@ -122,7 +123,7 @@
 <h3>{% trans "Resting pulse"%}</h3>
 <div class="drop-shadow lifted" id="pulsediv" style="width:300px;height:150px"></div>
 {% if ftpdataseries %}
-<h3>{% trans "FTP"%}</h3>
+<h3>{% trans "FTP" %}{{ "FunctionalThresholdPower"|wiki_help }}</h3>
 <div class="drop-shadow lifted" id="ftpdiv" style="width:300px;height:150px"></div>
 {% endif %}
 <script id="source" language="javascript" type="text/javascript">
@@ -199,7 +200,7 @@ $(function () {
                 <li class="heart"><span class="label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}</li>
                 {% endif %}
                 {% if object.ftp %}
-                <li class="power"><span class="label">{% trans "Functional Threshold Power" %}:</span> {{ object.ftp }} {% trans "W" %}</li>
+                <li class="power"><span class="label">{% trans "Functional Threshold Power" %}:{{ "FunctionalThresholdPower"|wiki_help }}</span> {{ object.ftp }} {% trans "W" %}</li>
                 {% endif %}
                 {% if object.info %}
                 <li><span class="label">{% trans "About" %}:</span> {{ object.info }}</li>
