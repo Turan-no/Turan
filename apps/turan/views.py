@@ -1414,12 +1414,15 @@ def exercise(request, object_id):
         hrhzones = gethrhzones(object, details, max_hr)
         cadfreqs = []
         bestpowerefforts = object.bestpowereffort_set.all()
+        userbestbestpowerefforts = []
         # fetch the all time best for comparison
         #bestbestpowerefforts = []
         #for bpe in bestpowerefforts:
         #    bbpes = BestPowerEffort.objects.filter(exercise__user=object.user,duration=bpe.duration).order_by('-power')[0]
         #    bestbestpowerefforts.append(bbpes)
-        bestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user__username='tor').values('duration').annotate(power=Max('power'))
+        bestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user=object.user).values('duration').annotate(power=Max('power'))
+        if request.user.is_authenticated() and request.user != object.user:
+            userbestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user=request.user).values('duration').annotate(power=Max('power'))
         speedfreqs = []
         if object.avg_cadence:
             cadfreqs = getfreqs(details, 'cadence', min=1)

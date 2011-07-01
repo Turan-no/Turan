@@ -130,6 +130,7 @@
 <script type="text/javascript">
 {% localize off %}
 {% if object.avg_power and power_show %}
+{% spaceless %}
     var best_effort_data = [
         {
             label: '{% trans "This exercise" %}',
@@ -138,6 +139,15 @@
             {% endif %}{% endfor %}],
             color: 3,
         },
+        {% if userbestbestpowerefforts %}
+        {
+            label: '{{ user}} {% trans "All time best" %}',
+            data: [ {% for effort in userbestbestpowerefforts %}{% if effort.duration %}
+                [{{ effort.duration }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
+            {% endif %}{% endfor %}],
+            color: 5,
+        },
+        {% endif %}
         {
             label: '{% trans "All time best" %}',
             data: [ {% for effort in bestbestpowerefforts %}{% if effort.duration %}
@@ -146,6 +156,7 @@
             color: 4,
         }
     ];
+{% endspaceless %}
     $.plot($("#besteffortdiv"), best_effort_data, { 
             legend: {show: true}, 
             grid: { 
