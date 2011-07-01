@@ -222,7 +222,8 @@ def slice_to_segmentdetail(exercise, segment, start, stop):
     data['start_lat'] = ret['start_lat']
     data['end_lon'] = ret['end_lon']
     data['end_lat'] = ret['end_lat']
-    data['power_per_kg'] = ret['power_per_kg']
+    if 'power_per_kg' in ret:
+        data['power_per_kg'] = ret['power_per_kg']
     data['segment'] = segment
     #data['comment'] = 'Auto'
     new_object = SegmentDetail(**data)
