@@ -531,7 +531,7 @@ class Exercise(models.Model):
         if self.route:
             if self.route.single_serving:
                 if not self.route.exercise_set.count() > 1: # Do not delete single serving routes that have multiple exercises attachted
-                    r.delete()
+                    self.route.delete()
         super(Exercise, self).delete(*args, **kwargs)
 
     def get_intensityfactor(self):
