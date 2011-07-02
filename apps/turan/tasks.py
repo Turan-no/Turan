@@ -827,12 +827,17 @@ def sanitize_entries(entries):
 
     def power_spikes_fixer(entries):
         ''' Remove insane power spikes from entries '''
+        for e in entries:
+            if hasattr(e, 'power') and e.power > 3000: # Get real!
+                e.power = 0
+                print "Parser: Skipped insane power value  %s at index %s" %(e.power, index)
         return entries
 
     entries = distance_offset_fixer(entries)
     entries = distance_inc_fixer(entries)
     entries = gps_lost_fixer(entries)
     entries = interpolate_to_1s(entries)
+    entries = power_spikes_fixer(entries)
     return entries
 
 
