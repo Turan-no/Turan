@@ -944,10 +944,17 @@ class Slope(models.Model):
         if self.segment:
             return self.segment.get_absolute_url()
 
+class SegmentDetailManager(models.Manager):
+    ''' Removes non-public segments from lists '''
+
+    def get_query_set(self):
+        return super(SegmentDetailManager, self).get_query_set().filter(public=1)
+
 class SegmentDetail(models.Model):
 
     exercise = models.ForeignKey(Exercise)
     segment = models.ForeignKey(Segment, blank=True, null=True, help_text=_("Optionally add this selection to a shared public segment"))
+    public = models.BooleanField(blank=True, default=1)
     start = models.FloatField(help_text=_('in km'), default=0)
     length = models.FloatField(help_text=_('in km'), default=0)
     ascent = models.IntegerField(help_text=_('in m'), default=0)
@@ -966,6 +973,8 @@ class SegmentDetail(models.Model):
     end_lon = models.FloatField(blank=True, null=True, default=0.0)
 
     comment = models.TextField(blank=True, null=True)
+
+    objects = SegmentDetailManager()
 
     def get_absolute_url(self):
         if self.segment:
