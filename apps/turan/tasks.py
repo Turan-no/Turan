@@ -110,7 +110,7 @@ def calcpower(userweight, eqweight, gradient, speed,
     return (gforce + frictionforce + windforce)*speed
 
 @task
-def getslopes(values, userweight):
+def getslopes(values, userweight, eqweight):
     ''' Given values and weight at the time of exercise, find
     and calculate stats for slopes in exercise and save to db, returning
     the slopes found. Deletes any existing slopes for exercise '''
@@ -169,7 +169,7 @@ def getslopes(values, userweight):
                         slope.duration = (values[cur_end].time - values[cur_start].time).seconds
                         slope.speed = slope.length/slope.duration * 3.6
                         slope.avg_hr = getavghr(values, cur_start, cur_end)
-                        slope.est_power = calcpower(userweight, 10, slope.grade, slope.speed/3.6)
+                        slope.est_power = calcpower(userweight, eqweight, slope.grade, slope.speed/3.6)
                         slope.act_power = getavgpwr(values, cur_start, cur_end)
 
                         slope.start_lat = values[cur_start].lat
@@ -1035,7 +1035,7 @@ def parse_sensordata(exercise, callback=None):
     calculate_best_efforts(exercise)
     calculate_time_in_zones(exercise)
     if hasattr(route, 'ascent') and route.ascent > 0:
-        getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date))
+        getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date), exercise.get_eq_weight())
     populate_interval_info(exercise)
     for segment in search_trip_for_possible_segments_matches(exercise):
         slice_to_segmentdetail(exercise, segment[0], segment[1], segment[2])
@@ -1292,7 +1292,7 @@ def detailslice_info(details):
         gradient = ascent/distance
         speed = ret['speed__avg']
         # EQweight hard coded to 10! 
-        ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
+        ret['power__avg_est'] = calcpower(userweight, exercise.get_eq_weight(), gradient*100, speed/3.6)
         ret['gradient'] = gradient*100
         ret['power__normalized'] = power_30s_average(details)
         ret['vam'] = int(round((float(ascent)/duration)*3600))

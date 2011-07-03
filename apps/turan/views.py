@@ -1,5 +1,5 @@
 from models import *
-from tasks import smoothListGaussian, calcpower, power_30s_average \
+from tasks import smoothListGaussian, power_30s_average \
         , hr2zone, detailslice_info, search_trip_for_possible_segments_matches, filldistance, \
         create_gpx_from_details
 from itertools import groupby, islice

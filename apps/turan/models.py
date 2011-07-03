@@ -107,6 +107,13 @@ class Equipment(models.Model):
     def get_absolute_url(self):
         return reverse('profile_redirect')
 
+    def get_weight(self):
+        ''' Returns weight, using riding weight if given, or add 3kg for normal equipment if not '''
+        if self.riding_weight:
+            return self.riding_weight
+        elif self.weight:
+            return self.weight + 3
+
 class ComponentType(models.Model):
     name = models.CharField(max_length=140)
     description = models.TextField(_('Description'), help_text=_('Component description'), blank=True, null=True)
@@ -576,6 +583,13 @@ class Exercise(models.Model):
     def get_weight(self):
         ''' Find weight during exercise '''
         return self.user.get_profile().get_weight(self.date)
+
+    def get_eq_weight(self):
+        ''' Return weight of equipment '''
+        eqweight = 10
+        if self.equipment:
+            return self.equipment.get_weight()
+        return eqweight
 
 
 
