@@ -1230,7 +1230,7 @@ ul#last_comments p {
 div.tooltip ul {
     padding: 5px;
 }
-div.tooltip {
+div.tooltip, .tooltip_help_box {
     z-index: 10;
     position: fixed;
     background-color: #fff;
@@ -1246,6 +1246,16 @@ div.tooltip {
     opacity: 0.9;
     padding: 5px;
     overflow: hidden;
+}
+.tooltip_help_box {
+    display: none; 
+    position: absolute; 
+    height: 250px; 
+    width: 200px; 
+    overflow: auto; 
+    background: white; 
+    color: black;
+    font-weight: normal;
 }
 div.slope-categories span {
     display: none;
@@ -1430,22 +1440,6 @@ a.profilehoverpoint>img {
     padding: 0 4px; 
     position: relative;
     display: inline;
-}
-.tooltip_help_box {
-    display: none; 
-    position: absolute; 
-    height: 250px; 
-    width: 200px; 
-    overflow: auto; 
-    background: white; 
-    border: 1px solid black; 
-    box-shadow: 3px 3px 8px #555;
-    z-index: 1; 
-    padding: 5px;
-    font-size: 12px;
-    font-family: tahoma;
-    color: black;
-    font-weight: normal;
 }
 .categorybutton {
     color: #ffffff;
