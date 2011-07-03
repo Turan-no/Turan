@@ -31,13 +31,14 @@
             {{equipment.model }} 
         </td>
         <td>
-            {{ equipment.get_distance|floatformat }} km
+            {{ equipment.get_distance|floatformat|default:"0" }} km
         </td>
         </tr>
 
     <ul>
     {% for component in equipment.component_set.all %}
     <tr>
+        <td></td>
         <td>
             {{component.componenttype }}
         </td>
@@ -49,6 +50,9 @@
         </td>
         <td>
             {{ component.added|naturalday}}
+        </td>
+        <td>
+            {{ component.get_distance|floatformat|default:"0" }} km
         </td>
     </tr>
     

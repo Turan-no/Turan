@@ -25,6 +25,7 @@ from photos.models import Pool, Image
 
 from celery.task.sets import subtask
 from datetime import datetime
+import datetime
 
 from durationfield import DurationField
 
@@ -141,6 +142,17 @@ class Component(models.Model):
     class Meta:
         verbose_name = _("Component")
         verbose_name_plural = _("Components")
+
+    def get_distance(self):
+        ''' Get the exercises in the daterange with routes and sum the distance '''
+        end_date = self.removed
+        if not end_date:
+            end_date = datetime.date.today()
+        return Exercise.objects\
+                .filter(equipment=self.equipment)\
+                .exclude(route__isnull=True)\
+                .filter(date__range=(self.added, end_date))\
+                .aggregate(sum=Sum('route__distance'))['sum']
 
 
 class RouteManager(models.Manager):
