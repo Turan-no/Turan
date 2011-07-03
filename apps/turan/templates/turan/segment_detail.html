@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load l10n %}
 {% load turan_extras %}
+{% load turanwaka_tags %}
 
 {% load avatar_tags %}
 {% load pagination_tags %}
@@ -123,7 +124,7 @@ $(function () {
         <th>{% anchortrans act_power "Power" %}</th>
         <th>{% anchortrans est_power "Power (est)" %}</th>
         <th>{% anchortrans power_per_kg "Avg power/kg" %}</th>
-        <th>{% anchortrans vam "VAM" %}</th>
+        <th>{% anchortrans vam "VAM" %}{{ "VeloAscMet"|wiki_help }}</th>
         <th>{% trans "Comment" %}</th>
         </tr>
         {% for object in object_list %}
