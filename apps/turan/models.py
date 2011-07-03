@@ -87,6 +87,7 @@ class Equipment(models.Model):
     brand = models.CharField(_('Brand'), max_length=140)
     model = models.CharField(_('Model'), max_length=140)
     weight = models.FloatField(_('Weight'), blank=True, help_text=_('in kg'))
+    riding_weight = models.FloatField(_('Weight when in use'), default=0, blank=True, help_text=_('weight in kg when riding, used for power estimations. Include bottles, clothes, etc'))
     notes = models.TextField(_('Notes'), help_text=_('Equipment description'), blank=True, null=True)
     aquired = models.DateField(_('Aquired'), help_text=_('Date you aquired the equipment'))
     exercise_type = models.ForeignKey(ExerciseType, verbose_name=_('Exercise type'), blank=True, null=True)

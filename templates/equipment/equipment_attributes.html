@@ -14,12 +14,12 @@
         </tr>
     <tr>
         <td>
-            {% if equipment.image %}
-            <img src="{{MEDIA_URL}}{{equipment.image}}">
-            {% endif %}
+            <a href="{% url equipment_update equipment.id %}"><img title="{% trans "Modify" %}" src="{{ "wrench"|silk_icon }}"></a>
         </td>
         <td>
-            <a href="{% url equipment_update equipment.id %}"><img title="{% trans "Modify" %}" src="{{ "wrench"|silk_icon }}"></a>
+            {% if equipment.image %}
+            <a href="{{MEDIA_URL}}{{equipment.image}}"><img width="64" height="64" src="{{MEDIA_URL}}{{equipment.image}}"></a>
+            {% endif %}
         </td>
         <td>
             {{equipment.equipmenttype }}

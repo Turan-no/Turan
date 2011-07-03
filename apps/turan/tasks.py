@@ -847,7 +847,7 @@ def sanitize_entries(parser):
                 parser.max_power = max(e.power, parser.max_power)
                 parser.avg_power += e.power
                 time_d = (e.time - prev.time).seconds
-                if time_d > 0 and time_d < 30: # more than 30s is break, deal with it
+                if time_d > 0 and time_d < 30: # more than 30s is break
                     if e.power != None and e.cadence != None:
                         powersum += e.power*time_d
                         powerseconds += time_d

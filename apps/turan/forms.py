@@ -38,14 +38,18 @@ class ExerciseForm(forms.ModelForm):
 #    exercise_type = forms.ModelChoiceField(widget=ImageSelect())
 #    exercise_type = forms.ChoiceField(label=_("Exercise Type"), choices=(),
 #                                                    widget=forms.Select(attrs={'class':'selector'}))
-    #def __init__(self, *args, **kwargs):
-    #    super(ExerciseForm, self).__init__(*args, **kwargs)
-    #    self.fields['equipment'].queryset = Equipment.objects.filter(user= self.instance.user)
+    def __init__(self, *args, **kwargs):
+        super(ExerciseForm, self).__init__(*args, **kwargs)
+        #qs = Equipment.objects.filter(user=self.instance.user)
+        #assert False, self.fields['equipment'].queryset
+
+        #if qs.count():
+        #    self.fields['equipment'].initial = qs[0].pk
 
     class Meta:
         model = Exercise
         fields = ['route', 'sensor_file', 'exercise_type', 'equipment', 'comment', 'tags', 'url', 'kcal','exercise_permission' ]
-        widgets = { 
+        widgets = {
                 'exercise_type': ImageSelect(),
                 'exercise_permission': forms.RadioSelect(renderer=HorizRadioRenderer)#,choices=permission_choices,label=_('Visible control'),max_length=1, default='A',help_text='Test')
                 }
@@ -87,7 +91,9 @@ class FullExerciseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(FullExerciseForm, self).__init__(*args, **kwargs)
-        self.fields['equipment'].queryset = Equipment.objects.filter(user = self.instance.user)
+        qs = Equipment.objects.filter(user = self.instance.user)
+        self.fields['equipment'].queryset = qs
+
 
 class SegmentForm(forms.ModelForm):
     class Meta:

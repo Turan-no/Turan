@@ -1570,7 +1570,11 @@ def create_object(request, model=None, template_name=None,
             data = {}
             #data['equipment']= Equipment.objects.filter(user=request.user)
             form = form_class(initial=data)
-            form.fields['equipment'].queryset = Equipment.objects.filter(user=request.user)
+            qs = Equipment.objects.filter(user=request.user)
+            form.fields['equipment'].queryset = qs
+            if qs.count():
+                form.fields['equipment'].initial = qs[0].id
+
         else:
             form = form_class()
 
