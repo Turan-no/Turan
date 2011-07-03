@@ -208,7 +208,7 @@ class Route(models.Model):
         if not self.name:
             self.set_geo_title()
         # Check for single serving that really are not
-        if self.single_serving and self.exercise_set.count():
+        if self.single_serving and self.exercise_set.count() > 1:
             self.single_serving = False
         super(Route, self).save(force_insert, force_update)
         if self.gpx_file:
