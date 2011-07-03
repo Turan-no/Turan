@@ -751,9 +751,11 @@ def normalize_altitude(exercise):
             r.max_altitude = altitude_max
         r.save()
 
-def sanitize_entries(entries):
+def sanitize_entries(parser):
     ''' Try and sanitize and work around different quirks in different parsers
     '''
+
+    entries = parser.entries
 
     def distance_offset_fixer(entries):
         ''' Some parsers return non-zero distance for the first sample
@@ -783,7 +785,7 @@ def sanitize_entries(entries):
         return entries
 
 
-    def interpolate_to_1s(entires):
+    def interpolate_to_1s(entries):
         ''' Interpolate skips in files to 1s, if not breaks for over 30s in series '''
 
         val_types = ('distance', 'hr', 'altitude', 'speed', 'cadence', 'lon', 'lat', 'power', 'temp')
@@ -822,15 +824,38 @@ def sanitize_entries(entries):
         return entries
 
     def gps_lost_fixer(entries):
-        ''' Do not export entires with lon,lat == 0'''
+        ''' Do not export entries with lon,lat == 0'''
         return entries
 
     def power_spikes_fixer(entries):
         ''' Remove insane power spikes from entries '''
-        for e in entries:
+        fixed_any = False
+        for index, e in enumerate(entries):
             if hasattr(e, 'power') and e.power > 3000: # Get real!
                 e.power = 0
+                fixed_any = True
                 print "Parser: Skipped insane power value  %s at index %s" %(e.power, index)
+        if fixed_any: # We fixed a spike, this means avg power and max power might be wrong
+                      # So we try and recalculate
+            prev = entries[0]
+            parser.max_power = 0
+            parser.avg_power = 0
+            parser.avg_pedaling_power = 0
+            powersum = 0
+            powerseconds = 0
+            for index, e in enumerate(entries):
+                parser.max_power = max(e.power, parser.max_power)
+                parser.avg_power += e.power
+                time_d = (e.time - prev.time).seconds
+                if time_d > 0 and time_d < 30: # more than 30s is break, deal with it
+                    if e.power != None and e.cadence != None:
+                        powersum += e.power*time_d
+                        powerseconds += time_d
+                if powersum and powerseconds:
+                    parser.avg_pedaling_power = powersum/powerseconds
+                prev = e
+
+            parser.avg_power = parser.avg_power/len(entries)
         return entries
 
     entries = distance_offset_fixer(entries)
@@ -839,7 +864,6 @@ def sanitize_entries(entries):
     entries = interpolate_to_1s(entries)
     entries = power_spikes_fixer(entries)
     return entries
-
 
 @task
 def parse_sensordata(exercise, callback=None):
@@ -884,7 +908,8 @@ def parse_sensordata(exercise, callback=None):
     parser = find_parser(exercise.sensor_file.name)
     parser.parse_uploaded_file(exercise.sensor_file.file)
 
-    saner_entries = sanitize_entries(parser.entries) # Sanity will prevail
+
+    saner_entries = sanitize_entries(parser) # Sanity will prevail
     for val in parser.entries:
         detail = ExerciseDetail()
         detail.exercise_id = exercise.id
