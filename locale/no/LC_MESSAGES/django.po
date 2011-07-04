@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-06-17 12:54+0200\n"
-"PO-Revision-Date: 2011-06-17 13:19\n"
-"Last-Translator:   <andreas@bach.li>\n"
+"PO-Revision-Date: 2011-07-04 21:38\n"
+"Last-Translator: Simen Graat?n <simeng@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -242,7 +242,6 @@ msgstr "Lag"
 msgid "Tribe %(tribe_name)s deleted."
 msgstr "Stammen %(tribe_name)s ble slettet."
 
-
 #: apps/tribes/views.py:117
 #, python-format
 msgid "You have joined the team %(tribe_name)s"
@@ -362,12 +361,10 @@ msgid "Descent"
 msgstr "Senkning"
 
 #: apps/turan/models.py:61
-#, fuzzy
 msgid "Maximum altitude"
 msgstr "Maks. høyde"
 
 #: apps/turan/models.py:62
-#, fuzzy
 msgid "Minimum altitude"
 msgstr "Min. høyde"
 
@@ -398,29 +395,26 @@ msgid "All"
 msgstr "Alle"
 
 #: apps/turan/models.py:302
-#, fuzzy
 msgid "Friends"
 msgstr "Dine venner"
 
 #: apps/turan/models.py:303
 msgid "Only myself"
-msgstr ""
+msgstr "Kun meg"
 
 #: apps/turan/models.py:306
 msgid "Finished"
 msgstr "Ferdig"
 
 #: apps/turan/models.py:307
-#, fuzzy
 msgid "Paused"
-msgstr "Pause"
+msgstr "Pauset"
 
 #: apps/turan/models.py:308 apps/turan/templates/turan/exercise_player.html:54
 msgid "Live"
-msgstr ""
+msgstr "Direktesendt"
 
 #: apps/turan/models.py:314
-#, fuzzy
 msgid "Exercise type"
 msgstr "Treningstype"
 
@@ -471,12 +465,10 @@ msgid "Celsius"
 msgstr "Celsius"
 
 #: apps/turan/models.py:342 apps/turan/models.py:568
-#, fuzzy
 msgid "Exercise file"
-msgstr "Treningstid"
+msgstr "Treningsfil"
 
 #: apps/turan/models.py:342
-#, fuzzy
 msgid ""
 "File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, "
 ".gmd, .csv, .xml)"
@@ -560,13 +552,13 @@ msgid "Locations"
 msgstr "Steder"
 
 #: apps/turan/turancalendar.py:32
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Distance: %(distance_sum).1f km, Ascent: %(ascent_sum).0f m, Duration: "
 "%(duration_sum)s, kcal: %(kcal_sum)s"
 msgstr ""
-"Distanse: %(distance_sum).1f km, Varighet: %(duration_sum)s, kcal: "
-"%(kcal_sum)s"
+"Distanse: %(distance_sum).1f km, Klatret: %(acent_sum).0f m, Varighet:"
+" %(duration_sum)s, kcal: %(kcal_sum)s"
 
 #: apps/turan/turancalendar.py:34
 msgid "Month sums"
@@ -1706,17 +1698,18 @@ msgid "Add Exercise"
 msgstr "Legg til trening"
 
 #: apps/turan/templates/turan/exercise_form.html:31
-#, fuzzy
 msgid "Name/Route"
-msgstr "Rute"
+msgstr "Navn/Rute"
 
 #: apps/turan/templates/turan/exercise_form.html:33
 msgid "Name this exercise or start typing to search in existing routes"
 msgstr ""
+"Navngi denne treningen eller begynn å skriv for å søke i eksisterende "
+"ruter"
 
 #: apps/turan/templates/turan/exercise_form.html:35
 msgid "You can optionally leave this field blank"
-msgstr ""
+msgstr "Du kan la dette feltet stå tomt"
 
 #: apps/turan/templates/turan/exercise_form.html:45
 msgid "Save exercise"
@@ -1810,7 +1803,7 @@ msgstr "Spol fremover"
 
 #: apps/turan/templates/turan/exercise_player.html:55
 msgid "Go Live"
-msgstr ""
+msgstr "Kjør direktesending"
 
 #: apps/turan/templates/turan/exercise_player.html:83
 #: apps/turan/templates/turan/exercise_player.html:99
@@ -1902,10 +1895,12 @@ msgid ""
 "Your exercise is not public. It needs to be public for Turan to import "
 "it"
 msgstr ""
+"Treningen er ikke offentlig. Den må være offentlig for å kunne bli "
+"importert til Turan."
 
 #: apps/turan/templates/turan/import.html:24
 msgid "Something went wrong while importing trip"
-msgstr ""
+msgstr "Noe gikk galt ved importering av turen."
 
 #: apps/turan/templates/turan/import.html:30
 #: apps/turan/templates/turan/index.html:24
@@ -1935,18 +1930,16 @@ msgid "Add an exercise"
 msgstr "Legg til trening"
 
 #: apps/turan/templates/turan/index.html:76
-#, fuzzy
 msgid "View more exercises"
-msgstr "Ny trening"
+msgstr "Vis fler treninger"
 
 #: apps/turan/templates/turan/index.html:107
 msgid "ascent"
 msgstr "Stigning"
 
 #: apps/turan/templates/turan/index.html:117
-#, fuzzy
 msgid "View more routes"
-msgstr "Importer rute"
+msgstr "Vis flere ruter"
 
 #: apps/turan/templates/turan/index.html:123
 msgid "Turan?"
@@ -2077,16 +2070,15 @@ msgstr "Alle ruter"
 #: apps/turan/templates/turan/route_list.html:87
 #: apps/turan/templates/turan/segment_list.html:27
 msgid "Plot"
-msgstr ""
+msgstr "Graf"
 
 #: apps/turan/templates/turan/search.html:6
 msgid "Matches for search"
-msgstr ""
+msgstr "Treff ved søk"
 
 #: apps/turan/templates/turan/search.html:9
-#, fuzzy
 msgid "Users"
-msgstr "Bruker"
+msgstr "Medlemmer"
 
 #: apps/turan/templates/turan/search_head.html:5
 msgid "Search"
@@ -2099,14 +2091,12 @@ msgid "Segment"
 msgstr "Segment"
 
 #: apps/turan/templates/turan/segment_detail.html:42
-#, fuzzy
 msgid "Best efforts"
-msgstr "Best jobb"
+msgstr "Beste resultat"
 
 #: apps/turan/templates/turan/segment_detail.html:73
-#, fuzzy
 msgid "Duration graph"
-msgstr "Tid"
+msgstr "Varighetsgraf"
 
 #: apps/turan/templates/turan/segment_detail.html:102
 msgid "Gradients"
@@ -2118,7 +2108,7 @@ msgstr "Ritt på dette segmentet"
 
 #: apps/turan/templates/turan/segment_detail.html:110
 msgid "My results"
-msgstr ""
+msgstr "Mine resultater"
 
 #: apps/turan/templates/turan/segment_detail.html:136
 #: apps/turan/templates/turan/segment_detail.html:144
@@ -2156,7 +2146,6 @@ msgstr ""
 
 #: apps/turan/templates/turan/segment_list.html:9
 #: apps/turan/templates/turan/segment_list.html:18
-#, fuzzy
 msgid "Segment list"
 msgstr "Segmenter"
 
@@ -2165,6 +2154,8 @@ msgid ""
 "Segments are parts of exercises that are public and shared between "
 "exercisers. You can for example "
 msgstr ""
+"Segmenter er deler av øvelser som er offentlige og deles mellom "
+"utøvere. Du kan for eksempel"
 
 #: apps/turan/templates/turan/segment_list.html:23
 msgid ""
@@ -2172,6 +2163,9 @@ msgid ""
 "Turan will find all rides for the segment and list the ride. Use this "
 "to compete with yourself or others."
 msgstr ""
+"opprette et segment for din favorittbakke, og Turan vil deretter bruke"
+" GPS-data til å finne alle turer langs segmentet. Bruk denne til å "
+"konkurrere med deg selv og andre."
 
 #: apps/turan/templates/turan/segmentdetail_form.html:10
 msgid "Segment modification"
@@ -2224,13 +2218,12 @@ msgid "Previous"
 msgstr "Forrige"
 
 #: apps/turan/templates/turan/statistics.html:30
-#, fuzzy
 msgid "Current month"
-msgstr "Neste måned"
+msgstr "Nåværende måned"
 
 #: apps/turan/templates/turan/statistics.html:31
 msgid "Current"
-msgstr ""
+msgstr "Nåværende"
 
 #: apps/turan/templates/turan/statistics.html:34
 #: apps/turan/templates/turan/statistics.html:35
@@ -2528,7 +2521,7 @@ msgstr "Laster graf"
 
 #: apps/turan/templates/turan/exercise/graph.html:40
 msgid "Full screen graph"
-msgstr ""
+msgstr "Fullskjermsgraf"
 
 #: apps/turan/templates/turan/exercise/graph.html:43
 msgid "Zoom out"
@@ -2554,9 +2547,8 @@ msgid "Est power"
 msgstr "Est. effekt"
 
 #: apps/turan/templates/turan/exercise/slope_tab.html:144
-#, fuzzy
 msgid "Search for named segments"
-msgstr "Lag nytt segment"
+msgstr "Søk etter navngitte segmenter"
 
 #: apps/turan/templates/turan/exercise/zone_tab.html:29
 msgid "Time in watt zones"
@@ -2739,22 +2731,18 @@ msgid "Logout"
 msgstr "Logg ut"
 
 #: templates/site_base.html:77
-#, fuzzy
 msgid "Username"
-msgstr "Navn"
+msgstr "Brukernavn"
 
 #: templates/site_base.html:81
-#, fuzzy
 msgid "Password"
-msgstr "Sett passord"
+msgstr "Passord"
 
 #: templates/site_base.html:86
-#, fuzzy
 msgid "Remember me"
-msgstr "Medlemmer"
+msgstr "Husk meg"
 
 #: templates/site_base.html:87
-#, fuzzy
 msgid "Log in"
 msgstr "Logg inn"
 
