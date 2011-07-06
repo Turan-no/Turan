@@ -613,6 +613,9 @@ class ExercisePermission(models.Model):
     cadence = models.CharField(max_length=1, choices=permission_choices, default='A')
     hr = models.CharField(max_length=1, choices=permission_choices, default='A')
 
+    def __unicode__(self):
+        return u"%s (%s, %s, %s, %s)" % (self.exercise, self.speed, self.power, self.cadence, self.hr)
+
 class ExerciseDetail(models.Model):
 
     exercise   = models.ForeignKey(Exercise)
