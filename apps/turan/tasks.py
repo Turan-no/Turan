@@ -766,7 +766,7 @@ def sanitize_entries(parser):
         if hasattr(entries[0], 'distance'):
             if entries[0].distance > 100: # We don't care about small values
                 distance_offset = entries[0].distance
-                print "Parser: Offset distance" %distance_offset
+                print "Parser: Offset distance: %s" %distance_offset
                 for e in entries:
                     if e.distance != None:
                         e.distance -= distance_offset
