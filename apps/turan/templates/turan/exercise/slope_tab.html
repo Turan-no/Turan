@@ -74,20 +74,20 @@
 
 
             {% if slope.segment %}
-                <a style="float: left" href="{{slope.segment.get_absolute_url}}">
-                    {{ slope.segment.name|truncatechars:"15" }}
+            <a style="float: left" href="{{slope.segment.get_absolute_url}}">
+                {{ slope.segment.name|truncatechars:"15" }}
+            </a>
+            {% endif %}
+            {% if object.user == request.user and slope.is_segmentdetail %}
+            <div class="floatleft hidden" id="segmentbuttons{{slope.id}}">
+                <a href="{% url segmentdetail_update slope.id %}">
+                <img title="{% trans "Modify segment"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
                 </a>
-                {% if object.user == request.user and slope.is_segmentdetail %}
-                <div class="floatleft hidden" id="segmentbuttons{{slope.id}}">
-                    <a href="{% url segmentdetail_update slope.id %}">
-                    <img title="{% trans "Modify segment"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
-                    </a>
-                    <a href="{% url segmentdetail_delete slope.id %}">
-                    <img title="{% trans "Delete segment"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
-                    </a>
-                </div>
-                {% endif %}
-            {% endif%}
+                <a href="{% url segmentdetail_delete slope.id %}">
+                <img title="{% trans "Delete segment"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
+                </a>
+            </div>
+            {% endif %}
             </td>
             <td>
                 {{ slope.start|floatformat }} {% trans "km" %}
