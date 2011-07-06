@@ -1517,7 +1517,7 @@ msgstr "Ingen segment funne i denne treninga"
 #: apps/turan/templates/turan/segmentdetail_form.html:17
 #: apps/turan/templates/turan/exercise/slope_tab.html:155
 msgid "Create new segment"
-msgstr "Oprett nytt segment"
+msgstr "Opprett nytt segment"
 
 #: apps/turan/templates/turan/exercise_segments.html:36
 msgid ""
