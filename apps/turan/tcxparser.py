@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from xml.etree import ElementTree
+import re
 import datetime
 import pyproj
 from math import hypot
@@ -98,7 +99,15 @@ class TCXParser(object):
             self.laps.append(LapData(time, duration, distance_sum, max_speed, avg_hr, max_hr, avg_cadence, kcal_sum))
 
         self.time = self.laps[0].start_time
-        self.start_time = datetime.time(self.time.hour, self.time.minute, self.time.second)
+
+        if f.name and re.search('[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}', f.name):
+            m = re.search('[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}', f.name)
+            self.start_time = datetime.time(int(m.group(0)[11:13]), int(m.group(0)[14:16]), int(m.group(0)[17:19]))
+        elif f.name and re.search('[0-9]{2}.[0-9]{2}.[0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2}', f.name):
+            m = re.search('[0-9]{2}.[0-9]{2}.[0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2}', f.name)
+            self.start_time = datetime.time(int(m.group(0)[11:13]), int(m.group(0)[14:16]), int(m.group(0)[17:19]))
+        else:
+            self.start_time = datetime.time(self.time.hour, self.time.minute, self.time.second)
         self.date = datetime.date(self.time.year, self.time.month, self.time.day)
         self.cur_time = self.time
 
