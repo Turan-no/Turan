@@ -75,7 +75,7 @@
     <td style="padding: 0">
         <div class="toplist" style="margin: 0">
             <ol>
-            {% for user in object.get_toplist %}
+            {% for other_user in object.get_toplist %}
                 <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
                     <span class="smaller">
                         <span class="duration">
