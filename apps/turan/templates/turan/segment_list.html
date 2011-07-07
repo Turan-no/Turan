@@ -74,10 +74,10 @@
     </td>
     <td style="padding: 0">
         <div class="toplist" style="margin: 0">
-            <ol style="float: right">
+            <ol>
             {% for user in object.get_toplist %}
                 <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
-                    <p class="smaller">
+                    <span class="smaller">
                         <span class="duration">
                             {{ user.duration|durationformatshort}}
                         </span>
@@ -86,12 +86,12 @@
                                 {{ user }}
                             </span>
                         </a>
-                    </p>
+                    </span>
                 </li>
             {% endfor %}
             {% with object.get_latest|slice:"1" as latest_list %}
             {% for latest in latest_list %}
-            <li style="width: 120px; margin-left: 0" class="floatleft">
+            <li style="width: 120px; margin-left: 0">
                 <p class="smaller">
                     {% trans "Newest" %}:
                     {{ latest.duration|durationformatshort}}:
