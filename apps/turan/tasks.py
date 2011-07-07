@@ -871,11 +871,27 @@ def sanitize_entries(parser):
             parser.avg_power = parser.avg_power/len(entries)
         return entries
 
+    def duplicate_samples_fixer(entries):
+        ''' Remove duplicate time sample TODO: merge the sample values '''
+
+
+        prev = False
+        for e in entries:
+            if prev:
+                time_d = (e.time - prev.time).seconds
+                if time_d < 1:
+                    del e
+                    print "Parser: Removing duplicate sample %s at %s" %(e, e.time)
+            prev = e
+        return entries
+
+
     entries = distance_offset_fixer(entries)
     entries = distance_inc_fixer(entries)
     entries = gps_lost_fixer(entries)
     entries = interpolate_to_1s(entries)
     entries = power_spikes_fixer(entries)
+    entires = duplicate_samples_fixer(entries)
     return entries
 
 @task
