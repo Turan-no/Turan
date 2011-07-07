@@ -19,6 +19,7 @@
 <h1>
     {% trans "Segment list" %}
 </h1>
+{{ "WhatAreSegments"|wiki_help }}
 <div class="floatright" style="clear: right;">
 {% paginate %}
 </div>
@@ -29,8 +30,16 @@
             {% trans "Create new segment" %}
         </a>
     </li>
+{% if request.user.username %}
+        <li class="floatleft">
+            {% if not username %}
+            <a href="{% url segments %}?username={{request.user.username}}">{% trans "My segment efforts" %}</a>
+            {% else %}
+            <a href="{% url segments %}">{% trans "All segments" %}</a>
+            {% endif %}
+        </li>
+{% endif %}
 </ul>
-{{ "WhatAreSegments"|wiki_help }}
 
 <table class="fullsize">
     <tr>
@@ -38,6 +47,8 @@
         <th>
             {% anchortrans name %}
         </th>
+        <th>
+            {% trans "Best times" %}
         <th>
             {% anchortrans distance "Distance" %}
         </th>
@@ -52,30 +63,35 @@
             {{ "SlopeCategory"|wiki_help }}
         </th>
         <th>
-            {% anchortrans tcount "Count" %}
+            # {% anchortrans tcount "Entries" %}
         </th>
     </tr>
 {% for object in object_list %}
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
     <td><img src="{{ object.get_png_url }}"></td>
     <td>
-        <div class="toplist">
+        <h4><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a></h4>
+    </td>
+    <td style="padding: 0">
+        <div class="toplist" style="margin: 0">
             <ol style="float: right">
             {% for user in object.get_toplist %}
-                <li style="width: 140px" class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
+                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
                     <p class="smaller">
                         <span class="duration">
                             {{ user.duration|durationformatshort}}
                         </span>
                         <a href="{{ user.get_absolute_url }}" title="{{ user }}">
-                            {{ user }}
+                            <span class="{% if username == user.username %}selected{%endif%}">
+                                {{ user }}
+                            </span>
                         </a>
                     </p>
                 </li>
             {% endfor %}
             {% with object.get_latest|slice:"1" as latest_list %}
             {% for latest in latest_list %}
-            <li style="width: 140px; margin-left: -22px" class="floatleft">
+            <li style="width: 120px; margin-left: 0" class="floatleft">
                 <p class="smaller">
                     {% trans "Newest" %}:
                     {{ latest.duration|durationformatshort}}:
@@ -88,8 +104,6 @@
             {% endwith %}
             </ol>
         </div>
-        <h4><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a></h4>
-        <span class="smaller">{{object.description}}</span>
     </td>
     <td>{{ object.distance|floatformat }} {% trans "km" %} </td>
     <td>{{object.ascent}} {% trans "m" %}</td>

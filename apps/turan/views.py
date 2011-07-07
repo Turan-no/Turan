@@ -1919,7 +1919,11 @@ def segments(request, queryset):
     username = request.GET.get('username', '')
     if username:
         user = get_object_or_404(User, username=username)
-        queryset = queryset.filter(exercise__user=user)
+        #queryset = queryset.filter(exercise__user=user)
+        # Two step attack on this, do not know how to do it it one fell swoop
+        s_list_ids = set(SegmentDetail.objects.filter(exercise__user=user).values_list('segment__id',flat=1))
+        queryset = queryset.filter(id__in=s_list_ids)
+
 
     return object_list(request, queryset=queryset, extra_context=locals())
 
