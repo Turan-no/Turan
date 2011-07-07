@@ -23,6 +23,7 @@
             "data":  {{ cadence}},
             "label": "{% trans "Cadence" %}",
             "color": 1
+            "yaxis": 6
             },
         {% endif %}
         {% if altitude%}
