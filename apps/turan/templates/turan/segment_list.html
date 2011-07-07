@@ -75,15 +75,15 @@
     <td style="padding: 0">
         <div class="toplist" style="margin: 0">
             <ol style="float: right">
-            {% for user in object.get_toplist %}
+            {% for other_user in object.get_toplist %}
                 <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
                     <p class="smaller">
                         <span class="duration">
-                            {{ user.duration|durationformatshort}}
+                            {{ other_user.duration|durationformatshort}}
                         </span>
-                        <a href="{{ user.get_absolute_url }}" title="{{ user }}">
-                            <span class="{% if username == user.username %}selected{%endif%}">
-                                {{ user }}
+                        <a href="{{ other_user.get_absolute_url }}" title="{{ other_user }}">
+                            <span class="{% if username == other_user.username %}selected{%endif%}">
+                                {{ other_user }}
                             </span>
                         </a>
                     </p>
@@ -105,9 +105,9 @@
             </ol>
         </div>
     </td>
-    <td>{{ object.distance|floatformat }} {% trans "km" %} </td>
-    <td>{{object.ascent}} {% trans "m" %}</td>
-    <td>{{object.grade|floatformat}} %</td>
+    <td>{{ object.distance|floatformat }} <span class="unit">{% trans "km" %}</span> </td>
+    <td>{{object.ascent}} <span class="unit">{% trans "m" %}</span></td>
+    <td>{{object.grade|floatformat}} <span class="unit">%</span></td>
     <td><div class="categorybutton">{{object.category}}</div></td> 
     <td>{{object.tcount}}</td>
 </tr>

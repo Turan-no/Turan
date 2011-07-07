@@ -1460,4 +1460,7 @@ a.profilehoverpoint>img {
     -webkit-border-radius: 10px;
     border: 1px solid #242424;
 }
-
+.unit {
+    color: #666;
+    font-weight: lighter;
+}
