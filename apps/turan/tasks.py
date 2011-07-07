@@ -825,6 +825,19 @@ def sanitize_entries(parser):
 
     def gps_lost_fixer(entries):
         ''' Do not export entries with lon,lat == 0'''
+        prev = entries[0]
+        prevIndex = 0
+        missed = 0
+        for index, e in enumerate(entries):
+            if not e.lon or not e.lat:
+                e.lon = prev.lon
+                e.lat = prev.lat
+                missed += 1
+            prevIndex = index
+            prev = e
+
+        if missed:
+            print "Parser: Samples with missing pos: %s" %(missed)
         return entries
 
     def power_spikes_fixer(entries):
