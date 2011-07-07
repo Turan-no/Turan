@@ -22,7 +22,7 @@
         "cadence": {
             "data":  {{ cadence}},
             "label": "{% trans "Cadence" %}",
-            "color": 1
+            "color": 1,
             "yaxis": 6
             },
         {% endif %}

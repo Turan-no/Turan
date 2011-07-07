@@ -80,7 +80,7 @@ var GraphPlotter = {
                     { position: "right", tickFormatter: axisformatters['power']},
                     { tickFormatter: axisformatters['altitude']} ,
                     { tickFormatter: axisformatters['temp']},
-                    { tickFormatter: axisformatters['cadence']},
+                    { tickFormatter: axisformatters['cadence']}
                     ],
                 xaxis: xaxisattrs,
                 legend: { 
