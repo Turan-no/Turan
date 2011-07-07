@@ -29,6 +29,9 @@ var axisformatters = {
     speed: function(val, axis) {
         return (val).toFixed(axis.tickDecimals) + ' km/h';
     },
+    cadence: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' RPM';
+    },
     altitude: function(val, axis) {
         return (val).toFixed(axis.tickDecimals) + ' m';
     },
