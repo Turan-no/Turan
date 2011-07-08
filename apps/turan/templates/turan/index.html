@@ -195,6 +195,22 @@
         });
     </script>
 
+    <ul class="segments">
+        {% for object in segment_list|slice:":10" %}
+        <li class="{% cycle "even" "odd" %}">
+            <a href="{{ object.get_absolute_url }}">
+                <img class="floatleft" src="{{ object.get_png_url }}" width="32" height="32"/>
+                <p>{{ object }}</p>
+                <p class="smaller fade">
+                    {{ object.distance|floatformat }} km, 
+                    {{ object.ascent }} m {% trans "ascent" %}
+                </p>
+            </a> 
+            <hr class="clearleft" />
+        </li>
+        {% endfor %}
+    </ul>
+
     <h2>{% trans "Latest comments" %}</h2>
     <ul id="last_comments" class="spacer">
         {% for comment in comment_list %}

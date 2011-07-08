@@ -1131,13 +1131,16 @@ div.box h2 {
             box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
 ul.routes,
+ul.segments,
 ul.trips {
     margin-bottom: 7px;
 }
+ul.segments li img,
 ul.trips li img {
     margin-right: 13px;
 }
 ul.routes li,
+ul.segments li,
 ul.trips li {
     list-style-type: none;
     margin-left: 0;
