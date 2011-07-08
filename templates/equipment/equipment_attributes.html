@@ -14,7 +14,9 @@
         </tr>
     <tr>
         <td>
+            {% if other_user == request.user %}
             <a href="{% url equipment_update equipment.id %}"><img title="{% trans "Modify" %}" src="{{ "wrench"|silk_icon }}"></a>
+            {% endif %}
         </td>
         <td>
             {% if equipment.image %}
