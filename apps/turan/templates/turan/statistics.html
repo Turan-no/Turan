@@ -49,111 +49,44 @@
     <td> <a href="{% url statistics-year now.year %}?exercise=svømming"><img alt="{% trans "Swimming"%}" style="float:left" src="{{MEDIA_URL}}turan/swimming.jpg" /></a> </td>
     </tr>
 </table>
-{% comment %}
-<ul>
-    <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration|retarddurationformat }}</li>
-    <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
-    <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>
-    <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Total exercise count"%}:</span> {{ exercise_count}} {% trans "trips" %}</li>
-    <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"><span class="label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
-</ul>
-<hr class="clear" />
-
-<div class="toplist hike half floatright">
-    <h2> {% trans "Hike statistics" %} </h2>
-    <h3> {% trans "Highest average speed for trip" %} </h3>
-    <ol>
-        {% for u in hike_maxavgspeeds %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.hike_max_avg_speed|floatformat }} {% trans "km/h" %}</li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Highest speeds" %} </h3>
-    <ol>
-        {% for u in hike_maxspeeds %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.hike_max_speed|floatformat }} {% trans "km/h" %}</li>
-        {% endfor %}
-    </ol>
-    <h3> {% trans "Average speed for all trips" %} </h3>
-    <ol>
-        {% for u in hike_avgspeeds %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.hike_avg_avg_speed|floatformat }} {% trans "km/h" %}</li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Number of trips" %} </h3>
-    <ol>
-        {% for u in hike_numtrips %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.hike_num_trips|floatformat}}</li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Longest total distance" %} </h3>
-    <ol>
-        {% for u in hike_distsums %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.hike_sum_distance|floatformat }} {% trans "km" %}</li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Average hike length" %} </h3>
-    <ol>
-        {% for u in hike_lengthstats %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avglen|floatformat }} {% trans "km" %}</li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Most time hiking" %} </h3>
-    <ol>
-        {% for u in hike_dursums %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.hike_sum_duration|retarddurationformat}}</li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Most energy consumed" %} </h3>
-    <ol>
-        {% for u in hike_energysums %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.hike_sum_energy }} {% trans "kcal" %} ({{u.hike_sum_energy|bodyfat|floatformat}} kg {% trans "bodyfat" %})</li>
-        {% endfor %}
-    </ol>
-
-
-    <h3> {% trans "Highest average HR" %} </h3>
-    <ol>
-        {% for u in hike_avgavghrs %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.hike_avg_avg_hr|floatformat}} {% trans "BPM" %} ( {{u.hike_avg_avg_hr|percent:u.max_hr}}  )</li>
-        {% endfor %}
-    </ol>
-    <h3> {% trans "Top climbers" %} </h3>
-    <ol>
-        {% for u in hike_ascentsums %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.hike_sum_ascent }} {% trans "m" %} </li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Steepest average grade" %} </h3>
-    <ol>
-        {% for u in hike_climbstats %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avgclimb|floatformat }} {% trans "m" %}/{% trans "km" %} </li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Fastest average climb" %} </h3>
-    <ol>
-        {% for u in hike_climbstatsbytime %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avgclimbperhour|floatformat }} {% trans "m" %}/{% trans "hour" %} </li>
-        {% endfor %}
-    </ol>
-</div>
-
-{% endcomment %}
 <div class="toplist" >
     <h2> {% trans "Exercise Statistics" %} </h2>
-    <h3> {% trans "Total distance" %} </h3>
-    <ol>
-        {% for u in distsums|slice:":5" %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.sum_distance|floatformat }} {% trans "km" %}</li>
-        {% endfor %}
-    </ol>
+
+    <div class="time_and_length">
+        <div class="box">
+            <h3> {% trans "Number of trips" %} </h3>
+            <ol>
+                {% for u in numtrips|slice:":5" %}
+                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.num_trips|floatformat}}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="box">
+            <h3> {% trans "Total duration" %} </h3>
+            <ol>
+                {% for u in dursums|slice:":5" %}
+                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.sum_duration|retarddurationformat}}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="box">
+            <h3> {% trans "Total distance" %} </h3>
+            <ol>
+                {% for u in distsums|slice:":5" %}
+                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.sum_distance|floatformat }} {% trans "km" %}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="box">
+            <h3> {% trans "Average trip length" %} </h3>
+            <ol>
+                {% for u in lengthstats|slice:":5" %}
+                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avglen|floatformat }} {% trans "km" %}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
     <h3> {% trans "Highest average speed for trip" %} </h3>
     <ol>
         {% for u in maxavgspeeds|slice:":5" %}
@@ -166,32 +99,10 @@
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avg_avg_speed|floatformat }} {% trans "km/h" %}</li>
         {% endfor %}
     </ol>
-
     <h3> {% trans "Highest speeds" %} </h3>
     <ol>
         {% for u in maxspeeds|slice:":5" %}
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.max_speed|floatformat }} {% trans "km/h" %}</li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Number of trips" %} </h3>
-    <ol>
-        {% for u in numtrips|slice:":5" %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.num_trips|floatformat}}</li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Average trip length" %} </h3>
-    <ol>
-        {% for u in lengthstats|slice:":5" %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avglen|floatformat }} {% trans "km" %}</li>
-        {% endfor %}
-    </ol>
-
-    <h3> {% trans "Total duration" %} </h3>
-    <ol>
-        {% for u in dursums|slice:":5" %}
-        <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.sum_duration|retarddurationformat}}</li>
         {% endfor %}
     </ol>
 
@@ -215,26 +126,26 @@
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span>{{ u.avg_normalized_power|floatformat }} W</li>
         {% endfor %}
     </ol>
+    
     <h3> {% trans "Top climbers" %} </h3>
     <ol>
         {% for u in ascentsums|slice:":5" %}
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.sum_ascent }} {% trans "m" %} </li>
         {% endfor %}
     </ol>
-
     <h3> {% trans "Steepest average grade" %} </h3>
     <ol>
         {% for u in climbstats|slice:":5" %}
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avgclimb|floatformat }} {% trans "m" %}/{% trans "km" %} </li>
         {% endfor %}
     </ol>
-
     <h3> {% trans "Fastest average climb" %} </h3>
     <ol>
         {% for u in climbstatsbytime|slice:":5" %}
         <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span> {{ u.avgclimbperhour|floatformat }} {% trans "m" %}/{% trans "hour" %} </li>
         {% endfor %}
     </ol>
+
 {% for i, hrzone in hrzonestats %}
     <h3> {% trans "Highest time in Zone "%}
         {{i}}
@@ -247,7 +158,8 @@
     </li>
     {% endfor %}
     </ol>
-    {% endfor %}
+{% endfor %}
+
     <h3> {% trans "Highest Max Power" %} </h3>
     <ol>
         {% for u in maxpowers|slice:":5" %}

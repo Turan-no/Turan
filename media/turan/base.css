@@ -595,8 +595,11 @@ div.mapcontainer {
 .toplist ol {
     padding-left: 10px;
     font-size: 11px;
-    width: 190px;
     list-style-position: inside;
+}
+.toplist ol li {
+    list-style-type: decimal;
+    padding-left: 8px;
 }
 h3.segmenttoplist {
     margin-bottom: 20px;
@@ -613,15 +616,15 @@ h3.segmenttoplist {
 }
 .toplist ol li.first {
     list-style-image: url(/site_media/pinax/img/silk/icons/medal_gold_3.png);
-    font-size: 1.2em;
+    padding-left: 0;
 }
 .toplist ol li.second {
     list-style-image: url(/site_media/pinax/img/silk/icons/medal_silver_2.png);
-    font-size: 1.15em;
+    padding-left: 0;
 }
 .toplist ol li.third {
     list-style-image: url(/site_media/pinax/img/silk/icons/medal_bronze_1.png);
-    font-size: 1.1em;
+    padding-left: 0;
 }
 .toplist ol li.segment {
     list-style-image: url(/site_media/pinax/img/silk/icons/shape_rotate_clockwise.png);
@@ -1463,4 +1466,12 @@ a.profilehoverpoint>img {
 .unit {
     color: #666;
     font-weight: lighter;
+}
+.time_and_length {
+    overflow: auto;
+}
+.time_and_length .box {
+    float: left;
+    width: 220px;
+    margin: 5px;
 }
