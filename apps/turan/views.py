@@ -1892,6 +1892,39 @@ def slopes(request, queryset):
 
     return object_list(request, queryset=queryset, extra_context=locals())
 
+def segmentdetails(request, queryset):
+    ''' Segment detail list view, based on turan_object_list. Changed a bit for search
+    and filter purposes '''
+
+    search_query = request.GET.get('q', '')
+    if search_query:
+        qset = (
+            Q(exercise__route__name__icontains=search_query) |
+            Q(exercise__route__description__icontains=search_query) |
+            Q(exercise__tags__icontains=search_query)
+        )
+        queryset = queryset.filter(qset).distinct()
+
+
+    latitude = request.GET.get('lat', '')
+    longitude = request.GET.get('lon', '')
+
+    if latitude and longitude:
+        # A litle aprox box around your area
+        queryset = queryset.filter(start_lat__gt=float(latitude) - 0.5)
+        queryset = queryset.filter(start_lat__lt=float(latitude) + 0.5)
+        queryset = queryset.filter(start_lon__gt=float(longitude) - 1.0)
+        queryset = queryset.filter(start_lon__lt=float(longitude) + 1.0)
+
+    queryset = queryset.filter(vam__lt=1800) # humans.
+
+    username = request.GET.get('username', '')
+    if username:
+        user = get_object_or_404(User, username=username)
+        queryset = queryset.filter(exercise__user=user)
+
+    return object_list(request, queryset=queryset, extra_context=locals())
+
 def segments(request, queryset):
     ''' Segment list view, based on turan_object_list. Changed a bit for search
     and filter purposes '''
