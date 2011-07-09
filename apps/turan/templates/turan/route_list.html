@@ -107,7 +107,7 @@
     </tr>
 {% for object in object_list %}
 <tr class="{% cycle 'odd' 'even' %}">
-    <td><img src="{{ object.get_png_url }}"></td>
+    <td><a href="{{ object.get_absolute_url }}"><img src="{{ object.get_png_url }}"></a></td>
     <td>
         <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
         <br>
