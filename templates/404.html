@@ -1,0 +1,12 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "404 Not Found" %}{% endblock %}
+
+{% block body %}
+
+<h1 align="center">404 {% trans "Page Not Found"%}</h1>
+<img src="{{MEDIA_URL}}turan/404clincher_powertap.jpg">
+    <h3 class="floatright">{% trans "We're sorry but zip was found at this address." %}</h3>
+{% endblock %}

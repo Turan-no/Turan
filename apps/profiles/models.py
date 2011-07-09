@@ -2,36 +2,48 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.db.models import Count
 from django.utils.translation import ugettext_lazy as _
+from django.utils import simplejson
+from django.utils.safestring import mark_safe
 
 from timezones.fields import TimeZoneField
 
 class Profile(models.Model):
     
     user = models.ForeignKey(User, unique=True, verbose_name=_('user'))
-    name = models.CharField(_('name'), max_length=50, null=True, blank=True)
+    name = models.CharField(_('name'), help_text=_('Optional real name'), max_length=50, null=True, blank=True)
     about = models.TextField(_('about'), null=True, blank=True)
     location = models.CharField(_('location'), max_length=40, null=True, blank=True)
     website = models.URLField(_('website'), null=True, blank=True, verify_exists=False)
     
-    height = models.IntegerField(blank=True, default=0, help_text=_('in cm'))
-    weight = models.FloatField(blank=True, default=0, help_text=_('in kg'))
-    resting_hr = models.IntegerField(blank=True, default=0, help_text=_('beats per minute'))
+    height = models.IntegerField(_('Height'), blank=True, default=0, help_text=_('in cm'))
+    weight = models.FloatField(_('Weight'),blank=True, default=0, help_text=_('in kg, used to calculate power'))
+    resting_hr = models.IntegerField(_('Resting HR'), blank=True, default=0, help_text=_('beats per minute'))
     ftp = models.IntegerField(blank=True,null=True, help_text=_('Functional Threshold Power'))
-    max_hr = models.IntegerField(blank=True, default=0, help_text=_('beats per minute'))
-    motto = models.CharField(max_length=160)
+    max_hr = models.IntegerField(_('Max HR'), blank=True, default=0, help_text=_('beats per minute'))
+    motto = models.CharField(_('Motto'), max_length=160)
 
-    image = models.ImageField(upload_to='turan', blank=True)
-    cycle = models.CharField(max_length=99, blank=True)
-    cycle_image = models.ImageField(upload_to='turan', blank=True)
+    #image = models.ImageField(upload_to='turan', blank=True)
+    #cycle = models.CharField(max_length=99, blank=True)
+    #cycle_image = models.ImageField(upload_to='turan', blank=True)
 
     def __unicode__(self):
+        return self.get_name()
+
+    def get_name(self):
+        if self.name and self.name.strip() != "":
+            return self.name
         return self.user.username
     
     def get_absolute_url(self):
         return ('profile_detail', None, {'username': self.user.username})
     get_absolute_url = models.permalink(get_absolute_url)
     
+    def get_exercise_types_by_count_json(self):
+        ''' Used in exercise create form to autoselect the most used exercise types '''
+        return mark_safe(simplejson.dumps(list(self.user.exercise_set.values('exercise_type__id').annotate(c=Count('exercise_type__id')).order_by('-c'))[:3]))
+
     class Meta:
         verbose_name = _('profile')
         verbose_name_plural = _('profiles')
@@ -71,7 +83,7 @@ class UserProfileDetail(models.Model):
         ''' Overriden to update UserProfile with new data '''
         super(UserProfileDetail, self).save(force_insert, force_update)
         if self.weight:
-            self.userprofile.weight = int(round(self.weight))
+            self.userprofile.weight = self.weight
         if self.resting_hr:
             self.userprofile.resting_hr = self.resting_hr
         if self.ftp:

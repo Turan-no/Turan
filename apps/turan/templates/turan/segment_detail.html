@@ -1,13 +1,15 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
+{% load turanwaka_tags %}
 
 {% load avatar_tags %}
 {% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
-{% trans "Segment" %} : {{object}} {% if object.distance %} {{ object.distance|floatformat }} km {% endif %}{% if object.ascent %} {{ object.ascent|floatformat }} asc m {% endif %}
+{% trans "Segment" %} : {{object}} {% if object.distance %} {{ object.distance|floatformat }} km {% endif %}{% if object.ascent %} {{ object.ascent|floatformat }} asc m {% endif %} {{ object.grade|floatformat }} %
 {% endblock %}
 {% block searchenginemeta %}
 <meta name="description" content="{{object.description|truncatewords:20|escape}}" />
@@ -25,13 +27,40 @@
 {% endblock %}
 {% block content %}
 
-<div style="width:500px; height:500px; float: right;" id="map"></div>
 <h1>
     {{ object.name }}
 </h1>
 <div class="box spacer">
-{% include "turan/segment/attributes.html" %}
+    {% if slopes %}
+    <div class="segmenttoplist toplist floatright">
+    <span class="title">{% trans "Best efforts" %}</span>
+        <ol>
+        {% for object in slopes|slice:":3" %}
+            <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
+                {{ object.duration|durationformatshort}}, {{object.exercise.date}}
+                <div style="float: right">
+                    <a href="{{ object.exercise.user.get_absolute_url }}" title="{{ object.exercise.user }}">
+                        {% avatar object.exercise.user 32 %}
+                    </a>
+                </div>
+                <hr class="clearright" />
+            </li>
+        {% endfor %}
+    </ol>
+    </div>
+    {% endif %}
+
+    {% include "turan/segment/attributes.html" %}
 </div>
+
+
+<hr class="clear" />
+{% if object.gpx_file %}
+<div ><div style="width:100%; height: 500px" class="drop-shadow raised" id="map"></div>
+        <a href="{{MEDIA_URL}}turan/{{ object.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
+    </div>
+{% endif %}
+
 <ul class="photos hlist">
     {% for photo in object.get_photos %}
     <li>
@@ -46,47 +75,76 @@
 {% include "turan/tags.html" %}
 
 <hr class="clearleft" />
-{% with object.get_slopes as object_list %}
+{% with slopes as object_list %}
 {% autosort object_list %}
 {% autopaginate object_list %}
 {% if object_list %}
-    <h2 style="clear: both">{% trans "Altitude profile" %}</h2>
-    <div id="altdiv" style="height: 200px"></div>
-<script id="source" language="javascript" type="text/javascript">
-    var alt = { data: [{{ alt }}], color: 3, lines: { fill: 0.7 } };
-    var options = { yaxes:[{}, { min: 0, max: {{ alt_max }}, }], };
-$.plot($("#altdiv"), [alt], options);
-</script>
-    <h2 style="clear: both">{% trans "Gradients" %}</h2>
-    <div id="gradientzonediv" style="width: 1000px; height:200px; float: right;"></div>
-    <div id="gradientzonetable" style="width:1px; height: 400px;"></div>
+    <div id="durationdiv" style="width:100%;height:100px"></div>
+    <script id="source" language="javascript" type="text/javascript">
+$(function () {
+
+    var times = [
+        {% for user, series in usertimes.items %}
+        {% if series %}
+            {
+                label: "{{user}}",
+                bars: { show: true },
+                data: [{{series}}],
+                color: {{ forloop.counter }}
+            },
+        {% endif %}
+        {% endfor %}
+    ];
+    var options = { 
+        xaxis: { mode: "time", timeformat: "%y/%m/%d" }, 
+        yaxis: { tickFormatter: axisformatters.duration },
+        legend: {
+            position: "sw",
+            noColumns: 0,
+            },
+        }
+        $.plot($("#durationdiv"), times, options);
+    });
+    </script>
+    {% include "turan/altitude_profile.html" %}
+    <div id="gradientzonediv" style="width: 1000px; height:200px"></div>
     {% include "turan/exercise/gradient_tab.html" %}
     <form id="route_form">
-    <h2>{% trans "Rides on this segment" %}</h2>
-    <input type="submit" value="{% trans "Compare"%}">
+
     <table class="fullsize">
         <tr>
             <th>{% trans "CMP" %}</th>
             <th>{% trans "Trip" %}</th>
-            <th>{% anchortrans object.exercise.user Exerciser %}</th>
-            <th>{% anchortrans date %}</th>
+            <th>{% anchortrans exercise__user Exerciser %}</th>
+            <th>{% anchortrans exercise__date "Date" %}</th>
             <th>{% anchortrans duration %}</th>
             <th>{% anchortrans avg_hr "Avg HR" %}</th>
             <th>{% anchortrans avg_speed "Avg Speed" %}</th>
             <th> {% anchortrans ascent "Ascent" %} </th>
-        <th> {% anchortrans act_power "Avg power (actual)" %} </th>
-        <th> {% anchortrans est_power "Avg power (est)" %} </th>
-        <th> {% anchortrans power_per_kg "Avg power/kg" %} </th>
-        <th> {% anchortrans vam "VAM" %} </th>
+        <th>{% anchortrans act_power "Power" %}</th>
+        <th>{% anchortrans est_power "Power (est)" %}</th>
+        <th>{% anchortrans power_per_kg "Avg power/kg" %}</th>
+        <th>{% anchortrans vam "VAM" %}{{ "VeloAscMet"|wiki_help }}</th>
         <th>{% trans "Comment" %}</th>
         </tr>
         {% for object in object_list %}
         <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
-            <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
             <td>
-                <a href="{{ object.exercise.get_absolute_url }}">
-                {{ object.exercise.route }}
-                    <img src="/site_media/pinax/images/silk/icons/zoom.png" />
+                <input type="checkbox" name="selected_routes" value="{{ object.exercise.id }}-{{object.id}}">
+                <input type="hidden" id="start{{object.exercise.id}}-{{object.id}}" value="{{object.start|unlocalize}}">
+            </td>
+            <td>
+                    {% if object.exercise.user == request.user or request.user.is_superuser %}
+                    <a href="{% url segmentdetail_update object.id %}">
+                    <img title="{% trans "Modify segment entry"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
+                    </a>
+                    <a href="{% url segmentdetail_delete object.id %}">
+                    <img title="{% trans "Delete segment entry"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
+                    </a>
+                    {% endif%}
+                <a href="{{ object.exercise.get_absolute_url }}#graph-zoom-{{object.start|unlocalize}}-{{object.end|unlocalize}}">
+                    <img src="/site_media/pinax/img/silk/icons/zoom.png" />
+                    {{ object.exercise.route|truncatechars:"15" }}
                 </a>
             </td>
             <td>
@@ -95,11 +153,13 @@ $.plot($("#altdiv"), [alt], options);
                 </a>
             </td>
             <td><a href="{{ object.get_absolute_url }}">{{object.exercise.date|naturalday}}</a></td>
-            <td>{{ object.duration|durationformat }}</td>
+            <td>{{ object.duration|durationformatshort }}</td>
             <td>
                 {% if object.avg_hr and object.exercise.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.exercise.user.get_profile.max_hr }} 
                 {% else%}
-                {{ object.avg_hr }}&nbsp;bpm 
+                {% if object.avg_hr %}
+                    {{ object.avg_hr }}&nbsp;bpm 
+                {% endif %}
                 {% endif %}
             </td>
             <td>{{ object.speed|floatformat }}&nbsp;{% trans "km/h" %}</td>
@@ -108,28 +168,63 @@ $.plot($("#altdiv"), [alt], options);
     <td>{{object.est_power|floatformat}} {% trans "W" %} </td>
     <td>{{object.power_per_kg|floatformat}}</td>
     <td>{% if object.vam %}{{object.vam}}{% endif %}</td>
-    <td>{{ object.comment|slice:"70" }}</td>
+    <td>
+        {% if object.comment %}
+        {{ object.comment|slice:"70" }}
+        {% endif %}
+    </td>
         </tr>
         {% endfor %}
     </table>
+    <input type="submit" value="{% trans "Compare"%}">
+{% if request.user.username %}
+<a href="?username={{request.user.username}}"><button>{% trans "My results" %}</button></a>
+{% endif %}
     </form>
     <script language="javascript" type="text/javascript">
     $('#route_form').bind("submit", function (ev) {
         ev.preventDefault();
         var selectedIds = [];
+        var selectedSegmentIds = [];
+        var selectedStarts = [];
         $(this.selected_routes).each(function (i, elem) {
             if (elem.checked) {
-                selectedIds.push(elem.value);
+                var object_id = elem.value.split('-')[0];
+                var segment_id = elem.value.split('-')[1];
+                selectedIds.push(object_id);
+                selectedSegmentIds.push(segment_id);
             }
         });
-        // todo.. yea this code is real bad. *sighface*
-        document.location = "/turan/exercise/compare/" + selectedIds.join("/");
+        var player_url =  "/play/exercise/?id=" + selectedIds.join("&id=");
+        // Then add hash for start
+        player_url += '#';
+        var index=0;
+        for(id in selectedIds) {
+            var hashstr = 'start-' + index + '-' + $('#' + 'start' + selectedIds[id] + '-' + selectedSegmentIds[index]).val();
+            selectedStarts.push (hashstr);
+            index++;
+        }
+        player_url += selectedStarts.join(',')
+        document.location = player_url;
+
     });
+
+        /*
+$(document).ready(function() {
+    //Add Overview map control 
+    if (Mapper.map) {
+        var options = {
+            maximized: false,
+        };
+        var ovmap = new OpenLayers.Control.OverviewMap(options);
+        Mapper.map.addControl(ovmap);
+    }
+});
+*/
+
     </script>
 {% paginate %}
 {% endif %}
 {% endwith %}
-<hr>
-{% include "turan/commentform.html" %}
 {% endblock content %}
 

@@ -37,13 +37,20 @@
 <h1>
     {% trans "Events" %}
 </h1>
-
 <div class="floatright">
 {% paginate %}
 </div>
 
+<ul class="buttons">
+    <li>
+        <a href="{% url exercise_create %}">
+            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
+            {% trans "Add an exercise" %}
+        </a>
+    </li>
+</ul>
 <table class="fullsize">
-    <tr>
+    <tr class="{% cycle odd,even %}">
         <th>
             {% trans "Type" %}
         </th>
@@ -88,7 +95,7 @@
     </td>
     <td>
         {% if object.route.gpx_file %}
-            <object width="64" height="64" type="image/svg+xml" data="{{ object.route.get_svg_url }}"></object>
+            <img src="{{ object.route.get_png_url }}">
         {% endif %}
     </td>
     <td>

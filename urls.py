@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^account/signup/$', signup_view, name="acct_signup"),
     
     (r'^turan/', include('turan.urls')),
+    (r'^api/', include('api.urls')),
     (r'^about/', include('about.urls')),
     (r'^account/', include('account.urls')),
     (r'^openid/(.*)', PinaxConsumer()),
@@ -41,7 +42,7 @@ urlpatterns = patterns('',
     (r'^notices/', include('notification.urls')),
     (r'^messages/', include('messages.urls')),
     (r'^announcements/', include('announcements.urls')),
-    (r'^tribes/', include('tribes.urls')),
+    (r'^tribes/', include('pinax.apps.tribes.urls')),
     (r'^comments/', include('threadedcomments.urls')),
     (r'^robots.txt$', include('robots.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
@@ -57,9 +58,19 @@ urlpatterns = patterns('',
     (r'^feeds/posts/(.*)/$', 'django.contrib.syndication.views.feed', blogs_feed_dict),
     (r'^feeds/bookmarks/(.*)/?$', 'django.contrib.syndication.views.feed', bookmarks_feed_dict),
     (r'', include('turan.urls')),
-    (r'', include('djangodblog.urls')),
+
+    (r'', include('social_auth.urls')),
+)
+urlpatterns += patterns(
+    'piston.authentication',
+    url(r'^oauth/request_token/$','oauth_request_token'),
+    url(r'^oauth/authorize/$','oauth_user_auth'),
+    url(r'^oauth/access_token/$','oauth_access_token'),
 )
 
+urlpatterns += patterns('',
+    (r'^sentry/', include('sentry.urls')),
+)
 
 handler500 = 'turan.views.internal_server_error'
 ## @@@ for now, we'll use friends_app to glue this stuff together

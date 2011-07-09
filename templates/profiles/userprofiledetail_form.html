@@ -1,4 +1,5 @@
 {% extends "turan/base.html" %}
+{% load uni_form_tags %}
 {% load i18n %}
 {% block title %}
 {{ block.super }}
@@ -6,30 +7,29 @@
 {% endblock %}
 {% block extra_head %}
 {{ form.media }}
-<script type="text/javascript" src="{{MEDIA_URL}}date.js"></script>
-<script type="text/javascript" src="{{MEDIA_URL}}jquery.datePicker.js"></script>
-<link rel="stylesheet" href="{{MEDIA_URL}}/datePicker.css" />
-
+<script type="text/javascript" src="{{MEDIA_URL}}jquery.ui.datepicker-no.js"></script>
 {% endblock %}
 {% block content %}
 <h1>{% trans "Add new profile detail" %}</h1>
-<form enctype="multipart/form-data" method="post">
-<table>
-{{ form }}
-</table>
+<form class="uniForm" enctype="multipart/form-data" method="post">
+{{ form|as_uni_form }}
 <input id="id_user" type="hidden" name="user" value="{{user.id}}">
+{% comment %}
 <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
+{% endcomment %}
 <input type="submit" value="{% trans "Submit" %}" />
 </form>
 <script type="text/javascript">
-    Date.firstDayOfWeek = 0;
-    Date.format = 'yyyy-mm-dd';
     $(function() {
+        $.datepicker.setDefaults( $.datepicker.regional[ "no" ] ); // TODO fix regional 
         var dateField = $('#id_time');
         if (dateField.val() != undefined ) {
-            dateField.datePicker({startDate:'2011-01-01'});
-            if (dateField.val().length == 0)
-                dateField.val(new Date().asString()).trigger('change');
+        dateField.datepicker({
+            startDate:'2011-01-01',
+            constrainInput: false,
+            dateFormat: 'yy-mm-dd'
+
+                });
         }
     });
 </script>

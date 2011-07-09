@@ -3,7 +3,7 @@ import datetime
 from BeautifulSoup import BeautifulSoup
 
 class GMDEntry(object):
-    def __init__(self, time, hr, speed, cadence, altitude, lon, lat):
+    def __init__(self, time, hr, speed, cadence, altitude, lon, lat, distance):
         self.time = time
         self.hr = hr
         self.speed = speed
@@ -11,8 +11,9 @@ class GMDEntry(object):
         self.altitude = altitude
         self.lon = lon
         self.lat = lat
+        self.distance = distance
     def __unicode__(self):
-        return '[%s] hr: %s, speed: %s, cadence: %s, alt: %s, lon %s, lat: %s' % (self.time, self.hr, self.speed, self.cadence, self.altitude, self.lon, self.lat)
+        return '[%s] hr: %s, speed: %s, cadence: %s, alt: %s, lon %s, lat: %s, dist: %s' % (self.time, self.hr, self.speed, self.cadence, self.altitude, self.lon, self.lat, self.distance)
     
     def __str__(self):
         return self.__unicode__()
@@ -40,6 +41,12 @@ class GMDParser(object):
         self.speed_sum = 0
         self.cadence_sum = 0
 
+    def __unicode__(self):
+        return '%s hr: %s/%s speed: %s/%s' % (self.duration, self.avg_hr, self.max_hr, self.avg_speed, self.max_speed)
+    
+    def __str__(self):
+        return self.__unicode__()
+
     def parse_uploaded_file(self, f):
         self.soup = BeautifulSoup(f.read())
 
@@ -55,6 +62,7 @@ class GMDParser(object):
 
         self.max_speed = float(lap.max_speed.string)*3.6
         self.max_hr = int(lap.max_hr.string)
+        self.avg_hr = int(lap.avg_hr.string)
         self.kcal_sum = int(lap.calories.string)
 
         points = self.soup.findAll('point')
@@ -90,14 +98,16 @@ class GMDParser(object):
                 point['lat'] = float(point['lat'])
             else:
                 point['lat'] = 0
-            e = GMDEntry(time, point['hr'], speed, cadence, point['alt'], point['lon'], point['lat'])
+            e = GMDEntry(time, point['hr'], speed, cadence, point['alt'], point['lon'], point['lat'], self.cur_distance)
             self.entries.append(e)
 
 if __name__ == '__main__':
+    import sys
     p = GMDParser()
-    f = open("test.gmd")
+    f = open(sys.argv[1])
     p.parse_uploaded_file(f)
 
     for ent in p.entries:
         print ent
 
+    print p

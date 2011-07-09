@@ -1,0 +1,27 @@
+{% extends "turan/base.html" %}
+{% load i18n %}
+{% load turan_extras %}
+
+{% block content %}
+{% for packed in segments.items %}
+{% with packed.0 as exercise %}
+{% for segment in packed.1 %}
+{% if forloop.first %}
+{% trans "Segments found in exercise"%} <a href="{{exercise.get_absolute_url }}">{{ exercise }}</a>
+    <ul>
+<div id="result">
+{% endif %}
+<li>
+{{ segment.0 }}, Start at: {{segment.3|divide:"1000"}}, Segment distance: {{segment.4|floatformat}} m <a href="{% url segmentdetail_create %}?exercise={{exercise.id}}&segment={{segment.0.id}}&start={{segment.1}}&stop={{segment.2}}">{% trans "Add this segment" %}</a>
+
+</li>
+
+{% if forloop.last %}
+</div>
+</ul>
+{% endif %}
+{% endfor %}
+
+{% endwith %}
+{% endfor %}
+{% endblock content %}

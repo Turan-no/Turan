@@ -1,12 +1,14 @@
 {% load threadedcommentstags %}
 {% load i18n %}
-{% load uni_form %}
+{% load uni_form_tags %}
 {% load pagination_tags %}
 {% load avatar_tags %}
 {% load humanize %}
 
 {% get_threaded_comment_tree for object as responses %}
+{% comment %}
 {% autopaginate responses %}
+{% endcomment %}
 <ul class="comments">
     {% for response in responses %}
         <li class="{% cycle even,odd %} thread-{{ response.depth }} clearfix">
@@ -39,17 +41,15 @@
     {% endfor %}
 </ul>
 
-{% paginate %}
-
 {% if user.is_authenticated %}
     <form class="uniForm" method="post" action="{% get_comment_url object %}">
         <fieldset class="inlineLabels">
             <div class="ctrlHolder">
-                <textarea id="id_comment" rows="2" cols="40" name="comment"></textarea>
+                <textarea class="drop-shadow lifted" id="id_comment" rows="2" cols="60" name="comment"></textarea>
             </div>
             <div class="form_block">
                 <input type="hidden" name="next" value="{{ request.path }}" />
-                <input type="submit" value="{% trans "Post Response" %}" />
+                <button type="submit">{% trans "Post Response" %}</button>
             </div>
         </fieldset>
     </form>

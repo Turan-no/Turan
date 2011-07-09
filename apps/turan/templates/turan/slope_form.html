@@ -1,0 +1,16 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% load uni_form_tags %}
+{% block title %}
+{{ block.super }}
+{% trans "Slope" %}
+{% endblock %}
+{% block content %}
+<h1>{% trans "Slope modification" %}</h1>
+<form class="uniForm" enctype="multipart/form-data" method="post">
+{{ form|as_uni_form}}
+</table>
+<input type="submit" value="{% trans "Save slope" %}" />
+</form>
+{% endblock content %}

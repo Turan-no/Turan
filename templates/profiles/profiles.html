@@ -13,17 +13,18 @@
 
     <form method="get" action="">
         <input type="text" name="search" value="{{ search_terms }}" />
-        <input type="submit" value="Search" />
+        <input type="submit" value="{% trans "Search"%}" />
         {% if search_terms %}
-            <a href="{% clear_search_url request %}">Clear Search Terms</a>
+        <a href="{% clear_search_url request %}">{% trans "Clear Search Terms"%}</a>
         {% endif %}
     </form>
 
     {% if users %}
-        <p>{% trans "Order by:" %}
+        <p>{% trans "Order by" %}:
                 <a href="{% url profile_list %}?order=name">{% trans "Name" %}</a>
                 <a href="{% url profile_list %}?order=date">{% trans "Date" %}</a>
-                <a href="{% url profile_list %}?order=time">{% trans "Exercise time" %}</a>
+                <a href="{% url profile_list %}?order=time">{% trans "Total exercise duration" %}</a>
+                <a href="{% url profile_list %}?order=recent">{% trans "Recent exercise duration" %}</a>
         </p>
 
         {% autopaginate users%}
@@ -47,6 +48,6 @@
         {% paginate %}
         
        {% else %}
-           <p>No profile were found.</p>
+       <p>{% trans "No profile were found"%}.</p>
       {% endif %}
 {% endblock %}

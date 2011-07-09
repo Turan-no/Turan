@@ -10,23 +10,28 @@
 
 {% block subnav %}
     <ul>
-        <li><a href="{% url slopes %}">{% trans "Slopes" %}</a></li>
+        <li><a href="{% url segmentdetails %}">{% trans "Segment efforts" %}</a></li>
+        {% comment %}
         <li><a href="{% url calendar-index %}">{% trans "Calendar" %}</a></li>
+        {% endcomment %}
         <li><a href="{% url statistics %}">{% trans "Statistics" %}</a></li>
-        {% if user.get_profile.id %}
+        {% if user.username %}
         <li class="right"><a href="{% url calendar-index %}?username={{user.username}}">{% trans "My calendar" %}</a></li>
-        <li id="tab_photos"><a href="{% url photos %}">{% trans "Photos" %}</a></li>
-        <li id="tab_tribes"><a href="{% url tribe_list %}">{% trans "Teams" %}</a></li>
+            {% comment %}
+            <li id="tab_photos"><a href="{% url photos %}">{% trans "Photos" %}</a></li>
+            <li id="tab_tribes"><a href="{% url tribe_list %}">{% trans "Teams" %}</a></li>
     {% if user.is_authenticated %}
             <li><a href="{% url what_next %}">{% trans "What next?" %}</a></li>
             <li id="tab_profile"><a href="{% url profile_detail user %}">{% trans "Profile" %}</a></li>
     {% else %}
+            {% endcomment %}
             <li id="tab_profile"><a href="{% url profile_list %}">{% trans "Exercisers" %}</a></li>
-    {% endif %}
         {% endif %}
         {% block extramenu %}
         {% endblock %}
     </ul>
+    {% block submenu %}
+    {% endblock %}
 {% endblock %}
 {% block body %}
 {% block content %}

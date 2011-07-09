@@ -1,0 +1,64 @@
+{% load i18n %}
+{% load humanize %}
+{% load turan_extras %}
+
+<li>
+    <table class="fullsize">
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>{% trans "Brand" %}</th>
+            <th>{% trans "Model" %}</th>
+            <th>{% trans "Distance" %}</th>
+        </tr>
+    <tr>
+        <td>
+            {% if other_user == request.user %}
+            <a href="{% url equipment_update equipment.id %}"><img title="{% trans "Modify" %}" src="{{ "wrench"|silk_icon }}"></a>
+            {% endif %}
+        </td>
+        <td>
+            {% if equipment.image %}
+            <a href="{{MEDIA_URL}}{{equipment.image}}"><img width="64" height="64" src="{{MEDIA_URL}}{{equipment.image}}"></a>
+            {% endif %}
+        </td>
+        <td>
+            {{equipment.equipmenttype }}
+        </td>
+        <td>
+            {{equipment.brand}}
+        </td>
+        <td>
+            {{equipment.model }} 
+        </td>
+        <td>
+            {{ equipment.get_distance|floatformat|default:"0" }} km
+        </td>
+        </tr>
+
+    <ul>
+    {% for component in equipment.component_set.all %}
+    <tr>
+        <td></td>
+        <td>
+            {{component.componenttype }}
+        </td>
+        <td>
+            {{component.brand}}
+        </td>
+        <td>
+            {{component.model }} 
+        </td>
+        <td>
+            {{ component.added|naturalday}}
+        </td>
+        <td>
+            {{ component.get_distance|floatformat|default:"0" }} km
+        </td>
+    </tr>
+    
+    {% endfor %}
+    </ul>
+</table>
+</li>

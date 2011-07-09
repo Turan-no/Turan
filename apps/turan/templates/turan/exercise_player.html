@@ -1,0 +1,433 @@
+{% extends "turan/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% load l10n %}
+{% load turan_extras %}
+{% block title %} {% trans "Playback of exercise" %} {% for exercise in exercises %} {{ exercise }} {% endfor %}{% endblock %}
+{% block extra_head %}
+{{ block.super }}
+    <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.crosshair.js"></script>
+    <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.imagemarkers.js"></script>
+{% with exercise as object %}
+{% with exercise.route.gpx_file as gpx_file %}
+    {% include "turan/maphead.html" %}
+{% endwith %}
+{% endwith %}
+{% endblock %}
+{% block content %}
+<h1>{% trans "Playback of exercise" %}</h1>
+{% for exercise in exercises %}
+<a href="{% url exercise exercise.pk %}">
+    <img src="{{ forloop.counter0|player_icon:exercise.exercise_type}}" />
+    {{ exercise }}
+</a>
+{% endfor %}
+    <ul class="buttons spacer">
+        <li style="float: left">
+            <a id="control_start" href="#">
+                <img class="icons" src="{{ "control_start"|silk_icon }}" alt="{% trans "Start" %}" />
+                {% trans "Start" %}
+            </a>
+        </li>
+        <li style="float: left">
+            <a id="control_play" href="#">
+                <img class="icons" src="{{ "control_play"|silk_icon }}" alt="{% trans "Play" %}" />
+                {% trans "Play" %}
+            </a>
+        </li>
+        <li style="float: left">
+            <a id="control_pause" href="#">
+                <img class="icons" src="{{ "control_pause"|silk_icon }}" alt="{% trans "Pause" %}" />
+                {% trans "Pause" %}
+            </a>
+        </li>
+        <li style="float: left">
+            <a id="control_fastforward" href="#">
+                <img class="icons" src="{{ "control_fastforward"|silk_icon }}" alt="{% trans "FFWD" %}" />
+                {% trans "Fast forward" %}
+            </a>
+        </li>
+        {% for object in exercises %}
+        {% if object.live_state == 'L' %}
+        <li style="float: left">
+            <a id="control_live" href="#">
+                <img class="icons" src="{{ "control_fastforward"|silk_icon }}" alt="{% trans "Live" %}" />
+                {% trans "Go Live" %}
+            </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% comment %}
+<p id="choices">{% trans "Choose features" %}:</p>
+<input type="checkbox" checked="checked" name="graphs" id="chk_graph"><label for="chk_graph">{% trans "Graphs" %}</label></input>
+<input type="checkbox" checked="checked" name="altitude" id="chk_altitude"><label for="chk_altitude">{% trans "Altitude profile"%}</label></input>
+<input type="checkbox" checked="checked" name="map" id="chk_map"><label for="chk_map">{% trans "Map" %}</label></input>
+{% endcomment %}
+{% trans "You can click in the altitude profile to fast forward to that point "%}
+{% include "turan/altitude_profile.html" %}
+{% for object in exercises %}
+<hr class="clearleft">
+{{ object }}
+<hr class="clearleft">
+<p class="graphheader speed floatleft">{% trans "Speed" %}
+<br>
+<span class="title" id="speedval{{forloop.counter0}}"></span>
+</p>
+<div class="playergraph speed floatleft drop-shadow" id="speeddiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="hrval{{forloop.counter0}}"></span></p>
+<div class="playergraph hr floatleft drop-shadow" id="hrdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+{% if object.max_cadence %}
+<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="cadenceval{{forloop.counter0}}"></span></p>
+<div class="playergraph cadence floatleft drop-shadow" id="cadencediv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+{% endif %}
+<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="altitudeval{{forloop.counter0}}"></span></p>
+<div class="playergraph altitude floatleft drop-shadow" id="altitudediv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+{% if object.avg_power %}
+<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="powerval{{forloop.counter0}}"></span></p>
+<div class="playergraph power floatleft drop-shadow" id="powerdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
+{% endif %}
+<hr class="clearleft">
+
+<p class="graphheader speed floatleft">{% trans "Speed" %}<br><span class="title" id="2speedval{{forloop.counter0}}"></span></p>
+<div class="drop-shadow playergraph speed floatleft" id="2speeddiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+<p class="graphheader hr floatleft">{% trans "HR" %}<br><span class="title" id="2hrval{{forloop.counter0}}"></span></p>
+<div class="drop-shadow playergraph hr floatleft" id="2hrdiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+{% if object.max_cadence %}
+<p class="graphheader cadence floatleft">{% trans "Cadence" %}<br><span class="title" id="2cadenceval{{forloop.counter0}}"></span></p>
+<div class="drop-shadow playergraph cadence floatleft" id="2cadencediv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+{% endif %}
+<p class="graphheader altitude floatleft">{% trans "Altitude" %}<br><span class="title" id="2altitudeval{{forloop.counter0}}"></span></p>
+<div class="drop-shadow playergraph altitude floatleft" id="2altitudediv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+{% if object.avg_power %}
+<p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="2powerval{{forloop.counter0}}"></span></p>
+<div class="drop-shadow playergraph power floatleft" id="2powerdiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
+{% endif %}
+
+{% endfor %}
+<script  language="javascript" type="text/javascript">
+    {% localize off %}
+
+var index = 0;
+var indexoffsets = [];
+var fetchedindex = 0; // Store the index we last fetched here, used in live
+var speed = 1;
+
+$('#control_start').bind("click", function (evt) {
+        evt.preventDefault();
+        index = 0;
+    });
+$('#control_pause').bind("click", function (evt) {
+        evt.preventDefault();
+        speed = 0;
+    });
+$('#control_play').bind("click", function (evt) {
+        evt.preventDefault();
+        speed = 1;
+    });
+$('#control_fastforward').bind("click", function (evt) {
+        evt.preventDefault();
+        speed += 5;
+    });
+$('#control_live').bind("click", function (evt) {
+        evt.preventDefault();
+        index = iterations - 10;
+    });
+
+
+    var options = { 
+        series: {
+             lines: { show: false },
+             bars: { 
+                show: true,
+                horizontal: true,
+                fill: 1,
+                barWidth: 1,
+                align: "center"
+             },
+            xaxis: { tickDecimals: 0, tickSize: 1, tickLength: 1},
+            yaxis: { tickDecimals: 0, tickSize: 1}
+        },
+        grid: {
+            show: false,
+            borderColor: '#000',
+            borderWidth: 1,
+            color: '#ffffff',
+            markingsColor: "#000000",
+            markingsLineWidth: 1,
+            axisMargin: 0,
+            labelMargin: 0
+        }
+    };
+
+var graphoptions = [];
+var datasets = [];
+var histvals = {};
+{% for dataset in datasets %}
+datasets.push({{dataset}});
+{% endfor %}
+{% for object in exercises %}
+    graphoptions.push( {
+    {% if object.avg_hr %}
+      'hr': $.extend(true, {}, options, { xaxis: {max: {{object.max_hr}}, min: 80}, grid: { markings: [ { yaxis: { from: {{object.avg_hr}}, to: {{object.avg_hr}}}}]} }),
+    {% endif %}
+    {% if object.avg_speed %}
+     'speed': $.extend(true, {}, options, { xaxis: {max: {{object.max_speed}}, min: 0 }}),
+    {% endif %}
+    {% if object.max_cadence %}
+     'cadence': $.extend(true, {}, options, { xaxis: {max: {{object.max_cadence}}, min: 0}}),
+    {% endif %}
+     'altitude': $.extend(true, {}, options, { xaxis: {max: {{alt_max}}, min: 0}}),
+    {% if object.avg_power %}
+     'power': $.extend(true, {}, options, { xaxis: {max: {{object.max_power}}, min: 0}})
+    {% endif %}
+    });
+{% endfor %}
+// All plot objects stord in this to be used by setData()
+var plots = { };
+// All Markers stored in this
+var markers = [];
+var playerLayers = []
+/*
+var choiceContainer = $("#choices");
+choiceContainer.find("input").bind("change", function(evt) {
+        console.log(evt.attr("name"));
+        });
+*/
+/*
+ * Mathmatical functions
+ */
+var math = {
+    // sum an array that looks like this [0,1]
+    // only sum the [1]
+    sum: function (a){
+        var total = 0;
+        
+        $.each(a, function (i, v){
+            total += v[1];
+        });
+        // return the values as a comma-delimited string
+        return total;
+    },
+    // average an array
+    avg: function (a){
+        // return the values as a comma-delimited string
+        return math.sum(a)/a.length;
+    },
+    // lowest number in array
+    min: function (a){
+        return Math.min.apply(Math, a);
+    },
+    // highest number in array
+    max: function (a){
+        return Math.max.apply(Math, a);
+    }
+};
+
+var interations;
+var interval = 0;
+$(document).ready(function() {
+
+    //Mapper.gsat.setVisibility(1);
+    Mapper.map.setBaseLayer(Mapper.gsat);
+    if (Mapper.lgpx != undefined)
+        Mapper.lgpx.setVisibility(0);
+    //Mapper.map.removeLayer(Mapper.lgpx);
+    // Focus le map
+    $('#mapcontainer').focus();
+
+    var updateInterval = 500;
+    var zoomLevel = 3;
+    var nr_histvals = 30;
+    var histvalindex = 0;
+    var mapUpdater = 0;
+    iterations = datasets[0]["lon"].length;
+
+    $('#altdiv').bind("plotclick", function (evt, pos, item) {
+        index = item.dataIndex;
+    });
+    var lineLayers = [];
+    {% for object in exercises %}
+        lineLayers.push(Mapper.initLine('{{object.user}}'));
+        playerLayers.push(Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{ forloop.counter0|player_icon:object.exercise_type}}" ));
+    {% endfor %}
+    Mapper.map.zoomTo(zoomLevel);
+    Mapper.map.panMethod = OpenLayers.Easing.Linear.easeOut;
+
+
+    // Hash check
+    var orly = window.location.hash.split(',')
+    if (orly) {
+        for (rly in orly) {
+            var yarly = orly[rly].split('-');
+            var playeri = parseInt(yarly[1]);
+            var startkm = parseFloat(yarly[2]);
+            for (dataset in datasets[playeri]) {
+                for (x in datasets[playeri][dataset]['data']) {
+                    val = datasets[playeri][dataset]['data'][x];
+                    if (startkm <= val[0]) {
+                        indexoffsets.push( parseInt(x) );
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+
+
+
+    // Function to update both graphs for each val
+    // Try and look and for existing plot
+    // if cannot be found, create the initial plot and save key to var plots.
+    var setAndDraw = function(player, key, color, index) {
+        var val = datasets[player][key]['data'][index][1];
+        var htmlval;
+        if (key == 'speed') {
+            htmlval=val.toFixed(1);
+        }else{
+            htmlval=val.toFixed(0);
+        }
+        //  Update HTML text display of val
+        $('#'+key+'val'+player).text(htmlval);
+        plot = plots[key+player];
+        data = [{ 'color': color, 'data': [[val, 0]]}];
+        if (plot) {
+            plot.setData(data);
+            plot.draw();
+        }
+        else {
+            try { 
+                plot = $.plot($("#"+key+"div"+player),data, graphoptions[player][key]);
+            }catch (er) {}
+        }
+
+        // Save the current value to histvals for usage in history graph
+        histvalkey = key+player;
+        if (!histvals[histvalkey]) {
+            histvals[histvalkey] = [];
+        }
+        if (histvals[histvalkey].length>nr_histvals-1) {  // We only want last 30 values
+            histvals[histvalkey].shift()                  // So we shift out
+        }
+        histvals[histvalkey].push([histvalindex+nr_histvals, val]);
+
+
+        avg = math.avg(histvals[histvalkey]);
+        if (key == 'speed') {
+            avg=avg.toFixed(1);
+        }else{
+            avg=avg.toFixed(0);
+        }
+        $('#2'+key+'val'+player).html(avg);
+    
+        histdata = [{ 'color': color, 'data': histvals[histvalkey]}];
+
+        histplot = plots[2+key+player];
+        if (histplot) {
+            histplot.setData(histdata);
+            histplot.draw();
+        }
+        else {
+            $.plot($("#2"+key+"div"+player), histdata ,{grid: { show: false }});
+        }
+    }
+    var updateMapAndGraph= function() {
+        {% for object in exercises %}
+            var thisindex = index;
+            var player = {{forloop.counter0}};
+            if (indexoffsets[player]) {
+                thisindex =  index + indexoffsets[player]
+            }
+            if (thisindex >= iterations) {
+                // Stop player, start it again in the callback
+                clearInterval(interval);
+                // no more data, try and fetch more (e.g. live exercise)
+
+                // Get the previous fetched index and plus it with current index
+                fetchedindex += thisindex;
+                
+                $.getJSON("{% url json_trip_series object.id%}", { start: fetchedindex }, function (dataset)                   {
+                    datasets[player] = dataset;
+                    // Reset interations
+                    if (dataset["lon"])
+                        iterations = dataset["lon"].length;
+                    else // No data from backend
+                        iterations = 0;
+                    // Update index 
+                    index = 0;
+                    interval = setInterval(updateMapAndGraph, updateInterval);
+                    // Update altitude profile
+                    var altpoptions = { 
+                       yaxis: { tickFormatter: axisformatters['altitude'],  min: 0, max: {{ alt_max }}, },
+                       xaxis: { tickFormatter: axisformatters['distance']},
+                       grid: { clickable: true, hoverable: true },
+                       markers: [ ]
+                    };
+                    if (iterations > 0) {
+                        altitudeprofileplot = $.plot($("#altdiv"), [datasets[player]['altitude']], options);
+                    }
+
+                });
+                return;
+            }
+            var lon = datasets[player]["lon"][thisindex];
+            var lat = datasets[player]["lat"][thisindex];
+            var p_lon = datasets[player]["lon"][thisindex-speed];
+            var p_lat = datasets[player]["lat"][thisindex-speed];
+            // Check for none-values, we don't want to zoom to 0_o o_0
+            if (lon != 0.0 && lat != 0.0) {
+                if (!markers[player])
+                    // Init the feature icon
+                    markers.push(Mapper.createFeature(playerLayers[player], lon, lat, 90));
+                {% if forloop.first %}
+                    // Don't move marker every sample, less cluttery looking
+                    if (mapUpdater >= 10) {
+                        //Mapper.zoomToPosMarker();
+                        // Pan Map for the first linerider
+                        Mapper.panTo(lon, lat);
+                        mapUpdater = 0;
+                    }
+                {% endif %}
+                if (p_lon != 0.0 && p_lat != 0.0) {
+                    Mapper.drawLine(lineLayers[player], colors[{{forloop.counter}}], p_lon, p_lat, lon, lat);
+                    // Move the markers
+                    var angle = Mapper.calculateAngle(p_lon, p_lat, lon, lat);
+                    Mapper.moveFeature(markers[player], lon, lat, angle);
+                }
+            }
+
+            // Highlight the point at thisindex in the first series in the altitudeprofile plot
+            var x = datasets[player]['altitude']['data'][thisindex][0];
+            var y = datasets[player]['altitude']['data'][thisindex][1];
+            altitudeprofileplot.updateMarker(x, y, player);
+
+            {% if object.avg_hr %}
+                setAndDraw(player, 'hr', 2, thisindex);
+            {% endif %}
+            {% if object.avg_speed %}
+                setAndDraw(player, 'speed', 0, thisindex);
+            {% endif %}
+                setAndDraw(player, 'altitude', 3, thisindex);
+            {% if object.max_cadence %}
+                setAndDraw(player, 'cadence', 1, thisindex);
+            {% endif %}
+            {% if object.avg_power %}
+                setAndDraw(player, 'power', 4, thisindex);
+            {% endif %}
+        {% endfor %}
+            
+        index += speed;
+        histvalindex += 1;
+        mapUpdater++;
+    }
+
+    interval = setInterval(updateMapAndGraph, updateInterval);
+});
+
+{% endlocalize %}
+</script>
+<div class="mapcontainer"><div style="width:1000px;height:800px" class="drop-shadow raised" id="map"></div>
+{% endblock content %}
+

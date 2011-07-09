@@ -1,7 +1,9 @@
 from models import *
-from tasks import smoothListGaussian, calcpower, power_30s_average
+from tasks import smoothListGaussian, power_30s_average \
+        , hr2zone, detailslice_info, search_trip_for_possible_segments_matches, filldistance, \
+        create_gpx_from_details
 from itertools import groupby, islice
-from forms import ExerciseForm
+from forms import ExerciseForm, ImportForm, BulkImportForm
 from profiles.models import Profile
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseForbidden, Http404, HttpResponseServerError
@@ -9,6 +11,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.template import RequestContext, Context, loader
 from django.contrib.auth.decorators import login_required
+from django.utils.text import compress_string
+
+
 from django.contrib.auth import logout
 from django import forms
 from django.forms.models import inlineformset_factory
@@ -17,25 +22,31 @@ from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 from django.contrib.syndication.feeds import Feed
 from threadedcomments.models import ThreadedComment
 from django.core.files.storage import FileSystemStorage
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.base import ContentFile
 from django.utils.safestring import mark_safe
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import redirect_to_login
 from django.views.generic.create_update import get_model_and_form_class, apply_extra_context, redirect, update_object, lookup_object, delete_object
+from django.db.models import get_model
 from django.views.generic.list_detail import object_list
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from django.utils.decorators import decorator_from_middleware
+from django.views.decorators.gzip import gzip_page
 from django.utils.datastructures import SortedDict
 from django.middleware.gzip import GZipMiddleware
 
-from django.core.files.base import ContentFile
-from turan.models import Route
-from urllib2 import urlopen
+from turan.middleware import Http403
 from tempfile import NamedTemporaryFile
-
+import urllib2
+import cookielib
+import urllib
+import os
+import zipfile
 
 from BeautifulSoup import BeautifulSoup
 
@@ -43,15 +54,20 @@ from tagging.models import Tag
 from tribes.models import Tribe
 from friends.models import Friendship
 from wakawaka.models import WikiPage, Revision
+from photos.models import Pool, Image
+from photos.forms import PhotoUploadForm 
+
+
 
 import re
 from datetime import timedelta, datetime
 from datetime import date as datetimedate
+from datetime import time as datetimetime
 from time import mktime, strptime
 import locale
 
-from svg import GPX2SVG
 from turancalendar import WorkoutCalendar
+from templatetags.turan_extras import durationformatshort
 from feeds import ExerciseCalendar
 
 import simplejson
@@ -77,11 +93,36 @@ def datetime2jstimestamp(obj):
 def index(request):
     ''' Index view for Turan '''
 
-    exercise_list = Exercise.objects.all()[:10]
-    comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')[:5]
+
+    e_lookup_kwargs =  {}
+    u_lookup_kwargs = {}
+    c_lookup_kwargs = {}
+    if 'friends' in request.GET:
+        if request.user.is_authenticated():
+            friend_set = friend_set_for(request.user.id)  
+            friend_set = list(friend_set)
+            friend_set.append(request.user)
+            e_lookup_kwargs['user__in'] = friend_set
+            usernames = [u.username for u in friend_set]
+            u_lookup_kwargs['username__in'] = usernames
+            c_lookup_kwargs = e_lookup_kwargs
+
+    team =  request.GET.get('team', '')
+    if team:
+        friend_set =  get_object_or_404(Tribe, slug=team)
+        friend_set = friend_set.members.all()
+        e_lookup_kwargs['user__in'] = friend_set
+        usernames = [u.username for u in friend_set]
+        u_lookup_kwargs['username__in'] = usernames
+        c_lookup_kwargs = e_lookup_kwargs
+
+    exercise_list = Exercise.objects.exclude(exercise_permission='N').filter(**e_lookup_kwargs).select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')[:10]
+    comment_list = ThreadedComment.objects.filter(**c_lookup_kwargs).filter(is_public=True).order_by('-date_submitted')[:5]
 
     route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])[:12]
     #route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
+
+    segment_list = Segment.objects.annotate(last_date=Max('segmentdetail__exercise__date'),last_time=Max('segmentdetail__exercise__time')).order_by('-last_date','-last_time')
 
     tag_list = Tag.objects.cloud_for_model(Exercise)
 
@@ -89,7 +130,7 @@ def index(request):
     today = datetimedate.today()
     days = timedelta(days=14)
     begin = today - days
-    user_list = User.objects.filter(exercise__date__range=(begin, today)).annotate(Sum('exercise__duration')).exclude(exercise__duration__isnull=True).order_by('-exercise__duration__sum')
+    user_list = User.objects.filter(**u_lookup_kwargs).filter(exercise__date__range=(begin, today)).annotate(Sum('exercise__duration')).exclude(exercise__duration__isnull=True).order_by('-exercise__duration__sum')[:16]
 
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))
 
@@ -101,21 +142,22 @@ def exercise_compare(request, exercise1, exercise2):
         return redirect_to_login(request.path)
         # TODO Friend check
 
-    alt = tripdetail_js(None, trip1.id, 'altitude')
+    alt = tripdetail_js(trip1.id, 'altitude')
     #alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
     datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False, use_constraints=False)
     datasets2 = js_trip_series(request, trip2.get_details().all(), time_xaxis=False, use_constraints=False)
     if not datasets1 or not datasets2:
         return HttpResponse(_('Missing exercise details.'))
-    datasets = mark_safe(datasets1 +',' +datasets2)
+    datasets1, datasets2 = mark_safe(datasets1), mark_safe(datasets2)
+    #datasets = mark_safe(datasets1 + ',' +datasets2)
 
     return render_to_response('turan/exercise_compare.html', locals(), context_instance=RequestContext(request))
 
 class TripsFeed(Feed):
-    title = "lart.no turan exercises"
-    link = "http://turan.no/turan/"
-    description = "Exercises from turan.no/turan"
+    title = "Turan.no exercises"
+    link = "http://turan.no/"
+    description = "Exercises from http://turan.no"
 
     def items(self):
         return Exercise.objects.order_by('-date')[:20]
@@ -176,22 +218,23 @@ def events(request, group_slug=None, bridge=None, username=None, latitude=None, 
 def route_detail(request, object_id):
     object = get_object_or_404(Route, pk=object_id)
     usertimes = {}
+    object_list = object.get_trips()
     try:
         done_altitude_profile = False
-        for trip in sorted(object.get_trips(), key=lambda x:x.date):
+        for trip in sorted(object_list, key=lambda x:x.date):
             if not trip.user in usertimes:
                 usertimes[trip.user] = ''
             try:
-                time = trip.duration.seconds/60
+                time = trip.duration.total_seconds()/60
                 if trip.avg_speed: # Or else graph bugs with None-values
                     usertimes[trip.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed))
             except AttributeError:
                 pass # stupid decimal value in trip duration!
 
-            if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
+            if trip.avg_speed and trip.get_details().exists() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
                                                              # and trip with details
-                alt = tripdetail_js(None, trip.id, 'altitude')
-                alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
+                alt = tripdetail_js(trip.id, 'altitude')
+                alt_max, alt_min = trip.get_details().aggregate(max=Max('altitude'),min=Min('altitude')).values()
                 done_altitude_profile = True
 
     except TypeError:
@@ -205,50 +248,43 @@ def route_detail(request, object_id):
 def segment_detail(request, object_id):
     object = get_object_or_404(Segment, pk=object_id)
     usertimes = {}
- #   try:
-    #    for trip in sorted(object., key=lambda x:x.date):
-    #        if not trip.user in usertimes:
-    #            usertimes[trip.user] = ''
-    #        try:
-    #            time = trip.duration.seconds/60
-    #            if trip.avg_speed: # Or else graph bugs with None-values
-    #                usertimes[trip.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(trip.date), trip.avg_speed))
-    #        except AttributeError:
-    #            pass # stupid decimal value in trip duration!
-    #
-    done_altitude_profile = False
-    slope = object.slope_set.all()[0]
-    trip = slope.exercise
-    if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
+    slopes = object.get_slopes().select_related('exercise', 'exercise__route', 'exercise__user__profile', 'segment', 'profile', 'exercise__user')
+    username = request.GET.get('username', '')
+    if username:
+        other_user = get_object_or_404(User, username=username)
+        slopes = slopes.filter(exercise__user=other_user)
+    for slope in sorted(slopes, key=lambda x:x.exercise.date):
+        if not slope.exercise.user in usertimes:
+            usertimes[slope.exercise.user] = ''
+        time = slope.duration/60
+        usertimes[slope.exercise.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(slope.exercise.date), slope.duration))
 
-        tripdetails = trip.get_details().all()
-        if filldistance(tripdetails):
-            i = 0
-            start, stop= 0, 0
-            for d in tripdetails:
-                if d.distance == slope.start*1000:
-                    start = i
-                if start:
-                    #assert False, (d.distance,  slope.start*1000, slope.start*1000+slope.length)
-                    if d.distance > (slope.start*1000+ slope.length):
-                        stop = i
-                        break
-                i += 1
-        #assert False, (start, stop)
-        #start =  trip.get_details().filter(lon=slope.start_lon).filter(lat=slope.start_lat)[0].id
-        #stop =  trip.get_details().filter(lon=slope.end_lon).filter(lat=slope.end_lat)[0].id
-        alt = tripdetail_js(None, trip.id, 'altitude', start=start, stop=stop)
-        alt_max = trip.get_details().aggregate(Max('altitude'))['altitude__max']*2
-        done_altitude_profile = True
-#
-#    except TypeError:
-#        # bug for trips without date
-#        pass
-#    except UnboundLocalError:
-        # no trips found
-#        pass
-        # Todo, maybe calculate and save in db or cache ?
-        gradients, inclinesums = getgradients(tripdetails[start:stop])
+    done_altitude_profile = False
+    if slopes:
+        slope = slopes[0] # Select first detail for details for gradients and altitude profile, TODO: save in db
+        trip = slope.exercise
+        if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
+
+            tripdetails = trip.get_details().all()
+            if filldistance(tripdetails):
+                i = 0
+                start, stop= 0, 0
+                for d in tripdetails:
+                    if d.distance >= slope.start*1000 and not start:
+                        start = i
+                    elif start:
+                        if d.distance > (slope.start*1000 + slope.length):
+                            stop = i
+                            break
+                    i += 1
+            #start =  trip.get_details().filter(lon=slope.start_lon).filter(lat=slope.start_lat)[0].id
+            #stop =  trip.get_details().filter(lon=slope.end_lon).filter(lat=slope.end_lat)[0].id
+            #alt = tripdetail_js(None, trip.id, 'altitude', start=start, stop=stop)
+            d_offset = tripdetails[start].distance
+            alt = simplejson.dumps([((d.distance-d_offset)/1000, d.altitude) for d in tripdetails[start:stop]])
+            alt_max, alt_min = trip.get_details().aggregate(max=Max('altitude'),min=Min('altitude')).values()
+            done_altitude_profile = True
+        gradients, inclinesums = getgradients(tripdetails[start:stop],d_offset=d_offset)
     return render_to_response('turan/segment_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):
@@ -395,32 +431,47 @@ def statistics(request, year=None, month=None, day=None, week=None):
     tfilter["user__exercise__route__in"] = validroutes
     climbstats = statsprofiles.filter(**tfilter).annotate( \
             distance = Sum('user__exercise__route__distance'), \
-            height = Sum('user__exercise__route__ascent'),  \
+            height_sum = Sum('user__exercise__route__ascent'),  \
             duration = Sum('user__exercise__duration'), \
             trips = Count('user__exercise') \
-            ).filter(duration__gt=0).filter(distance__gt=0).filter(height__gt=0).filter(trips__gt=0)
+            ).filter(duration__gt=0).filter(distance__gt=0).filter(height_sum__gt=0).filter(trips__gt=0)
 
     for u in climbstats:
-        u.avgclimb = u.height/u.distance
-        u.avgclimbperhour = u.height/(float(u.duration)/10**6/3600)
+        u.avgclimb = u.height_sum/u.distance
+        u.avgclimbperhour = u.height_sum/(float(u.duration)/10**6/3600)
         u.avglen = float(u.distance)/u.trips
     climbstats = sorted(climbstats, key=lambda x: -x.avgclimb)
     climbstatsbytime = sorted(climbstats, key=lambda x:-x.avgclimbperhour)
     lengthstats = sorted(climbstats, key=lambda x: -x.avglen)
 
+    hrzonestats = []
+    hrzones = range(0,7)
+    for i in hrzones:
+        hrzonestats.append(statsprofiles.filter(**tfilter)\
+        .extra(where=['turan_hrzonesummary.zone = %s' %i])\
+        .annotate(\
+            duration = Sum('user__exercise__hrzonesummary__duration')
+            )\
+        .order_by('-duration'))
+    hrzonestats = zip(hrzones, hrzonestats)
+
 
     bestest_power = []
-    intervals = [5, 30, 60, 300, 600, 1200, 1800, 3600]
+    intervals = [5, 10, 30, 60, 300, 600, 1200, 1800, 3600]
     for i in intervals:
         userweight_tmp = []
-        #.filter(user__exercise__bestpowereffort__duration=i)\
         best_power_tmp = statsprofiles.filter(**tfilter)\
         .extra(where=['turan_bestpowereffort.duration = %s' %i])\
         .annotate( max_power = Max('user__exercise__bestpowereffort__power'))\
         .order_by('-max_power')
         for a in best_power_tmp:
-            userweight_tmp.append(a.max_power/a.get_weight())#(a.exercise.date))
-        bestest_power.append(zip(best_power_tmp, userweight_tmp))
+            if a.get_weight():
+                userweight_tmp.append(a.max_power/a.get_weight())
+            else:
+                userweight_tmp.append(0)
+        best_power_tmp = zip(best_power_tmp, userweight_tmp)
+        best_power_tmp = sorted(best_power_tmp, key=lambda x: -x[1])
+        bestest_power.append(best_power_tmp)
     bestest_power = zip(intervals, bestest_power)
 
     team_list = Tribe.objects.all()
@@ -501,6 +552,78 @@ def generate_tshirt(request):
     data.seek(0)
     return HttpResponse(data.read(), mimetype='image/png',status=200)
 
+def colorize_and_scale(request):
+    import Image
+    from cStringIO import StringIO
+
+    if 'i' in request.GET:
+        i = settings.MEDIA_ROOT + request.GET['i']
+        if not os.path.abspath(i).startswith(settings.MEDIA_ROOT):
+            return HttpResponseServerError()
+    else:
+        return HttpResponseServerError()
+
+    if 'w' in request.GET:
+        try:
+            w = int(request.GET['w'])
+        except ValueError,e:
+            w = 24
+    else:
+        w = 24
+
+    if 'h' in request.GET:
+        try:
+            h = int(request.GET['h'])
+        except ValueError,e:
+            h = 24
+    else:
+        h = 24
+
+    if 'r' in request.GET:
+        try:
+            r = int(request.GET['r'])
+        except ValueError,e:
+            r = 255
+    else:
+        r = 255
+
+    if 'g' in request.GET:
+        try:
+            g = int(request.GET['g'])
+        except ValueError,e:
+            g = 255
+    else:
+        g = 0
+
+    if 'b' in request.GET:
+        try:
+            b = int(request.GET['b'])
+        except ValueError,e:
+            b = 255
+    else:
+        b = 0
+
+    try:
+        i = Image.open(i)
+    except IOError, e:
+        raise Http404()
+
+    sized = i.resize((w, h), Image.ANTIALIAS)
+
+    channels = sized.split()
+
+    if len(channels) == 4:
+        channels = (channels[0].point(lambda i: r), channels[1].point(lambda i: g), channels[2].point(lambda i: b), channels[3])
+    else:
+        channels = (channels[0].point(lambda i: r), channels[1].point(lambda i: g), channels[2].point(lambda i: b))
+
+    sized = Image.merge(sized.mode, channels)
+
+    data = StringIO()
+    sized.save(data, "png")
+    data.seek(0)
+    return HttpResponse(data.read(), mimetype='image/png',status=200)
+
 
 def calendar(request):
     now = datetime.now()
@@ -546,8 +669,10 @@ def calendar_month(request, year, month):
     # Filter by username
     username = request.GET.get('username', '')
     if username:
-        user = get_object_or_404(User, username=username)
-        exercises = exercises.filter(user=user)
+        other_user = get_object_or_404(User, username=username)
+        exercises = exercises.filter(user=other_user)
+    else:
+        other_user = ''
 
     # Calculate the next month, if applicable.
     if allow_future:
@@ -556,6 +681,7 @@ def calendar_month(request, year, month):
         next_month = last_day
     else:
         next_month = None
+
 
     # Calculate the previous month
     if first_day.month == 1:
@@ -567,7 +693,7 @@ def calendar_month(request, year, month):
 
 
 
-   # FIXME django locale
+    # FIXME django locale
     # stupid calendar needs int
     year, month = int(year), int(month)
     cal = WorkoutCalendar(exercises, locale.getdefaultlocale()).formatmonth(year, month)
@@ -579,18 +705,9 @@ def calendar_month(request, year, month):
     if username: # Only give zone week graph for individuals
         for week, es in e_by_week:
             zones =[0,0,0,0,0,0,0]
-            for e in es:
-                eds = e.get_details().all()
-                if eds:
-                    zonevals = getzones(eds)
-                    i = 0
-                    for zone_legend, zone_value in zonevals.items():
-                        zones[i] += zone_value
-                        i += 1
-                else:
-                    if e.duration:
-                        zones[0] += e.duration.seconds
-            # Convert seconds to hours
+            dbzones = HRZoneSummary.objects.filter(exercise__in=es).values('zone').annotate(duration=Sum('duration'))
+            for dbzone in dbzones:
+                zones[dbzone['zone']] += dbzone['duration']
             z_by_week[week] = zones#[float(zone)/60/60 for zone in zones if zone]
 
     return render_to_response('turan/calendar.html',
@@ -601,8 +718,12 @@ def calendar_month(request, year, month):
              'next_month': next_month,
              'e_by_week': e_by_week,
              'z_by_week': z_by_week,
+             'other_user': other_user,
+             'year': year,
+             'month': month,
              },
             context_instance=RequestContext(request))
+
 
 def powerjson(request, object_id):
 
@@ -612,64 +733,22 @@ def powerjson(request, object_id):
     try:
         start, stop = int(start), int(stop)
     except ValueError:
-        return {}
+        return HttpResponse(simplejson.dumps({}), mimetype='application/json')
     all_details = object.get_details()
 
-    details = list(all_details.all()[start:stop])
-    ascent, descent = calculate_ascent_descent_gaussian(details)
+    details = all_details.all()[start:stop]
+    d = filldistance(details) # FIXME
 
-    #ret = object.get_details().all()[start:stop].aggregate( Avg('speed'), Avg('hr'), Avg('cadence'), Avg('power'), Min('speed'), Min('hr'), Min('cadence'), Min('power'), Max('speed'), Max('hr'), Max('cadence'), Max('power'))
+    ret = detailslice_info(details)
+    # Post proc for nicer numbers
+    if ret['distance'] >= 1000:
+        ret['distance'] = '%s %s' %(round(ret['distance']/1000,2), 'km')
+    else:
+        ret['distance'] = '%s %s' %(round(ret['distance'],2), 'm')
+    if ret['duration']:
+        ret['duration'] = durationformatshort(ret['duration'])
 
-    val_types = ('speed', 'hr', 'cadence', 'power', 'temp')
-    ret = {
-            'speed__min': 9999,
-            'hr__min': 9999,
-            'cadence__min': 9999,
-            'power__min': 9999,
-            'temp__min': 9999,
-            'speed__max': 0,
-            'hr__max': 0,
-            'cadence__max': 0,
-            'temp__max': 0,
-            'power__max': 0,
-            'speed__avg': 0,
-            'hr__avg': 0,
-            'cadence__avg': 0,
-            'power__avg': 0,
-            'temp__avg': 0,
-    }
-    for d in details:
-        for val in val_types:
-            ret[val+'__min'] =  min(ret[val+'__min'], getattr(d, val))
-            ret[val+'__max'] = max(ret[val+'__max'], getattr(d, val))
-            if getattr(d, val):
-                ret[val+'__avg'] += getattr(d, val)
-    for val in val_types:
-        ret[val+'__avg'] = ret[val+'__avg']/len(details)
 
-    ret['ascent'] = ascent
-    ret['descent'] = descent
-
-    details = list(details)
-
-    if filldistance(details):
-        #Shit that only works for distance, like power
-        distance = details[-1].distance - details[0].distance
-        gradient = ascent/distance
-        duration = (details[-1].time - details[0].time).seconds
-        speed = ret['speed__avg']
-        userweight = object.user.get_profile().get_weight(object.date)
-
-        # EQweight hard coded to 10! 
-        ret['power__avg_est'] = calcpower(userweight, 10, gradient*100, speed/3.6)
-        ret['duration'] = duration
-        ret['distance'] = distance
-        ret['gradient'] = gradient*100
-        ret['power__normalized'] = power_30s_average(details)
-    for a, b in ret.items():
-        # Do not return empty values
-        if not b:
-            del ret[a]
     return HttpResponse(simplejson.dumps(ret), mimetype='application/json')
 
 def wikijson(request, slug, rev_id=None):
@@ -716,10 +795,15 @@ def geojson(request, object_id):
     if not start and not stop:
         gjstr = cache.get(cache_key)
         if gjstr:
-            return HttpResponse(gjstr, mimetype='text/javascript')
+            response = HttpResponse(gjstr, mimetype='text/javascript')
+            response['Content-Encoding'] = 'gzip'
+            response['Content-Length'] = len(gjstr)
+            return response
 
 
     max_hr = Exercise.objects.get(pk=object_id).user.get_profile().max_hr
+    if not max_hr: # sigh
+        max_hr = 190
 
     class Feature(object):
 
@@ -780,14 +864,21 @@ def geojson(request, object_id):
     "type": "FeatureCollection",
         "features": ['''
     gjstr = '%s%s]}' % (gjhead, ','.join(filter(lambda x: x, [f.json for f in features])))
+    gjstr = compress_string(gjstr)
 
     # save to cache if no start and stop
     if not start and not stop:
         cache.set(cache_key, gjstr, 86400)
 
-    return HttpResponse(gjstr, mimetype='text/javascript')
+    response = HttpResponse(gjstr, mimetype='text/javascript')
+    response['Content-Encoding'] = 'gzip'
+    response['Content-Length'] = len(gjstr)
+    return response
 
-def tripdetail_js(event_type, object_id, val, start=False, stop=False):
+def json_trip_details(request, object_id, start=False, stop=False):
+    pass
+
+def tripdetail_js(object_id, val, start=False, stop=False):
     if start:
         start = int(start)
     if stop:
@@ -798,7 +889,7 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
     x = 0
     distance = 0
     previous_time = False
-    js = ''
+    js = []
     for i, d in enumerate(qs.all().values('time', 'speed', val)):
         if start and i < start:
             continue
@@ -808,14 +899,18 @@ def tripdetail_js(event_type, object_id, val, start=False, stop=False):
             previous_time = d['time']
         time = d['time'] - previous_time
         previous_time = d['time']
-        distance += ((d['speed']/3.6) * time.seconds)/1000
-        # time_xaxis = x += float(time.seconds)/60
         dval = d[val]
-        if dval > 0: # skip zero values (makes prettier graph)
-            js += '[%.4f,%s],' % (distance, dval)
-    return js
+        if d['speed'] != None:
+            distance += ((d['speed']/3.6) * time.seconds)/1000
+            js.append((distance, dval))
+        else:
+            x += float(time.seconds)/60
+            js.append((x, dval))
+        #time_xaxis = 
+    return simplejson.dumps(js)
 
-def json_trip_series(request, object_id):
+#@profile("json_trip_series")
+def json_trip_series(request, object_id, start=False):
     ''' Generate a json file to be retrieved by web browsers and renderend in flot '''
     exercise = get_object_or_404(Exercise, pk=object_id)
 
@@ -831,28 +926,48 @@ def json_trip_series(request, object_id):
             smooth = int(req_s)
         except:
             smooth = 0
+    start =  request.GET.get('start', '')
+    if start:
+        try:
+            start = int(start)
+        except:
+            start = False
 
     if not exercise.user == request.user:  # Allow self
         is_friend = False
         if request.user.is_authenticated():
             is_friend = Friendship.objects.are_friends(request.user, exercise.user)
         if exercise.exercise_permission == 'N':
-            return redirect_to_login(request.path)
+            raise Http403()
         elif exercise.exercise_permission == 'F':
             if not is_friend:
-                return redirect_to_login(request.path)
+                raise Http403()
     power_show = exercise_permission_checks(request, exercise)
 
     cache_key = 'json_trip_series_%s_%dtime_xaxis_%dpower_%dsmooth' %(object_id, time_xaxis, smooth, power_show)
-    js = cache.get(cache_key)
+    js = None
+    if not start and not exercise.live_state == 'L': # Caching not involved in slices or live exercises
+        js = cache.get(cache_key)
     if not js:
         details = exercise.exercisedetail_set.all()
+        if start:
+            details = details[start:]
         if exercise.avg_power:
             generate_30s_power = power_30s_average(details)
-        d = filldistance(details)
-        js = js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
-        cache.set(cache_key, js, 86400)
-    return HttpResponse(js, mimetype='text/javascript')
+        has_distance = filldistance(details)
+        if not has_distance:
+            time_xaxis = True
+        js = js_trip_series(request, details, start=start, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
+        if not js: # if start and no elements returner, we get None
+            return HttpResponse('{}', mimetype='text/javascript')
+        js = js.encode('UTF-8')
+        js = compress_string(js)
+        if not start and not exercise.live_state == 'L': # Do not cache slices or live exercises
+            cache.set(cache_key, js, 86400)
+    response = HttpResponse(js, mimetype='text/javascript')
+    response['Content-Encoding'] = 'gzip'
+    response['Content-Length'] = len(js)
+    return response
 
 def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, use_constraints=True, smooth=0):
     ''' Generate javascript to be used directly in flot code
@@ -871,10 +986,9 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
             'cadence': [],
             'hr': [],
             'temp': [],
+            'lon': [],
+            'lat': [],
         }
-
-    x = 0
-    previous_time = False
 
     exercise = details[0].exercise
     # User always has permission for their own shit
@@ -906,42 +1020,56 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
             # No permissionojbect found
             pass
 
-# Check if we should export altitude to graph
+    # Check if we should export altitude to graph
     has_altitude = details[0].exercise.exercise_type.altitude
     if not has_altitude:
         del js_strings['altitude']
 
-# Check if we should export temperature to graph
+    # Check if we should export temperature to graph
     has_temperature = False
-    if details[0].exercise.max_temperature:
+    if exercise.max_temperature:
         has_temperature = True
     if not has_temperature:
         del js_strings['temp']
+    if not exercise.avg_power:
+        del js_strings['power']
+        del js_strings['poweravg30s']
+    if not exercise.avg_hr:
+        del js_strings['hr']
+    if not exercise.avg_speed:
+        del js_strings['speed']
+    if not exercise.avg_cadence:
+        del js_strings['cadence']
+
+
+    x = 0
+    previous_time = False
 
     for i, d in enumerate(details):
         if start and start < i:
             continue
         if stop and i > stop:
             break
-        if not previous_time:
+        if not previous_time: # For first value
             previous_time = d.time
         time = d.time - previous_time
         previous_time = d.time
-        if not time_xaxis:
-            #if d.speed != None:
+        if time_xaxis:
+            x += float(time.seconds)/60
+        else:
             if d.distance:
                 x = d.distance/1000
-            #else:
-            #    x = += ((d.speed/3.6) * time.seconds)/1000
-        else:
-            x += float(time.seconds)/60
 
         for val in js_strings.keys():
             try:
                 dval = getattr(d, val)
-                if dval != 0: # skip zero values (makes prettier graph)
-                    if dval != None:
-                        js_strings[val].append((x, dval))
+                ### Export every single item to graph, this because indexes are used in zooming, etc
+                if dval == None:
+                    dval = 0
+                if val in ('lon', 'lat'): # No distance needed for these, uses indexes
+                    js_strings[val].append(dval)
+                else:
+                    js_strings[val].append((x, dval))
             except AttributeError: # not all formats support all values
                 pass
 
@@ -949,14 +1077,16 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
     for val in js_strings.keys():
         thevals = js_strings[val]
         if smooth:
-            vals = js_strings[val]
-            dists = islice([d[0] for d in vals], None,None, smooth)
-            vals = [v[1] for v in vals]
-            thevals = [sum(vals[i*smooth:(i+1)*smooth])/smooth for i in xrange(len(vals)/smooth)]
-            thevals = zip(dists, thevals)
+            if val in ('lon', 'lat'): # No Distance needed for these
+                thevals = [sum(thevals[i*smooth:(i+1)*smooth])/smooth for i in xrange(len(thevals)/smooth)]
+            else:
+                #if not dists: # Only do this once
+                dists = islice([d[0] for d in thevals], None,None, smooth)
+                vals = [v[1] for v in thevals]
+                thevals = [sum(vals[i*smooth:(i+1)*smooth])/smooth for i in xrange(len(vals)/smooth)]
+                thevals = zip(dists, thevals)
         if len(thevals):
             js_strings[val] =  simplejson.dumps(thevals, separators=(',',':'))
-#''.join(js_strings[val]).rstrip(',')
 
     js_strings['use_constraints'] = use_constraints
 
@@ -965,15 +1095,29 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
     js = t.render(c)
     # Remove last comma for nazi json parsing
     js = js.rstrip(', \n') + '}'
-
     return js
 
-#def json_tripdetail(request, event_type, object_id, val, start=False, stop=False):
+def getzones_with_legend(exercise):
 
-    #response = HttpResponse()
-    #serializers.serialize('json', qs, fields=('id', val), indent=4, stream=response)
-#    js = tripdetail_js(event_type, object_id, val, start, stop)
-#    return HttpResponse(js)
+    zones = exercise.hrzonesummary_set.all()
+    zones_with_legend = SortedDict()
+
+    for zone in zones:
+        if zone.zone == 0:
+            zones_with_legend['0 (0% - 60%)'] = zone.duration
+        elif zone.zone == 1:
+            zones_with_legend['1 (60% - 72%)'] = zone.duration
+        elif zone.zone == 2:
+            zones_with_legend['2 (72% - 82%)'] = zone.duration
+        elif zone.zone == 3:
+            zones_with_legend['3 (82% - 87%)'] = zone.duration
+        elif zone.zone == 4:
+            zones_with_legend['4 (87% - 92%)'] = zone.duration
+        elif zone.zone == 5:
+            zones_with_legend['5 (92% - 97%)'] = zone.duration
+        elif zone.zone == 6:
+            zones_with_legend['6 (97% - 100%'] = zone.duration
+    return zones_with_legend
 
 def getinclinesummary(values):
     inclines = SortedDict({
@@ -1005,117 +1149,36 @@ def getinclinesummary(values):
 
     return inclines
 
-def getwzones(values):
+def getwzones_with_legend(exercise):
     ''' Calculate time in different coggans ftp watt zones given trip details '''
 
 
-    # Check if exercise even has watts
-    if not values[0].exercise.avg_power:
-        return []
-    # Check for FTP, can't calculate zones if not
-    userftp = values[0].exercise.user.get_profile().get_ftp(values[0].exercise.date)
-    if not userftp:
-        return []
-
-    zones = SortedDict({
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-        })
-    previous_time = False
-    for i, d in enumerate(values):
-        if not previous_time:
-            previous_time = d.time
-            continue
-        time = d.time - previous_time
-        previous_time = d.time
-        if time.seconds > 60:
-            continue
-        w_percent = 0
-        if d.power:
-            w_percent = float(d.power)*100/userftp
-        zone = watt2zone(w_percent)
-        zones[zone] += time.seconds
-
+    zones = exercise.wzonesummary_set.all()
     zones_with_legend = SortedDict()
 
-    for zone, val in zones.items():
-        if zone == 1:
-            zones_with_legend['1 (0% - 55%)'] = val
-        elif zone == 2:
-            zones_with_legend['2 (55% - 75%)'] = val
-        elif zone == 3:
-            zones_with_legend['3 (75% - 90%)'] = val
-        elif zone == 4:
-            zones_with_legend['4 (90% - 105%)'] = val
-        elif zone == 5:
-            zones_with_legend['5 (105% - 121%)'] = val
-        elif zone == 6:
-            zones_with_legend['6 (121% - 150%)'] = val
-        elif zone == 7:
-            zones_with_legend['7 (150% - '] = val
+    for zone in zones:
+        if zone.zone == 1:
+            zones_with_legend['1 (0% - 55%)'] = zone.duration
+        elif zone.zone == 2:
+            zones_with_legend['2 (55% - 75%)'] = zone.duration
+        elif zone.zone == 3:
+            zones_with_legend['3 (75% - 90%)'] = zone.duration
+        elif zone.zone == 4:
+            zones_with_legend['4 (90% - 105%)'] = zone.duration
+        elif zone.zone == 5:
+            zones_with_legend['5 (105% - 121%)'] = zone.duration
+        elif zone.zone == 6:
+            zones_with_legend['6 (121% - 150%)'] = zone.duration
+        elif zone.zone == 7:
+            zones_with_legend['7 (150% - '] = zone.duration
 
     return zones_with_legend
 
-def getzones(values):
+
+def gethrhzones(exercise, values, max_hr):
     ''' Calculate time in different sport zones given trip details '''
 
-    max_hr = values[0].exercise.user.get_profile().max_hr
-    if not max_hr:
-        return []
-
-    zones = SortedDict({
-            0: 0,
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-        })
-    previous_time = False
-    for i, d in enumerate(values):
-        if not previous_time:
-            previous_time = d.time
-            continue
-        time = d.time - previous_time
-        previous_time = d.time
-        if time.seconds > 60:
-            continue
-        hr_percent = 0
-        if d.hr:
-            hr_percent = float(d.hr)*100/max_hr
-        zone = hr2zone(hr_percent)
-        zones[zone] += time.seconds
-
-    zones_with_legend = SortedDict()
-
-    for zone, val in zones.items():
-        if zone == 0:
-            zones_with_legend['0 (0% - 60%)'] = val
-        elif zone == 1:
-            zones_with_legend['1 (60% - 72%)'] = val
-        elif zone == 2:
-            zones_with_legend['2 (72% - 82%)'] = val
-        elif zone == 3:
-            zones_with_legend['3 (82% - 87%)'] = val
-        elif zone == 4:
-            zones_with_legend['4 (87% - 92%)'] = val
-        elif zone == 5:
-            zones_with_legend['5 (92% - 97%)'] = val
-        elif zone == 6:
-            zones_with_legend['6 (97% - 100%'] = val
-
-    return zones_with_legend
-
-def gethrhzones(values):
-    ''' Calculate time in different sport zones given trip details '''
-
-    max_hr = values[0].exercise.user.get_profile().max_hr
+    #max_hr = values[0].exercise.user.get_profile().max_hr
     #resting_hr = values[0].exercise.user.get_profile().resting_hr
     if not max_hr: #or not resting_hr:
         return []
@@ -1142,8 +1205,8 @@ def gethrhzones(values):
     #for i in range(40,100):
     #    filtered_zones[i] = 0
 
-    if d.exercise.duration:
-        total_seconds = d.exercise.duration.seconds
+    if exercise.duration:
+        total_seconds = exercise.duration.total_seconds()
         for hr in sorted(zones):
             #if 100*float(zones[hr])/total_seconds > 0:
             if hr > 40 and hr < 101:
@@ -1186,20 +1249,22 @@ def getfreqs(values, val_type, min=0, max=0, val_cutoff=0):
 
     return freqs
 
-def getgradients(values):
+def getgradients(values, d_offset=0):
     ''' Iterate over details, return list with tuples with distances and gradients '''
 
     altitudes = []
     distances = []
     inclinesums = {}
 
-
     for d in values:
         altitudes.append(d.altitude)
         # Distances is used in the graph, so divide by 1000 to get graph xasis in km
-        distances.append(d.distance/1000)
+        if d.distance:
+            distances.append((d.distance-d_offset)/1000)
+        else:
+            distances.append(0)
 
-    # Smooth 10 Wide!
+    # Smooth 3 Wide!
     altitudes = smoothListGaussian(altitudes, 10)
 
     gradients = []
@@ -1235,35 +1300,16 @@ def getgradients(values):
 
     return zip(distances, gradients), inclinesums
 
-
-#def getdistance(values, start, end):
-#    d = 0
-#    for i in xrange(start+1, end+1):
-#        delta_t = (values[i].time - values[i-1].time).seconds
-#        d += values[i].speed/3.6 * delta_t
-#    return d
-
-def filldistance(values):
-    d = 0
-    if values:
-        d_check = values[len(values)-1].distance
-        if d_check > 0:
-            return d_check
-        values[0].distance = 0
-        for i in xrange(1,len(values)):
-            delta_t = (values[i].time - values[i-1].time).seconds
-            if values[i].speed:
-                d += values[i].speed/3.6 * delta_t
-            values[i].distance = d
-    return d
-
-
 def exercise_permission_checks(request, exercise):
     '''Given a request object and a exercise object, return a tuple with
     boolean for permissions or not '''
     # Permission checks
     power_show = True
     poweravg30_show = True
+
+    is_friend = False
+    if request.user.is_authenticated():
+        is_friend = Friendship.objects.are_friends(request.user, exercise.user)
 
     # Check for permission to display attributes
     try:
@@ -1297,32 +1343,43 @@ def exercise_permission_checks(request, exercise):
 def exercise(request, object_id):
     ''' View for exercise detail '''
 
-    object = get_object_or_404(Exercise, pk=object_id)
+    # Can't be used with select_related so do this manually object = get_object_or_404(Exercise, pk=object_id)
+    try:
+        object = Exercise.objects.select_related('route', 'user', \
+                'exercisepermission', 'hrzonesummary', 'wzonesummary'\
+                'exercise_type', 'slope', 'segmentdetail'
+                )\
+                .get(pk=object_id)
+    except Exercise.DoesNotExist:
+        raise Http404
 
     if not object.user == request.user:  # Allow self
         is_friend = False
         if request.user.is_authenticated():
             is_friend = Friendship.objects.are_friends(request.user, object.user)
         if object.exercise_permission == 'N':
+            raise Http403()
             return redirect_to_login(request.path)
         elif object.exercise_permission == 'F':
             if not is_friend:
+                raise Http403()
                 return redirect_to_login(request.path)
     power_show = exercise_permission_checks(request, object)
 
     # Provide template string for maximum yaxis value for HR, for easier comparison
     maxhr_js = ''
-    if object.user.get_profile().max_hr:
-        max_hr = int(object.user.get_profile().max_hr)
+    profile = object.user.get_profile()
+    if profile.max_hr:
+        max_hr = int(profile.max_hr)
         maxhr_js = ', max: %s' %max_hr
     else:
-        max_hr = 200 # FIXME, maybe demand from user ?
+        max_hr = 190 # FIXME, maybe demand from user ?
 
     details = object.exercisedetail_set.all()
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
     smooth = 0
-    if details:
+    if details.exists():
         if filldistance(details): # Only do this if we actually have distance
             # xaxis by distance if we have distance in details unless user requested time !
             req_t = request.GET.get('xaxis', '')
@@ -1334,17 +1391,40 @@ def exercise(request, object_id):
                     smooth = int(req_s)
                 except:
                     smooth = 0
-            userweight = object.user.get_profile().get_weight(object.date)
-            slopes = object.slope_set.all().order_by('start')
+            userweight = profile.get_weight(object.date)
+            userftp = profile.get_ftp(object.date)
+            slopes = []
+            # add both segment details and slopes
+            slopes += object.slope_set.all().order_by('start')
+            slopes += object.segmentdetail_set.all()
+            slopes = sorted(slopes, key=lambda x: x.start)
+
             # TODO: maybe put this in json details for cache etc
-            lonlats = simplejson.dumps([(d.lon, d.lat) for d in details if d.lon and d.lat])
+            #lonlats = []
+            #for d in details:
+            #    if d.lon == None:
+            #        d.lon = 0.0
+            #    if d.lat == None:
+            #        d.lat = 0.0
+            #    lonlats.append((d.lon, d.lat))
+            #    [(d.lon, d.lat) for d in details if d.lon and d.lat])
             # Todo, maybe calculate and save in db or cache ?
             gradients, inclinesums = getgradients(details)
         intervals = object.interval_set.select_related().all()
-        zones = getzones(details)
-        wzones = getwzones(details)
-        hrhzones = gethrhzones(details)
+        zones = getzones_with_legend(object)
+        wzones = getwzones_with_legend(object)
+        hrhzones = gethrhzones(object, details, max_hr)
         cadfreqs = []
+        bestpowerefforts = object.bestpowereffort_set.all()
+        userbestbestpowerefforts = []
+        # fetch the all time best for comparison
+        #bestbestpowerefforts = []
+        #for bpe in bestpowerefforts:
+        #    bbpes = BestPowerEffort.objects.filter(exercise__user=object.user,duration=bpe.duration).order_by('-power')[0]
+        #    bestbestpowerefforts.append(bbpes)
+        bestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user=object.user).values('duration').annotate(power=Max('power'))
+        if request.user.is_authenticated() and request.user != object.user:
+            userbestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user=request.user).values('duration').annotate(power=Max('power'))
         speedfreqs = []
         if object.avg_cadence:
             cadfreqs = getfreqs(details, 'cadence', min=1)
@@ -1434,17 +1514,71 @@ def create_object(request, model=None, template_name=None,
 
                 task = new_object.parse()
                 if task:
+                    #if request.user.is_authenticated():
+                    #    request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": model._meta.verbose_name})
                     return HttpResponseRedirect(\
                             reverse('exercise_parse_progress', kwargs = {
                                 'object_id': new_object.id,
                                 'task_id': task.task_id}))
 
 
-            if request.user.is_authenticated():
-                request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": model._meta.verbose_name})
             return redirect(post_save_redirect, new_object)
     else:
-        form = form_class()
+        if model == SegmentDetail: # prefill variables
+            exercise = request.GET.get('exercise', '')
+            start = request.GET.get('start', '')
+            stop = request.GET.get('stop', '')
+            segment = request.GET.get('segment', '')
+            try:
+                exercise = int(exercise)
+                start = int(start)
+                stop = int(stop)
+                if segment:
+                    segment = int(segment)
+            except ValueError:
+                return HttpResponseForbidden('Invalid request')
+            exercise = Exercise.objects.get(pk=exercise)
+            details = exercise.get_details().all()
+            # Run filldistance on all dtails because filldistance doesn't support detail slices yet
+            # this is a TODO
+            details = details[0:stop+1]
+            d = filldistance(details)
+            ret = detailslice_info(details[start:stop])
+            data = {}
+            data['exercise'] = exercise
+            data['start'] = ret['start']
+            data['length'] = ret['distance']
+            data['ascent'] = int(ret['ascent'])
+            data['grade'] = ret['gradient']
+            data['duration'] = ret['duration']
+            data['speed'] = ret['speed__avg']
+            data['est_power'] = ret['power__avg_est']
+            data['act_power'] = ret['power__avg']
+            data['vam'] = ret['vam']
+            data['avg_hr'] = ret['hr__avg']
+            data['start_lon'] = ret['start_lon']
+            data['start_lat'] = ret['start_lat']
+            data['end_lon'] = ret['end_lon']
+            data['end_lat'] = ret['end_lat']
+            data['power_per_kg'] = ret['power_per_kg']
+            if segment:
+                data['segment'] = Segment.objects.get(pk=segment)
+                new_object = SegmentDetail(**data)
+                new_object.save()
+                request.user.message_set.create(message=ugettext("The %(verbose_name)s was added successfully.") % {"verbose_name": _('Segment')})
+                return HttpResponseRedirect(new_object.get_absolute_url())
+            form = form_class(initial=data)
+        elif model == Exercise:
+            data = {}
+            #data['equipment']= Equipment.objects.filter(user=request.user)
+            form = form_class(initial=data)
+            qs = Equipment.objects.filter(user=request.user)
+            form.fields['equipment'].queryset = qs
+            if qs.count():
+                form.fields['equipment'].initial = qs[0].id
+
+        else:
+            form = form_class()
 
     # Create the template, context, response
     if not template_name:
@@ -1511,23 +1645,23 @@ def autocomplete_route(request, app_label, model):
     #except:
     #    raise Http404
 
-    if not request.GET.has_key('q'):
+    if not request.GET.has_key('term'):
         raise Http404
 
-    query = request.GET.get('q', '')
+    query = request.GET.get('term', '')
     qset = (
             Q(name__icontains=query) |
             Q(description__icontains=query) |
             Q(tags__contains=query)
         )
 
-    limit = request.GET.get('limit', None)
+    #limit = request.GET.get('limit', None)
+    limit = 20
 
-    routes = Route.objects.filter(qset).order_by('name').distinct()[:limit]
-    route_list = '\n'.join([u'%s|%s' % (f.__unicode__(), f.pk) for f in routes])
+    routes = Route.objects.filter(qset).exclude(single_serving=1).extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',]).distinct()[:limit]
+    route_list = [{'id': f.pk, 'name': f.__unicode__(), 'description': f.description, 'tcount': f.tcount, 'icon': f.get_png_url()} for f in routes]
 
-    return HttpResponse(route_list)
-
+    return HttpResponse(simplejson.dumps(route_list), mimetype='text/javascript')
 
 def ical(request, username):
 
@@ -1543,8 +1677,12 @@ def turan_delete_object(request, model=None, post_delete_redirect='/turan/', obj
 
 
     obj = lookup_object(model, object_id, slug, slug_field)
-    if not obj.user == request.user:
-        return HttpResponseForbidden('Wat?')
+    if model == SegmentDetail:
+        if not obj.exercise.user == request.user:
+            return HttpResponseForbidden('Wat?')
+    else:
+        if not obj.user == request.user:
+            return HttpResponseForbidden('Wat?')
 
     # Check if exercise has singelserving route, if so, delete it
     #if model == Exercise:
@@ -1569,8 +1707,39 @@ def turan_delete_detailset_value(request, model, object_id, value=False):
 
     return HttpResponseRedirect(obj.get_absolute_url())
 
-class ImportForm(forms.Form):
-    import_url = forms.CharField(label='Url to external exercise', required=True)
+@login_required
+def import_bulk(request):
+    if request.method == 'POST':
+        form = BulkImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            exercises = []
+            zfile = zipfile.ZipFile( request.FILES['zip_file'])
+            for info in zfile.infolist():
+                fname = info.filename
+                content = zfile.read(fname)
+                content = ContentFile(content)
+                fname = fname.lower()
+                exercise_filename = os.path.join('sensor', fname)
+
+                exercise = Exercise()
+                exercise.user = request.user
+                exercise.sensor_file.save(exercise_filename, content)
+                exercise.save()
+                exercises.append(exercise)
+            # Done saving, now parse them all
+            for e in exercises:
+                task = e.parse()
+            if task: # Display progress for last task
+                return HttpResponseRedirect(\
+                reverse('exercise_parse_progress', kwargs = {
+                    'object_id': e.id,
+                    'task_id': task.task_id}))
+
+    form = ImportForm()
+    bulkform = BulkImportForm()
+
+    return render_to_response("turan/import.html", {'form': form, 'bulkform': bulkform}, context_instance=RequestContext(request))
+
 
 @login_required
 def import_data(request):
@@ -1587,10 +1756,9 @@ def import_data(request):
 
                 if id > 0:
                     route = Route()
-                    content = ContentFile(urlopen(url).read())
+                    content = ContentFile(urllib2.urlopen(url).read())
 
                     route.gpx_file.save("gpx/sporty_" + id + ".gpx", content)
-                    form.save()
 
                     return HttpResponseRedirect(route.get_absolute_url())
                 else:
@@ -1598,23 +1766,52 @@ def import_data(request):
 
             # Supports both route and exercise import
             elif url.find("http://connect.garmin.com/activity/") == 0:
+                cj = cookielib.LWPCookieJar()
+                opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+                urllib2.install_opener(opener)
+
+                headers = {
+                        'User-agent' : 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1'
+                }
+                post = {
+                    'login': 'login',
+                    'login:loginUsernameField': 'turan.no',
+                    'login:password': 'turan.no',
+                    'login:signInButton': 'a',
+                    'javax.faces.ViewState': 'j_id1'
+                }
+
+                # Login needs to get some cookies or something so we try twice
+                u1 = "https://connect.garmin.com/signin"
+                req = urllib2.Request(u1, urllib.urlencode(post), headers)
+                f = urllib2.urlopen(req)
+                req = urllib2.Request(u1, urllib.urlencode(post), headers)
+                f = urllib2.urlopen(req)
+
                 base_url = "http://connect.garmin.com"
                 id = url.split("/")[-1].rstrip("/")
 
-                tripdata = urlopen(url).read()
-                tripsoup = BeautifulSoup(tripdata, convertEntities=BeautifulSoup.HTML_ENTITIES)
+                try:
+                    tripdata = urllib2.urlopen(url).read()
+                except urllib2.HTTPError, e:
 
-                gpx_url = tripsoup.find(id="actionGpx")['href']
-                tcx_url = tripsoup.find(id="actionTcx")['href']
+                    return render_to_response("turan/import.html", {'form': form, 'error': e}, context_instance=RequestContext(request))
+
+                tripsoup = BeautifulSoup(tripdata, convertEntities=BeautifulSoup.HTML_ENTITIES)
+                # Lets hope these ones work for a while
+                gpx_url = base_url + "/proxy/activity-service-1.1/gpx/activity/%s?full=true" % ( id )
+                # Website used 1.0 for tcx and 1.1 for gpx when this was written
+                # although 1.1 also seems to work for tcx
+                tcx_url = base_url + "/proxy/activity-service-1.0/tcx/activity/%s?full=true" % ( id )
 
                 route_name = tripsoup.find(id="activityName")
-                if route_name.string:
+                if route_name and route_name.string:
                     route_name = route_name.string.strip()
                 else:
                     route_name = "Unnamed"
 
                 exercise_description = tripsoup.find(id="discriptionValue")
-                if exercise_description.string:
+                if exercise_description and exercise_description.string:
                     exercise_description = exercise_description.string.strip()
                 else:
                     exercise_description = None
@@ -1623,13 +1820,25 @@ def import_data(request):
 
                 if gpx_url:
                     route = Route()
-                    content = ContentFile(urlopen(base_url + gpx_url).read())
+                    req = urllib2.Request(gpx_url, None, headers)
+                    try:
+                        content = ContentFile(urllib2.urlopen(req).read())
+                    except urllib2.HTTPError, e:
+
+                        return render_to_response("turan/import.html", {'form': form, 'error': e}, context_instance=RequestContext(request))
                     route.gpx_file.save("gpx/garmin_connect_" + id + ".gpx", content)
                     route.name = route_name
+                    # Until we have option to match existing route set it to single serving
+                    route.single_serving = True
                     route.save()
 
                 if tcx_url:
-                    content = ContentFile(urlopen(base_url + tcx_url).read())
+                    req = urllib2.Request(tcx_url, None, headers)
+                    try:
+                        content = ContentFile(urllib2.urlopen(req).read())
+                    except urllib2.HTTPError, e:
+
+                        return render_to_response("turan/import.html", {'form': form, 'error': e}, context_instance=RequestContext(request))
                     exercise_filename = 'sensor/garmin_connect_' + id + '.tcx'
 
                     exercise = Exercise()
@@ -1645,8 +1854,9 @@ def import_data(request):
                 return render_to_response("turan/import_stage2.html", {'route': route, 'exercise': exercise}, context_instance=RequestContext(request))
     else:
         form = ImportForm()
+        bulkform = BulkImportForm()
 
-    return render_to_response("turan/import.html", {'form': form}, context_instance=RequestContext(request))
+    return render_to_response("turan/import.html", {'form': form, 'bulkform': bulkform}, context_instance=RequestContext(request))
 
 
 def slopes(request, queryset):
@@ -1662,6 +1872,7 @@ def slopes(request, queryset):
         )
         queryset = queryset.filter(qset).distinct()
 
+
     latitude = request.GET.get('lat', '')
     longitude = request.GET.get('lon', '')
 
@@ -1671,6 +1882,41 @@ def slopes(request, queryset):
         queryset = queryset.filter(start_lat__lt=float(latitude) + 0.5)
         queryset = queryset.filter(start_lon__gt=float(longitude) - 1.0)
         queryset = queryset.filter(start_lon__lt=float(longitude) + 1.0)
+
+    queryset = queryset.filter(vam__lt=1800) # humans.
+
+    username = request.GET.get('username', '')
+    if username:
+        user = get_object_or_404(User, username=username)
+        queryset = queryset.filter(exercise__user=user)
+
+    return object_list(request, queryset=queryset, extra_context=locals())
+
+def segmentdetails(request, queryset):
+    ''' Segment detail list view, based on turan_object_list. Changed a bit for search
+    and filter purposes '''
+
+    search_query = request.GET.get('q', '')
+    if search_query:
+        qset = (
+            Q(exercise__route__name__icontains=search_query) |
+            Q(exercise__route__description__icontains=search_query) |
+            Q(exercise__tags__icontains=search_query)
+        )
+        queryset = queryset.filter(qset).distinct()
+
+
+    latitude = request.GET.get('lat', '')
+    longitude = request.GET.get('lon', '')
+
+    if latitude and longitude:
+        # A litle aprox box around your area
+        queryset = queryset.filter(start_lat__gt=float(latitude) - 0.5)
+        queryset = queryset.filter(start_lat__lt=float(latitude) + 0.5)
+        queryset = queryset.filter(start_lon__gt=float(longitude) - 1.0)
+        queryset = queryset.filter(start_lon__lt=float(longitude) + 1.0)
+
+    queryset = queryset.filter(vam__lt=1800) # humans.
 
     username = request.GET.get('username', '')
     if username:
@@ -1692,6 +1938,9 @@ def segments(request, queryset):
         )
         queryset = queryset.filter(qset).distinct()
 
+    # Order by last ridden
+    queryset = queryset.annotate(last_ride=Max('segmentdetail__exercise__date')).order_by('-last_ride')
+
     latitude = request.GET.get('lat', '')
     longitude = request.GET.get('lon', '')
 
@@ -1704,8 +1953,12 @@ def segments(request, queryset):
 
     username = request.GET.get('username', '')
     if username:
-        user = get_object_or_404(User, username=username)
-        queryset = queryset.filter(exercise__user=user)
+        other_user = get_object_or_404(User, username=username)
+        #queryset = queryset.filter(exercise__user=user)
+        # Two step attack on this, do not know how to do it it one fell swoop
+        s_list_ids = set(SegmentDetail.objects.filter(exercise__user=other_user).values_list('segment__id',flat=1))
+        queryset = queryset.filter(id__in=s_list_ids)
+
 
     return object_list(request, queryset=queryset, extra_context=locals())
 
@@ -1715,6 +1968,7 @@ def internal_server_error(request, template_name='500.html'):
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request, {})))
 
+@login_required
 def exercise_parse(request, object_id):
     ''' View to trigger reparse of a single exercise given exercise id '''
 
@@ -1726,6 +1980,37 @@ def exercise_parse(request, object_id):
                     'object_id': object_id,
                     'task_id': task.task_id}))
 
+@login_required
+def exercise_segment_search(request, object_id):
+    ''' View to display segments found in an exercise and make user able to
+    add to shared segments '''
+
+    exercise = get_object_or_404(Exercise, id=object_id)
+    segments = search_trip_for_possible_segments_matches(exercise)
+
+    return render_to_response('turan/exercise_segments.html', locals(), context_instance=RequestContext(request))
+
+@login_required
+def segment_exercise_search(request, object_id):
+    ''' View to display exercises found for a segment and make user able to
+    add '''
+
+    if request.user.is_superuser:
+
+        segment = get_object_or_404(Segment, id=object_id)
+        segments = {}
+        for e in Exercise.objects.all():
+            if len(segments) > 19:
+                break
+            if e.route and e.route.gpx_file:
+                found_segments = search_trip_for_possible_segments_matches(e, search_in_segments=[segment])
+                if found_segments:
+                    segments[e] = found_segments
+
+        return render_to_response('turan/segment_exercise_finder.html', locals(), context_instance=RequestContext(request))
+    return HttpResponseForbidden()
+
+@login_required
 def exercise_parse_progress(request, object_id, task_id):
     ''' View to display progress on parsing and redirect user
     to fully parsed exercised when done '''
@@ -1734,3 +2019,284 @@ def exercise_parse_progress(request, object_id, task_id):
     result = AsyncResult(task_id).status
 
     return render_to_response('turan/exercise_parse.html', locals(), context_instance=RequestContext(request))
+
+@login_required
+def exercise_create_live(request):
+    ''' View to handle creation of new live exercise '''
+    if not request.user.is_authenticated():
+        return redirect_to_login(request.path)
+    ExerciseFormSet = inlineformset_factory(Exercise, ExercisePermission, form=ExerciseForm)
+
+    if request.method == 'POST':
+        form = ExerciseFormSet(request.POST, request.FILES)
+        if form.is_valid():
+            new_object = form.save(commit=False)
+            new_object.user = request.user
+            new_object.save()
+
+            # notify friends of new object
+            if notification and user_required: # only notify for user owned objects
+                notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
+
+            if request.user.is_authenticated():
+                request.user.message_set.create(message=ugettext("The %(verbose_name)s was created successfully.") % {"verbose_name": Exercise._meta.verbose_name})
+            return redirect(post_save_redirect, new_object)
+    else:
+        form = ExerciseFormSet()
+
+    return render_to_response('turan/exercise_form.html', locals(), context_instance=RequestContext(request))
+
+#@login_required TODO enable auth
+def exercise_update_live(request, object_id):
+    ''' View to handle submitted values from client, make them into exercise details
+
+    They should arrive posted as a json object that looks like this
+
+     should arrive posted as a json object that looks like this
+     [
+        {"power": 400, "hr": 62, "lon": 5.3, "time": 12312323, "lat": 60, "speed": 34.3},
+        {"power": 410, "hr": 64, "lon": 5.4, "time": 12312324, "lat": 61, "speed": 35.3}
+     ]
+
+     Fields can vary from entry to entry.
+     Supported fieldlist:
+        time
+        distance
+        speed
+        hr
+        altitude
+        lat
+        lon
+        cadence
+        power
+        temp
+
+    '''
+
+    exercise = get_object_or_404(Exercise, id=object_id)
+    if not exercise.route.gpx_file:
+        create_gpx_from_details(exercise)
+    route = exercise.route
+
+    if request.method == 'POST' or request.method == 'GET':
+        data = request.raw_post_data
+        data = simplejson.loads(data)
+        #print 'JSON: %s' %data
+        try:
+            for item in data:
+                new_object = ExerciseDetail(**item)
+                new_object.time = datetime.fromtimestamp(float(new_object.time))
+                new_object.exercise = exercise
+                new_object.save()
+                new_time = datetimetime(new_object.time.hour, \
+                        new_object.time.minute, new_object.time.second)
+                if not exercise.time:
+                    exercise.time = new_time
+                if not exercise.date:
+                    exercise.date = datetimedate(new_object.time.year, \
+                            new_object.time.month, new_object.time.day)
+                if new_object.lon and not exercise.start_lon:
+                    route.start_lon = float(new_object.lon)
+                if new_object.lat and not exercise.start_lat:
+                    route.start_lat = float(new_object.lat)
+                if new_object.lon:
+                    route.end_lon = float(new_object.lon)
+                if new_object.lat:
+                    route.end_lat = float(new_object.lat)
+
+                old_duration = 0
+                try:
+                    old_duration = exercise.duration.total_seconds()
+                except:
+                    pass # Object is Decimal first time around, stupid durationfield
+
+                # Use exercise start time as previous if no previous samples found (e.g. first sample)
+                previous_time = exercise.time
+                previous_sample = ExerciseDetail.objects.filter(exercise__id=exercise.pk).order_by('-time')[0]
+                if previous_sample:
+                    previous_time = previous_sample.time
+                # Find time delta, to be used in updating distance, ascent, etc
+                time_d = (new_object.time - previous_time).seconds
+
+                # Calculate duration, to be used in calculating new averages
+                new_duration = new_object.time - datetime.combine(exercise.date, exercise.time)
+                exercise.duration = new_duration
+                new_duration = new_duration.seconds
+
+                if new_object.hr:
+                    hr = int(new_object.hr)
+                    exercise.max_hr = max(hr, exercise.max_hr)
+                    if exercise.avg_hr and exercise.duration:
+                        exercise.avg_hr = (exercise.avg_hr*old_duration+ hr) / new_duration
+                    else:
+                        exercise.avg_hr = hr
+                if new_object.power:
+                    power = int(new_object.power)
+                    exercise.max_power = max(power, exercise.max_power)
+                    if exercise.avg_power and exercise.duration:
+                        exercise.avg_power = (exercise.avg_power*old_duration+ power) / new_duration
+                    else:
+                        exercise.avg_power = power
+                if new_object.cadence:
+                    cadence = int(new_object.cadence)
+                    exercise.max_cadence = max(cadence, exercise.max_cadence)
+                    if exercise.avg_cadence and exercise.duration:
+                        exercise.avg_cadence = (exercise.avg_cadence*old_duration+ cadence) / new_duration
+                    else:
+                        exercise.avg_cadence = cadence
+                if new_object.speed:
+                    speed = float(new_object.speed)
+                    # Update new distance
+                    route.distance += speed * time_d
+
+                    exercise.max_speed = max(speed, exercise.max_speed)
+                    if exercise.avg_speed and exercise.duration:
+                        exercise.avg_speed = (exercise.avg_speed*old_duration+ speed) / new_duration
+                    else:
+                        exercise.avg_speed = speed
+                if new_object.temp:
+                    temp = float(new_object.temp)
+                    exercise.max_temperature = max(temp, exercise.max_temperature)
+                    if exercise.temperature and exercise.duration:
+                        exercise.temperature = (exercise.temperature*old_duration+ temp) / new_duration
+                    else:
+                        exercise.temperature = temp
+                    exercise.min_temperature = min(temp, exercise.min_temperature)
+                if new_object.altitude and previous_sample:
+                    altitude = int(float(new_object.altitude)) # float maybe TODO ?
+                    # We have a previous sample and an altitude reading, this 
+                    # means we can calculate new ascent or descent
+                    if previous_sample.altitude:
+                        if altitude > previous_sample.altitude:
+                            route.ascent += altitude - previous_sample.altitude
+                        else:
+                            route.descent += previous_sample.altitude - altitude
+                    # Update max and min altitude
+                    route.max_altitude = max(altitude, route.max_altitude)
+                    route.min_altitude = min(altitude, route.min_altitude)
+
+                route.save() # Save the route - save the world
+                exercise.save() # Finally save the new values
+                return HttpResponse('Saved OK')
+        except Exception, e:
+            raise
+            return HttpResponse(str(e))
+
+    return HttpResponse('Nothing saved')
+
+def exercise_player(request):
+
+    exercises = []
+    ids = request.GET.getlist('id')
+    for id in ids:
+        try:
+            object_id = int(id)
+        except ValueError:
+            return Http404()
+        exercise = get_object_or_404(Exercise, pk=object_id)
+        if exercise.exercise_permission == 'N':
+            return redirect_to_login(request.path)
+            # TODO Friend check
+        exercises.append(exercise)
+
+    alt = tripdetail_js(exercise.id, 'altitude')
+
+
+    datasets = []
+    alt_max = 0
+    for exercise in exercises:
+        details = exercise.get_details().all()
+        distance = filldistance(details)
+        if not alt_max:
+            alt_max, alt_min = details.aggregate(max=Max('altitude'),min=Min('altitude')).values()
+        datasets.append(mark_safe(js_trip_series(request, details, time_xaxis=False, use_constraints=False)))
+
+    return render_to_response('turan/exercise_player.html', locals(), context_instance=RequestContext(request))
+
+def exercise_live(request):
+
+    exercise = Exercise.objects.get(pk=4570)
+
+    return render_to_response('turan/exercise_live.html', locals(), context_instance=RequestContext(request))
+
+
+def fetchRAAM(request):
+    #callback = request.GET.get('callback', '')
+    req = {}
+    url = "http://live.raam.no/LastPing.aspx"
+    req ['data'] = urllib2.urlopen(url).read().strip()
+    response = simplejson.dumps(req)
+    return HttpResponse(response, mimetype="application/json")
+
+def search(request):
+    ''' Global site Search view '''
+    search_query = request.GET.get('q', '')
+    if not search_query:
+        raise Http404
+    start = request.GET.get('start', 0)
+    try:
+        start = int(start)
+    except:
+        start = 0
+    SLICE_SIZE = 20
+
+    exercise_list = Exercise.objects.select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')
+    comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')
+    route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])
+    segment_list = Segment.objects.all()
+
+    tag_list = Tag.objects.all()
+    user_list = User.objects.all()
+    qset = (
+        Q(route__name__icontains=search_query) |
+        Q(comment__icontains=search_query) |
+        Q(tags__contains=search_query)
+    )
+    exercise_list = exercise_list.filter(qset).distinct().order_by('-date')[start:start+SLICE_SIZE]
+    uqset = (
+        Q(username__icontains=search_query)
+    )
+    user_list = user_list.filter(uqset).distinct()[start:start+SLICE_SIZE]
+    tag_list = tag_list.filter(name__icontains=search_query)[start:start+SLICE_SIZE]
+    rqset = (
+        Q(name__icontains=search_query) |
+        Q(description__icontains=search_query)
+    )
+    route_list = route_list.filter(rqset).distinct()[start:start+SLICE_SIZE]
+    sset = (
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query)
+    )
+    segment_list = segment_list.filter(sset).distinct()[start:start+SLICE_SIZE]
+
+
+
+    if request.is_ajax() or start:
+        return HttpResponse(serializers.serialize('json', exercise_list, indent=4), mimetype='text/javascript')
+
+    return render_to_response('turan/search.html', locals(), context_instance=RequestContext(request))
+
+
+@login_required
+def photo_add(request, content_type, object_id):
+    content_type = get_model('turan', content_type)
+    object = get_object_or_404(content_type, pk=object_id)
+    photo_form = form_class()
+
+    if request.method == "POST":
+        if request.POST.get("action") == "upload":
+            photo_form = form_class(request.user, request.POST, request.FILES)
+            if photo_form.is_valid():
+                photo = photo_form.save(commit=False)
+                photo.member = request.user
+                photo.save()
+                pool = Pool(content_object=content_object, image=photo)
+                pool.photo = photo
+                pool.save()
+                #messages.add_message(request, messages.SUCCESS,
+                #    ugettext(_"Successfully uploaded photo '%s'") % photo.title
+                #)
+    return redirect(object.get_absolute_url())
+
+
+

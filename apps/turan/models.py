@@ -1,34 +1,40 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8
 from django.db import models
+from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
+from django.db.models.signals import pre_save, post_save
+from django.contrib.contenttypes.models import ContentType
 
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday
 from django.core.urlresolvers import reverse
-from django.template.defaultfilters import slugify
+#from django.template.defaultfilters import slugify
+from turan.templatetags.turan_extras import u_slugify as slugify
 from django.core.files.storage import FileSystemStorage
-from django.db.models.signals import pre_save, post_save
 from django.conf import settings
 from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
 from tagging.fields import TagField
 import types
 from os.path import join
+import re
 
 from photos.models import Pool, Image
 
 from celery.task.sets import subtask
 from datetime import datetime
+import datetime
 
 from durationfield import DurationField
 
 from gpxparser import GPXParser, proj_distance
 from gpxwriter import GPXWriter
 
-from tasks import create_simplified_gpx, create_svg_from_gpx, create_gpx_from_details, \
+from tasks import create_simplified_gpx, create_png_from_gpx, create_gpx_from_details, \
         merge_sensordata, calculate_ascent_descent_gaussian, calculate_best_efforts, \
-        parse_sensordata, filldistance
+        parse_sensordata, filldistance, hr2zone, watt2zone
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -37,6 +43,117 @@ else:
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 AUTOROUTE_DESCRIPTION = "Autoroute"
+
+class ExerciseType(models.Model):
+
+    name = models.CharField(max_length=40)
+    logo = models.ImageField(upload_to='exerciselogos', blank=True, storage=gpxstore)
+    altitude = models.BooleanField(blank=True, default=0)
+    slopes = models.BooleanField(blank=True, default=0)
+
+    def __unicode__(self):
+        return ugettext(self.name)
+
+    def __repr__(self):
+        return unicode(self.name)
+
+    def icon(self):
+        # FIXME use media url
+        if self.logo:
+            return settings.MEDIA_URL + 'turan/%s' %(self.logo)
+        return ''
+
+    class Meta:
+        verbose_name = _("Exercise Type")
+        verbose_name_plural = _("Exercise Types")
+        ordering = ('name',)
+
+class EquipmentType(models.Model):
+    name = models.CharField(max_length=140)
+    description = models.TextField(_('Description'), help_text=_('Equipment description'), blank=True, null=True)
+    icon = models.ImageField(upload_to='equipment', null=True, blank=True, storage=gpxstore)
+
+    def __unicode__(self):
+        return unicode(self.name)
+
+    class Meta:
+        verbose_name = _("Equipment Type")
+        verbose_name_plural = _("Equipment Types")
+
+class Equipment(models.Model):
+    user = models.ForeignKey(User)
+    equipmenttype = models.ForeignKey(EquipmentType)
+    image = models.ImageField(upload_to='equipment', blank=True, storage=gpxstore)
+    url = models.URLField(_('External URL'), blank=True, help_text=_('Added info in external URL'))
+    brand = models.CharField(_('Brand'), max_length=140)
+    model = models.CharField(_('Model'), max_length=140)
+    weight = models.FloatField(_('Weight'), blank=True, help_text=_('in kg'))
+    riding_weight = models.FloatField(_('Weight when in use'), default=0, blank=True, help_text=_('weight in kg when riding, used for power estimations. Include bottles, clothes, etc'))
+    notes = models.TextField(_('Notes'), help_text=_('Equipment description'), blank=True, null=True)
+    aquired = models.DateField(_('Aquired'), help_text=_('Date you aquired the equipment'))
+    exercise_type = models.ForeignKey(ExerciseType, verbose_name=_('Exercise type'), blank=True, null=True)
+
+    def __unicode__(self):
+        return unicode('%s %s %s' %(self.equipmenttype, self.brand, self.model))
+
+    class Meta:
+        verbose_name = _("Equipment")
+        verbose_name_plural = _("Equipment")
+        ordering = ('-aquired',)
+
+    def get_distance(self):
+        ''' Get the exercises with routes and sum the distance '''
+        return self.exercise_set.exclude(route__isnull=True).aggregate(sum=Sum('route__distance'))['sum']
+
+    def get_absolute_url(self):
+        return reverse('profile_redirect')
+
+    def get_weight(self):
+        ''' Returns weight, using riding weight if given, or add 3kg for normal equipment if not '''
+        if self.riding_weight:
+            return self.riding_weight
+        elif self.weight:
+            return self.weight + 3
+
+class ComponentType(models.Model):
+    name = models.CharField(max_length=140)
+    description = models.TextField(_('Description'), help_text=_('Component description'), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("Component Type")
+        verbose_name_plural = _("Component Types")
+
+    def __unicode__(self):
+        return unicode(self.name)
+
+class Component(models.Model):
+    equipment= models.ForeignKey(Equipment)
+    componenttype = models.ForeignKey(ComponentType)
+    brand = models.CharField(_('Brand'), max_length=140)
+    model = models.CharField(_('Model'), max_length=140)
+    weight = models.FloatField(_('Weight'), default=0, blank=True, help_text=_('in kg'))
+    added = models.DateField(_('Added'))
+    removed = models.DateField(_('Removed'),null=True,blank=True)
+    notes = models.TextField(_('Notes'), help_text=_('Component description'), blank=True, null=True)
+
+    def __unicode__(self):
+        return unicode('%s %s %s' %(self.componenttype, self.brand, self.model))
+
+    class Meta:
+        verbose_name = _("Component")
+        verbose_name_plural = _("Components")
+
+    def get_distance(self):
+        ''' Get the exercises in the daterange with routes and sum the distance '''
+        end_date = self.removed
+        if not end_date:
+            end_date = datetime.date.today()
+        return Exercise.objects\
+                .filter(equipment=self.equipment)\
+                .exclude(route__isnull=True)\
+                .filter(date__range=(self.added, end_date))\
+                .aggregate(sum=Sum('route__distance'))['sum']
+
 
 class RouteManager(models.Manager):
     ''' Primary purpose to remove the /dev/null route. Will also hide "one time routes" '''
@@ -47,15 +164,15 @@ class RouteManager(models.Manager):
 
 
 class Route(models.Model):
-    name = models.CharField(max_length=160, blank=True, help_text=_('for example Opsangervatnet'))
-    distance = models.FloatField(help_text=_('in km'), default=0)
-    description = models.TextField(help_text=_('route description'))
-    route_url = models.URLField(blank=True) # gmaps?
+    name = models.CharField(_('Name'), max_length=160, blank=True, null=True, help_text=_('for example Opsangervatnet'))
+    distance = models.FloatField(_('Distance'),help_text=_('in km'), default=0)
+    description = models.TextField(_('Description'), help_text=_('route description'))
+    route_url = models.URLField(_('External URL'), blank=True, help_text=_('Added info for route in external URL')) # gmaps?
     gpx_file = models.FileField(upload_to='gpx', blank=True, storage=gpxstore)
-    ascent = models.IntegerField(blank=True, null=True) # m
-    descent = models.IntegerField(blank=True, null=True) # m
-    max_altitude = models.IntegerField(blank=True, null=True) # m
-    min_altitude = models.IntegerField(blank=True, null=True) # m
+    ascent = models.IntegerField(_('Ascent'), blank=True, null=True) # m
+    descent = models.IntegerField(_('Descent'), blank=True, null=True) # m
+    max_altitude = models.IntegerField(_('Maximum altitude'), blank=True, null=True) # m
+    min_altitude = models.IntegerField(_('Minimum altitude'), blank=True, null=True) # m
 
     start_lat = models.FloatField(blank=True, default=0.0)
     start_lon = models.FloatField(blank=True, default=0.0)
@@ -81,32 +198,38 @@ class Route(models.Model):
                         self.start_lat = g.start_lat
                         self.end_lon = g.end_lon
                         self.end_lat = g.end_lat
-                        self.set_geo_description()
                     if not self.distance:
                         # distance calculated in meters in parser
                         self.distance = g.distance/1000.0
                     if not self.ascent:
                         self.ascent = g.ascent
                         self.descent = g.descent
-        self.set_geo_description()
+        # No name, possibly autogenerated route, try and set name
+        if not self.name:
+            self.set_geo_title()
+        # Check for single serving that really are not
+        if self.single_serving and self.exercise_set.count() > 1:
+            self.single_serving = False
+        elif not self.single_serving and self.description == AUTOROUTE_DESCRIPTION and self.exercise_set.count() < 2:
+            self.single_serving = True
         super(Route, self).save(force_insert, force_update)
         if self.gpx_file:
             # generate svg if it doesn't exist (after save, it uses id for filename)
-            filename = 'svg/%s.svg' %self.id
+            filename = 'svg/%s.png' %self.id
             if not gpxstore.exists(filename):
-                create_svg_from_gpx.delay(self.gpx_file.path, filename)
+                create_png_from_gpx.delay(self.gpx_file.path, filename)
 
             # generate simplified gpx to use as layer, for faster loading
             filename = 'gpx/%s.simpler.gpx' %self.id
             if not gpxstore.exists(filename):
                 create_simplified_gpx.delay(self.gpx_file.path, filename)
 
-    def set_geo_description(self):
+    def set_geo_title(self):
         # Check if route is autogenerated
         if self.description == AUTOROUTE_DESCRIPTION:
-            des = self.get_geo_title()
-            if des:
-                self.description = des
+            title = self.get_start_location_name()
+            if title:
+                self.name = title
 
     def __unicode__(self):
         if self.name:
@@ -126,8 +249,10 @@ class Route(models.Model):
         return url
 
     def get_absolute_url(self):
-        if not self.single_serving:
-            return reverse('route', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
+        url =  reverse('route', kwargs={ 'object_id': self.id })
+        if self.name:
+            url += '/' + slugify(self.name)
+        return url
 
     def get_svg_url(self):
         if self.gpx_file:
@@ -137,13 +262,20 @@ class Route(models.Model):
         else:
             return ''
 
+    def get_png_url(self):
+        if self.gpx_file:
+            filename = 'svg/%s.png' %self.id
+            #return gpxstore.url(filename) Broken ?
+            return '%sturan/%s' %(settings.MEDIA_URL, filename)
+        return '/empty.gif'
+
     class Meta:
         verbose_name = _("Route")
         verbose_name_plural = _("Routes")
         ordering = ('-created','name')
 
     def get_trips(self):
-        return self.exercise_set.all().order_by('duration')
+        return self.exercise_set.select_related('route', 'user').order_by('duration')
 
     def get_photos(self):
         ct = ContentType.objects.get_for_model(self)
@@ -157,6 +289,18 @@ class Route(models.Model):
     def tripcount(self):
         ''' used in triplist, nice for sorting '''
         return len(self.get_trips())
+
+    def get_start_location_name(self):
+        lon1, lat1 = self.start_lon, self.start_lat
+        start_town = ''
+        if lon1 and lat1:
+            s_distance = 99999999
+            for loc in Location.objects.all():
+                this_distance = proj_distance(lat1, lon1, loc.lat, loc.lon)
+                if this_distance < s_distance:
+                    start_town = loc.town
+                    s_distance = this_distance
+        return start_town
 
     def get_geo_title(self):
         lon1, lat1 = self.start_lon, self.start_lat
@@ -262,48 +406,29 @@ class ExerciseManager(models.Manager):
 #    class Meta:
 #        verbose_name = _("Team Membership")
 #        verbose_name_plural = _("Team Memberships")
-class ExerciseType(models.Model):
-
-    name = models.CharField(max_length=40)
-    logo = models.ImageField(upload_to='exerciselogos', blank=True, storage=gpxstore)
-    altitude = models.BooleanField(blank=True, default=0)
-    slopes = models.BooleanField(blank=True, default=0)
-
-    def __unicode__(self):
-        return ugettext(self.name)
-
-    def __repr__(self):
-        return unicode(self.name)
-
-    def icon(self):
-        # FIXME use media url
-        if self.logo:
-            return settings.MEDIA_URL + 'turan/%s' %(self.logo)
-        return ''
-
-
-    class Meta:
-        verbose_name = _("Exercise Type")
-        verbose_name_plural = _("Exercise Types")
-        ordering = ('name',)
 
 permission_choices = (
-            ('A', 'All'),
-            ('F', 'Friends'),
-            ('N', 'None'),
+            ('A', _('All')),
+            ('F', _('Friends')),
+            ('N', _('Only myself')),
                     )
+live_states = (
+            ('F', _('Finished')),
+            ('P', _('Paused')),
+            ('L', _('Live')),
+)
 
 class Exercise(models.Model):
 
     user = models.ForeignKey(User)
-    exercise_type = models.ForeignKey(ExerciseType, default=13) # FIXME hardcoded to cycling
+    exercise_type = models.ForeignKey(ExerciseType, verbose_name=_('Exercise type'), default=13) # FIXME hardcoded to cycling
     route = models.ForeignKey(Route, blank=True, null=True, help_text=_("Search existing routes"))
-    duration = DurationField(blank=True, default=0, help_text='18h 30m 23s 10ms 150mis')
-    date = models.DateField(blank=True, null=True, help_text=_("year-mo-dy"))
-    time = models.TimeField(blank=True, null=True, help_text="00:00:00")
+    duration = DurationField(_('Duration'), blank=True, default=0, help_text='18h 30m 23s 10ms 150mis')
+    date = models.DateField(_('Date'), blank=True, null=True, help_text=_("year-mo-dy"))
+    time = models.TimeField(_('Start time'), blank=True, null=True, help_text="00:00:00")
 
-    comment = models.TextField(blank=True)
-    url = models.URLField(blank=True)
+    comment = models.TextField(_('Comment'), blank=True)
+    url = models.URLField(_('External URL'), blank=True)
 
     avg_speed = models.FloatField(blank=True, null=True) #kmt
     avg_cadence = models.IntegerField(blank=True, null=True) # rpm
@@ -311,6 +436,7 @@ class Exercise(models.Model):
     avg_power = models.IntegerField(blank=True, null=True) # W
     avg_pedaling_power = models.IntegerField(blank=True, null=True) # W
     normalized_power = models.IntegerField(blank=True, null=True) # W 
+    normalized_hr = models.IntegerField(blank=True, null=True) # W 
 
     max_speed = models.FloatField(blank=True, null=True) #kmt
     max_cadence = models.IntegerField(blank=True, null=True) # rpm
@@ -323,15 +449,17 @@ class Exercise(models.Model):
     temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     min_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     max_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
-    sensor_file = models.FileField(upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv)'))
+    sensor_file = models.FileField(_('Exercise file'), upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, .gmd, .csv, .xml)'))
 
-    exercise_permission = models.CharField(max_length=1, choices=permission_choices, default='A', help_text=_('Visibility choice'))
+    exercise_permission = models.CharField(_('Exercise permission'), max_length=1, choices=permission_choices, default='A', )
+    live_state = models.CharField(max_length=1, choices=live_states, default='F', blank=True, null=True)
+    equipment = models.ForeignKey(Equipment, help_text=_('Select the equipment used for this exercise, for statistics and tracking'), verbose_name=_('Equipment'), null=True, blank=True)
 
     object_id = models.IntegerField(null=True)
     content_type = models.ForeignKey(ContentType, null=True)
     group = generic.GenericForeignKey("object_id", "content_type")
 
-    tags = TagField(help_text='f.eks. sol regn uhell punktering')
+    tags = TagField(verbose_name=_('Tags'), help_text='f.eks. sol regn uhell punktering')
 
     #objects = models.Manager() # default manager
 
@@ -344,16 +472,18 @@ class Exercise(models.Model):
     def save(self, *args, **kwargs):
         super(Exercise, self).save(*args, **kwargs)
         if self.sensor_file:
-            if not self.route and (str(self.exercise_type) == "Cycling" or str(self.exercise_type) == "Running" or str(self.exercise_type) == "Hike"):
+            if not self.route and str(self.exercise_type) not in ("Puls", "Spinning",  "Rollers", 'Svømming', 'Volleyball', 'Basketball', 'Elliptical'):
                 r = Route()
-                r.name = str(self.user) + " " + datetime.now().strftime('%d%m%y')
                 r.description = AUTOROUTE_DESCRIPTION
                 r.single_serving = True
                 r.save()
                 self.route = r
         # set avg_speed if distance and duration is given
         if self.route and self.route.distance and self.duration and not self.avg_speed:
-            self.avg_speed = float(self.route.distance)/(float(self.duration.seconds)/60/60)
+            self.avg_speed = float(self.route.distance)/(float(self.duration.total_seconds())/60/60)
+        # Save Route, just in case it needs something done
+        if self.route:
+            self.route.save()
 
         super(Exercise, self).save(*args, **kwargs)
 
@@ -373,7 +503,7 @@ class Exercise(models.Model):
 
     def get_absolute_url(self):
         route_name = ''
-        if self.route:
+        if self.route and self.route.name:
             route_name = slugify(self.route.name)
         return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + route_name
 
@@ -406,23 +536,24 @@ class Exercise(models.Model):
         ordering = ('-date','-time')
 
     def __unicode__(self):
-        name = _('Unnamed trip')
+        return u'%s, %s %s' %(self.get_name(), _('by'), self.user.get_profile().get_name())
+
+    def get_name(self):
+        name = _('Untitled')
         if self.route and self.route.name:
             name = self.route.name
-# FIXME 
-            if name == '/dev/null':
+            if name == '/dev/null': # TODO: Remove this old hack from db
                 name = unicode(self.exercise_type)
         else:
             name = unicode(self.exercise_type)
-
-        return u'%s, %s %s' %(name, _('by'), self.user)
+        return name
 
     def delete(self, *args, **kwargs):
         ''' Also delete single serving route '''
         if self.route:
             if self.route.single_serving:
-                r = self.route
-                r.delete()
+                if not self.route.exercise_set.count() > 1: # Do not delete single serving routes that have multiple exercises attachted
+                    self.route.delete()
         super(Exercise, self).delete(*args, **kwargs)
 
     def get_intensityfactor(self):
@@ -439,6 +570,43 @@ class Exercise(models.Model):
         start_time = datetime(self.date.year, self.date.month, self.date.day, self.time.hour, self.time.minute, self.time.second)
         return start_time
 
+    @property
+    def start_lon(self):
+        if self.route and self.route.start_lon:
+            return self.route.start_lon
+        return 0.0
+
+    @property
+    def start_lat(self):
+        if self.route and self.route.start_lat:
+            return self.route.start_lat
+        return 0.0
+
+    @property
+    def end_lat(self):
+        if self.route and self.route.end_lat:
+            return self.route.end_lat
+        return 0.0
+
+    @property
+    def end_lon(self):
+        if self.route and self.route.end_lon:
+            return self.route.end_lon
+        return 0.0
+
+    def get_weight(self):
+        ''' Find weight during exercise '''
+        return self.user.get_profile().get_weight(self.date)
+
+    def get_eq_weight(self):
+        ''' Return weight of equipment '''
+        eqweight = 10
+        if self.equipment:
+            return self.equipment.get_weight()
+        return eqweight
+
+
+
 
 class ExercisePermission(models.Model):
     exercise = models.OneToOneField(Exercise, primary_key=True)
@@ -447,19 +615,22 @@ class ExercisePermission(models.Model):
     cadence = models.CharField(max_length=1, choices=permission_choices, default='A')
     hr = models.CharField(max_length=1, choices=permission_choices, default='A')
 
+    def __unicode__(self):
+        return u"%s (%s, %s, %s, %s)" % (self.exercise, self.speed, self.power, self.cadence, self.hr)
+
 class ExerciseDetail(models.Model):
 
-    exercise = models.ForeignKey(Exercise)
-    time = models.DateTimeField()
-    distance = models.FloatField(blank=True, null=True)
-    speed = models.FloatField(blank=True, null=True)
-    hr = models.IntegerField(blank=True, null=True)
-    altitude = models.FloatField(blank=True, null=True)
-    lat = models.FloatField(blank=True, null=True)
-    lon = models.FloatField(blank=True, null=True)
-    cadence = models.IntegerField(blank=True, null=True)
-    power = models.IntegerField(blank=True, null=True)
-    temp = models.FloatField(blank=True, null=True)
+    exercise   = models.ForeignKey(Exercise)
+    time       = models.DateTimeField()
+    distance   = models.FloatField(blank=True, null=True)
+    speed      = models.FloatField(blank=True, null=True)
+    hr         = models.IntegerField(blank=True, null=True)
+    altitude   = models.FloatField(blank=True, null=True)
+    lat        = models.FloatField(blank=True, null=True)
+    lon        = models.FloatField(blank=True, null=True)
+    cadence    = models.IntegerField(blank=True, null=True)
+    power      = models.IntegerField(blank=True, null=True)
+    temp       = models.FloatField(blank=True, null=True)
 
     def get_relative_time(self):
         start_time = datetime(self.time.year, self.time.month, self.time.day, self.trip.time.hour, self.trip.time.minute, self.trip.time.second)
@@ -480,6 +651,23 @@ class BestPowerEffort(models.Model):
 
     class Meta:
         ordering = ('duration',)
+
+class HRZoneSummary(models.Model):
+    exercise = models.ForeignKey(Exercise)
+    zone = models.IntegerField()
+    duration = models.IntegerField()
+
+    class Meta:
+        ordering = ('zone',)
+
+class WZoneSummary(models.Model):
+    exercise = models.ForeignKey(Exercise)
+    zone = models.IntegerField()
+    duration = models.IntegerField()
+
+    class Meta:
+        ordering = ('zone',)
+
 
 class BestSpeedEffort(models.Model):
     exercise = models.ForeignKey(Exercise)
@@ -502,7 +690,7 @@ merge_choices = (
 class MergeSensorFile(models.Model):
     exercise = models.ForeignKey(Exercise)
     merge_strategy = models.CharField(max_length=1, choices=merge_choices, default='M', help_text=_('Merge strategy. Merge = Merge on top of current, Append = Append to end, Prepend = Insert before current'))
-    sensor_file = models.FileField(upload_to='sensor', storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, .pwx, .xml, .fit)'))
+    sensor_file = models.FileField(_('Exercise file'), upload_to='sensor', storage=gpxstore, help_text=_('File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, .pwx, .xml, .fit)'))
     hr = models.BooleanField(blank=True, default=0)
     power = models.BooleanField(blank=True, default=0)
     cadence = models.BooleanField(blank=True, default=0)
@@ -561,17 +749,20 @@ class Interval(models.Model):
     min_cadence = models.IntegerField(blank=True, null=True) # rpm
     min_power = models.IntegerField(blank=True, null=True) # W
 
+    avg_pedaling_cadence = models.IntegerField(blank=True, null=True) # rpm
+
     def get_avg_power_per_kg(self):
         ''' Find weight during exercise and calculate W/kg'''
-        userweight = self.exercise.user.get_profile().get_weight(self.exercise.date)
+        userweight = self.exercise.get_weight()
         try:
             if self.avg_power:
                 return self.avg_power/userweight
         except ZeroDivisionError:
             return 0
 
-    def get_ftp_percentage(self):
-        userftp = self.exercise.user.get_profile().get_ftp(self.exercise.date)
+    def get_ftp_percentage(self, userftp=None):
+        if not userftp:
+            userftp = self.exercise.user.get_profile().get_ftp(self.exercise.date)
         if userftp:
             return self.avg_power*100/userftp
 
@@ -600,6 +791,8 @@ class Interval(models.Model):
             if startd:
                 if startd[0].distance:
                     self.start = startd[0].distance
+                else:
+                    self.start = 0
 
         super(Interval, self).save(*args, **kwargs)
 
@@ -607,11 +800,13 @@ class Interval(models.Model):
         seconds = (self.start_time - self.exercise.get_full_start_time()).seconds
         if seconds:
             return seconds/60
+        return 0
 
 class Segment(models.Model):
-    name = models.CharField(max_length=160, blank=True, help_text=_("for example Alpe d'Huez"))
+    name = models.CharField(max_length=160, help_text=_("for example Alpe d'Huez"))
     distance = models.FloatField(help_text=_('in km'), default=0)
-    description = models.TextField(help_text=_('route description'))
+    description = models.TextField(_('Description'), help_text=_('Describe where it starts and ends and other noteworthy details'))
+    segment_url = models.URLField(_('External URL'), blank=True, help_text=_('E.g. added info for segment in external URL'))
     gpx_file = models.FileField(upload_to='gpx', blank=True, storage=gpxstore)
 
     ascent = models.IntegerField(blank=True, null=True) # m
@@ -619,8 +814,8 @@ class Segment(models.Model):
     max_altitude = models.IntegerField(blank=True, null=True) # m
     min_altitude = models.IntegerField(blank=True, null=True) # m
 
-    grade = models.FloatField()
-    category = models.IntegerField()
+    grade = models.FloatField(blank=True,default=0,null=True,)
+    category = models.IntegerField(blank=True,default=0, null=True)
 
     start_lat = models.FloatField(null=True, blank=True, default=0.0)
     start_lon = models.FloatField(null=True, blank=True, default=0.0)
@@ -641,12 +836,25 @@ class Segment(models.Model):
                 url = self.gpx_file
         return url
 
+    def get_png_url(self):
+        if self.gpx_file:
+            filename = 'svg/segment/%s.png' %self.id
+            if gpxstore.exists(filename):
+                return '%sturan/%s' %(settings.MEDIA_URL, filename)
+        return '/empty.gif'
 
     def get_absolute_url(self):
         return reverse('segment', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
 
     def get_slopes(self):
-        return self.slope_set.all().order_by('duration')
+        return self.segmentdetail_set.all().order_by('duration')
+
+    def get_toplist(self):
+        return User.objects.filter(exercise__segmentdetail__segment__exact=self.id).annotate(duration=Min('exercise__segmentdetail__duration')).order_by('duration')[:3]
+        #return SegmentDetail.objects.filter(segment=self.id).values('exercise__user').annotate(duration=Min('duration')).order_by('duration')
+
+    def get_latest(self):
+        return SegmentDetail.objects.filter(segment=self.id).order_by('-exercise__date','-exercise__time')
 
     def save(self, *args, **kwargs):
         ''' Calculate extra values before save '''
@@ -655,27 +863,51 @@ class Segment(models.Model):
         super(Segment, self).save(*args, **kwargs)
         # Create gpxtrack for this segment
         if not self.gpx_file:
-            if self.get_slopes():
-                slope = self.get_slopes()[0]
-                trip = slope.exercise
-                tripdetails = trip.get_details().all()
-                if filldistance(tripdetails):
-                    i = 0
-                    start, stop= 0, 0
-                    for d in tripdetails:
-                        if d.distance == slope.start*1000:
-                            start = i
-                        if start:
-                            if d.distance > (slope.start*1000+ slope.length):
-                                stop = i
-                                break
-                        i += 1
-                tripdetails = tripdetails[start:stop]
-                g = GPXWriter(tripdetails)
-                filename = 'gpx/segment/%s.gpx' %self.id
-                self.gpx_file.save(filename, ContentFile(g.xml), save=True)
+            for slope in self.get_slopes():
+                if slope.exercise.route and slope.exercise.route.gpx_file:
+                    trip = slope.exercise
+                    tripdetails = trip.get_details().all()
+                    if filldistance(tripdetails):
+                        i = 0
+                        start, stop= 0, 0
+                        for d in tripdetails:
+                            if not start and d.distance >= slope.start*1000:
+                                start = i
+                            elif start:
+                                if d.distance > (slope.start*1000+ slope.length):
+                                    stop = i
+                                    break
+                            i += 1
+                    tripdetails = tripdetails[start:stop]
+                    g = GPXWriter(tripdetails)
+                    if g.points: # don't write gpx if not lon/lat-trip
+                        filename = 'gpx/segment/%s.gpx' %self.id
+                        self.gpx_file.save(filename, ContentFile(g.xml), save=True)
+                        break
+
+        # generate png if it doesn't exist (after save, it uses id for filename)
+        if self.gpx_file:
+            filename = 'svg/segment/%s.png' %self.id
+            if not gpxstore.exists(filename):
+                create_png_from_gpx.delay(self.gpx_file.path, filename)
+
+        for attr in ('ascent', 'grade', 'length', 'start_lon', 'start_lat', 'end_lon', 'end_lat'):
+            for slope in self.get_slopes():
+                slopeattr = attr
+                if attr == 'length': # omg
+                    slopeattr = 'distance' # so silly
+                if not getattr(self, slopeattr):
+                    slopeval = getattr(slope, attr)
+                    if slopeval:
+                        if slopeattr == 'distance': # this design is so silly, why vary between m and km?
+                            slopeval = slopeval/1000
+                        setattr(self, slopeattr, slopeval)
+        self.category = get_category(self.grade, self.distance*1000)
 
         super(Segment, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
 
 
 class Slope(models.Model):
@@ -710,26 +942,6 @@ class Slope(models.Model):
 
         super(Slope, self).save(*args, **kwargs)
 
-    def get_category(self):
-        ''' The categories are the same as in the Tour De France or other bike race
-        What we do is take the grade of the climb and the distance and multiply them. So, for example, a 2
-        kilometer climb at 4% grade = 8000, and 8000 to 16000 is a category 4 climb. 16 to 32 is a category
-        3 etc.
-        Our categorization is based on the official UCI but with some modification.
-        '''
-        grade = self.grade * self.length
-        if grade < 8000:
-            return 5
-        elif grade < 16000:
-            return 4
-        elif grade < 32000:
-            return 3
-        elif grade < 64000:
-            return 2
-        elif grade < 128000:
-            return 1
-        else:
-            return 0 # HC ?
 
     def get_vam(self):
         ''' Return Vertical Ascended Meters / Hour,
@@ -739,6 +951,9 @@ class Slope(models.Model):
         if self.get_category() < 4:
             ret = int(round((float(self.ascent)/self.duration)*3600))
         return ret
+
+    def get_category(self):
+        return get_category(self.grade, self.length)
 
     def get_avg_power_kg(self):
         ''' Find weight during exercise and calculate W/kg'''
@@ -757,6 +972,76 @@ class Slope(models.Model):
     class Meta:
         ordering = ('-exercise__date',)
 
+    def get_absolute_url(self):
+        if self.segment:
+            return self.segment.get_absolute_url()
+
+class SegmentDetailManager(models.Manager):
+    ''' Removes non-public segments from lists '''
+
+    def get_query_set(self):
+        return super(SegmentDetailManager, self).get_query_set().filter(public=1)
+
+class SegmentDetail(models.Model):
+
+    exercise = models.ForeignKey(Exercise)
+    segment = models.ForeignKey(Segment, blank=True, null=True, help_text=_("Optionally add this selection to a shared public segment"))
+    public = models.BooleanField(blank=True, default=1)
+    start = models.FloatField(help_text=_('in km'), default=0)
+    length = models.FloatField(help_text=_('in km'), default=0)
+    ascent = models.IntegerField(help_text=_('in m'), default=0)
+    grade = models.FloatField()
+    duration = models.IntegerField()
+    speed = models.FloatField()
+    est_power = models.FloatField()
+    act_power = models.FloatField(default=0)
+    power_per_kg = models.FloatField()
+    vam = models.IntegerField(default=0)
+    avg_hr = models.IntegerField(default=0)
+
+    start_lat = models.FloatField(blank=True, null=True, default=0.0)
+    start_lon = models.FloatField(blank=True, null=True, default=0.0)
+    end_lat = models.FloatField(blank=True, null=True, default=0.0)
+    end_lon = models.FloatField(blank=True, null=True, default=0.0)
+
+    comment = models.TextField(blank=True, null=True)
+
+    objects = SegmentDetailManager()
+
+    def get_absolute_url(self):
+        if self.segment:
+            return self.segment.get_absolute_url()
+        else:
+            return self.exercise.get_absolute_url()
+
+    def save(self, *args, **kwargs):
+        ''' Save parent also to populate shit '''
+
+        super(SegmentDetail, self).save(*args, **kwargs)
+        if self.segment:
+            self.segment.save()
+
+    def category(self):
+        if self.segment:
+            return self.segment.category
+
+
+    def __unicode__(self):
+        if self.segment:
+            return unicode(self.segment)
+        return u''
+
+    def is_segmentdetail(self):
+        return True
+
+    class Meta:
+        ordering = ('duration',)
+
+
+    def end(self):
+        ''' Helper so we don't have to calculate end in templates '''
+
+        return self.start + self.length/1000
 
 
 
@@ -849,48 +1134,30 @@ def new_comment(sender, instance, **kwargs):
                 {"user": instance.user, "exercise": exercise, "comment": instance})
 models.signals.post_save.connect(new_comment, sender=ThreadedComment)
 
-def hr2zone(hr_percent):
-    ''' Given a HR percentage return sport zone based on Olympiatoppen zones'''
 
-    zone = 0
+def get_category(grade, length):
+    ''' The categories are the same as in the Tour De France or other bike race
+    What we do is take the grade of the climb and the distance and multiply them. So, for example, a 2
+    kilometer climb at 4% grade = 8000, and 8000 to 16000 is a category 4 climb. 16 to 32 is a category
+    3 etc.
+    Our categorization is based on the official UCI but with some modification.
+    '''
+    grade = grade * length
+    if grade < 8000:
+        return 5
+    elif grade < 16000:
+        return 4
+    elif grade < 32000:
+        return 3
+    elif grade < 64000:
+        return 2
+    elif grade < 128000:
+        return 1
+    else:
+        return 0 # HC ?
 
-    if hr_percent > 97:
-        zone = 6
-    elif hr_percent > 92:
-        zone = 5
-    elif hr_percent > 87:
-        zone = 4
-    elif hr_percent > 82:
-        zone = 3
-    elif hr_percent > 72:
-        zone = 2
-    elif hr_percent > 60:
-        zone = 1
+class AutoTranslateField(models.CharField):
+    __metaclass__ = models.SubfieldBase
 
-    return zone
-def watt2zone(watt_percentage):
-    ''' Given watt_percentage in relation to FTP, return coggan zone 
-
-1   Active Recovery <55%    165w      Taking your bike for a walk!
-2   Endurance   >75%    225w      All day pace.
-3   Tempo   >90%    270w      Chain Gang pace.
-4   Lactate Threshold   >105%   315w      At or around 25m TT pace
-5   VO2max  >120%   360w      3-8 minute interval pace
-6   Anaerobic   121%+   360w+     Flamme Rouge SHITS intervals
-7   Neuromuscular       >1000w?   Jump Intervals '''
-    zone = 1
-    if watt_percentage > 150:
-        zone = 7
-    elif watt_percentage > 121:
-        zone = 6
-    elif watt_percentage > 105:
-        zone = 5
-    elif watt_percentage > 90:
-        zone = 4
-    elif watt_percentage > 75:
-        zone = 3
-    elif watt_percentage > 54:
-        zone = 2
-    elif watt_percentage < 55:
-        zone = 1
-    return zone
+    def to_python(self, value):
+        return str(_(value))

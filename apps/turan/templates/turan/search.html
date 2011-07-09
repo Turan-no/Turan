@@ -1,0 +1,99 @@
+{% extends "turan/base.html" %}
+{% load tagging_tags %}
+{% load i18n %}
+{% load avatar_tags %}
+{% load turan_extras %}
+{% block content %}
+
+<h1>{% trans "Matches for search" %} {{ search_query }}</h1>
+
+{% if user_list %}
+<div class="spacer floatleft">
+    <h2>{% trans "Users" %}</h2>
+    <ul class="iconlist spacer">
+        {% for user in user_list %}
+        <li class="user"><a href="{{ user.get_absolute_url }}">{% avatar user 30 %}{{ user }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if exercise_list %}
+<div class="floatleft spacer">
+    <h2>{% trans "Exercises" %}</h2>
+    <ul class="iconlist spacer">
+        {% for exercise in exercise_list %}
+        <li class="exercise"><a href="{{ exercise.get_absolute_url }}"><img width="32" height="32" src="{{exercise.route.get_png_url}}">{{ exercise|truncatechars:"35" }}</a></li>
+        {% endfor %}
+    </ul>
+    {% if exercise_list|length >= 15 %}
+    <a href="#" id="more_exercises">{% trans "Show more" %}</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if route_list %}
+<div class="spacer floatleft">
+    <h2>{% trans "Routes" %}</h2>
+    <ul class="iconlist spacer">
+            {% for route in route_list %}
+            <li class=""><img widht="32" height="32" src="{{route.get_png_url}}"><a href="{{ route.get_absolute_url }}">{{ route|truncatechars:"35" }}</a></li>
+            {% endfor %}
+    </ul>
+    {% if route_list|length >= 15 %}
+    <a href="#" id="more_routes">{% trans "Show more" %}</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if tag_list %}
+<div class="spacer floatleft">
+    <h2>{% trans "Tags" %}</h2>
+    <ul class="iconlist spacer">
+        <li class="">
+            <img alt="Tag" src="{{ MEDIA_URL }}pinax/img/silk/icons/tag_blue.png" class="noborder" />
+        </li>
+        {% for tag in tag_list %}
+        <li class="{{ tag }}"><a href="/tags/{{ tag }}">{{ tag }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% if segment_list %}
+<div class="spacer floatleft">
+<h2>{% trans "Segments" %}</h2>
+<ul class="iconlist spacer">
+        {% for segment in segment_list %}
+        <li class=""><img widht="32" height="32" src="{{segment.get_png_url}}"><a href="{{ segment.get_absolute_url }}">{{ segment }}</a></li>
+        {% endfor %}
+</ul>
+</div>
+{% endif %}
+
+<script type="text/javascript">
+    var route_i = {{SLICE_SIZE}};
+    var exercise_i = {{SLICE_SIZE}};
+    var query = "{{ search_query }}";
+
+    jQuery("#more_routes").bind("click", function(evt) {
+       var ul = jQuery(this).prev();
+       evt.preventDefault();
+       jQuery.getJSON("/search", { "q": query, "start": route_i }, function(data) {
+           for (k in data) {
+               ul.append(data[k].fields.comment);
+           }
+       });
+       route_i += {{SLICE_SIZE}};
+    });
+    jQuery("#more_exercises").bind("click", function(evt) {
+       var ul = jQuery(this).prev();
+       evt.preventDefault();
+       jQuery.getJSON("/search", { "q": query, "start": exercise_i }, function(data) {
+           for (k in data) {
+               ul.append(data[k].fields.comment);
+           }
+       });
+       exercise_i += {{SLICE_SIZE}};
+    });
+</script>
+{% endblock %}

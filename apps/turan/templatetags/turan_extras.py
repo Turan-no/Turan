@@ -1,11 +1,15 @@
 from django import template
+from django.conf import settings
 #from django.template import render_to_string #Context, loader
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
-from django.template.defaultfilters import floatformat
+from django.template.defaultfilters import floatformat, stringfilter
 from django_sorting.templatetags.sorting_tags import SortAnchorNode
+from friends.models import Friendship
 from time import mktime
+import simplejson as json
+import re
 
 register = template.Library()
 
@@ -37,9 +41,42 @@ def anchortrans(parser, token):
     return SortAnchorNode(bits[1].strip(), title.strip())
 
 @register.filter
+def player_icon(player, exercise_type,w=24,h=24):
+    playercolors = [
+        { "r": 255, "g": 20, "b": 20 },
+        { "r": 20, "g": 20, "b": 255 },
+        { "r": 20, "g": 255, "b": 255 },
+        { "r": 255, "g": 20, "b": 255 },
+        { "r": 255, "g": 255, "b": 20 },
+        { "r": 80, "g": 80, "b": 80 }
+    ]
+    return "/generate/icon?i=/turan/%s&r=%d&g=%d&b=%d&h=%d&w=%d" % ( exercise_type.logo, playercolors[player]["r"], playercolors[player]["g"], playercolors[player]["b"], h, w )
+
+@register.filter
+def player_icon_huge(player, exercise_type,w=32,h=32):
+    return player_icon(player, exercise_type, w, h)
+
+@register.filter
 def nbsp(value):
     """ Make sure string can't break """
     return mark_safe(unicode(value).replace(" ", "&nbsp;"))
+
+@register.filter
+def u_slugify(txt):
+    """A custom version of slugify that retains non-ascii characters. The purpose of this
+    function in the application is to make URLs more readable in a browser, so there are 
+    some added heuristics to retain as much of the title meaning as possible while 
+    excluding characters that are troublesome to read in URLs. For example, question marks 
+    will be seen in the browser URL as %3F and are thereful unreadable. Although non-ascii
+    characters will also be hex-encoded in the raw URL, most browsers will display them
+    as human-readable glyphs in the address bar -- those should be kept in the slug."""
+    txt = txt.strip() # remove trailing whitespace
+    txt = re.sub('\s*-\s*','-', txt, re.UNICODE) # remove spaces before and after dashes
+    txt = re.sub('[\s/]', '_', txt, re.UNICODE) # replace remaining spaces with underscores
+    txt = re.sub('(\d):(\d)', r'\1-\2', txt, re.UNICODE) # replace colons between numbers with dashes
+    txt = re.sub('"', "'", txt, re.UNICODE) # replace double quotes with single quotes
+    txt = re.sub(r'[?,:!@#~`+=$%^&\\*()\[\]{}<>]','',txt, re.UNICODE) # remove some characters altogether
+    return txt
 
 @register.filter
 def bodyfat(value):
@@ -47,7 +84,7 @@ def bodyfat(value):
     return float(value)/7800
 
 @register.filter
-def retarddurationformat(value, longFormat=True):
+def retarddurationformat(value, longFormat=False):
     """ Converts a number of retarded ms to textual string """
     return durationformat(int(value / 1000000), longFormat)
 
@@ -78,10 +115,10 @@ def durationformatshort(value):
         minStr = ":"
         string = u"%s%02d%s" % (string, mins, minStr)
 
-    if value > 0:
-        secs = value
-        sStr = ":"
-        string = u"%s%02d%s" % (string, secs, sStr)
+    #if value > 0:
+    secs = value
+    sStr = ":"
+    string = u"%s%02d%s" % (string, secs, sStr)
 
     if len(string) == 0:
         string = '0'
@@ -202,7 +239,10 @@ def divide(value, arg):
         return floatformat(float(value) / float(arg))
     except ValueError:
         return 0
-percent.is_safe = False
+    except TypeError:
+        return 0
+    except ZeroDivisionError:
+        return 0
 
 @register.filter
 def jstimestamp(value):
@@ -235,3 +275,46 @@ def exercise_mouseover(obj):
 @register.filter
 def profile_hover(obj):
     return render_to_string('profile_hover.html', {'object': obj})
+
+@register.filter
+def silk_icon(name):
+    return settings.MEDIA_URL + 'pinax/img/silk/icons/%s.png' %name
+
+@register.filter
+def as_json(obj):
+    return json.dumps(obj)
+
+@register.filter(name='truncatechars')
+@stringfilter
+def truncatechars(value, arg):
+    """
+    Truncates a string after a certain number of chars.
+
+    Argument: Number of chars to truncate after.
+    """
+    try:
+        length = int(arg)
+    except ValueError: # Invalid literal for int().
+        return value # Fail silently.
+    if len(value) > length:
+        return value[:length] + '...'
+    return value
+truncatechars.is_safe = True
+
+@register.filter
+def exercise_view_permission(exercise, user):
+    if exercise.user == user:  # Allow self
+        return True
+    if exercise.exercise_permission == 'N':
+        return False
+        if exercise.exercise_permission == 'F':
+            if user.is_authenticated():
+                is_friend = Friendship.objects.are_friends(user, exercise.user)
+                if is_friend:
+                    return True
+                else:
+                    return False
+
+            else:
+                return False
+    return True

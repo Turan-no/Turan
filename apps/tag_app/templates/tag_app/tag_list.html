@@ -1,7 +1,8 @@
 {% load tagging_tags %}
+{% load turan_extras %}
 {% tags_for_object obj as tags %}
 {% if tags %}
-    <img alt="Tag" src="{{ MEDIA_URL }}pinax/images/silk/icons/tag_blue.png" class="noborder" />
+    <img alt="Tag" src="{{ tag_blue|silk_icon}}" class="noborder" />
     {% for tag in tags %}
         <a href="/tags/{{ tag }}">{{ tag }}</a>
     {% endfor %}

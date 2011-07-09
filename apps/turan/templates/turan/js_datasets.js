@@ -22,7 +22,8 @@
         "cadence": {
             "data":  {{ cadence}},
             "label": "{% trans "Cadence" %}",
-            "color": 1
+            "color": 1,
+            "yaxis": 6
             },
         {% endif %}
         {% if altitude%}
@@ -60,8 +61,9 @@
             "yaxis": 5
             },
         {% endif %}
-        {% if index %}
-        {% autoescape off %}
-        "index": [ {{ index }} ]
-        {% endautoescape %}
+        {% if lon%}
+        "lon":  {{ lon}},
+        {% endif %}
+        {% if lat%}
+        "lat":  {{ lat}},
         {% endif %}

@@ -1,107 +1,136 @@
 {% load i18n %}
 {% load turan_extras %}
+<script type="text/javascript">
+var pieoptions = { 
+    grid: { show: false },
+    series: {
+            pie: { 
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 1,
+                    formatter: function(label, series){
+                        return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                    },
+                    background: { opacity: 0.8 }
+                }
+            }
+        },
+        legend: {
+            show: false
+        }
+}
+</script>
 {% if wzones and power_show %}
 
 <div id="wzonediv" style="width:400px;height:400px; float: right;"></div>
-    <h3>{% trans "Time in watt zones" %}</h3>
+
+<h3>{% trans "Time in watt zones" %}</h3>
 <div id="wzonetable" style="width:500px; height: 400px;">
-        <table class="fullsize">
-            <tr>
-                <th>
-                    <img alt="power" src="{{MEDIA_URL}}/pinax/images/silk/icons/lightbulb.png">
-                    {% trans "Zone" %}
-                </th>
-                <th>
-                    {% trans "Duration" %}
-                </th>
-                <th>
-                    {% trans "%" %}
-                </th>
-            </tr>
-            {% for zone, length in wzones.items %}
-            {% if length %}
-            <tr>
-                <td>
-                    <img alt="power" src="{{MEDIA_URL}}/pinax/images/silk/icons/lightbulb.png">
-                    {{ zone }}
-                </td>
-                <td>
-                    {{ length|durationformat }}
-                </td>
-                <td>
-                    {% if object.duration %}
-                        {{ length|percent:object.duration.seconds }}
-                    {% endif %}
-                </td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-        </table>
-    </div>
-<script type="text/javascript">
-    var wzonedata = [
+    <table class="fullsize">
+        <tr>
+            <th>
+                <img alt="power" src="{{MEDIA_URL}}/pinax/img/silk/icons/lightbulb.png">
+                {% trans "Zone" %}
+            </th>
+            <th>
+                {% trans "Duration" %}
+            </th>
+            <th>
+                {% trans "%" %}
+            </th>
+        </tr>
         {% for zone, length in wzones.items %}
-            {
-            {% if length %}
-                data: [[{{ zone|slice:":1" }}, {{ length }}]],
-                bars: { show: true},
-                color: colors[{{ forloop.counter0 }}]
-            {% endif %}
-            }
-{% if not forloop.last %},{%endif%}
+        {% if length %}
+        <tr class="{% cycle odd,even %}">
+            <td>
+                <img alt="power" src="{{MEDIA_URL}}/pinax/img/silk/icons/lightbulb.png">
+                {{ zone }}
+            </td>
+            <td>
+                {{ length|durationformat }}
+            </td>
+            <td>
+                {% if object.duration %}
+                {{ length|percent:object.duration.seconds }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endif %}
         {% endfor %}
-    ];
-    $.plot($("#wzonediv"),wzonedata, { grid: { show: false } });
+    </table>
+</div>
+<script type="text/javascript">
+
+    $(function () {
+        var wzonedata = [
+            {% for zone, length in wzones.items %}
+            {
+                {% if length %}
+                data: [[{{ zone|slice:":1" }}, {{ length }}]],
+                label: "{{zone|slice:":1"}}",
+                color: colors[{{ forloop.counter0 }}]
+                {% endif %}
+            }{% if not forloop.last %},{%endif%}
+            {% endfor %}
+        ];
+        $.plot($("#wzonediv"),wzonedata, pieoptions);
+    });
 </script>
 {% endif %}
+
 <div id="zonediv" style="width:400px;height:400px; float: right;"></div>
+
 <div id="zonetable" style="width:500px; height: 400px;">
     <h3>{% trans "Time in HR zones" %}</h3>
-        <table class="fullsize">
-            <tr>
-                <th>
-                    <img alt="hr" src="{{MEDIA_URL}}/pinax/images/silk/icons/heart.png">
-                    {% trans "Zone" %}
-                </th>
-                <th>
-                    {% trans "Duration" %}
-                </th>
-                <th>
-                    {% trans "%" %}
-                </th>
-            </tr>
-            {% for zone, length in zones.items %}
-            {% if length %}
-            <tr>
-                <td>
-                    <img alt="hr" src="{{MEDIA_URL}}/pinax/images/silk/icons/heart.png">
-                    {{ zone }}
-                </td>
-                <td>
-                    {{ length|durationformat }}
-                </td>
-                <td>
-                    {% if object.duration %}
-                        {{ length|percent:object.duration.seconds }}
-                    {% endif %}
-                </td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-        </table>
-    </div>
-<script type="text/javascript">
-    var zonedata = [
+    <table class="fullsize">
+        <tr>
+            <th>
+                <img alt="hr" src="{{MEDIA_URL}}/pinax/img/silk/icons/heart.png">
+                {% trans "Zone" %}
+            </th>
+            <th>
+                {% trans "Duration" %}
+            </th>
+            <th>
+                {% trans "%" %}
+            </th>
+        </tr>
         {% for zone, length in zones.items %}
-            {
-            {% if length %}
-                data: [[{{ zone|slice:":1" }}, {{ length }}]],
-                bars: { show: true},
-                color: colors[{{ forloop.counter0 }}]
-            {% endif %}
-            }
-{% if not forloop.last %},{%endif%}
+        {% if length %}
+        <tr class="{% cycle odd,even %}">
+            <td>
+                <img alt="hr" src="{{MEDIA_URL}}/pinax/img/silk/icons/heart.png">
+                {{ zone }}
+            </td>
+            <td>
+                {{ length|durationformat }}
+            </td>
+            <td>
+                {% if object.duration %}
+                    {{ length|percent:object.duration.seconds }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endif %}
         {% endfor %}
-    ];
-    $.plot($("#zonediv"),zonedata, { grid: { show: false } });
+    </table>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var zonedata = [
+            {% for zone, length in zones.items %}
+            {
+                {% if length %}
+                data: [[{{ zone|slice:":1" }}, {{ length }}]],
+                label: "{{zone|slice:":1"}}",
+                color: colors[{{ forloop.counter0 }}]
+                {% endif %}
+            }{% if not forloop.last %},{%endif%}
+            {% endfor %}
+        ];
+
+        $.plot($("#zonediv"),zonedata, pieoptions);
+    });
 </script>

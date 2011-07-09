@@ -1,84 +1,158 @@
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
-    <div id="tabs-6" class="slope_tab">
-        <table class="fullsize">
-            <tr>
-                <th>
-                    {% trans "Zoom" %}
-                </th>
-                <th>
-                    {% trans "Start" %}
-                </th>
-                <th>
-                    {% trans "Length" %}
-                </th>
-                <th>
-                    {% trans "Ascent" %}
-                </th>
-                <th>
-                    {% trans "Gradient" %}
-                </th>
-                <th>
-                    {% trans "Duration" %}
-                </th>
-                <th>
-                    {% trans "Speed" %}
-                </th>
-                {% if object.avg_power %}
-                <th>
-                    {% trans "Avg power (actual)" %}
-                </th>
-                {% endif %}
-                <th>
-                    {% trans "Avg power (est)" %}
-                </th>
-                <th>
-                    {% trans "Avg power/kg" %}
-                </th>
-                <th>
-                    VAM
-                </th>
-                <th>
-                    Category
-                </th>
-                <th>
-                    {% trans "Avg HR" %}
-                </th>
-            </tr>
+<div id="tabs-6" class="slope_tab">
+    <table class="fullsize">
+        <tr>
+            <th>
+                {% trans "Name" %}
+            </th>
+            <th>
+                {% trans "Start" %}
+            </th>
+            <th>
+                {% trans "Length" %}
+            </th>
+            <th>
+                {% trans "Ascent" %}
+            </th>
+            <th>
+                {% trans "%" %}
+            </th>
+            <th>
+                {% trans "Duration" %}
+            </th>
+            <th>
+                {% trans "Speed" %}
+            </th>
+
+            {% if object.avg_power %}
+            <th>
+                {% trans "Avg power" %}
+            </th>
+            {% endif %}
+
+            <th>
+                {% trans "Est power" %}
+            </th>
+            <th>
+                {% trans "W/kg" %}
+            </th>
+            <th>
+                VAM
+            </th>
+            <th>
+                {% trans "Category" %}
+            </th>
+            <th>
+                {% trans "Avg HR" %}
+            </th>
+        </tr>
         {% for slope in slopes %}
-            <tr>
-                <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="zoom{{forloop.counter0}}-link-1" class="zoom-select" />
-                    <script type="text/javascript">
-                        $('#zoom{{forloop.counter0}}-link-1').bind("click", 
-                                function (evt) { 
-                                plot.setSelection({ 
-                                    xaxis: { 
-                                        from: {{slope.start}}, to: {{slope.start}}+{{slope.length}}/1000
-                                    }
-                                })
-                                });
-                    </script>
-                </td>
-                <td>{{ slope.start|floatformat }} {% trans "km" %} </td>
-                <td>{{ slope.length|floatformat }} {% trans "m" %} </td>
-                <td>{{slope.ascent}} {% trans "m" %}</td>
-                <td>{{slope.grade|floatformat}} %</td>
-                <td>{{ slope.duration|durationformatshort }} </td>
-                <td>{{slope.speed|floatformat}} {% trans "km/h" %}</td>
-                {% if slope.act_power %}
-                <td>
-                    {{slope.act_power|floatformat}} {% trans "W" %}
-                </td>
+        <tr id="slopetd{{slope.id}}" class="{% cycle "odd" "even" %}">
+            <td style="width: 145px">
+                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="{% trans "Zoom"%}" title="{% trans "Zoom" %}" id="zoom{{forloop.counter0}}-link-1" class="zoom-select floatleft" />
+                <script type="text/javascript">
+                    $('#zoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
+                        plot.setSelection({ 
+                            xaxis: { 
+                                from: {{slope.start|unlocalize}}, to: {{slope.start|unlocalize}}+{{slope.length|unlocalize}}/1000
+                            }
+                        });
+                    });
+                {% if object.user == request.user and slope.is_segmentdetail %}
+                    $('#slopetd{{slope.id}}').hover (
+                            function () {
+                                $('#segmentbuttons{{slope.id}}').removeClass('hidden');
+                            },
+                            function () {
+                                $('#segmentbuttons{{slope.id}}').addClass('hidden');
+                            }
+                            );
                 {% endif %}
-                <td>{{slope.est_power|floatformat}} {% trans "W" %} </td>
-                <td>{{slope.power_per_kg|floatformat}} {% trans "W/kg" %} </td>
-                <td>{% if slope.vam %}{{slope.vam}}{% endif %}</td>
-                <td><div class="slope-categories slope-category-{{slope.category}}"><span>{{slope.category}}</span></div></td>
-                <td>{{slope.avg_hr|floatformat}} {% trans "BPM" %}
+                </script>
+
+
+            {% if slope.segment %}
+            <a style="float: left" href="{{slope.segment.get_absolute_url}}">
+                {{ slope.segment.name|truncatechars:"15" }}
+            </a>
+            {% endif %}
+            {% if object.user == request.user and slope.is_segmentdetail %}
+            <div class="floatleft hidden" id="segmentbuttons{{slope.id}}">
+                <a href="{% url segmentdetail_update slope.id %}">
+                <img title="{% trans "Modify segment"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
+                </a>
+                <a href="{% url segmentdetail_delete slope.id %}">
+                <img title="{% trans "Delete segment"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
+                </a>
+            </div>
+            {% endif %}
+            </td>
+            <td>
+                {{ slope.start|floatformat }} {% trans "km" %}
+            </td>
+            <td>
+                {{ slope.length|divide:"1000" }} {% trans "km" %}
+            </td>
+            <td>
+                {{slope.ascent}} {% trans "m" %}
+            </td>
+            <td>
+                {{slope.grade|floatformat}} %
+            </td>
+            <td>
+                {{ slope.duration|durationformatshort }}
+            </td>
+            <td>
+                {{slope.speed|floatformat}} {% trans "km/h" %}
+            </td>
+
+            {% if slope.act_power %}
+            <td>
+                {{slope.act_power|floatformat}} {% trans "W" %}
+            </td>
+            {% endif %}
+
+            <td>
+                {{slope.est_power|floatformat}} {% trans "W" %}
+            </td>
+            <td>
+                {{slope.power_per_kg|floatformat}} {% trans "W/kg" %}
+            </td>
+            <td>
+                {% if slope.category >= 0 %}
+                {% if slope.vam %}{{slope.vam}}{% endif %}
+                {% endif %}
+            </td>
+            <td>
+                {% if slope.category >= 0 %}
+                <div class="categorybutton">
+                    {{slope.category}}
+                </div>
+                {% endif %}
+            </td>
+            <td>
+                {% if object.avg_hr %}
                     {% if object.user.get_profile.max_hr %}
-                    ({{ slope.avg_hr|percent:object.user.get_profile.max_hr }})
-                    {% endif %} </td>
-            </tr>
+                        {{ slope.avg_hr|percent:object.user.get_profile.max_hr }}
+                    {% else %}
+                        {{ slope.avg_hr }}
+                    {% endif %} 
+                {% endif %}
+            </td>
+        </tr>
         {% endfor %}
-        </table>
-    </div>
+    </table>
+<hr>
+<ul class="buttons">
+{% if object.user == request.user or request.user.is_superuser %}
+<li class="floatleft">
+<a href="{% url exercise_segment_search object.id %}">{% trans "Search for named segments" %}</a>
+</li>
+{% endif %}
+<li class="floatleft">
+<a href="{% url segment_create %}">{% trans "Create new segment" %}</a>
+</li>
+</ul>
+</div>

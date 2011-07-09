@@ -21,14 +21,10 @@
 
 <table class="fullsize">
     <tr>
-        <th>
-            {% anchortrans user %}
+        <th style="width: 32px">
         </th>
         <th>
             {% anchortrans route__name "Name" %}
-        </th>
-        <th>
-            {% anchortrans date %}
         </th>
         <th>
             {% anchortrans route__distance "Distance" %}
@@ -46,15 +42,17 @@
             {% anchortrans avg_hr "Avg HR" %}
         </th>
         <th>
-            {% anchortrans kcal "Expenditure" %}
+            {% anchortrans normalized_power "xPower" %}
+        </th>
+        <th style="width: 32px">
         </th>
     </tr>
 {% for object in object_list %}
 <tr class="{% cycle even,odd %} hoverpoint" id="trip_{{object.id}}">
     <td>
         {{ object|exercise_mouseover }}
-        <a href="{{ object.user.get_absolute_url }}" title="{{object.user}}">
-            {% avatar object.user 32 %}
+        <a href="{{ object.get_absolute_url }}">
+            <img width="32" height="32" alt="{{ object.exercise_type }}" src="{{ object.icon }}" />
         </a>
     </td>
     <td>
@@ -65,9 +63,12 @@
             {{ object.exercise_type }}
             {% endif %}
         </a>
-    </td>
-    <td>
-        {{ object.date|naturalday }}
+        <p class="description">
+            {% if object.kcal %}
+                {{ object.kcal }} {% trans "kcal" %},
+            {% endif %}
+            &nbsp;&nbsp;{{ object.date|naturalday }}
+        </p>
     </td>
     <td>
         {% if object.route.distance %}
@@ -95,9 +96,14 @@
         {% endif %}
     </td>
     <td>
-        {% if object.kcal %}
-            {{ object.kcal }} {% trans "kcal" %}
+        {% if object.normalized_power %}
+            {{ object.normalized_power}}  {% trans "W" %}
         {% endif %}
+    </td>
+    <td>
+        <a href="{{ object.user.get_absolute_url }}" title="{{object.user}}">
+            {% avatar object.user 32 %}
+        </a>
     </td>
 </tr>
 {%endfor %}

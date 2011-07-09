@@ -34,8 +34,22 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 CACHE_MIDDLEWARE_KEY_PREFIX = 'turan'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        },
+    'file': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+        },
+}
+
+COMPRESS_CACHE_BACKEND = 'default'
+#COMPRESS = True
+COMPRESS_ROOT = os.path.join(PROJECT_ROOT, "site_media")
+
 
 
 # Local time zone for this installation. Choices can be found here:
@@ -48,13 +62,12 @@ TIME_ZONE = 'Europe/Oslo'
 # Language code for this installation. All choices can be found here:
 # http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
 # http://blogs.law.harvard.edu/tech/stories/storyReader$15
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'nn'
 
 SITE_ID = 1
 
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
 USE_I18N = True
+USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -71,7 +84,7 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'static')
 
 # URL that handles the static files like app media.
 # Example: "http://media.lawrence.com"
-STATIC_URL = '/site_media/static/'
+STATIC_URL = '/site_media/'
 
 # Additional directories which hold static files
 STATICFILES_DIRS = (
@@ -83,6 +96,12 @@ STATICFILES_EXTRA_MEDIA = (
     ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
     ('turansite', os.path.join(PROJECT_ROOT, 'media')),
 )
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
@@ -92,23 +111,28 @@ ADMIN_MEDIA_PREFIX = posixpath.join(MEDIA_URL, "admin/")
 SECRET_KEY = '%z3t0zu+99#5(m^w%-+q)m7tc2o9n#p_o%vah-$@7i_#))+0l8'
 
 # List of callables that know how to import templates from various sources.
+
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
+    ('django.template.loaders.cached.Loader', (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    )),
 )
 
 MIDDLEWARE_CLASSES = (
-#        'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.gzip.GZipMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_openid.consumer.SessionConsumer',
-    'account.middleware.LocaleMiddleware',
+    "pinax.apps.account.middleware.LocaleMiddleware",
     'django.middleware.doc.XViewMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'django_sorting.middleware.SortingMiddleware',
-#    'djangodblog.middleware.DBLogMiddleware',
+    'sentry.client.middleware.SentryResponseErrorIdMiddleware',
+    'turan.middleware.Http403Middleware',
     'pinax.middleware.security.HideSensistiveFieldsMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
 )
@@ -129,6 +153,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
+#    "staticfiles.context_processors.static_url",
+#    "social_auth.context_processors.facebook_api_key",
 
 #"pinax.core.context_processors.contact_email",
 #"pinax.core.context_processors.site_name",
@@ -136,11 +163,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
-    "account.context_processors.openid",
-    "account.context_processors.account",
+    "pinax.apps.account.context_processors.account",
+    #"account.context_processors.openid",
+    #"account.context_processors.account",
     "messages.context_processors.inbox",
     "friends_app.context_processors.invitations",
     "turansite.context_processors.combined_inbox_count",
+
 )
 
 COMBINED_INBOX_COUNT_SOURCES = (
@@ -158,7 +187,12 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'django.contrib.humanize',
     'django.contrib.markup',
+    'django.contrib.messages',
     'django.contrib.webdesign',
+    'indexer',
+    'paging',
+    'sentry',
+    'sentry.client',
     'pinax.templatetags',
 
 #    'devserver',
@@ -173,12 +207,12 @@ INSTALLED_APPS = (
     'messages',
     'announcements',
     'oembed',
-    'djangodblog',
+    #'djangodblog',
     'pagination',
 #    'gravatar',
     'threadedcomments',
     'threadedcomments_extras',
-    'wiki',
+#    'wiki',
 #    'swaps',
     'timezones',
 #    'app_plugins',
@@ -197,24 +231,43 @@ INSTALLED_APPS = (
     'django_sorting',
     'django_markup',
 
+    'compressor',
+
 # TUUURAN
     'turan',
+    'piston',
+    'api', # turan piston API
     'rosetta',
-#    'south',
-#    'debug_toolbar',
+    'south',
+    'debug_toolbar',
     
     # internal (for now)
-    'analytics',
+    #
+    #
+    'social_auth',
+
+    "pinax.apps.account",
+    "pinax.apps.signup_codes",
+    "pinax.apps.analytics",
+    #"pinax.apps.profiles",
+    #"pinax.apps.blog",
+    #"pinax.apps.tribes",
+    "pinax.apps.photos",
+    "pinax.apps.topics",
+    "pinax.apps.threadedcomments_extras",
+  #  'analytics',
     'profiles',
     'staticfiles',
-    'account',
+  #  'account',
 #    'signup_codes',
-    'tribes',
-    'photos',
+    'pinax.apps.tribes',
+    #'tribes',
+   # 'photos',
     'tag_app',
-    'topics',
+   # 'topics',
     'groups',
 
+#    'djkombu',
     'djcelery',
     'django.contrib.admin',
     'wakawaka',
@@ -224,7 +277,7 @@ INSTALLED_APPS = (
 
 )
 
-GPX_STORAGE = '/home/turan.lart.no/pinax-env/turansite/site_media/turan'
+GPX_STORAGE = '/home/turan.no/turansite/site_media/turan'
 #DEFAULT_FILE_STORAGE = GPX_STORAGE
 
 
@@ -246,8 +299,9 @@ AUTH_PROFILE_MODULE = 'profiles.Profile'
 NOTIFICATION_LANGUAGE_MODULE = 'account.Account'
 
 ACCOUNT_OPEN_SIGNUP = True
-ACCOUNT_REQUIRED_EMAIL = False
+ACCOUNT_REQUIRED_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = False
+ACCOUNT_USER_DISPLAY = lambda user: user.get_profile().get_name()
 
 AVATAR_DEFAULT_URL = MEDIA_URL + "turan/unknown.png"
 AVATAR_GRAVATAR_BACKUP = True
@@ -256,20 +310,21 @@ AVATAR_GRAVATAR_DEFAULT = 'http://turan.no/site_media/turan/unknown.png'
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
 CONTACT_EMAIL = "turan@turan.no"
+SERVER_EMAIL = CONTACT_EMAIL
 SITE_NAME = "Turan"
 LOGIN_URL = "/account/login/"
-LOGIN_REDIRECT_URLNAME = "what_next"
+LOGIN_REDIRECT_URLNAME = "profile_redirect"
+LOGIN_REDIRECT_URL = '/profiles/redirect/'
 
 INTERNAL_IPS = (
     '10.2.4.100',
+    '83.242.17.117',
 )
 
-ugettext = lambda s: s
 LANGUAGES = (
     ('nn', 'Nynorsk'),
     ('no', u'Bokmål'),
     ('en', 'English'),
-
 )
 
 URCHIN_ID = "UA-7885298-3"
@@ -289,7 +344,8 @@ RESTRUCTUREDTEXT_FILTER_SETTINGS = {
 }
 
 
-PAGINATION_INVALID_PAGE_RAISES_404 = False
+PAGINATION_INVALID_PAGE_RAISES_404 = True
+SORTING_INVALID_FIELD_RAISES_404 = True
 # if Django is running behind a proxy, we need to do things like use
 # HTTP_X_FORWARDED_FOR instead of REMOTE_ADDR. This setting is used
 # to inform apps of this fact
@@ -308,6 +364,7 @@ import djcelery
 djcelery.setup_loader()
 
 BROKER_HOST = "localhost"
+#BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 BROKER_PORT = 5672
 BROKER_USER = "turan"
 BROKER_PASSWORD = "tur4n"
@@ -316,6 +373,22 @@ CELERYD_CONCURRENCY = 1
 CELERYD_LOG_FILE = 'celeryd.log'
 CELERY_ALWAYS_EAGER = False
 
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.twitter.TwitterBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+#    'social_auth.backends.google.GoogleOAuthBackend',
+#    'social_auth.backends.google.GoogleOAuth2Backend',
+    'social_auth.backends.google.GoogleBackend',
+#    'social_auth.backends.yahoo.YahooBackend',
+    'social_auth.backends.contrib.linkedin.LinkedinBackend',
+#    'social_auth.backends.contrib.LiveJournalBackend',
+#    'social_auth.backends.contrib.orkut.OrkutBackend',
+#    'social_auth.backends.contrib.orkut.FoursquareBackend',
+    'social_auth.backends.OpenIDBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+import random
+SOCIAL_AUTH_DEFAULT_USERNAME = lambda: random.choice(['cipo', 'ilpirate', 'elefantino', 'pistelero', 'gruber'])
 
 
 # local_settings.py can be used to override environment-specific settings

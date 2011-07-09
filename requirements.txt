@@ -25,3 +25,4 @@ gunicorn>=0.11.0
 django-wakawaka
 django_celery
 djcelery
+simplejson

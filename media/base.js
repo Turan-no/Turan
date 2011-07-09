@@ -1,7 +1,104 @@
 /* Colors in use for lots of zone related stuffs */
-var colors = ["rgb(240,240,240)", "rgb(204,204,204)", "rgb(51,102,255)", "rgb(102,204,0)", 
-        "rgb(255,153,0)", "rgb(255,0,0)", "rgb(255,0,0)", "rgb(255,0,0)"];
+var colors = [
+    "rgb(240,240,240)", 
+    "rgb(102,204,0)", 
+    "rgb(000,200,255)",
+    "rgb(51,102,255)", 
+    "rgb(255,153,0)", 
+    "rgb(255,0,0)", 
+    "rgb(166,0,0)", 
+    "rgb(119,0,119)"];
 
+var playercolors = [
+    { r: 255, g: 20, b: 20 },
+    { r: 20, g: 20, b: 255 },
+    { r: 20, g: 255, b: 255 },
+    { r: 255, g: 20, b: 255 },
+    { r: 255, g: 255, b: 20 },
+    { r: 80, g: 80, b: 80 }
+];
+
+/* conver rgb colors to hex, openlayers uses those */
+function colorToHex(c) {
+    var m = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/.exec(c);
+    return m ? '#' + (1 << 24 | m[1] << 16 | m[2] << 8 | m[3]).toString(16).substr(1) : c;
+}
+
+/* Used by flot axis */
+var axisformatters = {
+    speed: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' km/h';
+    },
+    cadence: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' RPM';
+    },
+    altitude: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' m';
+    },
+    length: function(val, axis) {
+        return (Math.round(val*100)/100) + ' km';
+    },
+    distance: function(val, axis) {
+        return (Math.round(val*100)/100) + ' km';
+    },
+    power: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' W';
+    },
+    hr: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' BPM';
+    },
+    temp: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' ℃';
+    },
+    percent: function(val, axis) {
+        return (val).toFixed(axis.tickDecimals) + ' %';
+    },
+    time: function(val, axis) {
+        var hours = Math.floor(val / 60);
+        var minutes = Math.floor(val - hours * 60);
+	var seconds = Math.round(60 * (val - Math.floor(val)));
+
+	var r = "";
+
+        if (hours)
+            r += hours + 'h ';
+
+	if (minutes)
+	    r += minutes + 'm ';
+
+	if (seconds)
+	    r += seconds + 's';
+	return $.trim(r);
+    },
+    duration: function(val, axis) {
+        var days    = parseInt((val / (60*60*24)));
+        var hours   = parseInt((val % (60*60*24)) / (60*60));
+        var minutes = parseInt((val % (60*60)) / (60));
+
+        var result = [];
+
+        if (days > 0) {
+            result.push(days + "d");
+        }
+        if (hours > 0) {
+            result.push(hours + "h");
+        }
+        if (minutes > 0) {
+            result.push(minutes + "m");
+        }
+        if (result.length == 0) {
+            return "0m" 
+        }
+        if (result.length == 1) {
+            return result[0];
+        }
+        return result.slice(0, result.length-1).join(", ") + " " + result[result.length-1];
+    }
+};
+
+function choose (set) {
+    return set[Math.floor(Math.random() * set.length)];
+}
 
 jQuery.fn.autoscroll = function() {
     $('html,body').animate({scrollTop: this.offset().top}, 500);
@@ -11,9 +108,13 @@ $(function() {
         var itemId = this.getAttribute("id").split("_")[1];
         
         var popupBox = $("#mouseover_" + itemId).show();
-        var boxWidth = 350;
-        var boxHeight = parseInt(popupBox.css("height").replace("px","")) + 50;
-        popupBox.css({ left: (evt.clientX > window.innerWidth - boxWidth ? window.innerWidth - boxWidth : evt.clientX) + "px", top: (evt.clientY > window.innerHeight - boxHeight ? window.innerHeight - boxHeight : evt.clientY) + "px", width: boxWidth-50 + "px" });
+        var boxWidth = 300;
+        var boxHeight = popupBox.height();
+        popupBox.css({ 
+            left: evt.clientX + 10 + (evt.clientX + boxWidth > window.innerWidth ? - boxWidth - 50 + window.innerWidth - evt.clientX : 0) + "px", 
+            top: evt.clientY + 10 + (evt.clientY + boxHeight > window.innerHeight ? - boxHeight - 50 + window.innerHeight - evt.clientY : 0) + "px", 
+            width: boxWidth + "px" 
+        });
     }
 
     function popupfadeout(evt) {
@@ -22,14 +123,14 @@ $(function() {
         var popupBox = $("#mouseover_" + itemId).hide();
     }
 
-    $(".hoverpoint").hoverIntent({timeout: 0, interval: 900, over: popupfadein, out: popupfadeout});
+    $(".hoverpoint").hoverIntent({timeout: 0, interval: 500, over: popupfadein, out: popupfadeout});
 
     function profilepopupfadein(evt) {
         var itemId = this.getAttribute("id").split("_")[1];
         
         var popupBox = $("#profile_" + itemId).show();
         var boxWidth = 300;
-        popupBox.css({ left: evt.clientX + (evt.clientX < boxWidth ? boxWidth : 0) + "px", top: evt.clientY + "px", width: boxWidth + "px" });
+        popupBox.css({ left: evt.clientX + 10 + (evt.clientX + boxWidth > window.innerWidth ? - boxWidth - 50 + window.innerWidth - evt.clientX : 0) + "px", top: evt.clientY + 10 + "px", width: boxWidth + "px" });
     }
 
     function profilepopupfadeout(evt) {

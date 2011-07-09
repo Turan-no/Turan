@@ -3,7 +3,7 @@ import datetime
 
 class HRMEntry(object):
 
-    def __init__(self, time, hr, speed, cadence, altitude, power):
+    def __init__(self, time, hr, speed, cadence, altitude, power, distance):
         self.time = time
         self.hr = hr
         self.speed = speed
@@ -12,6 +12,19 @@ class HRMEntry(object):
         self.lat = 0 #not supported by hrm shit
         self.lon = 0 #not supported by hrm shit
         self.power = power
+        self.distance = distance
+
+class HRMLap(object):
+
+    def __init__(self, time, duration, min_hr, max_hr, avg_hr):
+        self.start_time = time
+        self.duration = duration
+        self.max_hr = max_hr
+        self.avg_hr = avg_hr
+        self.min_hr = min_hr
+
+    def __str__(self):
+        return '[%s] duration: %s distance: %s' % (self.start_time, self.duration, self.distance)
 
 class HRMParser(object):
 
@@ -93,14 +106,18 @@ class HRMParser(object):
                     elif self.smode == '110111100':
                         hr, speed, cadence, power, wat = line.split('\t')
                         altitude = 0
+                    elif self.smode == '11111110': # Tacx
+                        hr, speed, cadence, altitude, power = line.split('\t')
                     else:
-                        assert False, "Unknown smode (combination of sensors), please contact admins"
+                        assert False, "Unknown smode (combination of sensors), please mail file to turan@turan.no"
+                    #has_speed, has_cadence, has_altitude, has_power, power_l_balance, power_ped, hrcc, imperial, air_pressure = list(self.smode)
 
                     hr = int(hr)
                     speed = float(speed)/10
                     cadence = int(cadence)
                     altitude = int(altitude)
                     power = int(power)
+                    distance = 0
 
                     self.power_sum += power
                     self.max_power = max(power, self.max_power)
@@ -112,6 +129,10 @@ class HRMParser(object):
                     self.speed_sum += speed
                     if speed > self.max_speed:
                         self.max_speed = speed
+
+                    if speed:
+                        self.distance_sum += speed/3.6*self.interval
+                        distance = self.distance_sum
 
                     self.cadence_sum += cadence
                     if cadence > self.max_cadence:
@@ -126,16 +147,41 @@ class HRMParser(object):
                         self.pedaling_power_seconds += self.interval
 
 
-                    time = datetime.datetime(self.date.year, self.date.month, self.date.day, self.start_time.hour, self.start_time.minute, self.start_time.second)
-                    time = time + datetime.timedelta(0, self.interval*i)
-                    self.entries.append(HRMEntry(time, hr, speed, cadence, altitude, power))
+                    time = self.time + datetime.timedelta(0, self.interval*i)
+                    self.entries.append(HRMEntry(time, hr, speed, cadence, altitude, power, distance))
                     i += 1
             elif lapstarted:
                 laprow += 1
-                if laprow == 4:
-                    splitted = line.split('\t')
-                    self.temperature = float(splitted[3])/10
+                splitted = line.strip().split('\t')
+                if not len(splitted) > 1:
+                    # Lap Section Done
                     lapstarted = False # reset state
+                else:
+                    if laprow == 1: # New lap
+                        time, hr, min_hr, max_hr, avg_hr = splitted[:]
+                        hours, minutes, seconds = time.split(':')
+                        hours, minutes, seconds = int(hours), int(minutes), float(seconds) # FIXME microseconds
+                        seconds_after_start = (int(int(hours)*3600 + (int(minutes)*60) + float(seconds))) # FIXME support for microseconds
+                        time = self.time + datetime.timedelta(0, seconds_after_start)
+                        if self.laps:
+                            duration = (time - self.laps[-1].start_time).seconds
+                        else: # first lap
+                            duration = seconds_after_start
+                        self.laps.append(HRMLap(time, duration, min_hr, max_hr, avg_hr))
+                    elif laprow == 2:
+                        wut, wut, wut, speed, cadence, altitude = splitted[:]
+                        speed = float(speed)/10
+                        cadence = int(cadence)
+                        altitude = int(altitude)
+                    elif laprow == 4:
+                        lap_type, distance, power, temperature, phrase_lap, air_pressure = splitted[:]
+                        temperature = float(temperature)/10
+                        distance = float(distance)
+                        self.laps[-1].avg_temp = temperature
+                        self.laps[-1].distance = distance
+                        self.temperature = temperature
+                    elif laprow == 5:
+                        laprow = 0 # reset lap counter
             elif notestarted:
                 self.comment = line.strip().decode('ISO-8859-1')
                 notestarted = False # reset state
@@ -147,6 +193,8 @@ class HRMParser(object):
             elif line.startswith('StartTime'):
                 hour, minute, second = int(line[10:12]), int(line[13:15]), int(line[16:18])
                 self.start_time = datetime.time(hour, minute, second)
+                self.time = datetime.datetime(self.date.year, self.date.month, self.date.day, \
+                        self.start_time.hour, self.start_time.minute, self.start_time.second)
             elif line.startswith('Interval'):
                 self.interval = int(line.split("=")[1])
             elif line.startswith('[HRData]'):
@@ -171,7 +219,7 @@ class HRMParser(object):
             self.avg_pedaling_cad = self.pedaling_cad/self.pedaling_cad_seconds
         if self.pedaling_power and self.pedaling_power_seconds:
             self.avg_pedaling_power = self.pedaling_power/self.pedaling_power_seconds
-        self.distance_sum = self.interval*len(self.entries) * self.avg_speed/3.6
+        #self.distance_sum = self.interval*len(self.entries) * self.avg_speed/3.6
 
 
 if __name__ == '__main__':
@@ -181,8 +229,8 @@ if __name__ == '__main__':
     h = HRMParser()
     h.parse_uploaded_file(file(sys.argv[1]))
 
-    #for x in h.entries:
-    #    print x.time, x.speed, x.altitude, x.hr, x.cadence
+    for x in h.entries:
+        print x.time, x.speed, x.altitude, x.hr, x.cadence, x.distance
 
     print "avg hr, avg speed, avg cadence"
     print h.avg_hr, h.avg_speed, h.avg_cadence
@@ -194,3 +242,7 @@ if __name__ == '__main__':
     print h.avg_hr, h.avg_speed, h.avg_cadence, h.avg_pedaling_cad
     print h.max_hr, h.max_speed, h.max_cadence
     print "Distance:", h.distance_sum
+    if h.laps:
+        print "Laps:"
+        for lap in h.laps:
+            print lap

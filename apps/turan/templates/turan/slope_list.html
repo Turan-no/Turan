@@ -40,9 +40,9 @@
     {% trans "Slopes" %}
 </h1>
 <table class="fullsize">
-    <tr>
+    <tr class="{% cycle odd,even %}">
         <th>
-            {% anchortrans user %}
+            {% anchortrans exercise__user User %}
         </th>
         <th>
             {% anchortrans exercise %}
@@ -85,7 +85,7 @@
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
     <td><a href="{{ object.exercise.user.get_absolute_url }}" title="{{ object.exercise.user }}"> {% avatar object.exercise.user 32 %} </a></td>
     <td><a href="{{object.exercise.get_absolute_url}}">{{object.exercise.route}}</a></td>
-    <td>{{ object.length|divide:"1000"|floatformat }} {% trans "km" %} </td>
+    <td>{{ object.length|divide:"1000" }} {% trans "km" %} </td>
     <td>{{object.ascent}} {% trans "m" %}</td>
     <td>{{object.grade|floatformat}} %</td>
     <td>{{ object.duration|durationformatshort }}</td>
@@ -94,7 +94,7 @@
     <td>{{object.est_power|floatformat}} {% trans "W" %} </td>
     <td>{{object.power_per_kg|floatformat}}</td>
     <td>{% if object.vam %}{{object.vam}}{% endif %}</td>
-    <td><div class="slope-categories slope-category-{{object.category}}"><span>{{object.category}}</span></div></td> 
+    <td><div class="categorybutton"><span>{{object.category}}</span></div></td> 
     <td>{% if object.avg_hr%}{{object.avg_hr|floatformat}}
         {% if object.exercise.user.get_profile.max_hr %}
         ({{ object.avg_hr|percent:object.exercise.user.get_profile.max_hr }})

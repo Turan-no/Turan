@@ -339,7 +339,7 @@ class FITParser(object):
                         no sensible values anyways.
                         '''
                         continue
-                    
+
                     time = datetime.fromtimestamp(get_field_value(fields, fit_lap, 'timestamp'))
                     time = time + timestamp_offset
                     start_time = get_field_value(fields, fit_lap, 'start_time')
@@ -402,7 +402,7 @@ class FITParser(object):
                         gap somewhere earlier, but as of now we just give up
                         and drop the current sample if that is the case.
                         '''
-                        if (len(self.entries) == 1 or (self.entries[-1].time - self.entries[-2].time).seconds != 1):
+                        if (len(self.entries) == 1 or len(self.entries)>1 and (self.entries[-1].time - self.entries[-2].time).seconds != 1):
                             self.entries[-1].time = self.entries[-1].time - timedelta(seconds=1)
                         else:
                             continue
@@ -429,6 +429,11 @@ class FITParser(object):
                     if distance != None:
                         distance = distance / 100.
 
+                    #if distance == None or spd == None:
+                        # Do not export samples like this
+                        # Observed in site_media/turan/sensor/2011-06-18-12-55-11.fit
+                    #    continue
+
                     self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon, distance))
                 elif global_msg_type == 21:
                     '''
@@ -441,7 +446,7 @@ class FITParser(object):
                 else:
                     print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
                 '''
-            elif msg_type == 1:                
+            elif msg_type == 1:
                 def_hdr = f.read(5)
                 (arch,) = struct.unpack('B',def_hdr[1:2])
                 if arch == 0:

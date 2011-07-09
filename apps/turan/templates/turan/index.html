@@ -2,21 +2,47 @@
 {% load threadedcommentstags %}
 {% load avatar_tags %}
 {% load tagging_tags %}
-{% load webdesign %}
 
 {% load humanize %}
 {% load i18n %}
 {% load turan_extras %}
 {% block title %}
 {{ block.super }}
-{% trans "What matters" %}
+{% trans "Turan: It's what matters." %}
 {% endblock %}
+    {% block extramenu %}
+    <ul class="submenu">
+        <li style="float: left">
+            <a href="{% url route_create %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add route" %}" />
+                {% trans "Add route" %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url import_data %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="{% trans "Import exercise" %}" />
+                {% trans "Import exercise" %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url exercise_create %}">
+                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/add.png" alt="{% trans "Add an exercise" %}" />
+                {% trans "Add an exercise" %}
+            </a>
+        </li>
+    </ul>
+    {% endblock %}
 {% block content %}
 
+<div id="exercisers">
+    {% for exerciser in user_list %}
+    <a class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
+    {{ exerciser|profile_hover }}
+    {% endfor %}
+    <hr class="clearleft" />
+</div>
+
 <div class="half floatright">
-    <h2>
-        <a href="{% url exercises %}">{% trans "Latest exercises" %}</a>
-    </h2>
         {% for object in exercise_list %}
          {{ object|exercise_mouseover }}
         {% endfor %}
@@ -26,10 +52,24 @@
             <a href="{{ object.get_absolute_url }}">
                 <img alt="User image" class="floatleft" src="{{ object.icon|safe }}" width="32" height="32" />
             </a>
-            <a class="floatright" href="{{object.user.get_profile.get_absolute_url }}">{% avatar object.user 30 %}</a>
+            <a class="floatright" href="{% url profile_detail object.user %}">{% avatar object.user 30 %}</a>
+            {% if object.route.gpx_file %}
+            <img class="floatright" src="{{ object.route.get_png_url }}" width="32" height="32"/>
+            {% endif %}
             <a href="{{ object.get_absolute_url }}">
-                {{ object|slice:":35" }}
+                {{ object.get_name }}
             </a>
+            {% if object.segmentdetail_set.exists %}
+            <p class="smaller fade floatright">
+
+            {% for sd in object.segmentdetail_set.select_related %}
+            {% if sd.segment%}
+                <a href="{% url segment sd.segment.id %}">{{sd.segment.name|truncatechars:":15"}}</a>{% if not forloop.last %},{% endif%}
+            {% endif %}
+            {% endfor %}
+
+            </p>
+            {% endif %}
             <p class="smaller fade">
                 {% if object.route.distance %}
                     {{ object.route.distance|floatformat }} {% trans "km" %}
@@ -43,10 +83,8 @@
         </li>
         {%endfor %}
     </ul>
+    <a href="{% url exercises %}">{% trans "View more exercises" %}</a>
 
-    <h2>
-        <a href="{% url routes %}">{% trans "Most popular routes" %}</a>
-    </h2>
     <ul class="routes">
         {% for object in route_list %}
         <li class="{% cycle "even" "odd" %}">
@@ -66,6 +104,9 @@
                 </p>
                 <hr class="clearleft" />
             </div>
+            <a href="{{ object.get_absolute_url }}">
+                <img class="floatright" src="{{ object.get_png_url }}" width="32" height="32"/>
+            </a> 
             <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
             <p class="smaller fade">
                 {% if object.distance %}
@@ -82,104 +123,55 @@
         </li>
     {%endfor %}
     </ul>
+    <a href="{% url routes %}">{% trans "View more routes" %}</a>
 </div>
 
 <div class="half leftcol">
-    <h1>
-        {% trans "Welcome to Turan" %}.no!
-    </h1>
-
-    <ul class="buttons spacer">
-        <li style="float: left">
-            <a href="{% url route_create %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add route" %}" />
-                {% trans "Add route" %}
-            </a>
-        </li>
-        <li style="float: left">
-            <a href="{% url exercise_create %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
-                {% trans "Add an exercise" %}
-            </a>
-        </li>
-        <li>
-            <a href="{% url import_data %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Import exercise" %}" />
-                {% trans "Import exercise" %}
-            </a>
-        </li>
-    </ul>
-    <h2>{% trans "Top exercisers" %}</h2>
-    <div id="exercisers" class="spacer">
-        {% for exerciser in user_list %}
-        {% if exerciser.exercise_set.count %}
-        <a class="profilehoverpoint" id="user_{{exerciser.id}}" title="{{exerciser.username}}" href="{{exerciser.get_profile.get_absolute_url }}">{% avatar exerciser 60 %}</a>
-        {{ exerciser|profile_hover }}
-        {% endif %}
-        {% endfor %}
-    </div>
-    <h2>{% trans "Latest comments" %}</h2>
-    <ul id="last_comments" class="spacer">
-        {% for comment in comment_list %}
-        <li class="{% cycle "even" "odd" %}">
-            <a title="{{comment.user}}" href="{{comment.get_content_object.get_absolute_url}}#comment_{{comment.id}}">
-            {% avatar comment.user 32 %}
-            </a>
-            {% ifchanged %}<h4>{{comment.get_content_object}}</h4>{% endifchanged %}
-            <a title="{{comment.user}}" href="{{comment.get_content_object.get_absolute_url}}#comment_{{comment.id}}">
-                <p>{{comment.comment|truncatewords:24}}</p>
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
     <div id="tabs">
         <ul>
-            <li class="tab selected" id="tabs-select-1"><h3>{% trans "Turan?" %}</h3></li>
-            <li class="tab" id="tabs-select-2"><h3>{% trans "Analyze" %}</h3></li>
-            <li class="tab" id="tabs-select-3"><h3>{% trans "Map" %}</h3></li>
-            <li class="tab" id="tabs-select-4"><h3>{% trans "Log" %}</h3></li>
+            <li class="tab selected" id="tabs-select-1"><p>{% trans "Turan?" %}</p></li>
+            <li class="tab" id="tabs-select-2"><p>{% trans "Analyze" %}</p></li>
+            <li class="tab" id="tabs-select-3"><p>{% trans "Map" %}</p></li>
+            <li class="tab" id="tabs-select-4"><p>{% trans "Log" %}</p></li>
         </ul>
         <div id="tabs-1" class="visible">
             <p>
+            {% comment %}
+            <p>
+            <b>T</b>uran is currently an invite only site. Contact a member you know for an invite.
+            </p>
+            {% endcomment %}
             {% blocktrans %}
-            Turan is a hobby project driven mostly by coffee and frozen pizzas, but also by xt, N`Grath and si-m1. It supports a variety of training computers, preferrably with a gps-module. If you want to, you can use several devices and combine it here, as long as you're able to retrieve the .tcx, .gpx, and/or .hrm from the device.
+            <b>T</b>uran is a hobby project created by a few exercise enthusiasts for logging and analyzing exercise data from heart rate monitors / cycle computers. It supports a variety of devices.
+            </p>
+            <p>
+            Garmin products are supported with file formats .tcx and .fit. FIT-format reccommended.
+            Polar from polar online (.xml) or from devices that exports .hrm
+            GPX-files can be used but are often suboptimal.
+            PWX and CSV also supported, but some features missing.
             {% endblocktrans %}
             </p>
-            <h4>{% trans "The supported devices are" %}:</h4>
-            <ul class="floatleft">
-                <li class="floatleft" style="list-style-type: none">
-                    <img alt="Garmin" src="{{ MEDIA_URL }}turan/garmin-edge-705.png" height="64" width="64" />
-                    <a href="http://www.hardware.no/sok/?query=garmin+edge">Garmin Edge</a>
-                </li>
-                <li class="floatleft" style="list-style-type: none">
-                    <img alt="Polar RS" src="{{ MEDIA_URL }}turan/polar.png" width="64" height="64" />
-                    <a href="http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=polar+rs">Polar RS</a>
-                </li>
-            </ul>
-            <hr class="clearleft" />
             <p>
             {% blocktrans %}
-            Turan is currently categorized into cycletrips, hikes and other exercises. Spinning and other indoor activity ends up in the latter category. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.
+            <b>T</b>uran is currently categorized into different exercise types to provide statistics and information for each type separately. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.
             {% endblocktrans %}
             </p>
         </div>
         <div id="tabs-2" class="">
-            <img class="floatright" src="{{MEDIA_URL}}turan/graf-utsnitt.png" alt="Graph" />
+            <img class="floatright" style="padding-left: 8px" src="{{MEDIA_URL}}turan/graf-utsnitt.png" alt="Graph" />
             <p>
             {% blocktrans %}
             Provided you have one of the supported devices you can analyze your training, kilometre by kilometre, or minute by minute if distance isn't relevant. You can, again provided your device supports it, graph everything the device records. Speed, altitude, cadence, heart rate, power, the whole <a href="http://www.urbandictionary.com/define.php?term=shebang">shebang</a>. Obviously, analyzing means breaking down a complex issue into smaller parts, so zooming in on any part of any lenght is supported. Just click and mark an interesting part of the graph and drool on the immense depth of the data <strong>you</strong> have produced.
             {% endblocktrans %}
             </p>
-            <hr class="clearright" />
         </div>
         <div id="tabs-3" class="">
-            <img class="floatleft" src="{{MEDIA_URL}}turan/mapexample.png" alt="Graph" />
+            <img class="floatleft" style="padding-right: 8px" src="{{MEDIA_URL}}turan/mapexample.png" alt="Graph" />
             <p>
             {% blocktrans %}
-            The map serves two purposes for trips and hikes. First and foremost the function of showing where you've been. That one's easy. The second is the killer: intensities during the exercises are embedded in the trace of the trip. The intensity of your exercise is indicated by the color, showing where which parts of your trip was relatively speaking the hardest. The levels are also relative to the user's own max-pulse, so make sure yours is correct.
+            The map serves two purposes. First and foremost the function of showing where you've been. That one's easy. The second is the killer: intensities during the exercises are embedded in the trace of the trip. The intensity of your exercise is indicated by the color, showing where which parts of your trip was relatively speaking the hardest. The levels are also relative to the user's own max-pulse, so make sure yours is correct.
             {% endblocktrans %}
             </p>
-            <hr class="clearleft" />
         </div>
         <div id="tabs-4" class="">
             <p>
@@ -203,12 +195,44 @@
         });
     </script>
 
+    <ul class="segments">
+        {% for object in segment_list|slice:":10" %}
+        <li class="{% cycle "even" "odd" %}">
+            <a href="{{ object.get_absolute_url }}">
+                <img class="floatleft" src="{{ object.get_png_url }}" width="32" height="32"/>
+                <p>{{ object }}</p>
+                <p class="smaller fade">
+                    {{ object.distance|floatformat }} km, 
+                    {{ object.ascent }} m {% trans "ascent" %}
+                </p>
+            </a> 
+            <hr class="clearleft" />
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h2>{% trans "Latest comments" %}</h2>
+    <ul id="last_comments" class="spacer">
+        {% for comment in comment_list %}
+        <li class="{% cycle "even" "odd" %}">
+            <a title="{{comment.user}}" href="{{comment.get_content_object.get_absolute_url}}#comment_{{comment.id}}">
+            {% avatar comment.user 32 %}
+            </a>
+            {% ifchanged %}<h4>{{comment.get_content_object}}</h4>{% endifchanged %}
+            <a title="{{comment.user}}" href="{{comment.get_content_object.get_absolute_url}}#comment_{{comment.id}}">
+                <p>{{comment.comment|truncatewords:24}}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
     <hr class="clear" />
 </div>
+
+
 {% endblock content %}
 
 {% block cloud %}
-<div class="cloud">
+<div class="spacer cloud drop-shadow lifted">
     <ul>
 {% for tag in tag_list %}
     {% ifnotequal tag.count 1 %}

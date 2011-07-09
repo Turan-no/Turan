@@ -1,86 +1,111 @@
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
+{% load sorting_tags %}
+{% autosort intervals %}
 <table class="fullsize">
-    <tr>
+    <tr class="{% cycle odd,even %}">
         <th>
             {% trans "Zoom" %}
         </th>
         <th>
-            {% trans "Start" %}
+            {% anchortrans start %}
         </th>
         <th>
-            {% trans "Duration" %}
+            {% anchortrans duration %}
         </th>
+
         {% if object.avg_speed %}
         <th>
-            {% trans "Length" %}
+            {% anchortrans distance "Length" %}
         </th>
         <th>
             {% trans "Elevation" %}
         </th>
         <th>
-            {% trans "Speed" %}
+            {% anchortrans avg_speed Speed %}
         </th>
         {% endif %}
+
         {% if object.avg_power and power_show%}
         <th>
-            {% trans "Avg power" %}
+            {% anchortrans avg_power "Avg power" %}
         </th>
         <th>
-            {% trans "FTP %"%}
+            {% anchortrans avg_power "FTP %" %}
         </th>
         <th>
             {% trans "Avg power/kg" %}
         </th>
-        <th> {% trans "Max power" %} </th>
+        <th>{% anchortrans max_power "Max power" %}</th>
         {% endif %}
+        {% if object.avg_hr %}
         <th>
-            {% trans "Avg HR" %}
+            {% anchortrans avg_hr "Avg HR" %}
         </th>
+        {% endif %}
+        {% if object.avg_cadence %}
+        <th>
+            {% anchortrans avg_pedaling_cadence "Avg cadence" %}
+        </th>
+        <th>
+            {% anchortrans max_cadence "Max cadence" %}
+        </th>
+        {% endif %}
     </tr>
-{% for interval in intervals %}
-<tr id="row{{forloop.counter0}}">
-        <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="izoom{{forloop.counter0}}-link-1" class="zoom-select" />
-<script type="text/javascript">
-$(function () {
-$('#izoom{{forloop.counter0}}-link-1').bind("click", 
-        function (evt) { 
-        plot.setSelection({ 
-            xaxis: { 
-            {% if time_xaxis %}
-                from: {{interval.get_relative_time_in_minutes}}, to: {{ interval.get_relative_time_in_minutes}} +  {{interval.duration}} / 60
-            {% else %}
-                from: {{interval.start}}/1000, to: ({{interval.start}}+{{interval.distance}})/1000
-            {% endif %}
-            }
-        })
-        });
-
-$('#row{{forloop.counter0}}').css('background-color', colors[{{interval.get_zone}}].replace("rgb", "rgba").replace(")", ", 0.5)"));
-});
-
-
-</script>
+    {% for interval in intervals %}
+    <tr id="row{{forloop.counter0}}">
+        <td>
+            <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="Zoom" id="izoom{{forloop.counter0}}-link-1" class="zoom-select" />
+            <script type="text/javascript">
+                $(function () {
+                    $('#izoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
+                        {% localize off %}
+                        plot.setSelection({ 
+                            xaxis: { 
+                                {% if time_xaxis %}
+                                from: {{interval.get_relative_time_in_minutes}}, to: {{ interval.get_relative_time_in_minutes}} +  {{interval.duration}} / 60
+                                {% else %}
+                                from: {{interval.start}}/1000, to: ({{interval.start}}+{{interval.distance}})/1000
+                                {% endif %}
+                            }
+                        });{% endlocalize %}
+                    });
+                    {% if interval.get_zone %}
+                    $('#row{{forloop.counter0}}').css('background-color', colors[{{interval.get_zone}}].replace("rgb", "rgba").replace(")", ", 0.5)"));
+                    {% endif %}
+                });
+            </script>
         </td>
-        <td>{{ interval.start_time|time:"H:i" }} </td>
+        <td>{{ interval.start_time|time:"H:i" }}, {{interval.start|divide:"1000"}} km </td>
         <td>{{interval.duration|durationformatshort}}</td>
+
         {% if object.avg_speed %}
-        <td>{{ interval.distance|floatformat }} {% trans "m" %} </td>
-        <td>+{{ interval.ascent}}/-{{ interval.descent }} {% trans "m" %} </td>
+        <td>{{ interval.distance|divide:"1000"}} {% trans "km" %}</td>
+        <td>{% if interval.ascent%}+{{ interval.ascent}}/{% endif%}{% if interval.descent %}-{{ interval.descent }} {% trans "m" %}{% endif%}</td>
         <td>{{interval.avg_speed|floatformat}} {% trans "km/h" %}</td>
         {% endif %}
+
         {% if interval.avg_power and power_show %}
-        <td> {{interval.avg_power|floatformat}} {% trans "W" %} </td>
-        <td> {{interval.get_ftp_percentage|floatformat}} {% trans "%" %} </td>
-        <td>{{interval.get_avg_power_per_kg|floatformat}} {% trans "W/kg" %} </td>
-        <td> {{interval.max_power|floatformat}} {% trans "W" %} </td>
+        <td>{{interval.avg_power|floatformat}} {% trans "W" %}</td>
+        <td>{{interval.avg_power|percent:userftp}}</td>
+        <td>{{interval.get_avg_power_per_kg|floatformat}} {% trans "W/kg" %}</td>
+        <td>{{interval.max_power|floatformat}} {% trans "W" %} </td>
         {% endif %}
+        {% if interval.avg_hr %}
         <td>
-            {% if object.user.get_profile.max_hr %}
-            {{ interval.avg_hr|percent:object.user.get_profile.max_hr }}
+            {% if max_hr %}
+                {{ interval.avg_hr|percent:max_hr }}
             {% else %}
-            {{interval.avg_hr|floatformat}} {% trans "BPM" %}
-            {% endif %} </td>
+                {{interval.avg_hr|floatformat}} {% trans "BPM" %}
+            {% endif %}
+        </td>
+        {% endif %}
+        {% if interval.avg_pedaling_cadence %}
+        <td>{{interval.avg_pedaling_cadence}} {% trans "RPM" %}</td>
+        <td>{{interval.max_cadence}} {% trans "RPM" %}</td>
+        {% endif %}
+
     </tr>
-{% endfor %}
+    {% endfor %}
 </table>

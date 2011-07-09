@@ -17,7 +17,7 @@ def proj_distance(lat1, lon1, lat2, lon2, elev1=None, elev2=None):
 
 class GPXEntry(object):
 
-    def __init__(self, time, hr, speed, cadence, altitude, lon, lat):
+    def __init__(self, time, hr, speed, cadence, altitude, lon, lat, distance):
         self.time = time
         self.hr = hr
         self.speed = speed
@@ -27,6 +27,7 @@ class GPXEntry(object):
         self.altitude = altitude
         self.lat = lat
         self.lon = lon
+        self.distance = distance
 
 class GPXParser(object):
 
@@ -107,6 +108,8 @@ class GPXParser(object):
                             lon = self.entries[-1].lon
 
                     speed = self.val_or_none(trkpt, 'speed', return_zero=True)
+                    if speed:
+                        speed = speed * 3.6
                     try:
                         tstring = trkpt.find(ns + 'time').text
                     except AttributeError:
@@ -121,7 +124,7 @@ class GPXParser(object):
                     hr = 0
                     try:
                         hr_ele = trkpt.find('.//' +self.garmin_ns + 'hr')
-                        hr = int(hr_ele.text)
+                        hr = int(float(hr_ele.text))
                         self.avg_hr += hr
                         self.max_hr = max(hr, self.max_hr)
                     except AttributeError:
@@ -130,13 +133,17 @@ class GPXParser(object):
                     cad = 0
                     try:
                         cad_ele = trkpt.find('.//' +self.garmin_ns + 'cad')
-                        cad = int(cad_ele.text)
+                        cad = int(float(cad_ele.text))
                         self.avg_cadence += cad
                         self.max_cadence = max(cad, self.max_cadence)
                     except AttributeError:
                         pass # no hr in file
 
                     if self.entries:
+                        # Check for missing elevation, this happens in endomondo export for exmaple
+                        if ele == None:
+                            # Missing element, set it to previous eleveation
+                            ele = self.entries[-1].altitude
                         this_distance = proj_distance(self.entries[-1].lat,
                                 self.entries[-1].lon,
                                 lat,
@@ -155,7 +162,7 @@ class GPXParser(object):
                             if time_d:
                                 speed = 3.6 * this_distance/time_d
 
-                    e = GPXEntry(time, hr, speed, cad, ele, lon, lat)
+                    e = GPXEntry(time, hr, speed, cad, ele, lon, lat, self.distance)
                     self.avg_speed += speed
                     self.max_speed = max(self.max_speed, speed)
 
@@ -193,7 +200,7 @@ if __name__ == '__main__':
 
     for e in g.entries:
         #if 'speed' in e and 'altitude' in e:
-        print e.time, e.lon, e.lat, e.altitude, e.speed
+        print e.time, e.lon, e.lat, e.altitude, e.speed, e.distance
         #else:
         #    print e['time'], e['lon'], e['lat']
     print 'distance: ', g.distance

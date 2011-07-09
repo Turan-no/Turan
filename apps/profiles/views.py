@@ -1,13 +1,14 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.conf import settings
 from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
 
 from time import mktime, strptime
 from datetime import timedelta, datetime, date as datetimedate
@@ -42,7 +43,11 @@ def profiles(request, template_name="profiles/profiles.html", extra_context=None
     search_terms = request.GET.get('search', '')
     order = request.GET.get('order')
     if not order:
-        order = 'date'
+        order = 'name'
+    else:
+        if not order == 'recent':
+            users = users.annotate(duration=Sum('exercise__duration'))
+
     if search_terms:
         users = users.filter(username__icontains=search_terms)
     if order == 'date':
@@ -50,13 +55,28 @@ def profiles(request, template_name="profiles/profiles.html", extra_context=None
     elif order == 'name':
         users = users.order_by("username")
     elif order == 'time':
-        # FIXME Isn't working :(
-        users = users.annotate(e = Sum('exercise__duration'))
+        users = users.order_by("-duration")
+    elif order == 'recent':
+        # Top exercisers last 14 days
+        today = datetimedate.today()
+        days = timedelta(days=14)
+        begin = today - days
+        users = users.filter(exercise__date__range=(begin, today))
+        users = users.annotate(duration=Sum('exercise__duration')).order_by('-duration')
+
+
     return render_to_response(template_name, dict({
         'users': users,
         'order': order,
         'search_terms': search_terms,
     }, **extra_context), context_instance=RequestContext(request))
+
+def profile_redirect(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('profile_detail', kwargs = { 'username': request.user.username }))
+
+    return HttpResponseRedirect(reverse('turanindex'))
+
 
 def profile(request, username, template_name="profiles/profile.html", extra_context=None):
     if extra_context is None:
@@ -126,8 +146,9 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
                 'to_user': username,
                 'message': ugettext("Let's be friends!"),
             })
-    previous_invitations_to = FriendshipInvitation.objects.filter(to_user=other_user, from_user=request.user).exclude(status=8).exclude(status=6)
-    previous_invitations_from = FriendshipInvitation.objects.filter(to_user=request.user, from_user=other_user).exclude(status=8).exclude(status=6)
+    if request.user.is_authenticated():
+        previous_invitations_to = FriendshipInvitation.objects.filter(to_user=other_user, from_user=request.user).exclude(status=8).exclude(status=6)
+        previous_invitations_from = FriendshipInvitation.objects.filter(to_user=request.user, from_user=other_user).exclude(status=8).exclude(status=6)
     
     if is_me:
         if request.method == "POST":
@@ -178,8 +199,8 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
     for ftuple in ftpqs.values_list('time', 'ftp'):
         ftpdataseries += '[%s, %s],' % (datetime2jstimestamp(ftuple[0]), ftuple[1])
 
-    exerciseqs = other_user.exercise_set.order_by('date')
-    exerciseqs_dataseries = other_user.exercise_set.order_by('date')[:7]
+    exerciseqs = other_user.exercise_set.select_related('route','exercise_type').order_by('date')
+    exerciseqs_dataseries = other_user.exercise_set.select_related('route','exercise_type').order_by('date')[:7]
 
     i = 0
 
@@ -242,7 +263,7 @@ def profile(request, username, template_name="profiles/profile.html", extra_cont
 
     
 
-    latest_exercises = other_user.exercise_set.order_by('-date')[:20]
+    latest_exercises = other_user.exercise_set.select_related('route','exercise_type', 'user').order_by('-date')[:20]
 
 
     return render_to_response(template_name, locals(),
@@ -406,7 +427,7 @@ def profile_statistics(request, username, template_name="profiles/statistics.htm
         trips = len(exercises)
         for exercise in exercises:
             if exercise.duration:
-                duration += exercise.duration.seconds/60
+                duration += exercise.duration.total_seconds()/60
             if exercise.route:
                 if exercise.route.distance:
                     km += exercise.route.distance

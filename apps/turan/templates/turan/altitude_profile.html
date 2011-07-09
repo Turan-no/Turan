@@ -1,0 +1,30 @@
+{% load i18n %}
+{% load l10n %}
+    {% localize off %}
+    <div id="altdiv" style="height: 150px; clear: both;"></div>
+<script id="source" language="javascript" type="text/javascript">
+    var alt = { data: {{ alt }}, color: 3, lines: { fill: 0.7 } };
+    var options = { 
+        yaxis: { 
+           tickFormatter: axisformatters['altitude'],  
+           min: {{ alt_min }}, 
+           max: {{ alt_max }}, 
+       },
+        xaxis: { tickFormatter: axisformatters['distance']},
+        grid: { clickable: true, hoverable: true },
+        legend: {
+            position: 'nw'
+        },
+        markers: [ ]
+    };
+    {% for object in exercises %}
+    var marker = {};
+    marker.image = new Image();
+    marker.image.src = "/generate/icon?i=/turan/{{ object.exercise_type.logo }}&r=" + playercolors[{{forloop.counter0}}].r + "&g=" + playercolors[{{forloop.counter0}}].g + "&b=" + playercolors[{{forloop.counter0}}].b + "&h=64&w=64"
+    options.markers.push(marker);
+    {% endfor %}
+
+    alt['label'] = "{% trans "Altitude profile" %}";
+    var altitudeprofileplot = $.plot($("#altdiv"), [alt], options);
+    {% endlocalize %}
+</script>

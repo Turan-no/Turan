@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from xml.etree import ElementTree
-from django.http import HttpResponse
+import re
 import datetime
 import pyproj
 from math import hypot
@@ -99,7 +99,15 @@ class TCXParser(object):
             self.laps.append(LapData(time, duration, distance_sum, max_speed, avg_hr, max_hr, avg_cadence, kcal_sum))
 
         self.time = self.laps[0].start_time
-        self.start_time = datetime.time(self.time.hour, self.time.minute, self.time.second)
+
+        if f.name and re.search('[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}', f.name):
+            m = re.search('[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}', f.name)
+            self.start_time = datetime.time(int(m.group(0)[11:13]), int(m.group(0)[14:16]), int(m.group(0)[17:19]))
+        elif f.name and re.search('[0-9]{2}.[0-9]{2}.[0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2}', f.name):
+            m = re.search('[0-9]{2}.[0-9]{2}.[0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2}', f.name)
+            self.start_time = datetime.time(int(m.group(0)[11:13]), int(m.group(0)[14:16]), int(m.group(0)[17:19]))
+        else:
+            self.start_time = datetime.time(self.time.hour, self.time.minute, self.time.second)
         self.date = datetime.date(self.time.year, self.time.month, self.time.day)
         self.cur_time = self.time
 
@@ -129,6 +137,9 @@ class TCXParser(object):
         pedaling_power_seconds = 0
         self.powersum = 0
         need_initial_altitude = 0
+        last_lat = 0
+        last_lon = 0
+        last_alt = 0
         for e in t.getiterator(tag=garmin_ns + "Trackpoint"):
             try:
                 tstring = e.find(garmin_ns + "Time").text
@@ -164,6 +175,8 @@ class TCXParser(object):
             except AttributeError:
                 ## TODO figure out why elements lack distance, make this smarter ?
                 #distance = self.cur_distance
+                # 310 XT maybe fix??
+                pass
                 distance = 0
 
             try:
@@ -187,36 +200,50 @@ class TCXParser(object):
                 power = 0
 
             # Quickfix to skip empty trackpoints found at least in Garmin Edge 500 tcx-files
-            if lat == 0.0 and lon == 0.0 and distance == 0 and hr == 0:
-                continue
+            #if lat == 0.0 and lon == 0.0 and distance == 0 and hr == 0:
+            #    print "watness"
+            #    continue
             # Check for silly 310XT only pos values
             # as in trackpoints with only lon, lat and altitude, but no other values
             if lat and lon and altitude and not (distance or hr or power or cadence):
+                last_lon = lon
+                last_lat = lat
+                last_alt = altitude
                 continue
+
 
             time = datetime.datetime(*map(int, tstring.replace("T","-").replace(":","-").replace(".","-").strip("Z").split("-")))
 
             timedelta = (time - self.cur_time).seconds
             distdelta = 0
-            if self.gps_distance or (distance == 0 and lon and lat):
+            if self.gps_distance or (not distance and lon and lat):
                  # Didn't find DistanceMeterElement..but we have lon/lat, so calculate
-                if self.entries:
-                    o = self.entries[-1]
-                    if o.lon and o.lat:
-                        try:
-                            hdelta = self.geod.inv(lon, lat, o.lon, o.lat)[2]
-                            distdelta = hypot(hdelta, o.altitude-altitude)
-                        except ValueError:
-                            distdelta = 0
+                #assert False, (timedelta, distance, lon, lat, altitude, power, hr, cadence)
+                if last_lon and last_lat and last_alt and lon and lat and altitude:
+                    try:
+                        hdelta = self.geod.inv(lon, lat, last_lon, last_lat)[2]
+                        distdelta = hypot(hdelta, last_alt-altitude)
+                    except ValueError:
+                        distdelta = 0
+                last_lon = lon
+                last_lat = lat
+                last_alt = altitude
+
             if not distdelta:
                 if distance:
                     distdelta = distance - self.cur_distance
                     self.cur_distance = distance
+            if distdelta and not distance: # For gps_distance = True
+                distance = self.cur_distance + distdelta
+                self.cur_distance = distance
+
+            if not distdelta and not distance:
+                distance = self.cur_distance
 
             if timedelta and distdelta:
                 speed = distdelta/timedelta * 3.6
                 if speed >= 200: #FIXME oh so naive
-                    if self.entries:
+                    if len(self.entries) > 1 and self.entries[-1].speed:
                         speed = self.entries[-1].speed
                     else:
                         speed = 0
@@ -237,10 +264,9 @@ class TCXParser(object):
             self.entries.append(t)
             self.cur_time = time
 
-        seconds = sum([self.laps[i].duration for i in xrange(0,len(self.laps))])
-        self.avg_speed = self.distance_sum / seconds * 3.6
         if self.gps_distance:
             self.max_speed = max([self.entries[i].speed for i in xrange(0,len(self.entries))])
+            self.distance_sum = self.entries[-1].distance
         else:
             try:
                 self.max_speed = max([self.laps[i].max_speed for i in xrange(0,len(self.laps))])
@@ -252,6 +278,8 @@ class TCXParser(object):
             except:
                 pass
 
+        seconds = sum([self.laps[i].duration for i in xrange(0,len(self.laps))])
+        self.avg_speed = self.distance_sum / seconds * 3.6
         try:
             self.max_cadence = max([self.entries[i].cadence for i in xrange(0,len(self.entries))])
         except:
@@ -273,10 +301,11 @@ if __name__ == '__main__':
 
     import pprint
     import sys
-    t = TCXParser(0)
+    print sys.argv[1]
+    t = TCXParser(gps_distance=1)
     t.parse_uploaded_file(file(sys.argv[1]))
 
-    print "Time, Speed, Altitude, Hr, Cadence"
+    print "Time, Speed, Altitude, Hr, Cadence, Distance"
     for x in t.entries:
         print x.time, x.speed, x.altitude, x.hr, x.cadence, x.distance
 

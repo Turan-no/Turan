@@ -1,6 +1,7 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
 
 {% load avatar_tags %}
@@ -25,11 +26,15 @@
 {% endblock %}
 {% block content %}
 
-<div style="width:500px; height:500px; float: right;" id="map"></div>
+{% if object.gpx_file %}
+<div class="mapcontainer"><div class="map drop-shadow raised" id="map"></div>
+    <a href="{{MEDIA_URL}}turan/{{ object.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
+</div>
+{% endif %}
 <h1>
     {{ object.name }}
 </h1>
-<div class="box spacer">
+<div class="spacer">
 {% include "turan/route/attributes.html" %}
 </div>
 <ul class="photos hlist">
@@ -47,7 +52,7 @@
 <ul class="buttons">
     <li>
     <a href="{% url trip_create %}">
-        <img class="icons" src="{{ MEDIA_URL }}pinax/images/silk/icons/map_add.png" alt="{% trans "Add trip"%}" />
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add trip"%}" />
         {% trans "Add trip" %}
     </a>
     </li>
@@ -56,52 +61,46 @@
 {% include "turan/tags.html" %}
 
 <hr class="clearleft" />
-{% with object.get_trips as object_list %}
 {% autosort object_list %}
 {% autopaginate object_list %}
 {% if object_list %}
     <h2>{% trans "Average speed" %}</h2>
-    <div id="avgspeeddiv" style="width:420px;height:200px"></div>
+    <div id="avgspeeddiv" style="width:460px;height:200px"></div>
     <script id="source" language="javascript" type="text/javascript">
     $(function () {
-            var times = [
-            {% for user, series in usertimes.items %}
-            {% if series %}
-                {
-                    label: "{{user}}",
-                    data: [{{series}}],
-                    color: {{ forloop.counter }}
-                },
-            {% endif %}
-            {% endfor %}
-    ];
-    var options = { 
-        xaxis: { mode: "time", timeformat: "%y/%m/%d" }, 
-        yaxis: { min: 0, },
-        legend: {
-            position: "sw",
-            noColumns: 0,
+        var times = [
+        {% for user, series in usertimes.items %}
+        {% if series %}
+            {
+                label: "{{user}}",
+                data: [{{series|unlocalize}}],
+                color: {{ forloop.counter }}
             },
-        }
-        $.plot($("#avgspeeddiv"), times, options);
-    });
+        {% endif %}
+        {% endfor %}
+        ];
+        var options = { 
+            xaxis: { mode: "time", timeformat: "%y/%m/%d" }, 
+            yaxis: { min: 0, tickFormatter: axisformatters.speed },
+            legend: {
+                position: "sw",
+                noColumns: 0,
+                },
+            }
+            $.plot($("#avgspeeddiv"), times, options);
+        });
     </script>
-    <h2 style="clear: both">{% trans "Altitude profile" %}</h2>
-    <div id="altdiv" style="height: 200px"></div>
-<script id="source" language="javascript" type="text/javascript">
-    var alt = { data: [{{ alt }}], color: 3, lines: { fill: 0.7 } };
-    var options = { yaxes:[{}, { min: 0, max: {{ alt_max }}, }], };
-$.plot($("#altdiv"), [alt], options);
-</script>
+    {% include "turan/altitude_profile.html" %}
     <form id="route_form">
     <h2>{% trans "Trips on this route" %}</h2>
+    <form id="route_form">
     <input type="submit" value="{% trans "Compare"%}">
     <table class="fullsize">
         <tr>
             <th>{% trans "Trip" %}</th>
             <th>{% trans "CMP" %}</th>
             <th>{% anchortrans user Exerciser %}</th>
-            <th>{% anchortrans date %}</th>
+            <th>{% anchortrans date Date %}</th>
             <th>{% anchortrans duration %}</th>
             <th>{% anchortrans avg_hr "Avg HR" %}</th>
             <th>{% anchortrans avg_speed "Avg Speed" %}</th>
@@ -112,7 +111,7 @@ $.plot($("#altdiv"), [alt], options);
             <td>
                 {{ object|exercise_mouseover }}
                 <a href="{{ object.get_absolute_url }}">
-                    <img src="/site_media/pinax/images/silk/icons/zoom.png" />
+                    <img src="/site_media/pinax/img/silk/icons/zoom.png" />
                 </a>
             </td>
             <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
@@ -145,7 +144,6 @@ $.plot($("#altdiv"), [alt], options);
     </script>
 {% paginate %}
 {% endif %}
-{% endwith %}
 <hr>
 {% include "turan/commentform.html" %}
 {% endblock content %}

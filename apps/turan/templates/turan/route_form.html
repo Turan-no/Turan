@@ -1,17 +1,28 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
+{% load uni_form_tags %}
 {% load i18n %}
 {% block title %}
 {{ block.super }}
 {% trans "Routes" %}
 {% endblock %}
 {% block content %}
+{% if not object %}
 <h1>{% trans "Create new route" %}</h1>
-<form enctype="multipart/form-data" method="post">
-<table class="fullsize">
-{{ form}}
-</table>
+{%blocktrans%}Create a named route if you want to have a public shared route that people can attach their exercises to.<br>
+You only need to provide Name and Description. The rest of the info will be populated when the first exercise is added to the route.
+
+<br>
+
+<p>Note: If your exercise monitor equipment does not include a GPS, you will have to add a GPX-file manually to the Route to enable the map.</p>{%endblocktrans%}
+{% else %}
+<h1>{% trans "Update route" %}</h1>
+{% endif %}
+<form class="uniForm" enctype="multipart/form-data" method="post">
+{{ form|as_uni_form}}
+{% comment %}
 <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
-<input type="submit" value="{% trans "Next" %}" />
+{% endcomment %}
+<input type="submit" value="{% trans "Save route" %}" />
 </form>
 {% endblock content %}

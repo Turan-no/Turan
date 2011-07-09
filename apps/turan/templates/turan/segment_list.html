@@ -1,4 +1,5 @@
 {% extends "turan/base.html" %}
+{% load turanwaka_tags %}
 {% load humanize %}
 {% load i18n %}
 {% load turan_extras %}
@@ -6,47 +7,48 @@
 {% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
-{% trans "Segments" %}
+{% trans "Segment list" %}
 {% endblock %}
+{% block body_class%}segments{% endblock %}
 {% block content %}
 
 {% autosort object_list %}
 {% autopaginate object_list %}
 
-{% include "turan/search_head.html" %}
 
-{% if search_query %}
-<h4>{% trans "Search results for " %}{{search_query}} <a class="remove" title="{% trans "Clear search query" %}" href="{% url segments %}">[X]</a></h4>
-{% endif %}
-<div class="searchfilters">
-    <ul class="buttons">
-        {% include "turan/geolocation.html" %}
+<h1>
+    {% trans "Segment list" %}
+</h1>
+{{ "WhatAreSegments"|wiki_help }}
+<div class="floatright" style="clear: right;">
+{% paginate %}
+</div>
+<ul class="buttons">
+    <li class="floatleft">
+        <a href="{% url segment_create %}">
+            <img alt="Segment" src="{{MEDIA_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
+            {% trans "Create new segment" %}
+        </a>
+    </li>
 {% if request.user.username %}
         <li class="floatleft">
             {% if not username %}
-            <a href="{% url segments %}?username={{request.user.username}}">{% trans "My climbs" %}</a>
+            <a href="{% url segments %}?username={{request.user.username}}">{% trans "My segment efforts" %}</a>
             {% else %}
             <a href="{% url segments %}">{% trans "All segments" %}</a>
             {% endif %}
         </li>
 {% endif %}
-    </ul>
-</div>
-<div class="floatright" style="clear: right;">
-{% paginate %}
-</div>
+</ul>
 
-<h1>
-    {% trans "Segments" %}
-</h1>
 <table class="fullsize">
     <tr>
+        <th>{% trans "Plot" %}</th>
         <th>
-            {% anchortrans Name %}
+            {% anchortrans name %}
         </th>
         <th>
-            {% anchortrans description %}
-        </th>
+            {% trans "Best times" %}
         <th>
             {% anchortrans distance "Distance" %}
         </th>
@@ -54,23 +56,64 @@
             {% anchortrans ascent "Ascent" %}
         </th>
         <th>
-            {% anchortrans grade "Grade" %}
+            {% anchortrans grade "Incline" %}
         </th>
         <th>
-            {% anchortrans category %}
+            {% anchortrans category "Category" %}
+            {{ "SlopeCategory"|wiki_help }}
+        </th>
+        <th>
+            # {% anchortrans tcount "Entries" %}
         </th>
     </tr>
 {% for object in object_list %}
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
-    <td><a href="{% url segment object.id %}">{{object.name}}</a></td>
-    <td>{{object.description}}</td>
-    <td>{{ object.distance|divide:"1000"|floatformat }} {% trans "km" %} </td>
-    <td>{{object.ascent}} {% trans "m" %}</td>
-    <td>{{object.grade|floatformat}} %</td>
-    <td><div class="slope-categories slope-category-{{object.category}}"><span>{{object.category}}</span></div></td> 
+    <td><img src="{{ object.get_png_url }}"></td>
+    <td>
+        <h4><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a></h4>
+    </td>
+    <td style="padding: 0">
+        <div class="toplist" style="margin: 0">
+            <ol>
+            {% for other_user in object.get_toplist %}
+                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
+                    <span class="smaller">
+                        <span class="duration">
+                            {{ other_user.duration|durationformatshort}}
+                        </span>
+                        <a href="{{ other_user.get_absolute_url }}" title="{{ other_user }}">
+                            <span class="{% if username == other_user.username %}selected{%endif%}">
+                                {{ other_user }}
+                            </span>
+                        </a>
+                    </span>
+                </li>
+            {% endfor %}
+            {% with object.get_latest|slice:"1" as latest_list %}
+            {% for latest in latest_list %}
+            <li style="width: 120px; margin-left: 0">
+                <p class="smaller">
+                    {% trans "Newest" %}:
+                    {{ latest.duration|durationformatshort}}:
+                        <a href="{{ latest.exercise.get_absolute_url }}">
+                            {{ latest.exercise.user}}
+                        </a>
+                </p>
+            </li>
+            {% endfor %}
+            {% endwith %}
+            </ol>
+        </div>
+    </td>
+    <td>{{ object.distance|floatformat }} <span class="unit">{% trans "km" %}</span> </td>
+    <td>{{object.ascent}} <span class="unit">{% trans "m" %}</span></td>
+    <td>{{object.grade|floatformat}} <span class="unit">%</span></td>
+    <td><div class="categorybutton">{{object.category}}</div></td> 
+    <td>{{object.tcount}}</td>
 </tr>
 {%endfor %}
 </table>
+<hr>
 {% paginate %}
 {% endblock content %}
 

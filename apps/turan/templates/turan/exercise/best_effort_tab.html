@@ -1,6 +1,9 @@
 {% load i18n %}
+{% load l10n %}
 {% load turan_extras %}
-<div id="besteffortdiv" class="clearfix" style="width:900px;height:500px"></div>
+<div id="besteffortdiv" class="clearfix" style="width:900px;height:500px">
+</div>
+
 <div id="bestefforttable">
     {% if object.avg_power and power_show %}
     <table class="fullsize">
@@ -29,42 +32,42 @@
             </th>
             {% endif %}
         </tr>
-            {% for effort in object.bestpowereffort_set.all %}
-            <tr>
-                    <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
-                        <script type="text/javascript">
-                            $('#pzoom{{forloop.counter0}}-link-1').bind("click", 
-                                    function (evt) { 
-                                    plot.setSelection({ 
-                                        xaxis: { 
-                                            from: {{effort.pos}}, to: {{effort.pos}}+{{effort.length}}/1000
-                                        }
-                                    })
-                                    });
-                        </script>
-                    </td>
-                <td> 
-                    {{ effort.duration|durationformatshort }} 
-                </td>
-                <td>
-                    {{ effort.power }} {% trans "W" %}
-                </td>
-                <td>
-                    {{ effort.power|divide:userweight|floatformat }} {% trans "W/kg" %}
-                </td>
-                <td>
-                    {{ effort.pos|floatformat }} {% trans "km" %}
-                </td>
-                <td>
-                    {{ effort.length|distanceformat }}
-                </td>
-                {% if object.route.ascent or object.route.descent %}
-                <td>
-                    +{{ effort.ascent|default_if_none:"N" }} / -{{ effort.descent|default_if_none:"A" }} {% trans "m" %}
-                </td>
-                {% endif %}
-            </tr>
-            {% endfor %}
+        {% for effort in bestpowerefforts %}
+        <tr class="{% cycle odd,even %}">
+            <td>
+                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" title="{% trans "Zoom" %}" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
+                <script type="text/javascript">
+                    $('#pzoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
+                        plot.setSelection({ 
+                            xaxis: { 
+                                from: {{effort.pos|unlocalize}}, to: {{effort.pos|unlocalize}}+{{effort.length|unlocalize}}/1000
+                            }
+                        })
+                    });
+                </script>
+            </td>
+            <td> 
+                {{ effort.duration|durationformat}} 
+            </td>
+            <td>
+                {{ effort.power }} {% trans "W" %}
+            </td>
+            <td>
+                {{ effort.power|divide:userweight}} {% trans "W/kg" %}
+            </td>
+            <td>
+                {{ effort.pos|floatformat }} {% trans "km" %}
+            </td>
+            <td>
+                {{ effort.length|distanceformat }}
+            </td>
+            {% if object.route.ascent or object.route.descent %}
+            <td>
+                +{{ effort.ascent|default_if_none:"N" }} / -{{ effort.descent|default_if_none:"A" }} {% trans "m" %}
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
     </table>
     {% endif %}
     <table class="fullsize">
@@ -91,24 +94,22 @@
             {% endif %}
         </tr>
         {% for effort in object.bestspeedeffort_set.all %}
-        <tr>
-             <td><img src="{{ MEDIA_URL }}pinax/images/silk/icons/zoom.png" alt="Zoom" id="szoom{{forloop.counter0}}-link-1" class="zoom-select" />
-                    <script type="text/javascript">
-                        $('#szoom{{forloop.counter0}}-link-1').bind("click", 
-                                function (evt) { 
-                                plot.setSelection({ 
-                                    xaxis: { 
-                                        from: {{effort.pos}}, to: {{effort.pos}}+{{effort.length}}/1000
-                                    }
-                                })
-                                });
-                    </script>
+        <tr class="{% cycle odd,even %}">
+            <td>
+                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="Zoom" id="szoom{{forloop.counter0}}-link-1" class="zoom-select" />
+                <script type="text/javascript">
+                    $('#szoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
+                        plot.setSelection({ 
+                            xaxis: { from: {{effort.pos|unlocalize}}, to: {{effort.pos|unlocalize}}+{{effort.length|unlocalize}}/1000 }
+                        })
+                    });
+                </script>
             </td>
             <td> 
                 {{ effort.duration|durationformat }} 
             </td>
             <td>
-                {{ effort.speed|floatformat }} {% trans "km/h" %}
+                {{ effort.speed|floatformat}} {% trans "km/h" %}
             </td>
             <td>
                 {{ effort.pos|floatformat }} {% trans "km" %}
@@ -127,23 +128,85 @@
 </div>
 
 <script type="text/javascript">
-//    $("#besteffortdiv").css("height", $("#besteffortdiv").parent().css("height"));
+{% localize off %}
 {% if object.avg_power and power_show %}
+{% spaceless %}
     var best_effort_data = [
-                {
-                    data: [
-            {% for effort in object.bestpowereffort_set.all %}
-            {% if effort.length %}
-          [{{ effort.length }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
-            {% endif %}
-            {% endfor %}
-    ],
-                    color: 3,
-                }];
-    $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: true } });
+        {
+            label: '{% trans "This exercise" %}',
+            data: [ {% for effort in bestpowerefforts %}{% if effort.duration %}
+                [{{ effort.duration }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
+            {% endif %}{% endfor %}],
+            color: 3,
+        },
+        {% if userbestbestpowerefforts %}
+        {
+            label: '{{ user}} {% trans "All time best" %}',
+            data: [ {% for effort in userbestbestpowerefforts %}{% if effort.duration %}
+                [{{ effort.duration }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
+            {% endif %}{% endfor %}],
+            color: 5,
+        },
+        {% endif %}
+        {
+            label: '{% trans "All time best" %}',
+            data: [ {% for effort in bestbestpowerefforts %}{% if effort.duration %}
+                [{{ effort.duration }}/60, {{ effort.power }}]{% if not forloop.last %},{%endif%}
+            {% endif %}{% endfor %}],
+            color: 4,
+        }
+    ];
+{% endspaceless %}
+    $.plot($("#besteffortdiv"), best_effort_data, { 
+            legend: {show: true}, 
+            grid: { 
+                show: true,
+                hoverable: true,
+            },
+            series: {
+                lines: { lineWidth: 3}
+            },
+            xaxis: {
+             transform: function (v) {
+                 return Math.log(v);
+             },
+             inverseTransform: function (v) { return Math.exp(v); }
+            },
+            yaxis: { tickFormatter: axisformatters.power }
+    });
+    function showTooltip (x, y, contents) {
+        $('<div class="tooltip" id="btooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            padding: '2px',
+            opacity: 0.80
+        }).appendTo("body").fadeIn(50);
+    };
+    var previousPoint = null;
+    $("#besteffortdiv").bind("plothover", function (event, pos, item) {
+        if (item) {
+            if (previousPoint != item.datapoint) {
+                previousPoint = item.datapoint;
+                
+                $("#btooltip").remove();
+                var x = item.datapoint[0],
+                    y = item.datapoint[1];
+                
+                showTooltip(item.pageX, item.pageY,
+                    item.series.label + " {% trans 'at' %} " + x + " {% trans 'minutes' %} {% trans 'is'%} " + y + " w");
+
+            }
+        }
+        else {
+            $("#btooltip").remove();
+            previousPoint = null;            
+        }
+    });
 {% else %}
     var best_effort_data = [
-            {% for effort in object.bestspeedeffort_set.all %}
+        {% for effort in object.bestspeedeffort_set.all %}
             {% if effort %}
                 {
                     data: [[{{ forloop.counter0 }}, {{ effort.speed }}]],
@@ -151,9 +214,10 @@
                     color: {{ forloop.counter }}
                 }{% if not forloop.last %},{%endif%}
             {% endif %}
-            {% endfor %}
+        {% endfor %}
     ];
     $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: false } });
 {% endif %}
+{% endlocalize %}
 </script>
 

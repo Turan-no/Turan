@@ -1,0 +1,52 @@
+{% extends "turan/base.html" %}
+{% load i18n %}
+{% block title %}
+{{block.super}} {% trans "About" %}
+{% endblock %}
+
+{% block content %}
+<h1>Turan - Log, analyze and graph your exercises </h1>
+<div id="container">
+	<h2>
+        <img alt="Package" src="{{ MEDIA_URL }}pinax/img/silk/icons/package.png">
+		Development
+	</h2>
+
+    Source code at <a href="https://github.com/torhve/Turan">https://github.com/torhve/Turan</a>
+	<h3>
+		<img src="{{ MEDIA_URL }}pinax/img/silk/icons/heart.png" alt="heart" />
+		Thanks to
+	</h3>
+	<pre>
+CURRENT DEVELOPERS
+
+ o falxx
+ o si-m1
+ o Ixan
+ o tor
+ o N`Grath
+ o asbjorjo
+
+Logo by <a href="http://www.visuello.no/">Visuello</a>
+</pre>
+and contributers of the great shoulders we stand on
+<h3>
+Contact
+</h3>
+IRC: #turan @ freenode
+	<h3>
+		<img src="{{ MEDIA_URL }}pinax/img/silk/icons/layout.png" alt="layout" />
+		Created using
+	</h3>
+	<p>
+		turan.no makes use of a bunch of excellent and free (speech and beer) tools including
+		the <a href="http://www.python.org/">Python</a> programming language,
+		the <a href="http://www.djangoproject.com/">Django</a> web framework,
+		the <a href="http://www.pinaxproject.com/">Pinax</a> social web framework,
+		<a href="http://developer.yahoo.com/yui/">Yahoo! UI Library</a> for style
+		sheets, and icons from
+		<a href="http://www.famfamfam.com/lab/icons/silk/">FamFamFam</a>.
+		And also Flot, openlayers, openstreetmap, and jquery.
+	</p>
+</div>
+{% endblock %}
