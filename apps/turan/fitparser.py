@@ -268,7 +268,16 @@ class FITParser(object):
             if hdr_type == 0:
                 msg_type = (hdr >> 6) & 1
                 local_msg_type = (hdr) & int('1111',2)
+            elif hdr_type == 1:
+                '''
+                TODO
+                Compressed timestamp headers are not invalid,
+                but not really handled properly either.
+                '''
+                continue
+                local_msg_type = (hdr >> 5) & int('11',2)
             else:
+                print hdr_type
                 '''
                 Invalid header type.
                 '''
