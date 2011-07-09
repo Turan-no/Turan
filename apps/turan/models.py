@@ -210,6 +210,8 @@ class Route(models.Model):
         # Check for single serving that really are not
         if self.single_serving and self.exercise_set.count() > 1:
             self.single_serving = False
+        elif not self.single_serving and self.description == AUTOROUTE_DESCRIPTION and self.exercise_set.count() < 2:
+            self.single_serving = True
         super(Route, self).save(force_insert, force_update)
         if self.gpx_file:
             # generate svg if it doesn't exist (after save, it uses id for filename)
