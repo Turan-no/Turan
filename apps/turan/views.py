@@ -614,8 +614,10 @@ def colorize_and_scale(request):
 
     if len(channels) == 4:
         channels = (channels[0].point(lambda i: r), channels[1].point(lambda i: g), channels[2].point(lambda i: b), channels[3])
-    else:
+    elif len(channels) == 3:
         channels = (channels[0].point(lambda i: r), channels[1].point(lambda i: g), channels[2].point(lambda i: b))
+    else:
+        pass
 
     sized = Image.merge(sized.mode, channels)
 
