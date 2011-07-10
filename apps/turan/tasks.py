@@ -784,6 +784,17 @@ def sanitize_entries(parser):
             prev = e.distance
         return entries
 
+    def altitude_lost_fixer(entries):
+        ''' Do not accept None-sample, use previous altitude  '''
+
+        prev = entries[0]
+        for index, e in enumerate(entries):
+            if e.altitude == None:
+                print "Parser: Changed altitude: %s at index %s" %(e.altitude, index)
+                e.altitude = prev.altitude
+            prev = e
+        return entries
+
 
     def interpolate_to_1s(entries):
         ''' Interpolate skips in files to 1s, if not breaks for over 30s in series '''
@@ -888,6 +899,7 @@ def sanitize_entries(parser):
 
     entries = distance_offset_fixer(entries)
     entries = distance_inc_fixer(entries)
+    entires = altitude_lost_fixer(entries)
     entries = gps_lost_fixer(entries)
     entries = interpolate_to_1s(entries)
     entries = power_spikes_fixer(entries)
