@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_unicode, smart_str
 from django.forms.fields import Field
-import datetime
+import datetime, re
 
 class TimeDelta(datetime.timedelta):
     values_in_microseconds = SortedDict((
@@ -24,7 +24,9 @@ class TimeDelta(datetime.timedelta):
             return datetime.timedelta.__new__(TimeDelta)
         
         pairs = []
-        for b in value.lower().split():
+        # The regex transforms strings such as "1h20m" into "1h 20m"
+        # which .split is able to handle
+        for b in re.sub(r"(\w)(\d)", r"\1 \2", value.lower()).split():
             for index, char in enumerate(b):
                 if not char.isdigit():
                     pairs.append((b[:index], b[index:])) #digits, letters
