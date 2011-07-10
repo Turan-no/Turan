@@ -90,7 +90,7 @@ urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^segment/finder/(?P<object_id>\d+)', segment_exercise_search, name='segment_exercise_search'),
 )
 urlpatterns += patterns('django.views.generic.simple',
-    url(r'^about/', 'direct_to_template', {'template': 'turan/about.html'}, name='turan_about'),
+    url(r'^about/', 'direct_to_template', {'template': 'about/about.html'}, name='turan_about'),
     url(r'^todo/', 'direct_to_template', {'template': 'turan/todo.html'}, name='todo'),
 )
 
