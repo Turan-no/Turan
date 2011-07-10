@@ -899,7 +899,7 @@ def sanitize_entries(parser):
 
     entries = distance_offset_fixer(entries)
     entries = distance_inc_fixer(entries)
-    entires = altitude_lost_fixer(entries)
+    entries = altitude_lost_fixer(entries)
     entries = gps_lost_fixer(entries)
     entries = interpolate_to_1s(entries)
     entries = power_spikes_fixer(entries)
