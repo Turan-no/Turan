@@ -891,8 +891,9 @@ def sanitize_entries(parser):
             if prev:
                 time_d = (e.time - prev.time).seconds
                 if time_d < 1:
-                    del e
                     print "Parser: Removing duplicate sample %s at %s" %(e, e.time)
+                    del e
+                    continue
             prev = e
         return entries
 
