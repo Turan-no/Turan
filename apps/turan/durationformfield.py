@@ -26,7 +26,7 @@ class TimeDelta(datetime.timedelta):
         pairs = []
         # The regex transforms strings such as "1h20m" into "1h 20m"
         # which .split is able to handle
-        for b in re.sub(r"(\w)(\d)", r"\1 \2", value.lower()).split():
+        for b in re.sub(r"(\D)(\d)", r"\1 \2", value.lower()).split():
             for index, char in enumerate(b):
                 if not char.isdigit():
                     pairs.append((b[:index], b[index:])) #digits, letters
