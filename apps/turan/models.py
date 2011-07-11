@@ -534,6 +534,7 @@ class Exercise(models.Model):
         verbose_name = _("Exercise")
         verbose_name_plural = _("Exercises")
         ordering = ('-date','-time')
+        unique_together = ("date", "time", "user")
 
     def __unicode__(self):
         return u'%s, %s %s' %(self.get_name(), _('by'), self.user.get_profile().get_name())

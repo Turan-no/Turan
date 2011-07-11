@@ -784,14 +784,14 @@ def sanitize_entries(parser):
             prev = e.distance
         return entries
 
-    def altitude_lost_fixer(entries):
-        ''' Do not accept None-sample, use previous altitude  '''
+    def none_to_prev_val(entries, val):
+        ''' Do not accept None-sample, use previous value  '''
 
         prev = entries[0]
         for index, e in enumerate(entries):
-            if e.altitude == None:
-                print "Parser: Changed altitude: %s at index %s" %(e.altitude, index)
-                e.altitude = prev.altitude
+            if getattr(e, val) == None:
+                print "Parser: Changed %s: %s at index %s" %(val, getattr(e, val), index)
+                setattr(e, val, getattr(prev, val))
             prev = e
         return entries
 
@@ -900,7 +900,8 @@ def sanitize_entries(parser):
 
     entries = distance_offset_fixer(entries)
     entries = distance_inc_fixer(entries)
-    entries = altitude_lost_fixer(entries)
+    entries = none_to_prev_val(entries, 'altitude')
+    entries = none_to_prev_val(entries, 'hr')
     entries = gps_lost_fixer(entries)
     entries = interpolate_to_1s(entries)
     entries = power_spikes_fixer(entries)
