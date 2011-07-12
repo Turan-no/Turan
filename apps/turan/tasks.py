@@ -61,13 +61,15 @@ def find_parser(filename):
     return parser
 
 def filldistance(values):
+    ''' Helper to fill distance in a list of exercise details,
+    needed until all parsers are fixed to export distance '''
     d = 0
     if values: #exists?
         d_check = values[len(values)-1].distance
         if d_check > 0:
             return d_check
         values[0].distance = 0
-        for i in xrange(1,len(values)):
+        for i in xrange(1, len(values)):
             delta_t = (values[i].time - values[i-1].time).seconds
             if values[i].speed:
                 d += values[i].speed/3.6 * delta_t
@@ -77,6 +79,7 @@ def filldistance(values):
     return d
 
 def getavghr(values, start, end):
+    ''' Return average HR given values and start and end '''
     hr = 0
     for i in xrange(start+1, end+1):
         delta_t = (values[i].time - values[i-1].time).seconds
@@ -87,6 +90,7 @@ def getavghr(values, start, end):
 
 
 def getavgpwr(values, start, end):
+    ''' Return average power given values and start and end '''
     pwr = 0
     for i in xrange(start+1, end+1):
         delta_t = (values[i].time - values[i-1].time).seconds
@@ -132,7 +136,7 @@ def getslopes(values, userweight, eqweight):
     cur_end = 0
     stop_since = False
     inslope = False
-    for i in xrange(1,len(values)):
+    for i in xrange(1, len(values)):
         if values[i].speed < 0.05 and not stop_since:
             stop_since = i
         if values[i].speed >= 0.05:
@@ -156,7 +160,7 @@ def getslopes(values, userweight, eqweight):
                     or i == len(values)-1 \
                     or stop_duration > 60:
                 if stop_duration > 60:
-                    cur_stop = stop_since
+                    cur_end = stop_since
                 inslope = False
                 if hdelta >= min_slope:
                     distance = values[cur_end].distance - values[cur_start].distance
@@ -235,12 +239,11 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
             then find match for end pos if distance elapsed doesn't exceed segment distance
                 finally save the segment found if start and stop pos found '''
     Segment = get_model('turan', 'Segment')
-    SegmentDetail = get_model('turan', 'SegmentDetail')
 
     if not search_in_segments:
         search_in_segments = Segment.objects.all()
     # Only works for exercises with distance
-    details = exercise.get_details().filter(lon__gt=0).filter(lat__gt=0).filter(distance__gt=0).values('distance','lon','lat')
+    details = exercise.get_details().filter(lon__gt=0).filter(lat__gt=0).filter(distance__gt=0).values('distance', 'lon', 'lat')
     i_len = len(details)
     segments = [] #'[(segment, start, stop)...'
     #old_segmentdetails = exercise.segmentdetail_set.all()
@@ -389,28 +392,28 @@ def merge_sensordata(exercise, callback=None):
                 ed.save()
             except Exception:
                 print "No match: %s" % val.time
-                pass # Did not find match, silently continue
+                # Did not find match, continue
     if not callback is None:
         subtask(callback).delay(exercise)
 #    create_gpx_from_details.delay(exercise)
 
-def smoothListGaussian(list,degree=5):
+def smoothListGaussian(list, degree=5):
     list = [x if x else 0 for x in list] # Change None into 0
     if not list:
         return list
     list = [list[0]]*(degree-1) + list + [list[-1]]*degree
-    window=degree*2-1
-    weight=numpy.array([1.0]*window)
-    weightGauss=[]
+    window = degree*2-1
+    weight = numpy.array([1.0]*window)
+    weightGauss = []
     for i in range(window):
-        i=i-degree+1
-        frac=i/float(window)
-        gauss=1/(numpy.exp((4*(frac))**2))
+        i = i-degree+1
+        frac = i/float(window)
+        gauss = 1/(numpy.exp((4*(frac))**2))
         weightGauss.append(gauss)
-    weight=numpy.array(weightGauss)*weight
-    smoothed=[0.0]*(len(list)-window)
+    weight = numpy.array(weightGauss)*weight
+    smoothed = [0.0]*(len(list)-window)
     for i in range(len(smoothed)):
-        smoothed[i]=sum(numpy.array(list[i:i+window])*weight)/sum(weight)
+        smoothed[i] = sum(numpy.array(list[i:i+window])*weight)/sum(weight)
     return smoothed
 
 def calculate_ascent_descent_gaussian(details, degree=5):
@@ -420,7 +423,7 @@ def calculate_ascent_descent_gaussian(details, degree=5):
     for a in details:
         altvals.append(a.altitude)
 
-    altvals = smoothListGaussian(altvals,degree)
+    altvals = smoothListGaussian(altvals, degree)
     return altvals_to_ascent_descent(altvals)
 
 def altvals_to_ascent_descent(altvals):
@@ -816,7 +819,7 @@ def sanitize_entries(parser):
                         deltas[vt] = (getattr(e, vt) - getattr(prev, vt)) / time_d
                 for s in xrange(1, time_d):
                     fake_entry = deepcopy(prev)
-                    fake_entry.time = fake_entry.time + timedelta(0,s)
+                    fake_entry.time = fake_entry.time + timedelta(0, s)
                     for vt in val_types:
                         if vt == 'lon' or vt == 'lat':  # Do not interpolate between missed samples
                             if not fake_entry.lon or not fake_entry.lat:
@@ -898,15 +901,15 @@ def sanitize_entries(parser):
         return entries
 
 
-    entries = distance_offset_fixer(entries)
-    entries = distance_inc_fixer(entries)
-    entries = none_to_prev_val(entries, 'altitude')
-    entries = none_to_prev_val(entries, 'hr')
-    entries = gps_lost_fixer(entries)
-    entries = interpolate_to_1s(entries)
-    entries = power_spikes_fixer(entries)
-    entires = duplicate_samples_fixer(entries)
-    return entries
+    distance_offset_fixer(entries)
+    distance_inc_fixer(entries)
+    none_to_prev_val(entries, 'altitude')
+    none_to_prev_val(entries, 'hr')
+    gps_lost_fixer(entries)
+    interpolate_to_1s(entries)
+    power_spikes_fixer(entries)
+    duplicate_samples_fixer(entries)
+    return entries # Not really used.
 
 @task
 def parse_sensordata(exercise, callback=None):
@@ -952,7 +955,7 @@ def parse_sensordata(exercise, callback=None):
     parser.parse_uploaded_file(exercise.sensor_file.file)
 
 
-    saner_entries = sanitize_entries(parser) # Sanity will prevail
+    sanitize_entries(parser) # Sanity will prevail
     for val in parser.entries:
         detail = ExerciseDetail()
         detail.exercise_id = exercise.id
@@ -1213,11 +1216,10 @@ def power_30s_average(details):
     fourth = 0.0
     power_avg_count = 0
 
-    #FORCING 1 SEC SAMPLE INTERVAL!
     for i in xrange(0, datasetlen):
         foo = 0.0
         foo_element = 0.0
-        for j in xrange(0,30):
+        for j in xrange(0, 30):
             if (i+j-30) > 0 and (i+j-30) < datasetlen:
                 delta_t = (details[i+j-30].time - details[i+j-31].time).seconds
                 ## Break if sample is not 1 sek...
@@ -1355,12 +1357,13 @@ def detailslice_info(details):
     #        del ret[a]
     return ret
 
-def smoothList(list,strippedXs=False,degree=30):
+def smoothList(list, strippedXs=False, degree=30):
     list = [x if x else 0 for x in list] # Change None into 0
-    if strippedXs==True: return Xs[0:-(len(list)-(len(list)-degree+1))]
-    smoothed=[0]*(len(list)-degree+1)
+    if strippedXs == True:
+        return Xs[0:-(len(list)-(len(list)-degree+1))]
+    smoothed = [0]*(len(list)-degree+1)
     for i in range(len(smoothed)):
-        smoothed[i]=sum(list[i:i+degree])/float(degree)
+        smoothed[i] = sum(list[i:i+degree])/float(degree)
     return smoothed
 
 def normalized_attr(exercise, attr):
@@ -1372,15 +1375,15 @@ def normalized_attr(exercise, attr):
     delta_t = (exercise_details[1].time - exercise_details[0].time).seconds
     if delta_t > 1: # Check smart sample
         return 0
-    attrlist = exercise.exercisedetail_set.values_list(attr,flat=1)
-    attrlist = smoothList(attrlist,degree=30)
-    fourth = sum([pow(x,4) for x in attrlist])
+    attrlist = exercise.exercisedetail_set.values_list(attr, flat=1)
+    attrlist = smoothList(attrlist, degree=30)
+    fourth = sum([pow(x, 4) for x in attrlist])
     if fourth:
         normalized = int(round(pow(fourth/len(attrlist), (0.25))))
         return normalized
 
 def watt2zone(watt_percentage):
-    ''' Given watt_percentage in relation to FTP, return coggan zone 
+    ''' Given watt_percentage in relation to FTP, return coggan zone
 
 1   Active Recovery <55%    165w      Taking your bike for a walk!
 2   Endurance   >75%    225w      All day pace.
