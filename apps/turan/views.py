@@ -1396,8 +1396,6 @@ def exercise(request, object_id):
                     smooth = int(req_s)
                 except:
                     smooth = 0
-            userweight = profile.get_weight(object.date)
-            userftp = profile.get_ftp(object.date)
             slopes = []
             # add both segment details and slopes
             slopes += object.slope_set.all().order_by('start')
@@ -1415,6 +1413,8 @@ def exercise(request, object_id):
             #    [(d.lon, d.lat) for d in details if d.lon and d.lat])
             # Todo, maybe calculate and save in db or cache ?
             gradients, inclinesums = getgradients(details)
+        userweight = profile.get_weight(object.date)
+        userftp = profile.get_ftp(object.date)
         intervals = object.interval_set.select_related().all()
         zones = getzones_with_legend(object)
         wzones = getwzones_with_legend(object)
