@@ -1675,7 +1675,7 @@ def turan_delete_object(request, model=None, post_delete_redirect='/turan/', obj
         slug=None, slug_field='slug', template_name=None,
         template_loader=loader, extra_context=None, login_required=False,
         context_processors=None, template_object_name='object'):
-    ''' See django's generic view docs for help. This specific checks that a user is deleting his own objects'''
+    """ See django's generic view docs for help. This specific checks that a user is deleting his own objects"""
 
 
     obj = lookup_object(model, object_id, slug, slug_field)
