@@ -247,6 +247,9 @@ def route_detail(request, object_id):
 
 def segment_detail(request, object_id):
     object = get_object_or_404(Segment, pk=object_id)
+    # Workaround for http://turan.no/sentry/group/147/messages/3326 and googlebot being persistent.
+    if request.GET.get('sort', '') == 'object.exercise.user':
+        raise Http404
     usertimes = {}
     slopes = object.get_slopes().select_related('exercise', 'exercise__route', 'exercise__user__profile', 'segment', 'profile', 'exercise__user')
     username = request.GET.get('username', '')
