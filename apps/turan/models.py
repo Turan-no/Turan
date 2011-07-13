@@ -989,7 +989,7 @@ class SegmentDetail(models.Model):
     segment = models.ForeignKey(Segment, blank=True, null=True, help_text=_("Optionally add this selection to a shared public segment"))
     public = models.BooleanField(blank=True, default=1)
     start = models.FloatField(help_text=_('in km'), default=0)
-    length = models.FloatField(help_text=_('in km'), default=0)
+    length = models.FloatField(help_text=_('in m'), default=0)
     ascent = models.IntegerField(help_text=_('in m'), default=0)
     grade = models.FloatField()
     duration = models.IntegerField()
