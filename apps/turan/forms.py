@@ -123,8 +123,15 @@ class FullEquipmentForm(forms.ModelForm):
         model = Equipment
         exclude = ('user',)
 
+def clean_import_url(url):
+    if not (url.find("http://sportypal.com/Workouts/Details/") == 0 or
+            url.find("http://connect.garmin.com/activity/") == 0):
+        raise forms.ValidationError(_("You can only import from Sportypal and Garmin Connect."))
+    return import_url
+
 class ImportForm(forms.Form):
     import_url = forms.CharField(label='Url to external exercise', required=True)
+    import_url.clean = clean_import_url
 
 def clean_zipfile(zip_file, wat):
     if not (zip_file and zip_file.name.endswith('.zip')):
