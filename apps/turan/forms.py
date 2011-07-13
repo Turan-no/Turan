@@ -127,7 +127,7 @@ class ImportForm(forms.Form):
     import_url = forms.CharField(label='Url to external exercise', required=True)
 
 def clean_zipfile(zip_file, wat):
-    if not zip_file.name.endswith('.zip'):
+    if not (zip_file and zip_file.name.endswith('.zip')):
         msg = _('File upload must be a valid ZIP archive.')
         raise forms.ValidationError( msg )
     else:
