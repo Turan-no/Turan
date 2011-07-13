@@ -1711,9 +1711,10 @@ def turan_delete_detailset_value(request, model, object_id, value=False):
 
 @login_required
 def import_bulk(request):
+    form = ImportForm()
     if request.method == 'POST':
-        form = BulkImportForm(request.POST, request.FILES)
-        if form.is_valid():
+        bulkform = BulkImportForm(request.POST, request.FILES)
+        if bulkform.is_valid():
             exercises = []
             zfile = zipfile.ZipFile( request.FILES['zip_file'])
             for info in zfile.infolist():
@@ -1736,9 +1737,8 @@ def import_bulk(request):
                 reverse('exercise_parse_progress', kwargs = {
                     'object_id': e.id,
                     'task_id': task.task_id}))
-
-    form = ImportForm()
-    bulkform = BulkImportForm()
+    else:
+        bulkform = BulkImportForm()
 
     return render_to_response("turan/import.html", {'form': form, 'bulkform': bulkform}, context_instance=RequestContext(request))
 
