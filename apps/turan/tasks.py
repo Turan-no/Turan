@@ -854,6 +854,33 @@ def sanitize_entries(parser):
             print "Parser: Samples with missing pos: %s" %(missed)
         return entries
 
+    def correct_power(entries):
+        ''' Different settings on monitors affects their reporting of
+        average values, so we always do our own calculations instead.
+        Also helps when any power spikes were fixed already and averages
+        being wrong because of that'''
+        prev = entries[0]
+        parser.max_power = 0
+        parser.avg_power = 0
+        parser.avg_pedaling_power = 0
+        powersum = 0
+        powerseconds = 0
+        for index, e in enumerate(entries):
+            parser.max_power = max(e.power, parser.max_power)
+            if e.power == None:
+                e.power = 0
+            parser.avg_power += e.power
+            time_d = (e.time - prev.time).seconds
+            if time_d > 0 and time_d < 30: # more than 30s is break
+                if e.power != None and e.cadence != None and e.power > 0:
+                    powersum += e.power*time_d
+                    powerseconds += time_d
+            if powersum and powerseconds:
+                parser.avg_pedaling_power = powersum/powerseconds
+            prev = e
+
+        parser.avg_power = parser.avg_power/len(entries)
+
     def power_spikes_fixer(entries):
         ''' Remove insane power spikes from entries '''
         fixed_any = False
@@ -862,27 +889,6 @@ def sanitize_entries(parser):
                 e.power = 0
                 fixed_any = True
                 print "Parser: Skipped insane power value  %s at index %s" %(e.power, index)
-        if fixed_any: # We fixed a spike, this means avg power and max power might be wrong
-                      # So we try and recalculate
-            prev = entries[0]
-            parser.max_power = 0
-            parser.avg_power = 0
-            parser.avg_pedaling_power = 0
-            powersum = 0
-            powerseconds = 0
-            for index, e in enumerate(entries):
-                parser.max_power = max(e.power, parser.max_power)
-                parser.avg_power += e.power
-                time_d = (e.time - prev.time).seconds
-                if time_d > 0 and time_d < 30: # more than 30s is break
-                    if e.power != None and e.cadence != None:
-                        powersum += e.power*time_d
-                        powerseconds += time_d
-                if powersum and powerseconds:
-                    parser.avg_pedaling_power = powersum/powerseconds
-                prev = e
-
-            parser.avg_power = parser.avg_power/len(entries)
         return entries
 
     def duplicate_samples_fixer(entries):
@@ -908,6 +914,7 @@ def sanitize_entries(parser):
     gps_lost_fixer(entries)
     interpolate_to_1s(entries)
     power_spikes_fixer(entries)
+    correct_power(entries)
     duplicate_samples_fixer(entries)
     return entries # Not really used.
 
@@ -1006,6 +1013,7 @@ def parse_sensordata(exercise, callback=None):
         exercise.normalized_power = power_30s_average(exercise.get_details().all())
     if hasattr(parser, 'max_power'): # only some parsers
         exercise.max_power = parser.max_power
+
     if hasattr(parser, 'avg_pedaling_power'):
         exercise.avg_pedaling_power = parser.avg_pedaling_power
 
