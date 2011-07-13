@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_unicode, smart_str
 from django.forms.fields import Field
+from django.forms import ValidationError
 import datetime, re
 
 class TimeDelta(datetime.timedelta):
