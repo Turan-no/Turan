@@ -1745,6 +1745,7 @@ def import_bulk(request):
 
 @login_required
 def import_data(request):
+    bulkform = BulkImportForm()
     if request.method == 'POST':
         form = ImportForm(request.POST)
         url = form.data['import_url']
@@ -1856,7 +1857,6 @@ def import_data(request):
                 return render_to_response("turan/import_stage2.html", {'route': route, 'exercise': exercise}, context_instance=RequestContext(request))
     else:
         form = ImportForm()
-        bulkform = BulkImportForm()
 
     return render_to_response("turan/import.html", {'form': form, 'bulkform': bulkform}, context_instance=RequestContext(request))
 
