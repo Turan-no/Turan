@@ -857,6 +857,13 @@ class Segment(models.Model):
     def get_latest(self):
         return SegmentDetail.objects.filter(segment=self.id).order_by('-exercise__date','-exercise__time')
 
+    def get_avg_ascent(self):
+        ''' Return average ascent '''
+        res =  self.get_slopes().aggregate(avg=Avg('ascent'))
+        if 'avg' in res:
+            return int(round(res['avg']))
+        return None
+
     def save(self, *args, **kwargs):
         ''' Calculate extra values before save '''
 

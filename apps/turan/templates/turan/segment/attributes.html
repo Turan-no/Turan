@@ -20,6 +20,11 @@
         {% if object.distance %}
             ({{ object.ascent|divide:object.distance }} <span class="unit">{% trans "m/km" %})</span>
         {% endif %}
+        {% if object.get_avg_ascent %}
+            <p class="smaller unit">
+            {% trans "Avg ascent" %}: {{ object.get_avg_ascent }} m
+            </p>
+        {% endif %}
     </li>
     {% endif %}
     {% if object.descent %}
