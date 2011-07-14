@@ -799,7 +799,7 @@ def geojson(request, object_id):
         if start and stop:
             qs = qs[start:stop+1]
 
-    if len(qs) == 0:
+    if not len(qs) > 1:
         return HttpResponse('{}')
 
     cache_key = 'geojson_%s' %object_id
@@ -815,7 +815,7 @@ def geojson(request, object_id):
 
     max_hr = Exercise.objects.get(pk=object_id).user.get_profile().max_hr
     if not max_hr: # sigh
-        max_hr = 190
+        max_hr = 200
 
     class Feature(object):
 
