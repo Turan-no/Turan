@@ -2204,12 +2204,14 @@ def exercise_player(request):
         try:
             object_id = int(id)
         except ValueError:
-            return Http404()
+            raise Http404()
         exercise = get_object_or_404(Exercise, pk=object_id)
         if exercise.exercise_permission == 'N':
             return redirect_to_login(request.path)
             # TODO Friend check
         exercises.append(exercise)
+    else:
+        raise Http404()
 
     alt = tripdetail_js(exercise.id, 'altitude')
 
