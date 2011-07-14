@@ -2261,6 +2261,7 @@ def search(request):
 
     tag_list = Tag.objects.all()
     user_list = User.objects.all()
+    profile_list = Profile.objects.all()
     qset = (
         Q(route__name__icontains=search_query) |
         Q(comment__icontains=search_query) |
@@ -2268,9 +2269,18 @@ def search(request):
     )
     exercise_list = exercise_list.filter(qset).distinct().order_by('-date')[start:start+SLICE_SIZE]
     uqset = (
-        Q(username__icontains=search_query)
+        Q(username__icontains=search_query) |
+        Q(first_name__icontains=search_query) |
+        Q(last_name__icontains=search_query)
     )
-    user_list = user_list.filter(uqset).distinct()[start:start+SLICE_SIZE]
+    pqset = (
+            Q(name__icontains=search_query)
+    )
+    profile_list = profile_list.filter(pqset).distinct()[start:start+SLICE_SIZE]
+    user_list = list(user_list.filter(uqset).distinct()[start:start+SLICE_SIZE])
+    for profil in profile_list:
+        if not profil.user in user_list:
+            user_list.append(profil.user)
     tag_list = tag_list.filter(name__icontains=search_query)[start:start+SLICE_SIZE]
     rqset = (
         Q(name__icontains=search_query) |
