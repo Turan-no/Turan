@@ -445,7 +445,7 @@ class Exercise(models.Model):
     avg_hr = models.IntegerField(blank=True, null=True) # bpm 
     max_hr = models.IntegerField(blank=True, null=True) # bpm 
 
-    kcal = models.IntegerField(blank=True, default=0, help_text=_('Only needed for Polar products'))
+    kcal = models.IntegerField(blank=True, null=True, default=0, help_text=_('Only needed for Polar products'))
     temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     min_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
     max_temperature = models.FloatField(blank=True, null=True, help_text=_('Celsius'))
