@@ -859,6 +859,11 @@ def sanitize_entries(parser):
         average values, so we always do our own calculations instead.
         Also helps when any power spikes were fixed already and averages
         being wrong because of that'''
+        if not hasattr(parser, 'avg_power'):
+            # We make the assumption that if the parser does not export
+            # avg_power we have no samples with power
+            return entries
+
         prev = entries[0]
         parser.max_power = 0
         parser.avg_power = 0
