@@ -1565,7 +1565,11 @@ def create_object(request, model=None, template_name=None,
             data['start_lat'] = ret['start_lat']
             data['end_lon'] = ret['end_lon']
             data['end_lat'] = ret['end_lat']
-            data['power_per_kg'] = ret['power_per_kg']
+            if 'power_per_kg' in ret:
+                data['power_per_kg'] = ret['power_per_kg']
+            else:
+                data['power_per_kg'] = 0
+
             if segment:
                 data['segment'] = Segment.objects.get(pk=segment)
                 new_object = SegmentDetail(**data)
