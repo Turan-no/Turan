@@ -87,7 +87,7 @@ class Equipment(models.Model):
     url = models.URLField(_('External URL'), blank=True, help_text=_('Added info in external URL'))
     brand = models.CharField(_('Brand'), max_length=140)
     model = models.CharField(_('Model'), max_length=140)
-    weight = models.FloatField(_('Weight'), blank=True, help_text=_('in kg'))
+    weight = models.FloatField(_('Weight'), blank=True, null=True, help_text=_('in kg'))
     riding_weight = models.FloatField(_('Weight when in use'), default=0, blank=True, help_text=_('weight in kg when riding, used for power estimations. Include bottles, clothes, etc'))
     notes = models.TextField(_('Notes'), help_text=_('Equipment description'), blank=True, null=True)
     aquired = models.DateField(_('Aquired'), help_text=_('Date you aquired the equipment'))
@@ -534,7 +534,7 @@ class Exercise(models.Model):
         verbose_name = _("Exercise")
         verbose_name_plural = _("Exercises")
         ordering = ('-date','-time')
-        unique_together = ("date", "time", "user")
+        #unique_together = ("date", "time", "user")
 
     def __unicode__(self):
         return u'%s, %s %s' %(self.get_name(), _('by'), self.user.get_profile().get_name())
