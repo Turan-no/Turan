@@ -127,7 +127,7 @@ def clean_import_url(url):
     if not (url.find("http://sportypal.com/Workouts/Details/") == 0 or
             url.find("http://connect.garmin.com/activity/") == 0):
         raise forms.ValidationError(_("You can only import from Sportypal and Garmin Connect."))
-    return import_url
+    return url
 
 class ImportForm(forms.Form):
     import_url = forms.CharField(label='Url to external exercise', required=True)
