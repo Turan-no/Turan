@@ -1352,22 +1352,24 @@ def detailslice_info(details):
         # EQweight hard coded to 10! 
         ret['power__avg_est'] = calcpower(userweight, exercise.get_eq_weight(), gradient*100, speed/3.6)
         ret['gradient'] = gradient*100
-        ret['power__normalized'] = power_30s_average(details)
-        ret['vam'] = int(round((float(ascent)/duration)*3600))
-        if ret['power__avg']:
-            power = ret['power__avg']
-        else:
-            power = ret['power__avg_est']
-        if power and userweight:
-            ret['power_per_kg'] = power/userweight
+    else:
+        ret['gradient'] = 0
+        ret['power__avg_est'] = 0
+
+    ret['vam'] = int(round((float(ascent)/duration)*3600))
+    ret['power__normalized'] = power_30s_average(details)
+    if ret['power__avg']:
+        power = ret['power__avg']
+    else:
+        power = ret['power__avg_est']
+    if power and userweight:
+        ret['power_per_kg'] = power/userweight
+    else:
+        ret['power_per_kg'] = 0
 
     ret['duration'] = duration
     ret['distance'] = distance
 
-    #for a, b in ret.items():
-        # Do not return empty values
-    #    if not b:
-    #        del ret[a]
     return ret
 
 def smoothList(list, strippedXs=False, degree=30):

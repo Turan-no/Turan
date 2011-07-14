@@ -705,7 +705,8 @@ def calendar_month(request, year, month):
 
     e_by_week = [(week, list(items)) for week, items in groupby(exercises, lambda workout: int(workout.date.strftime('%W')))]
 
-    z_by_week = {}
+    hz_by_week = {}
+    pz_by_week = {}
 
     if username: # Only give zone week graph for individuals
         for week, es in e_by_week:
@@ -713,7 +714,12 @@ def calendar_month(request, year, month):
             dbzones = HRZoneSummary.objects.filter(exercise__in=es).values('zone').annotate(duration=Sum('duration'))
             for dbzone in dbzones:
                 zones[dbzone['zone']] += dbzone['duration']
-            z_by_week[week] = zones#[float(zone)/60/60 for zone in zones if zone]
+            hz_by_week[week] = zones#[float(zone)/60/60 for zone in zones if zone]
+            zones =[0,0,0,0,0,0,0,0]
+            dbzones = WZoneSummary.objects.filter(exercise__in=es).values('zone').annotate(duration=Sum('duration'))
+            for dbzone in dbzones:
+                zones[dbzone['zone']] += dbzone['duration']
+            pz_by_week[week] = zones#[float(zone)/60/60 for zone in zones if zone]
 
     return render_to_response('turan/calendar.html',
             {'calendar': mark_safe(cal),
@@ -722,7 +728,8 @@ def calendar_month(request, year, month):
              'previous_month': previous_month,
              'next_month': next_month,
              'e_by_week': e_by_week,
-             'z_by_week': z_by_week,
+             'pz_by_week': pz_by_week,
+             'hz_by_week': hz_by_week,
              'other_user': other_user,
              'year': year,
              'month': month,
@@ -1565,11 +1572,7 @@ def create_object(request, model=None, template_name=None,
             data['start_lat'] = ret['start_lat']
             data['end_lon'] = ret['end_lon']
             data['end_lat'] = ret['end_lat']
-            if 'power_per_kg' in ret:
-                data['power_per_kg'] = ret['power_per_kg']
-            else:
-                data['power_per_kg'] = 0
-
+            data['power_per_kg'] = ret['power_per_kg']
             if segment:
                 data['segment'] = Segment.objects.get(pk=segment)
                 new_object = SegmentDetail(**data)

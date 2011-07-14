@@ -42,7 +42,7 @@
     </li>
 </ul>
 {{ calendar }}
-{% if z_by_week %}
+{% if hz_by_week %}
 <h3>{% trans "Time in HR zones by week"%}</h3>
 <div id="weeks" style="width:900px;height:700px"></div>
 <script id="source" language="javascript" type="text/javascript">
@@ -55,10 +55,22 @@ function houryf(val, axis) {
 }
     var stack = true, bars = true, lines = false, steps = false;
     var z_by_week = [
-{% for week, zonevals in z_by_week.items %}
+{% for week, zonevals in hz_by_week.items %}
 {% for zoneval in zonevals%}
 {
     label: "{% trans "zone" %} {{forloop.counter0}}",
+    data: [[{{week}}-0.5,{{zoneval}}]],
+    color: colors[{{forloop.counter0}}]
+}
+{% if not forloop.last%},{%endif%}
+{% endfor %}
+{% if not forloop.last%},{%endif%}
+{% endfor %}
+{% if pz_by_week %},
+{% for week, zonevals in pz_by_week.items %}
+{% for zoneval in zonevals%}
+{
+    label: "{% trans "Power zone" %} {{forloop.counter0}}",
     data: [[{{week}},{{zoneval}}]],
     color: colors[{{forloop.counter0}}]
 }
@@ -66,6 +78,7 @@ function houryf(val, axis) {
 {% endfor %}
 {% if not forloop.last%},{%endif%}
 {% endfor %}
+{%endif %}
 ];
 
 function duration(time) {
@@ -109,7 +122,7 @@ function duration(time) {
         series: {
             stack: stack,
             lines: { show: lines, fill: true, steps: steps }, 
-            bars: { show: bars, barWidth: 1, align: 'center' },
+            bars: { show: bars, barWidth: 0.5, align: 'center' },
             shadowSize: 1
         },
         grid: { 
