@@ -2210,7 +2210,7 @@ def exercise_player(request):
             return redirect_to_login(request.path)
             # TODO Friend check
         exercises.append(exercise)
-    else:
+    if not ids:
         raise Http404()
 
     alt = tripdetail_js(exercise.id, 'altitude')
