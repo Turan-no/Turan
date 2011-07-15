@@ -179,6 +179,7 @@ $(function () {
     <input type="submit" value="{% trans "Compare"%}">
 {% if request.user.username %}
 <a href="?username={{request.user.username}}"><button>{% trans "My results" %}</button></a>
+<a href="?distinct=user"><button>{% trans "Best individual results" %}</button></a>
 {% endif %}
     </form>
     <script language="javascript" type="text/javascript">

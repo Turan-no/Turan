@@ -252,6 +252,17 @@ def segment_detail(request, object_id):
         raise Http404
     usertimes = {}
     slopes = object.get_slopes().select_related('exercise', 'exercise__route', 'exercise__user__profile', 'segment', 'profile', 'exercise__user')
+    if request.GET.get('distinct', ''):
+        # I do not know how to trick the ORM to return this directly
+        # I think I need a DISTINCT ON patch
+        sds = SegmentDetail.objects.filter(segment=object_id).values('id','exercise__user','duration').order_by('duration')
+        id_list = []
+        u_list = []
+        for s in sds:
+            if not s['exercise__user'] in u_list:
+                u_list.append(s['exercise__user'])
+                id_list.append(s['id'])
+        slopes = SegmentDetail.objects.filter(id__in=id_list)
     username = request.GET.get('username', '')
     if username:
         other_user = get_object_or_404(User, username=username)
