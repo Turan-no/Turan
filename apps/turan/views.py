@@ -119,10 +119,10 @@ def index(request):
     exercise_list = Exercise.objects.exclude(exercise_permission='N').filter(**e_lookup_kwargs).select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')[:10]
     comment_list = ThreadedComment.objects.filter(**c_lookup_kwargs).filter(is_public=True).order_by('-date_submitted')[:5]
 
-    route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])[:12]
+    route_list = Route.objects.annotate( tcount=Count('exercise') ).order_by('-tcount')[:12]
     #route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
 
-    segment_list = Segment.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_segmentdetail WHERE turan_segmentdetail.segment_id = turan_segment.id' }).annotate(last_date=Max('segmentdetail__exercise__date'),last_time=Max('segmentdetail__exercise__time')).order_by('-last_date','-last_time')
+    segment_list = Segment.objects.annotate(tcount=Count('segmentdetail'),last_date=Max('segmentdetail__exercise__date'),last_time=Max('segmentdetail__exercise__time')).order_by('-last_date','-last_time')
 
     tag_list = Tag.objects.cloud_for_model(Exercise)
 
@@ -395,7 +395,15 @@ def statistics(request, year=None, month=None, day=None, week=None):
     #else:
     #    exercise = get_object_or_404(ExerciseType, name='Cycling')
 
-    stats_dict = Exercise.objects.filter(**tfilter).aggregate(Max('avg_speed'), Avg('avg_speed'), Avg('route__distance'), Max('route__distance'), Sum('route__distance'), Avg('duration'), Max('duration'), Sum('duration'))
+    stats_dict = Exercise.objects.filter(**tfilter).aggregate(
+            Max('avg_speed'),
+            Avg('avg_speed'),
+            Avg('route__distance'),
+            Max('route__distance'),
+            Sum('route__distance'),
+            Avg('duration'),
+            Max('duration'),
+            Sum('duration'))
     total_duration = stats_dict['duration__sum']
     total_distance = stats_dict['route__distance__sum']
     total_avg_speed = stats_dict['avg_speed__avg']
@@ -405,18 +413,18 @@ def statistics(request, year=None, month=None, day=None, week=None):
 
     exercise_count = Exercise.objects.all().count()
 
-    userstats = statsprofiles.filter(**tfilter).annotate( \
-            avg_avg_speed = Avg('user__exercise__avg_speed'), \
-            max_avg_speed = Max('user__exercise__avg_speed'), \
-            max_speed = Max('user__exercise__max_speed'), \
-            num_trips = Count('user__exercise'), \
-            sum_distance = Sum('user__exercise__route__distance'), \
-            sum_duration = Sum('user__exercise__duration'), \
-            sum_energy = Sum('user__exercise__kcal'), \
-            avg_normalized_power = Avg('user__exercise__normalized_power'), \
-            max_max_power = Max('user__exercise__max_power'), \
-            sum_ascent = Sum('user__exercise__route__ascent'), \
-            avg_avg_hr = Avg('user__exercise__avg_hr'), \
+    userstats = statsprofiles.filter(**tfilter).annotate(
+            avg_avg_speed = Avg('user__exercise__avg_speed'),
+            max_avg_speed = Max('user__exercise__avg_speed'),
+            max_speed = Max('user__exercise__max_speed'),
+            num_trips = Count('user__exercise'),
+            sum_distance = Sum('user__exercise__route__distance'),
+            sum_duration = Sum('user__exercise__duration'),
+            sum_energy = Sum('user__exercise__kcal'),
+            avg_normalized_power = Avg('user__exercise__normalized_power'),
+            max_max_power = Max('user__exercise__max_power'),
+            sum_ascent = Sum('user__exercise__route__ascent'),
+            avg_avg_hr = Avg('user__exercise__avg_hr'),
             )
 
     maxavgspeeds = userstats.filter(max_avg_speed__gt=0.0).order_by('max_avg_speed').reverse()
@@ -443,11 +451,11 @@ def statistics(request, year=None, month=None, day=None, week=None):
     validroutes = Route.objects.filter(**routefilter)
 
     tfilter["user__exercise__route__in"] = validroutes
-    climbstats = statsprofiles.filter(**tfilter).annotate( \
-            distance = Sum('user__exercise__route__distance'), \
-            height_sum = Sum('user__exercise__route__ascent'),  \
-            duration = Sum('user__exercise__duration'), \
-            trips = Count('user__exercise') \
+    climbstats = statsprofiles.filter(**tfilter).annotate(
+            distance = Sum('user__exercise__route__distance'),
+            height_sum = Sum('user__exercise__route__ascent'),
+            duration = Sum('user__exercise__duration'),
+            trips = Count('user__exercise')
             ).filter(duration__gt=0).filter(distance__gt=0).filter(height_sum__gt=0).filter(trips__gt=0)
 
     for u in climbstats:
@@ -463,7 +471,7 @@ def statistics(request, year=None, month=None, day=None, week=None):
     for i in hrzones:
         hrzonestats.append(statsprofiles.filter(**tfilter)\
         .extra(where=['turan_hrzonesummary.zone = %s' %i])\
-        .annotate(\
+        .annotate(
             duration = Sum('user__exercise__hrzonesummary__duration')
             )\
         .order_by('-duration'))
@@ -1681,7 +1689,7 @@ def autocomplete_route(request, app_label, model):
     #limit = request.GET.get('limit', None)
     limit = 20
 
-    routes = Route.objects.filter(qset).exclude(single_serving=1).extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',]).distinct()[:limit]
+    routes = Route.objects.filter(qset).exclude(single_serving=1).annotate( tcount=Count('exercise') ).order_by('-tcount')[:limit]
     route_list = [{'id': f.pk, 'name': f.__unicode__(), 'description': f.description, 'tcount': f.tcount, 'icon': f.get_png_url()} for f in routes]
 
     return HttpResponse(simplejson.dumps(route_list), mimetype='text/javascript')
@@ -2267,7 +2275,7 @@ def search(request):
 
     exercise_list = Exercise.objects.select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')
     comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')
-    route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])
+    route_list = Route.objects.annotate( tcount=Count('exercise') ).order_by('-tcount')
     segment_list = Segment.objects.all()
 
     tag_list = Tag.objects.all()
