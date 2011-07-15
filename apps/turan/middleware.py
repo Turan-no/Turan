@@ -3,6 +3,8 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied  
 from django.http import HttpResponseForbidden
 from django.template import RequestContext, Context, loader
+from sentry.client.models import get_client
+import logging
 
 class Http403(Exception):
     pass  
@@ -32,7 +34,7 @@ class TuranSentry404CatchMiddleware(object):
     def process_response(self, request, response):
         if response.status_code != 404:
             return response
-        message_id = get_client().create_from_text('Http 404 %s' %request.PATH_INFO, request=request, level=logging.INFO, logger='http404')
+        message_id = get_client().create_from_text('Http 404 %s' %request.path, request=request, level=logging.INFO, logger='http404')
         request.sentry = {
             'id': message_id,
         }
