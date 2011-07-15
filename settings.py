@@ -357,6 +357,9 @@ FORCE_LOWERCASE_TAGS = True
 WIKI_REQUIRES_LOGIN = True
 WAKAWAKA_DEFAULT_INDEX = 'TuranFaq'
 
+
+SENTRY_LOG_FILE = '/var/log/sentry.log'
+
 # Uncomment this line after signing up for a Yahoo Maps API key at the
 # following URL: https://developer.yahoo.com/wsregapp/
 # YAHOO_MAPS_API_KEY = ''
