@@ -18,8 +18,8 @@ fi
 python manage.py runfcgi pidfile=/var/run/turan/turan.pid minspare=8 maxspare=20 maxchildren=100 host=127.0.0.1 port=8080 
 
 if [ $? -eq 0 ]; then
-    echo "le'Deployed @ http://turan.no" | nc localhost 5050
+    echo "#turan le'Deployed @ http://turan.no" | nc localhost 5050
 else
-    echo "Deploy failed, fix me please." | nc localhost 5050
+    echo "#turan Deploy failed, fix me please." | nc localhost 5050
 fi
 
