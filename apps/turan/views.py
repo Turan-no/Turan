@@ -122,7 +122,7 @@ def index(request):
     route_list = Route.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_exercise WHERE turan_exercise.route_id = turan_route.id' }).extra( order_by= ['-tcount',])[:12]
     #route_list = sorted(route_list, key=lambda x: -x.exercise_set.count())[:15]
 
-    segment_list = Segment.objects.annotate(last_date=Max('segmentdetail__exercise__date'),last_time=Max('segmentdetail__exercise__time')).order_by('-last_date','-last_time')
+    segment_list = Segment.objects.extra( select={ 'tcount': 'SELECT COUNT(*) FROM turan_segmentdetail WHERE turan_segmentdetail.segment_id = turan_segment.id' }).annotate(last_date=Max('segmentdetail__exercise__date'),last_time=Max('segmentdetail__exercise__time')).order_by('-last_date','-last_time')
 
     tag_list = Tag.objects.cloud_for_model(Exercise)
 
