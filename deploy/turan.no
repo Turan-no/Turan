@@ -17,6 +17,7 @@ fi
 
 python manage.py runfcgi pidfile=/tmp/turan.pid minspare=8 maxspare=20 maxchildren=100 host=127.0.0.1 port=8080 
 
+curl -I http://turan.no/ 2>/dev/null | grep -q "200 OK"
 if [ $? -eq 0 ]; then
     echo "#turan le'Deployed @ http://turan.no" | nc localhost 5050
 else
