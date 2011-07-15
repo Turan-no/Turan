@@ -132,6 +132,7 @@ MIDDLEWARE_CLASSES = (
     'pagination.middleware.PaginationMiddleware',
     'django_sorting.middleware.SortingMiddleware',
     'sentry.client.middleware.SentryResponseErrorIdMiddleware',
+    'sentry.client.middleware.Sentry404CatchMiddleware',
     'turan.middleware.Http403Middleware',
     'pinax.middleware.security.HideSensistiveFieldsMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
