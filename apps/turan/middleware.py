@@ -32,10 +32,9 @@ class Http403Middleware(object):
 
 class TuranSentry404CatchMiddleware(object):
     def process_response(self, request, response):
-        if response.status_code != 404:
-            return response
-        message_id = get_client().create_from_text('Http 404 %s' %request.path, request=request, level=logging.INFO, logger='http404')
-        request.sentry = {
-            'id': message_id,
-        }
+        if response.status_code == 404 and request.META.get('HTTP_REFERER', ''):
+            message_id = get_client().create_from_text('Http 404 %s' %request.path, request=request, level=logging.INFO, logger='http404')
+            request.sentry = {
+                'id': message_id,
+                }
         return response
