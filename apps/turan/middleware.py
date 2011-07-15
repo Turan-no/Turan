@@ -17,9 +17,9 @@ def render_to_403(*args, **kwargs):
         args.append('403.html')
 
     httpresponse_kwargs = {'mimetype': kwargs.pop('mimetype', None)}
-    response = HttpResponseForbidden(loader.render_to_string(*args, **kwargs), **httpresponse_kwargs)              
+    response = HttpResponseForbidden(loader.render_to_string(*args, **kwargs), **httpresponse_kwargs)
 
-    return response  
+    return response
 
 class Http403Middleware(object):
     def process_exception(self,request,exception):
@@ -27,3 +27,13 @@ class Http403Middleware(object):
             #if settings.DEBUG:
             #    raise PermissionDenied
             return render_to_403(context_instance=RequestContext(request))
+
+class TuranSentry404CatchMiddleware(object):
+    def process_response(self, request, response):
+        if response.status_code != 404:
+            return response
+        message_id = get_client().create_from_text('Http 404 %s' %request.PATH_INFO, request=request, level=logging.INFO, logger='http404')
+        request.sentry = {
+            'id': message_id,
+        }
+        return response
