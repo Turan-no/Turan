@@ -85,16 +85,10 @@
     </ul>
     <a href="{% url exercises %}">{% trans "View more exercises" %}</a>
 
+    <h2 class="header drop-shadow">{% trans "Most popular routes" %}</h2>
     <ul class="routes">
         {% for object in route_list %}
         <li class="{% cycle "even" "odd" %}">
-            {% comment %}
-            Silly SVG
-                {% if object.gpx_file %}
-                    <object width="50" height="50" type="image/svg+xml" data="{{ object.get_svg_url }}"></object>
-                {% endif %}
-            {% endcomment %}
-
             <div style="height: 32px; width: 32px; margin-right: 13px; color: #999; background-color: #eee; float: left">
                 <p style="font-size: 14px; color: #888; width: 32px; text-align: center; float: left; padding: 0; margin: 2px 0 0 0">
                     {{ object.tcount }}
@@ -195,11 +189,12 @@
         });
     </script>
 
+    <h2 class="header drop-shadow">{% trans "Latest segments" %}</h2>
     <ul class="segments">
         {% for object in segment_list|slice:":10" %}
         <li class="{% cycle "even" "odd" %}">
             <a href="{{ object.get_absolute_url }}">
-                <img class="floatleft" src="{{ object.get_png_url }}" width="32" height="32"/>
+                <img class="floatright" src="{{ object.get_png_url }}" width="32" height="32"/>
         <div style="height: 32px; width: 32px; margin-right: 13px; color: #999; background-color: #eee; float: left">
             <p style="font-size: 14px; color: #888; width: 32px; text-align: center; float: left; padding: 0; margin: 2px 0 0 0">
                 {{ object.tcount }}
@@ -220,7 +215,7 @@
         {% endfor %}
     </ul>
 
-    <h2>{% trans "Latest comments" %}</h2>
+    <h2 class="header drop-shadow">{% trans "Latest comments" %}</h2>
     <ul id="last_comments" class="spacer">
         {% for comment in comment_list %}
         <li class="{% cycle "even" "odd" %}">

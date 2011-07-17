@@ -693,8 +693,8 @@ h3.segmenttoplist {
     text-decoration: none; 
     cursor:hand; 
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4f96ca', endColorstr='#1d3853'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(#4F96CA), to(#1D3853)); /* for webkit browsers */
     background: -moz-linear-gradient(top,  #4f96ca,  #1D3853); /* for firefox 3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, from(#4F96CA), to(#1D3853)); /* for webkit browsers */
     background: -o-linear-gradient(top,  #4f96ca,  #1d3853); 
     padding: 5px 5px 5px 5px;
     border-radius: 4px 4px 0 0;
@@ -1477,4 +1477,10 @@ a.profilehoverpoint>img {
     float: left;
     width: 220px;
     margin: 5px;
+}
+h2.header {
+    margin-top: 15px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 16px;
 }
