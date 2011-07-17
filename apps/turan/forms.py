@@ -88,6 +88,10 @@ class FullExerciseForm(forms.ModelForm):
     class Meta:
         model = Exercise
         exclude = ('user', 'content_type', 'object_id')
+        widgets = {
+                'exercise_type': ImageSelect(),
+                'exercise_permission': forms.RadioSelect(renderer=HorizRadioRenderer)
+                }
 
     def __init__(self, *args, **kwargs):
         super(FullExerciseForm, self).__init__(*args, **kwargs)
