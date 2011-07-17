@@ -29,7 +29,7 @@ class HorizRadioRenderer(forms.RadioSelect.renderer):
     """
     def render(self):
         """Outputs radios"""
-        return mark_safe(u'<div class="inlineLabels"' + u'\n'.join([u'%s\n' % w for w in self]) + u'</div>')
+        return mark_safe(u'<div class="inlineLabels">' + u'\n'.join([u'%s\n' % w for w in self]) + u'</div>')
 
 
 
