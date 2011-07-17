@@ -602,7 +602,7 @@ class Exercise(models.Model):
     def get_eq_weight(self):
         ''' Return weight of equipment '''
         eqweight = 10
-        if self.equipment:
+        if self.equipment and self.equipment.get_weight() > 0:
             return self.equipment.get_weight()
         return eqweight
 
