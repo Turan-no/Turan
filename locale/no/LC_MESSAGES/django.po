@@ -1541,7 +1541,7 @@ msgstr "Alle treninger"
 #: apps/turan/templates/turan/route_list.html:23
 #: apps/turan/templates/turan/slope_list.html:19
 msgid "Search results for "
-msgstr "Søkeresultat for"
+msgstr "Søkeresultat for "
 
 #: apps/turan/templates/turan/event_list.html:20
 #: apps/turan/templates/turan/route_list.html:23
