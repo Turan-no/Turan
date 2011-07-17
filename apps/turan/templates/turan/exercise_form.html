@@ -68,38 +68,40 @@ $(function() {
             });
     }
     var cache = {}, lastXhr;
-    $( "#route" ).autocomplete({
-        minLength: 0,
-        source: function( request, response ) {
-            var term = request.term;
-            /*
-            if ( term in cache ) {
-                response( cache[ term ] );
-                return;
-            }*/
-
-            lastXhr = $.getJSON( "{% url autocomplete_route "a" "b" %}", request, function( data, status, xhr ) {
-                if ( xhr === lastXhr ) {
-                    response( data );
-                }
-            });
-        },
-        focus: function( event, ui ) {
-                $( "#route" ).val( ui.item.name );
-                return false;
-        },
-        select: function( event, ui ) {
-                $( "#route" ).val( ui.item.name );
-                $( "#id_route" ).val( ui.item.id );
-                $( "#route-description" ).html( ui.item.description );
-            return false;
-        }})
-        .data( "autocomplete" )._renderItem = function( ul, item ) {
-            return $( "<li></li>" )
-                .data( "item.autocomplete", item )
-                .append( '<a><img src="' +item.icon +'">' + item.name + '<br><span class="smaller">' + item.description + ", " + item.tcount + " {% trans "trips"%}</span></a>" )
-                .appendTo( ul );
-        };
+    if ($("#route").length > 0) {
+	    $( "#route" ).autocomplete({
+	        minLength: 0,
+	        source: function( request, response ) {
+	            var term = request.term;
+	            /*
+	            if ( term in cache ) {
+	                response( cache[ term ] );
+	                return;
+	            }*/
+	
+	            lastXhr = $.getJSON( "{% url autocomplete_route "a" "b" %}", request, function( data, status, xhr ) {
+	                if ( xhr === lastXhr ) {
+	                    response( data );
+	                }
+	            });
+	        },
+	        focus: function( event, ui ) {
+	                $( "#route" ).val( ui.item.name );
+	                return false;
+	        },
+	        select: function( event, ui ) {
+	                $( "#route" ).val( ui.item.name );
+	                $( "#id_route" ).val( ui.item.id );
+	                $( "#route-description" ).html( ui.item.description );
+	            return false;
+	        }})
+	        .data( "autocomplete" )._renderItem = function( ul, item ) {
+	            return $( "<li></li>" )
+	                .data( "item.autocomplete", item )
+	                .append( '<a><img src="' +item.icon +'">' + item.name + '<br><span class="smaller">' + item.description + ", " + item.tcount + " {% trans "trips"%}</span></a>" )
+	                .appendTo( ul );
+	        };
+	};
 });
 
 $(document).ready(function() { 
