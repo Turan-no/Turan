@@ -1335,9 +1335,8 @@ def getgradients(values, d_offset=0):
         previous_altitude = altitudes[i]
         previous_distance = d*1000
 
-    if gradients: # Don't try to smooth empty list
-        gradients = smoothListGaussian(gradients)
-
+    #if gradients: # Don't try to smooth empty list
+    #    gradients = smoothListGaussian(gradients)
 
     # Clean values to reduce clutter
     # and round distance values
@@ -1445,15 +1444,6 @@ def exercise(request, object_id):
             slopes += object.segmentdetail_set.all()
             slopes = sorted(slopes, key=lambda x: x.start)
 
-            # TODO: maybe put this in json details for cache etc
-            #lonlats = []
-            #for d in details:
-            #    if d.lon == None:
-            #        d.lon = 0.0
-            #    if d.lat == None:
-            #        d.lat = 0.0
-            #    lonlats.append((d.lon, d.lat))
-            #    [(d.lon, d.lat) for d in details if d.lon and d.lat])
             # Todo, maybe calculate and save in db or cache ?
             gradients, inclinesums = getgradients(details)
         userweight = profile.get_weight(object.date)
