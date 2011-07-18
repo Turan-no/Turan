@@ -13,6 +13,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.datastructures import SortedDict
 import sentry.models as sentry_models
+from sentry.client.models import get_client
+
 
 from copy import deepcopy
 import numpy
@@ -43,11 +45,10 @@ from celery.signals import task_failure
 from sentry.client.handlers import SentryHandler
 
 logger = logging.getLogger('task')
-logger.addHandler(SentryHandler())
 def process_failure_signal(exception, traceback, sender, task_id,
                            signal, args, kwargs, einfo, **kw):
   exc_info = (type(exception), exception, traceback)
-  logger.error(
+  get_client().create_from_text(
     'Celery job exception: %s(%s)' % (exception.__class__.__name__, exception),
     exc_info=exc_info,
     extra={
@@ -982,7 +983,7 @@ def parse_sensordata(exercise):
     ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
 
 
-    logger.info("Parsing Exercise: %s, with file: %s" %(exercise.id, exercise.sensor_file))
+    print "Parsing Exercise: %s, with file: %s" %(exercise.id, exercise.sensor_file)
 
     ExerciseDetail = get_model('turan', 'ExerciseDetail')
     Interval = get_model('turan', 'Interval')
