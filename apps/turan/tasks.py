@@ -13,8 +13,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.datastructures import SortedDict
 import sentry.models as sentry_models
-from sentry.client.models import get_client
-
+from sentry.client.models import client
 
 from copy import deepcopy
 import numpy
@@ -45,23 +44,18 @@ from celery.signals import task_failure
 from sentry.client.handlers import SentryHandler
 
 logger = logging.getLogger('task')
-def process_failure_signal(exception, traceback, sender, task_id,
-                           signal, args, kwargs, einfo, **kw):
-  exc_info = (type(exception), exception, traceback)
-  get_client().create_from_text(
-    'Celery job exception: %s(%s)' % (exception.__class__.__name__, exception),
-    exc_info=exc_info,
-    extra={
-      'data': {
-        'task_id': task_id,
-        'sender': sender,
-        'args': args,
-        'kwargs': kwargs,
-      }
-    }
-  )
-task_failure.connect(process_failure_signal)
 
+@receiver(task_failure)
+def process_failure_signal(sender, task_id, exception, args, kwargs, traceback,
+                           einfo, **kw):
+  exc_info = (type(exception), exception, traceback)
+  client.create_from_exception(exc_info, data={
+      'sender': sender,
+      'task_id': task_id,
+      'args': args,
+      'kwargs': kwargs,
+      'kw': kw
+      })
 
 def find_parser(filename):
     ''' Returns correctly initianted parser-class given a filename '''
