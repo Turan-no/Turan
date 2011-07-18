@@ -38,3 +38,12 @@ class TuranSentry404CatchMiddleware(object):
                 'id': message_id,
                 }
         return response
+
+class TuranSentryMarkup(object):
+    '''Add more information to the sentry log'''
+
+    def process_exception(self, request, exception):
+        # Make sure the exception signal is fired for Sentry
+        if request.user:
+            request.META['TURANUSER'] = request.user
+        return None

@@ -131,6 +131,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'django_sorting.middleware.SortingMiddleware',
+    'turan.middleware.TuranSentryMarkup',
     'sentry.client.middleware.SentryResponseErrorIdMiddleware',
     'turan.middleware.TuranSentry404CatchMiddleware',
     'turan.middleware.Http403Middleware',
