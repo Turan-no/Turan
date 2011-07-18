@@ -958,22 +958,22 @@ def parse_and_calculate(exercise, callback=None):
     ''' Help function that calls all the functions required for a full parse of an exercise '''
 
 
-    parse_sensordata(exercise)
-    merge_sensordata(exercise)
+    parse_sensordata.apply(exercise)
+    merge_sensordata.apply(exercise)
     if exercise.avg_power:
         #exercise.normalized_power = power_30s_average(exercise.get_details().all())
         exercise.normalized_power = normalized_attr(exercise, 'power')
         #exercise.normalized_power = power_30s_average(exercise.get_details().all())
         exercise.save()
     #exercise.normalized_hr = normalized_attr(exercise, 'hr')
-    normalize_altitude.delay(exercise)
-    create_gpx_from_details.delay(exercise)
-    calculate_best_efforts.delay(exercise)
-    calculate_time_in_zones.delay(exercise)
-    getslopes.delay(exercise.get_details().all(),
+    normalize_altitude.apply(exercise)
+    create_gpx_from_details.apply(exercise)
+    calculate_best_efforts.apply(exercise)
+    calculate_time_in_zones.apply(exercise)
+    getslopes.apply(exercise.get_details().all(),
             exercise.user.get_profile().get_weight(exercise.date),
             exercise.get_eq_weight())
-    populate_interval_info.delay(exercise)
+    populate_interval_info.apply(exercise)
     for segment in search_trip_for_possible_segments_matches(exercise):
         slice_to_segmentdetail(exercise, segment[0], segment[1], segment[2])
         # TODO: send notifications notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
