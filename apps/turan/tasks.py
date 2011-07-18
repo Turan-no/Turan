@@ -9,7 +9,10 @@ from django.conf import settings
 from django.db.models import get_model
 from django.db import connection, transaction
 from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.datastructures import SortedDict
+import sentry.models as sentry_models
 
 from copy import deepcopy
 import numpy
@@ -30,6 +33,7 @@ from fitparser import FITParser
 from polaronlineparser import POLParser
 from suuntoxlsxparser import SuuntoXLSXParser
 
+import socket
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 
@@ -1450,3 +1454,24 @@ def watt2zone(watt_percentage):
     elif watt_percentage < 55:
         zone = 1
     return zone
+
+# FIXME: should probably live somewhere else.
+def current_site_url():
+    """Returns fully qualified URL (no trailing slash) for the current site."""
+    from django.contrib.sites.models import Site
+    current_site = Site.objects.get_current()
+    protocol = getattr(settings, 'MY_SITE_PROTOCOL', 'http')
+    port     = getattr(settings, 'MY_SITE_PORT', '')
+    url = '%s://%s' % (protocol, current_site.domain)
+    if port:
+        url += ':%s' % port
+    return url
+
+@task
+@receiver(post_save, sender=sentry_models.Message)
+def notify_irc_sentry(sender, instance, created, **kwargs):
+    if created:
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect(("localhost", 5050))
+        client_socket.send("#turan Sentry: %s/%s" % (current_site_url, instance.get_absolute_url()))
+        client_socket.close()
