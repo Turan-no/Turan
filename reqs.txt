@@ -18,7 +18,7 @@ django-atomformat
 django-attachments==0.3
 django-avatar==2.0a1
 django-bookmarks==0.1.0
-django-celery==2.0.2
+django-celery
 django-compressor==0.7
 django-db-log==2.2.1
 django-dbtemplates==0.5.8
