@@ -1473,5 +1473,5 @@ def notify_irc_sentry(sender, instance, created, **kwargs):
     if created:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect(("localhost", 5050))
-        client_socket.send("#turan Sentry: %s/%s" % (current_site_url, instance.get_absolute_url()))
+        client_socket.send("#turan Sentry: %s/%s" % (current_site_url(), instance.get_absolute_url()))
         client_socket.close()
