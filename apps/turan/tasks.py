@@ -955,8 +955,7 @@ def sanitize_entries(parser):
 
 @task
 def parse_and_calculate(exercise, callback=None):
-    ''' Help function that calls all the functions required for a full parse of an exercise '''
-
+    ''' Helper function that calls all the functions required for a full parse of an exercise '''
 
     parse_sensordata(exercise)
     merge_sensordata(exercise)
@@ -1092,8 +1091,8 @@ def parse_sensordata(exercise):
         if parser.max_temp:
             exercise.max_temperature = parser.max_temp
 
-    if hasattr(parser, 'comment'): # Polar has this
-        if parser.comment: # comment isn't always set
+    if hasattr(parser, 'comment'):
+        if parser.comment:
             exercise.comment = parser.comment
 
     # Auto calculate total ascent and descent
@@ -1127,9 +1126,6 @@ def parse_sensordata(exercise):
 
 @task
 def populate_interval_info(exercise):
-    #if exercise.sensor_file.name.endswith('.fit'):
-        #"FIT. SO PRO"
-    #    return
     details = list(exercise.exercisedetail_set.all())
     d = filldistance(details) # FIXME
     for interval in exercise.interval_set.all():
@@ -1371,7 +1367,6 @@ def detailslice_info(details):
     if distance:
         gradient = ascent/distance
         speed = ret['speed__avg']
-        # EQweight hard coded to 10! 
         ret['power__avg_est'] = calcpower(userweight, exercise.get_eq_weight(), gradient*100, speed/3.6)
         ret['gradient'] = gradient*100
     else:
