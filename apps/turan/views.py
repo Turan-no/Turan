@@ -411,8 +411,6 @@ def statistics(request, year=None, month=None, day=None, week=None):
     if not total_duration:
         return HttpResponse('No trips found')
 
-    exercise_count = Exercise.objects.all().count()
-
     userstats = statsprofiles.filter(**tfilter).annotate(
             avg_avg_speed = Avg('user__exercise__avg_speed'),
             max_avg_speed = Max('user__exercise__avg_speed'),
