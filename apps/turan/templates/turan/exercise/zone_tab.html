@@ -53,7 +53,7 @@ var pieoptions = {
             </td>
             <td>
                 {% if object.duration %}
-                {{ length|percent:object.duration.seconds }}
+                {{ length|percent:object.duration.total_seconds }}
                 {% endif %}
             </td>
         </tr>
@@ -109,7 +109,7 @@ var pieoptions = {
             </td>
             <td>
                 {% if object.duration %}
-                    {{ length|percent:object.duration.seconds }}
+                    {{ length|percent:object.duration.total_seconds }}
                 {% endif %}
             </td>
         </tr>
