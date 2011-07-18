@@ -63,8 +63,8 @@ class GPX2PNG(object):
 
             # Small hack to fix drawing of only one point
             if self.minlon == self.maxlon and self.minlat == self.maxlat:
-                slef.maxlon = self.maxlon + 0.0001
-                slef.maxlat = self.maxlat + 0.0001
+                self.maxlon = self.maxlon + 0.0001
+                self.maxlat = self.maxlat + 0.0001
 
             yscale = -math.cos( (self.minlat + self.maxlat) / 2 / 180 * 3.141592 )
             for trk in self.root.findall(self.ns + 'trk'):
