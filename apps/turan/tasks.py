@@ -33,6 +33,32 @@ from suuntoxlsxparser import SuuntoXLSXParser
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 
+
+# Hook up sentry to celery's logging 
+import logging
+from celery.signals import task_failure
+from sentry.client.handlers import SentryHandler
+
+logger = logging.getLogger('task')
+logger.addHandler(SentryHandler())
+def process_failure_signal(exception, traceback, sender, task_id,
+                           signal, args, kwargs, einfo, **kw):
+  exc_info = (type(exception), exception, traceback)
+  logger.error(
+    'Celery job exception: %s(%s)' % (exception.__class__.__name__, exception),
+    exc_info=exc_info,
+    extra={
+      'data': {
+        'task_id': task_id,
+        'sender': sender,
+        'args': args,
+        'kwargs': kwargs,
+      }
+    }
+  )
+task_failure.connect(process_failure_signal)
+
+
 def find_parser(filename):
     ''' Returns correctly initianted parser-class given a filename '''
     f_lower = filename.lower()
