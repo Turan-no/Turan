@@ -298,7 +298,6 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_off
                     previous_start = start_distance
                 elif start_distance > 300000: # If start distance is further away than 300km we stop searching
                     print "Skipped segment, start was %s m away" %start_distance
-                    print "Decimal distance was: %s" %(d['lat'] - se.start_lat)
                     break
             elif not found_end:
                 end_distance = proj_distance(se.end_lat, se.end_lon, d['lat'], d['lon'])
