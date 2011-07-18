@@ -49,7 +49,7 @@ logger = logging.getLogger('task')
 def process_failure_signal(sender, task_id, exception, args, kwargs, traceback,
                            einfo, **kw):
   exc_info = (type(exception), exception, traceback)
-  client.create_from_exception(exc_info, data={
+  client.create_from_exception(exc_info, logger='task', data={
       'sender': sender,
       'task_id': task_id,
       'args': args,
