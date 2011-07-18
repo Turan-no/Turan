@@ -496,6 +496,25 @@ def statistics(request, year=None, month=None, day=None, week=None):
 
     team_list = Tribe.objects.all()
 
+
+    # Limit the number of resulsts
+    resultsize = 10
+    numtrips = numtrips[:resultsize]
+    dursums = dursums[:resultsize]
+    distsums = distsums[:resultsize]
+    lengthstats = lengthstats[:resultsize]
+    maxavgspeeds = maxavgspeeds[:resultsize]
+    avgspeeds = avgspeeds[:resultsize]
+    maxspeeds = maxspeeds[:resultsize]
+    energysums = energysums[:resultsize]
+    avgavghrs = avgavghrs[:resultsize]
+    avgnormalizedpower = avgnormalizedpower[:resultsize]
+    ascentsums = ascentsums[:resultsize]
+    climbstats = climbstats[:resultsize]
+    climbstatsbytime = climbstatsbytime[:resultsize]
+    maxpowers = maxpowers[:resultsize]
+
+
     return render_to_response('turan/statistics.html', locals(), context_instance=RequestContext(request))
 
 def bestest(request):
