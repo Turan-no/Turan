@@ -1047,7 +1047,7 @@ class SegmentDetail(models.Model):
 
 
     def end(self):
-        ''' Helper so we don't have to calculate end in templates '''
+        ''' Helper so we do not have to calculate end in templates '''
 
         return self.start + self.length/1000
 
