@@ -631,6 +631,66 @@ def calculate_time_in_zones(exercise, callback=None):
         wz.duration = val
         wz.save()
 
+@task
+def calculate_gradients(exercise, callback=None):
+
+    # First: Delete any existing in case of reparse
+    exercise.exercisealtitudegradient_set.all().delete()
+    id = exercise.id
+
+    ExerciseAltitudeGradient = get_model('turan', 'ExerciseAltitudeGradient')
+
+    distances, gradients, altitudes = getgradients(exercise.get_details().all())
+    print len(distances), len(gradients), len(altitudes)
+    for i in xrange(0, len(distances)):
+        eag = ExerciseAltitudeGradient()
+        eag.exercise_id = id
+        eag.xaxis = distances[i]
+        eag.gradient = gradients[i]
+        eag.altitude = altitudes[i]
+        eag.save()
+
+def getgradients(values):
+    ''' Copy of function from view..this one used to save into db for
+    "caching" '''
+
+    altitudes = []
+    distances = []
+
+    for d in values:
+        altitudes.append(d.altitude)
+        # Distances is used in the graph, so divide by 1000 to get graph xasis in km
+        if d.distance:
+            distances.append(d.distance/1000)
+        else:
+            distances.append(0)
+
+    # Smud. 
+    altitudes = smoothListGaussian(altitudes, 10)
+
+    gradients = []
+    previous_altitude = 0
+    previous_distance = 0
+    for i, d in enumerate(distances):
+        if previous_distance:
+            h_delta = altitudes[i] -  previous_altitude
+            d_delta = d*1000 - previous_distance
+            if d_delta:
+                gradient = h_delta*100/d_delta
+            else:
+                gradient = 0
+            gradients.append(gradient)
+        else:
+            gradients.append(0)
+
+        previous_altitude = altitudes[i]
+        previous_distance = d*1000
+
+    #if gradients: # Don't try to smooth empty list
+    #    gradients = smoothListGaussian(gradients)
+
+    return distances, gradients, altitudes
+
 def getzones(exercise):
     ''' Calculate time in different sport zones given trip details '''
 

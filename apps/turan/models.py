@@ -1046,6 +1046,13 @@ class SegmentDetail(models.Model):
 
 
 
+class CommonAltitudeGradient(models.Model):
+    xaxis   = models.FloatField()
+    altitude   = models.FloatField()
+    gradient   = models.FloatField()
+
+class ExerciseAltitudeGradient(CommonAltitudeGradient):
+    exercise   = models.ForeignKey(Exercise)
 
 #class UserProfile(models.Model):
 #    user = models.ForeignKey(User, unique=True)
