@@ -641,7 +641,6 @@ def calculate_gradients(exercise, callback=None):
     ExerciseAltitudeGradient = get_model('turan', 'ExerciseAltitudeGradient')
 
     distances, gradients, altitudes = getgradients(exercise.get_details().all())
-    print len(distances), len(gradients), len(altitudes)
     for i in xrange(0, len(distances)):
         eag = ExerciseAltitudeGradient()
         eag.exercise_id = id
@@ -1022,6 +1021,7 @@ def parse_and_calculate(exercise, callback=None):
     create_gpx_from_details(exercise)
     calculate_best_efforts(exercise)
     calculate_time_in_zones(exercise)
+    calculate_gradients(exercise)
     getslopes(exercise.get_details().all(),
             exercise.user.get_profile().get_weight(exercise.date),
             exercise.get_eq_weight())

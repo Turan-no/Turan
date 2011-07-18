@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load l10n %}
 {% load turan_extras %}
+{% if inclinesums %}
 <div id="inclinediv" style="width:700px;height:100%; float: right;"></div>
 
 <div id="incline" style="width:200px">
@@ -50,3 +51,4 @@
     $.plot($("#inclinediv"), inclinedata, { grid: { show: true } });
 {% endlocalize %}
 </script>
+{% endif %}

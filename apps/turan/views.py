@@ -1445,7 +1445,10 @@ def exercise(request, object_id):
             slopes = sorted(slopes, key=lambda x: x.start)
 
             # Todo, maybe calculate and save in db or cache ?
-            gradients, inclinesums = getgradients(details)
+            #gradients, inclinesums = getgradients(details)
+# TODO inclinesums maybe needs a freqs cache thingy like speed/cadence
+            gradients = object.exercisealtitudegradient_set.values_list('xaxis', 'gradient')
+
         userweight = profile.get_weight(object.date)
         userftp = profile.get_ftp(object.date)
         intervals = object.interval_set.select_related().all()

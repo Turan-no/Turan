@@ -1051,6 +1051,9 @@ class CommonAltitudeGradient(models.Model):
     altitude   = models.FloatField()
     gradient   = models.FloatField()
 
+    class Meta:
+        ordering = ('xaxis',)
+
 class ExerciseAltitudeGradient(CommonAltitudeGradient):
     exercise   = models.ForeignKey(Exercise)
 
