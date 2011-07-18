@@ -37,7 +37,6 @@ import socket
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 
-
 # Hook up sentry to celery's logging 
 import logging
 from celery.signals import task_failure
@@ -756,25 +755,24 @@ def calculate_best_efforts(exercise, effort_range=[5, 10, 30, 60, 240, 300, 600,
     if not callback is None:
         subtask(callback).delay(exercise)
 
+@task
 def normalize_altitude(exercise):
     ''' Normalize altitude, that is, if it's below zero scale every value up.
     Also set max and min altitude on route'''
 
     altitude_min = exercise.get_details().aggregate(Min('altitude'))['altitude__min']
-    altitude_max = exercise.get_details().aggregate(Max('altitude'))['altitude__max']
-    # Normalize values
     if altitude_min and altitude_min < 0:
+        # Find new value
         altitude_min = 0 - altitude_min
-        previous_altitude = 0
-        for d in exercise.get_details().all():
-            if d.altitude == None: # Check for missing altitude values
-                d.altitude = previous_altitude
-            else:
-                d.altitude += altitude_min
-            d.save()
-            previous_altitude = d.altitude
+        ''' Do this in SQL instead of ORM, so we have 1 SQL statement instead
+        #of same number of statements as samples '''
+        cursor = connection.cursor()
+        # Data modifying operation - commit required
+        cursor.execute("UPDATE turan_exercisedetail set altitude = altitude + %s WHERE exercise_id = %s", [altitude_min, exercise.id])
+        transaction.commit_unless_managed()
+
     # Find min and max and populate route object
-    # reget new values after normalize
+    # fetch new values from db after normalize
     altitude_min = exercise.get_details().aggregate(Min('altitude'))['altitude__min']
     altitude_max = exercise.get_details().aggregate(Max('altitude'))['altitude__max']
     r = exercise.route
@@ -955,7 +953,32 @@ def sanitize_entries(parser):
     return entries # Not really used.
 
 @task
-def parse_sensordata(exercise, callback=None):
+def parse_and_calculate(exercise, callback=None):
+    ''' Help function that calls all the functions required for a full parse of an exercise '''
+
+
+    parse_sensordata(exercise)
+    merge_sensordata(exercise)
+    if exercise.avg_power:
+        #exercise.normalized_power = power_30s_average(exercise.get_details().all())
+        exercise.normalized_power = normalized_attr(exercise, 'power')
+        #exercise.normalized_power = power_30s_average(exercise.get_details().all())
+        exercise.save()
+    #exercise.normalized_hr = normalized_attr(exercise, 'hr')
+    normalize_altitude.delay(exercise)
+    create_gpx_from_details.delay(exercise)
+    calculate_best_efforts.delay(exercise)
+    calculate_time_in_zones.delay(exercise)
+    getslopes.delay(exercise.get_details().all(),
+            exercise.user.get_profile().get_weight(exercise.date),
+            exercise.get_eq_weight())
+    populate_interval_info.delay(exercise)
+    for segment in search_trip_for_possible_segments_matches(exercise):
+        slice_to_segmentdetail(exercise, segment[0], segment[1], segment[2])
+        # TODO: send notifications notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
+
+@task
+def parse_sensordata(exercise):
     ''' The function that takes care of parsing data file from sports equipment from polar or garmin and putting values into the detail-db, and also summarized values for trip. '''
 
 
@@ -1006,6 +1029,7 @@ def parse_sensordata(exercise, callback=None):
             if hasattr(val, v):
                 setattr(detail, v, getattr(val, v))
         detail.save()
+    #print "Saved ExerciseDetails: %s" %(exercise.id)
 
     # Parse laps/intervals
     for val in parser.laps:
@@ -1021,10 +1045,7 @@ def parse_sensordata(exercise, callback=None):
            ):
             if hasattr(val, v):
                 setattr(interval, v, getattr(val, v))
-        #try:
         interval.save()
-        #except:
-        #    pass
 
     exercise.max_hr = parser.max_hr
     exercise.max_speed = parser.max_speed
@@ -1044,8 +1065,6 @@ def parse_sensordata(exercise, callback=None):
 
     if hasattr(parser, 'avg_power'): # only some parsers
         exercise.avg_power = parser.avg_power
-        # Generate normalized power
-        exercise.normalized_power = power_30s_average(exercise.get_details().all())
     if hasattr(parser, 'max_power'): # only some parsers
         exercise.max_power = parser.max_power
 
@@ -1077,15 +1096,6 @@ def parse_sensordata(exercise, callback=None):
         if parser.comment: # comment isn't always set
             exercise.comment = parser.comment
 
-
-
-    # Normalize altitude, that is, if it's below zero scale every value up
-    normalize_altitude(exercise)
-
-
-    # Calculate normalized hr
-    exercise.normalized_hr = normalized_attr(exercise, 'hr')
-
     # Auto calculate total ascent and descent
     route = exercise.route
     if route:
@@ -1114,23 +1124,6 @@ def parse_sensordata(exercise, callback=None):
 
     # Somebadyyy saaaaaaave meee
     exercise.save()
-
-    if not callback is None:
-        subtask(callback).delay(exercise)
-
-    # Apply jobs, so we can use this in view
-    merge_sensordata(exercise)
-    create_gpx_from_details(exercise)
-    calculate_best_efforts(exercise)
-    calculate_time_in_zones(exercise)
-    if hasattr(route, 'ascent') and route.ascent > 0:
-        getslopes(exercise.get_details().all(), exercise.user.get_profile().get_weight(exercise.date), exercise.get_eq_weight())
-    populate_interval_info(exercise)
-    for segment in search_trip_for_possible_segments_matches(exercise):
-        slice_to_segmentdetail(exercise, segment[0], segment[1], segment[2])
-        # TODO: send notifications notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
-
-
 
 @task
 def populate_interval_info(exercise):
@@ -1180,11 +1173,10 @@ def populate_interval_info(exercise):
 
         # TODO add a bunch more
         interval.save()
-        #assert False, (start, stop, ret)
-
 
 @task
 def create_tcx_from_details(event):
+    ''' TCXWriter '''
     # Check if the details have lon, some parsers doesn't provide position
     if event.get_details().filter(lon__gt=0).filter(lat__gt=0).count() > 0:
         details = event.get_details().all()

@@ -34,7 +34,7 @@ from gpxwriter import GPXWriter
 
 from tasks import create_simplified_gpx, create_png_from_gpx, create_gpx_from_details, \
         merge_sensordata, calculate_ascent_descent_gaussian, calculate_best_efforts, \
-        parse_sensordata, filldistance, hr2zone, watt2zone
+        parse_and_calculate, filldistance, hr2zone, watt2zone
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -488,15 +488,8 @@ class Exercise(models.Model):
         super(Exercise, self).save(*args, **kwargs)
 
     def parse(self):
-        #task = parse_sensordata.delay(self)
-        #print task
         if self.sensor_file:
-            task = parse_sensordata.delay(self)
-#, callback=subtask(merge_sensordata, callback=subtask(calculate_best_efforts)))
-#, 
-#                    callback=subtask(create_gpx_from_details,
-#                    callback=subtask(calculate_best_efforts
-#                    ))))
+            task = parse_and_calculate.delay(self)
             return task
         return None
 
