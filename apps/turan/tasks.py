@@ -151,8 +151,8 @@ def getslopes(values, userweight, eqweight):
 
     # Make sure exercise type is cycling, this only makes sense for cycling
     exercise_type = values[0].exercise.exercise_type
-    if not str(exercise_type) == 'Cycling':
-        return []
+    #if not str(exercise_type) == 'Cycling':
+    #    return []
     if not filldistance(values):
         return []
 
