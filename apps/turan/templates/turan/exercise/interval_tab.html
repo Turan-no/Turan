@@ -31,9 +31,11 @@
         <th>
             {% anchortrans avg_power "Avg power" %}
         </th>
+        {% if userftp %}
         <th>
             {% anchortrans avg_power "FTP %" %}
         </th>
+        {% endif %}
         <th>
             {% trans "Avg power/kg" %}
         </th>
@@ -88,7 +90,9 @@
 
         {% if interval.avg_power and power_show %}
         <td>{{interval.avg_power|floatformat}} {% trans "W" %}</td>
+        {% if userftp %}
         <td>{{interval.avg_power|percent:userftp}}</td>
+        {% endif %}
         <td>{{interval.get_avg_power_per_kg|floatformat}} {% trans "W/kg" %}</td>
         <td>{{interval.max_power|floatformat}} {% trans "W" %} </td>
         {% endif %}
