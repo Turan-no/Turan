@@ -32,12 +32,15 @@
             </th>
             {% endif %}
 
+            {% if userweight %}
+
             <th>
                 {% trans "Est power" %}
             </th>
             <th>
                 {% trans "W/kg" %}
             </th>
+            {% endif %}
             <th>
                 VAM
             </th>
@@ -113,13 +116,14 @@
                 {{slope.act_power|floatformat}} {% trans "W" %}
             </td>
             {% endif %}
-
+            {% if userweight %}
             <td>
                 {{slope.est_power|floatformat}} {% trans "W" %}
             </td>
             <td>
                 {{slope.power_per_kg|floatformat}} {% trans "W/kg" %}
             </td>
+            {% endif %}
             <td>
                 {% if slope.category >= 0 %}
                 {% if slope.vam %}{{slope.vam}}{% endif %}
