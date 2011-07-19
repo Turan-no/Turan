@@ -299,6 +299,7 @@ def segment_detail(request, object_id):
             alt_max, alt_min = trip.get_details().aggregate(max=Max('altitude'),min=Min('altitude')).values()
             done_altitude_profile = True
         gradients, inclinesums = getgradients(tripdetails[start:stop],d_offset=d_offset)
+        gradients = simplejson.dumps(gradients)
     return render_to_response('turan/segment_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):
@@ -1447,7 +1448,7 @@ def exercise(request, object_id):
             # Todo, maybe calculate and save in db or cache ?
             #gradients, inclinesums = getgradients(details)
             # TODO inclinesums maybe needs a freqs cache thingy like speed/cadence
-            gradients = object.exercisealtitudegradient_set.values_list('xaxis', 'gradient')
+            gradients = simplejson.dumps(list(object.exercisealtitudegradient_set.values_list('xaxis', 'gradient')))
 
         userweight = profile.get_weight(object.date)
         userftp = profile.get_ftp(object.date)

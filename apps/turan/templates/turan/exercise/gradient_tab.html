@@ -62,9 +62,7 @@
             color: 3,
             lines: { fill: 0.7, },
             label: "{% trans "Gradients"%}",
-            data: [
-            {% for km, gradient in gradients %}[{{ km }},{{ gradient }}],{% endfor %}
-               ],
+            data: {{gradients}},
             "threshold": altconstraints
         }, 
     ];
