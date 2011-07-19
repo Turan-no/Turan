@@ -1014,8 +1014,11 @@ def sanitize_entries(parser):
         prev = entries[0]
         for index, e in enumerate(entries):
             if getattr(e, val) == None:
-                print "Parser: Changed %s: %s at index %s" %(val, getattr(e, val), index)
-                setattr(e, val, getattr(prev, val))
+                if getattr(prev, val) == None:
+                    continue # No initial value
+                else:
+                    print "Parser: Changed %s: %s at index %s" %(val, getattr(e, val), index)
+                    setattr(e, val, getattr(prev, val))
             prev = e
         return entries
 
