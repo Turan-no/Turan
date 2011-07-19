@@ -1,8 +1,17 @@
 {% load i18n %}
 {% load l10n %}
 {% load turan_extras %}
-<div id="gradientinfo"></div>
-<div id="gradientinfo2"></div>
+<div class="hidden" id="gradientinfo"></div>
+<div class="hidden" id="gradientinfo2">
+    <ul class="buttons">
+        <li>
+            <a class="" href="#" title="{% trans "Zoom out" %}" id="reset_gradient_zoom" >
+                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_out.png" /> 
+                {% trans "Zoom out" %}
+            </a>
+        </li>
+    </ul>
+</div>
 
 <script type="text/javascript">
 {% localize off %}
@@ -64,7 +73,9 @@
 
     $("#gradientzonediv").bind("plotselected", function (event, ranges) {            
         $("#gradientinfo").text(ranges.xaxis.from.toFixed(1) + " {% trans "to" %} " + ranges.xaxis.to.toFixed(1));
-        $("#gradientinfo2").text( "{% trans "Click graph to reset selection" %}");
+        //$("#gradientinfo2").text( "{% trans "Click graph to reset selection" %}");
+        $("#gradientinfo2").removeClass('hidden');
+        $("#gradientinfo").removeClass('hidden');
         
         var newplot = $.plot(
             $("#gradientzonediv"), 
@@ -76,10 +87,16 @@
         //gradientplot.setSelection(ranges, true );
         
     });                                                                      
-    $("#gradientzonediv").bind("plotclick", function (event, pos, item) {
-        plot = $.plot($("#gradientzonediv"), gradientzonedata, gradplotoptions);
+
+    /*$("#gradientzonediv").bind("plotclick", function (event, pos, item) {
         $("#gradientinfo").text("");
-        $("#gradientinfo2").text("");
+        $("#gradientinfo2")..("");
+    });*/
+    $("#reset_gradient_zoom").bind("click", function(evt) {
+        evt.preventDefault();
+        $("#gradientinfo").addClass('hidden');
+        $("#gradientinfo2").addClass('hidden');
+        plot = $.plot($("#gradientzonediv"), gradientzonedata, gradplotoptions);
     });
 {% endlocalize %}
 </script>
