@@ -147,6 +147,9 @@ def getslopes(values, userweight, eqweight):
     the slopes found. Deletes any existing slopes for exercise '''
     Slope = get_model('turan', 'Slope')
 
+    if not values.exists():
+        return []
+
     # Make sure we don't create duplicate slopes
     values[0].exercise.slope_set.all().delete()
 
