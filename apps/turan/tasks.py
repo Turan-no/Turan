@@ -793,6 +793,7 @@ def gethrhzones(exercise, values, max_hr):
                     filtered_zones[zone][hr] = percentage
 
     return filtered_zones
+
 def getfreqs(values, val_type, min=0, max=0, val_cutoff=0):
     ''' given values, create freqency structure for display in flot '''
 

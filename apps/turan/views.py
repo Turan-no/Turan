@@ -1356,51 +1356,51 @@ def exercise(request, object_id):
     time_xaxis = True
     smooth = 0
     if details.exists():
-        if filldistance(details): # Only do this if we actually have distance
+        #if filldistance(details): # Only do this if we actually have distance
             # xaxis by distance if we have distance in details unless user requested time !
-            req_t = request.GET.get('xaxis', '')
-            if not (req_t == 'time' or str(object.exercise_type) == 'Rollers'): # TODO make exercise_type matrix for xaxis, like for altitude
-                time_xaxis = False
-            req_s = request.GET.get('smooth', '')
-            if req_s:
-                try:
-                    smooth = int(req_s)
-                except:
-                    smooth = 0
-            slopes = []
-            # add both segment details and slopes
-            slopes += object.slope_set.all().order_by('start')
-            slopes += object.segmentdetail_set.all()
-            slopes = sorted(slopes, key=lambda x: x.start)
+        req_t = request.GET.get('xaxis', '')
+        if not (req_t == 'time' or str(object.exercise_type) == 'Rollers'): # TODO make exercise_type matrix for xaxis, like for altitude
+            time_xaxis = False
+        req_s = request.GET.get('smooth', '')
+        if req_s:
+            try:
+                smooth = int(req_s)
+            except:
+                smooth = 0
+        slopes = []
+        # add both segment details and slopes
+        slopes += object.slope_set.all().order_by('start')
+        slopes += object.segmentdetail_set.all()
+        slopes = sorted(slopes, key=lambda x: x.start)
 
-            # Todo, maybe calculate and save in db or cache ?
-            #gradients, inclinesums = getgradients(details)
-            # TODO inclinesums maybe needs a freqs cache thingy like speed/cadence
-            gradients = simplejson.dumps(list(object.exercisealtitudegradient_set.values_list('xaxis', 'gradient')))
+        # Todo, maybe calculate and save in db or cache ?
+        #gradients, inclinesums = getgradients(details)
+        # TODO inclinesums maybe needs a freqs cache thingy like speed/cadence
+        gradients = simplejson.dumps(list(object.exercisealtitudegradient_set.values_list('xaxis', 'gradient')))
 
-        userweight = profile.get_weight(object.date)
-        userftp = profile.get_ftp(object.date)
-        intervals = object.interval_set.select_related().all()
-        zones = getzones_with_legend(object)
-        wzones = getwzones_with_legend(object)
-        bestpowerefforts = object.bestpowereffort_set.all()
-        userbestbestpowerefforts = []
-        # fetch the all time best for comparison
-        bestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user=object.user).values('duration').annotate(power=Max('power'))
-        if request.user.is_authenticated() and request.user != object.user:
-            userbestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user=request.user).values('duration').annotate(power=Max('power'))
-        def freqobj_to_json(freq_type):
-            f = Freq.objects.get_or_none(exercise=object.id,freq_type=freq_type)
-            if f:
-                return f.json
+    userweight = profile.get_weight(object.date)
+    userftp = profile.get_ftp(object.date)
+    intervals = object.interval_set.select_related().all()
+    zones = getzones_with_legend(object)
+    wzones = getwzones_with_legend(object)
+    bestpowerefforts = object.bestpowereffort_set.all()
+    userbestbestpowerefforts = []
+    # fetch the all time best for comparison
+    bestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user=object.user).values('duration').annotate(power=Max('power'))
+    if request.user.is_authenticated() and request.user != object.user:
+        userbestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user=request.user).values('duration').annotate(power=Max('power'))
+    def freqobj_to_json(freq_type):
+        f = Freq.objects.get_or_none(exercise=object.id,freq_type=freq_type)
+        if f:
+            return f.json
 
-        hrhzones = freqobj_to_json('H')
-        cadfreqs = freqobj_to_json('C')
-        speedfreqs = freqobj_to_json('S')
-        powerfreqs = []
-        #inclinesummary = getinclinesummary(details)
-        if power_show:
-            powerfreqs = freqobj_to_json('P')
+    hrhzones = freqobj_to_json('H')
+    cadfreqs = freqobj_to_json('C')
+    speedfreqs = freqobj_to_json('S')
+    powerfreqs = []
+    #inclinesummary = getinclinesummary(details)
+    if power_show:
+        powerfreqs = freqobj_to_json('P')
 
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
 
