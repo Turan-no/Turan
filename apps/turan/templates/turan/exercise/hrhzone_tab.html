@@ -23,25 +23,11 @@
 <script type="text/javascript">
     {% localize off %}
     $(function () {
-        var hrhzonedata = [
-            {% for zone in hrhzones%}
-            {
-            {% if zone.items %}
-                data: [{% for hr, percent in zone.items %}[{{ hr }},{{ percent }}],{% endfor %} ],
-                bars: { show: true},
-                color: colors[{{ forloop.counter0 }}]
-            {% endif %}
-            }
-            {% if not forloop.last%},{%endif%}
-            {% endfor %}
-        ];
-
+        var hrhzonedata = {{ hrhzones }};
         {% if powerfreqs %}
         var powerfreqdata = [
             {
-                data: [
-                    {% for val in powerfreqs.items%}[{{val.0}},{{val.1}}]{% if not forloop.last%},{%endif%}{% endfor %}
-                ],
+                data: {{ powerfreqs }},
                 bars: { show: true},
                 label: "{% trans "Power" %}",
                 color: 5
@@ -52,7 +38,7 @@
         {% if cadfreqs %}
         var cadfreqdata = [
             {
-                data: [{% for val in cadfreqs.items%}[{{val.0}},{{val.1}}]{% if not forloop.last%},{%endif%}{% endfor %}],
+                data: {{ cadfreqs }},
                 bars: { show: true},
                 label: "{% trans "Cadence" %}",
                 color: 1
@@ -63,7 +49,7 @@
         {% if speedfreqs %}
         var speedfreqdata = [
             {
-                data: [{% for val in speedfreqs.items%}[{{val.0}},{{val.1}}]{% if not forloop.last%},{%endif%}{% endfor %}],
+                data: {{ speedfreqs }},
                 bars: { show: true },
                 label: "{% trans "Speed" %}",
                 color: 0

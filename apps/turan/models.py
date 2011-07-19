@@ -1172,3 +1172,26 @@ class AutoTranslateField(models.CharField):
 
     def to_python(self, value):
         return str(_(value))
+
+
+class GetOrNoneManager(models.Manager):
+    """Adds get_or_none method to objects
+    """
+    def get_or_none(self, **kwargs):
+        try:
+            return self.get(**kwargs)
+        except self.model.DoesNotExist:
+            return None
+
+class Freq(models.Model):
+    freq_choices = (
+        ('H', _('Heart rate')),
+        ('C', _('Cadence')),
+        ('P', _('Power')),
+        ('S', _('Speed')),
+    )
+    exercise     = models.ForeignKey(Exercise)
+    json         = models.TextField()
+    freq_type    = models.CharField(max_length=1, choices=freq_choices)
+
+    objects = GetOrNoneManager()

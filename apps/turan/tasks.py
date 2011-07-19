@@ -19,6 +19,7 @@ from copy import deepcopy
 import numpy
 from collections import deque
 from datetime import timedelta
+import simplejson
 
 from svg import GPX2SVG
 from gpx2png import GPX2PNG
@@ -606,6 +607,64 @@ def best_x_sec(details, length, altvals, speed=True, power=False):
 
         return best_power, best_start_km_power, best_length_power, best_power_ascent, best_power_descent
 
+
+@task
+def calculate_freqs(exercise):
+    ''' Calculate the freq charts and save to db '''
+    # Delete any existing 
+    exercise.freq_set.all().delete()
+
+
+    details = exercise.get_details().all()
+    Freq = get_model('turan', 'Freq')
+
+    if exercise.avg_cadence:
+        freqs = getfreqs(details, 'cadence', min=1)
+        freqs = simplejson.dumps(freqs.items())
+        freq = Freq()
+        freq.freq_type = 'C'
+        freq.json = freqs
+        freq.exercise = exercise
+        freq.save()
+    if exercise.avg_speed:
+        freqs = getfreqs(details, 'speed', min=1, max=150) # FIXME why is this 150 ?
+        freqs = simplejson.dumps(freqs.items())
+        freq = Freq()
+        freq.freq_type = 'S'
+        freq.json = freqs
+        freq.exercise = exercise
+        freq.save()
+    if exercise.avg_power:
+        freqs = getfreqs(details, 'power', min=1, val_cutoff=5)
+        freqs = simplejson.dumps(freqs.items())
+        freq = Freq()
+        freq.freq_type = 'P'
+        freq.json = freqs
+        freq.exercise = exercise
+        freq.save()
+
+    profile = exercise.user.get_profile()
+    max_hr = int(profile.max_hr)
+    if not max_hr:
+        max_hr = 190 # FIXME, maybe demand from user ?
+    if exercise.avg_hr:
+        hrhzones = gethrhzones(exercise, details, max_hr)
+        # tis is a bit ugly, maybe fork out in a template?
+        js = '['
+        for i, zone in enumerate(hrhzones):
+            if zone.items():
+                js += '''{
+                data: %s,
+                bars: { show: true},
+                color: colors[%s]
+             },''' %(simplejson.dumps(zone.items()), i)
+        js = js.rstrip(',') + ']'
+        freq = Freq()
+        freq.freq_type = 'H'
+        freq.json = js
+        freq.exercise = exercise
+        freq.save()
+
 @task
 def calculate_time_in_zones(exercise, callback=None):
 
@@ -691,6 +750,79 @@ def getgradients(values):
     #    gradients = smoothListGaussian(gradients)
 
     return distances, gradients, altitudes
+
+def gethrhzones(exercise, values, max_hr):
+    ''' Calculate time in different sport zones given trip details '''
+
+    #max_hr = values[0].exercise.user.get_profile().max_hr
+    #resting_hr = values[0].exercise.user.get_profile().resting_hr
+    if not max_hr:
+        return []
+
+    zones = SortedDict()
+    previous_time = False
+    for i, d in enumerate(values):
+        if not previous_time:
+            previous_time = d.time
+            continue
+        time = d.time - previous_time
+        previous_time = d.time
+        if time.seconds > 60:
+            continue
+        hr_percent = 0
+        if d.hr:
+            hr_percent = int(round(float(d.hr)*100/max_hr))
+        #hr_percent = (float(d.hr)-resting_hr)*100/(max_hr-resting_hr)
+        if not hr_percent in zones:
+            zones[hr_percent] = 0
+        zones[hr_percent] += time.seconds
+
+    filtered_zones = [SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict()]
+    #for i in range(40,100):
+    #    filtered_zones[i] = 0
+
+    if exercise.duration:
+        total_seconds = exercise.duration.total_seconds()
+        for hr in sorted(zones):
+            #if 100*float(zones[hr])/total_seconds > 0:
+            if hr > 40 and hr < 101:
+                percentage = float(zones[hr])*100/total_seconds
+                if percentage > 0.5:
+
+                    zone = hr2zone(hr)
+                    filtered_zones[zone][hr] = percentage
+
+    return filtered_zones
+def getfreqs(values, val_type, min=0, max=0, val_cutoff=0):
+    ''' given values, create freqency structure for display in flot '''
+
+    freqs = SortedDict()
+    previous_time = False
+    for d in values:
+        if not previous_time:
+            previous_time = d.time
+            continue
+        time = d.time - previous_time
+        previous_time = d.time
+        if time.seconds > 60: # Skip samples with pause ?
+            continue
+        val = getattr(d, val_type)
+        if val == None: # Drop nonesamples
+            continue
+        val = int(round(val))
+        if not val in freqs:
+            freqs[val] = 0
+        freqs[val] += time.seconds
+
+    for freq, val in freqs.iteritems():
+        if min and freq < min:
+            del freqs[freq]
+        elif max and freq > max:
+            del freqs[freq]
+        elif val_cutoff and val < val_cutoff:
+            del freqs[freq]
+
+    return freqs
 
 def getzones(exercise):
     ''' Calculate time in different sport zones given trip details '''
@@ -1024,6 +1156,7 @@ def parse_and_calculate(exercise, callback=None):
     calculate_best_efforts(exercise)
     calculate_time_in_zones(exercise)
     calculate_gradients(exercise)
+    calculate_freqs(exercise)
     getslopes(exercise.get_details().all(),
             exercise.user.get_profile().get_weight(exercise.date),
             exercise.get_eq_weight())

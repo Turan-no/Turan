@@ -1224,79 +1224,7 @@ def getwzones_with_legend(exercise):
     return zones_with_legend
 
 
-def gethrhzones(exercise, values, max_hr):
-    ''' Calculate time in different sport zones given trip details '''
 
-    #max_hr = values[0].exercise.user.get_profile().max_hr
-    #resting_hr = values[0].exercise.user.get_profile().resting_hr
-    if not max_hr: #or not resting_hr:
-        return []
-
-    zones = SortedDict()
-    previous_time = False
-    for i, d in enumerate(values):
-        if not previous_time:
-            previous_time = d.time
-            continue
-        time = d.time - previous_time
-        previous_time = d.time
-        if time.seconds > 60:
-            continue
-        hr_percent = 0
-        if d.hr:
-            hr_percent = int(round(float(d.hr)*100/max_hr))
-        #hr_percent = (float(d.hr)-resting_hr)*100/(max_hr-resting_hr)
-        if not hr_percent in zones:
-            zones[hr_percent] = 0
-        zones[hr_percent] += time.seconds
-
-    filtered_zones = [SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict(),SortedDict()]
-    #for i in range(40,100):
-    #    filtered_zones[i] = 0
-
-    if exercise.duration:
-        total_seconds = exercise.duration.total_seconds()
-        for hr in sorted(zones):
-            #if 100*float(zones[hr])/total_seconds > 0:
-            if hr > 40 and hr < 101:
-                percentage = float(zones[hr])*100/total_seconds
-                if percentage > 0.5:
-
-                    zone = hr2zone(hr)
-                    filtered_zones[zone][hr] = percentage
-
-    return filtered_zones
-
-def getfreqs(values, val_type, min=0, max=0, val_cutoff=0):
-    ''' given values, create freqency structure for display in flot '''
-
-    freqs = SortedDict()
-    previous_time = False
-    for d in values:
-        if not previous_time:
-            previous_time = d.time
-            continue
-        time = d.time - previous_time
-        previous_time = d.time
-        if time.seconds > 60: # Skip samples with pause ?
-            continue
-        val = getattr(d, val_type)
-        if val == None: # Drop nonesamples
-            continue
-        val = int(round(val))
-        if not val in freqs:
-            freqs[val] = 0
-        freqs[val] += time.seconds
-
-    for freq, val in freqs.iteritems():
-        if min and freq < min:
-            del freqs[freq]
-        elif max and freq > max:
-            del freqs[freq]
-        elif val_cutoff and val < val_cutoff:
-            del freqs[freq]
-
-    return freqs
 
 def getgradients(values, d_offset=0):
     ''' Iterate over details, return list with tuples with distances and gradients '''
@@ -1455,32 +1383,24 @@ def exercise(request, object_id):
         intervals = object.interval_set.select_related().all()
         zones = getzones_with_legend(object)
         wzones = getwzones_with_legend(object)
-        hrhzones = gethrhzones(object, details, max_hr)
-        cadfreqs = []
         bestpowerefforts = object.bestpowereffort_set.all()
         userbestbestpowerefforts = []
         # fetch the all time best for comparison
-        #bestbestpowerefforts = []
-        #for bpe in bestpowerefforts:
-        #    bbpes = BestPowerEffort.objects.filter(exercise__user=object.user,duration=bpe.duration).order_by('-power')[0]
-        #    bestbestpowerefforts.append(bbpes)
         bestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user=object.user).values('duration').annotate(power=Max('power'))
         if request.user.is_authenticated() and request.user != object.user:
             userbestbestpowerefforts = BestPowerEffort.objects.filter(exercise__user=request.user).values('duration').annotate(power=Max('power'))
-        speedfreqs = []
-        if object.avg_cadence:
-            cadfreqs = getfreqs(details, 'cadence', min=1)
-        if object.avg_speed:
-            speedfreqs = getfreqs(details, 'speed', min=1, max=150)
+        def freqobj_to_json(freq_type):
+            f = Freq.objects.get_or_none(exercise=object.id,freq_type=freq_type)
+            if f:
+                return f.json
+
+        hrhzones = freqobj_to_json('H')
+        cadfreqs = freqobj_to_json('C')
+        speedfreqs = freqobj_to_json('S')
+        powerfreqs = []
         #inclinesummary = getinclinesummary(details)
-
-        if object.avg_power and power_show:
-            #object.normalized = power_30s_average(details)
-            powerfreqs = getfreqs(details, 'power', min=1, val_cutoff=5)
-            #for i in range(0, len(poweravg30s)):
-            #    details[i].poweravg30s = poweravg30s[i]
-
-    #datasets = js_trip_series(request, details, time_xaxis=time_xaxis, smooth=smooth)
+        if power_show:
+            powerfreqs = freqobj_to_json('P')
 
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
 
