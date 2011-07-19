@@ -1212,9 +1212,9 @@ def populate_interval_info(exercise):
             check_and_set('avg_speed', ret['speed__avg'])
         if exercise.avg_power:
             if 'power__avg' in ret:
-                check_and_set('avg_power', ret['speed__avg'])
+                check_and_set('avg_power', ret['power__avg'])
             if 'power__max' in ret:
-                check_and_set('max_power', ret['speed__max'])
+                check_and_set('max_power', ret['power__max'])
         if exercise.avg_cadence:
             if 'cadence_pedaling__avg' in ret:
                 check_and_set('avg_pedaling_cadence', ret['cadence_pedaling__avg'])
