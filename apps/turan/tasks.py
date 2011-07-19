@@ -676,6 +676,8 @@ def getgradients(values):
             d_delta = d*1000 - previous_distance
             if d_delta:
                 gradient = h_delta*100/d_delta
+                if gradient > 50 or gradient < -50: # Filter extremes
+                    gradient = 0
             else:
                 gradient = 0
             gradients.append(gradient)
