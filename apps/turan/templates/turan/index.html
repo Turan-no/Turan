@@ -46,6 +46,7 @@
         {% for object in exercise_list %}
          {{ object|exercise_mouseover }}
         {% endfor %}
+    <h2 class="header drop-shadow">{% trans "Latest exercises" %}</h2>
     <ul class="trips">
         {% for object in exercise_list %}
         <li class="{% cycle "even" "odd" %} hoverpoint" id="trip_{{ object.id }}">
