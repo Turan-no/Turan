@@ -1351,11 +1351,12 @@ def exercise(request, object_id):
     else:
         max_hr = 190 # FIXME, maybe demand from user ?
 
-    details = object.exercisedetail_set.all()
+    #details = object.exercisedetail_set.all()
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
     smooth = 0
-    if details.exists():
+    if object.sensor_file: # Instead of running details.exists, 
+        #we make the assumption that if exercise has file, it has details
         #if filldistance(details): # Only do this if we actually have distance
             # xaxis by distance if we have distance in details unless user requested time !
         req_t = request.GET.get('xaxis', '')
