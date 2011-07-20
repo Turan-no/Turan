@@ -145,8 +145,8 @@ def exercise_compare(request, exercise1, exercise2):
     alt = tripdetail_js(trip1.id, 'altitude')
     #alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
-    datasets1 = js_trip_series(request, trip1, trip1.get_details().all(), time_xaxis=False, use_constraints=False)
-    datasets2 = js_trip_series(request, trip2, trip2.get_details().all(), time_xaxis=False, use_constraints=False)
+    datasets1 = js_trip_series(request, trip1, trip1.get_details().all().values(), time_xaxis=False, use_constraints=False)
+    datasets2 = js_trip_series(request, trip2, trip2.get_details().all().values(), time_xaxis=False, use_constraints=False)
     if not datasets1 or not datasets2:
         return HttpResponse(_('Missing exercise details.'))
     datasets1, datasets2 = mark_safe(datasets1), mark_safe(datasets2)
@@ -998,14 +998,13 @@ def json_trip_series(request, object_id, start=False):
     if not start and not exercise.live_state == 'L': # Caching not involved in slices or live exercises
         js = cache.get(cache_key)
     if not js:
-        details = exercise.exercisedetail_set.all()
         if start:
             details = details[start:]
         if exercise.avg_power:
             #generate_30s_power = power_30s_average(details)
-            vals = smoothList( [e.power for e in details])
+            vals = smoothList( [e['power'] for e in details])
             for e, v in zip(details, vals):
-                e.poweravg30s = v
+                e['poweravg30s'] = v
         has_distance = 0
         #filldistance(details) FIXME needs better logic?
         if exercise.route and exercise.route.distance > 0:
@@ -1092,6 +1091,9 @@ def js_trip_series(request, exercise, details,  start=False, stop=False, time_xa
     if not exercise.avg_cadence:
         del js_strings['cadence']
 
+    if not 'poweravg30s' in details[0]:
+        del js_strings['poweravg30s']
+
 
     x = 0
     previous_time = False
@@ -1102,18 +1104,18 @@ def js_trip_series(request, exercise, details,  start=False, stop=False, time_xa
         if stop and i > stop:
             break
         if not previous_time: # For first value
-            previous_time = d.time
-        time = d.time - previous_time
-        previous_time = d.time
+            previous_time = d['time']
+        time = d['time'] - previous_time
+        previous_time = d['time']
         if time_xaxis:
             x += float(time.seconds)/60
         else:
-            if d.distance:
-                x = d.distance/1000
+            if d['distance']:
+                x = d['distance']/1000
 
         for val in js_strings.keys():
             try:
-                dval = getattr(d, val)
+                dval = d[val]
                 ### Export every single item to graph, this because indexes are used in zooming, etc
                 if dval == None:
                     dval = 0
@@ -2176,7 +2178,7 @@ def exercise_player(request):
         distance = filldistance(details)
         if not alt_max:
             alt_max, alt_min = details.aggregate(max=Max('altitude'),min=Min('altitude')).values()
-        datasets.append(js_trip_series(request, exercise, details, time_xaxis=False, use_constraints=False))
+        datasets.append(mark_safe(js_trip_series(request, exercise, details.values(), time_xaxis=False, use_constraints=False)))
 
     return render_to_response('turan/exercise_player.html', locals(), context_instance=RequestContext(request))
 
