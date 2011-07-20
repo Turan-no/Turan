@@ -1,9 +1,10 @@
 {% load i18n %}
 {% load l10n %}
 {% load turan_extras %}
-
+{% if hrhzones %}
 <h3>{% trans "Percentage of time spent in different HR, colored by zones" %}</h3>
 <div id="hrhzonediv" style="width:900px;height:400px; "></div>
+{% endif %}
 
 {% if powerfreqs %}
 <h3>{% trans "Power distribution" %}</h3>
@@ -23,7 +24,9 @@
 <script type="text/javascript">
     {% localize off %}
     $(function () {
+        {% if hrhzones %}
         var hrhzonedata = {{ hrhzones }};
+        {% endif %}
         {% if powerfreqs %}
         var powerfreqdata = [
             {
@@ -65,7 +68,9 @@
             }
         };
 
+        {% if hrhzones %}
         $.plot($("#hrhzonediv"), hrhzonedata, {});
+        {% endif %}
 
         {% if powerfreqs %}
         $.plot($("#powerfreqdiv"), powerfreqdata, options);
