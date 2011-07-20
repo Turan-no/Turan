@@ -160,6 +160,11 @@
             <li class="intensity">
                 <span class="label">{% trans "Intensity Factor" %}:</span> {{ object.get_intensityfactor }}
             </li>
+            {% if object.get_tss %}
+            <li class="tss">
+                <span class="label">{% trans "TSS" %}:</span> {{ object.get_tss }}
+            </li>
+            {% endif %}
             {% endif %}
             {% if object.max_power %}
             <li class="power">

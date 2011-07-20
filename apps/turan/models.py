@@ -558,6 +558,13 @@ class Exercise(models.Model):
         except ZeroDivisionError:
             return 0
 
+    def get_tss(self):
+        ''' Estimating TSS
+        http://home.trainingpeaks.com/articles/cycling/estimating-training-stress-score-(tss)-by-joe-friel.aspx '''
+        userftp = self.user.get_profile().get_ftp(self.date)
+        tss = int(round(float(self.duration.total_seconds() * self.normalized_power * self.get_intensityfactor() ) / ( userftp * 3600 ) * 100))
+        return tss
+
     def get_full_start_time(self):
         ''' Used to get date and time '''
 
