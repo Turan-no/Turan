@@ -2177,7 +2177,7 @@ def exercise_player(request):
         distance = filldistance(details)
         if not alt_max:
             alt_max, alt_min = details.aggregate(max=Max('altitude'),min=Min('altitude')).values()
-        datasets.append(mark_safe(js_trip_series(request, details, time_xaxis=False, use_constraints=False)))
+        datasets.append(js_trip_series(request, details, time_xaxis=False, use_constraints=False))
 
     return render_to_response('turan/exercise_player.html', locals(), context_instance=RequestContext(request))
 
