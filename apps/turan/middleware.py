@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseForbidden
 from django.template import RequestContext, Context, loader
 from sentry.client.models import get_client
-from sentry import conf as sentry_conf
+from sentry.conf import settings as sentry_settings
 import logging
 
 class Http403(Exception):
@@ -33,7 +33,7 @@ class Http403Middleware(object):
 
 class TuranSentry404CatchMiddleware(object):
     def process_response(self, request, response):
-        if response.status_code == 404 and request.META.get('HTTP_REFERER', '') and not sentry_conf.DEBUG:
+        if response.status_code == 404 and request.META.get('HTTP_REFERER', '') and not sentry_settings.DEBUG:
             request.META['TURANUSER'] = request.user
             message_id = get_client().create_from_text('Http 404 %s' %request.path, request=request, level=logging.INFO, logger='http404')
             request.sentry = {
