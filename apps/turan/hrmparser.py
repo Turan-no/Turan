@@ -14,6 +14,9 @@ class HRMEntry(object):
         self.power = power
         self.distance = distance
 
+    def __str__(self):
+        return '[%s] hr: %s spd: %s cad: %s pwr: %s alt: %s distance: %s' % (self.time, self.hr, self.speed, self.cadence, self.power, self.altitude, self.distance)
+
 class HRMLap(object):
 
     def __init__(self, time, duration, min_hr, max_hr, avg_hr):
