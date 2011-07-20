@@ -145,8 +145,8 @@ def exercise_compare(request, exercise1, exercise2):
     alt = tripdetail_js(trip1.id, 'altitude')
     #alt_max = trip1.get_details().aggregate(Max('altitude'))['altitude__max']*2
 
-    datasets1 = js_trip_series(request, trip1.get_details().all(), time_xaxis=False, use_constraints=False)
-    datasets2 = js_trip_series(request, trip2.get_details().all(), time_xaxis=False, use_constraints=False)
+    datasets1 = js_trip_series(request, trip1, trip1.get_details().all(), time_xaxis=False, use_constraints=False)
+    datasets2 = js_trip_series(request, trip2, trip2.get_details().all(), time_xaxis=False, use_constraints=False)
     if not datasets1 or not datasets2:
         return HttpResponse(_('Missing exercise details.'))
     datasets1, datasets2 = mark_safe(datasets1), mark_safe(datasets2)
@@ -958,7 +958,7 @@ def tripdetail_js(object_id, val, start=False, stop=False):
         #time_xaxis = 
     return simplejson.dumps(js)
 
-@profile("json_trip_series")
+#@profile("json_trip_series")
 def json_trip_series(request, object_id, start=False):
     ''' Generate a json file to be retrieved by web browsers and renderend in flot '''
     exercise = get_object_or_404(Exercise, pk=object_id)
@@ -1006,10 +1006,13 @@ def json_trip_series(request, object_id, start=False):
             vals = smoothList( [e.power for e in details])
             for e, v in zip(details, vals):
                 e.poweravg30s = v
-        has_distance = filldistance(details)
+        has_distance = 0
+        #filldistance(details) FIXME needs better logic?
+        if exercise.route and exercise.route.distance > 0:
+            has_distance = 1
         if not has_distance:
             time_xaxis = True
-        js = js_trip_series(request, details, start=start, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
+        js = js_trip_series(request, exercise, details, start=start, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
         if not js: # if start and no elements returner, we get None
             return HttpResponse('{}', mimetype='text/javascript')
         js = js.encode('UTF-8')
@@ -1021,13 +1024,10 @@ def json_trip_series(request, object_id, start=False):
     response['Content-Length'] = len(js)
     return response
 
-def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, use_constraints=True, smooth=0):
+def js_trip_series(request, exercise, details,  start=False, stop=False, time_xaxis=True, use_constraints=True, smooth=0):
     ''' Generate javascript to be used directly in flot code
     Argument use_constraints can be used to disable flot constraints for HR, used for compare feature
     Argument smooth to reduce number of elements by averaging by the number given in smooth'''
-
-    if not details:
-        return
 
     # The JS arrays
     js_strings = {
@@ -1042,7 +1042,6 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
             'lat': [],
         }
 
-    exercise = details[0].exercise
     # User always has permission for their own shit
     if not exercise.user == request.user:
 
@@ -1073,7 +1072,7 @@ def js_trip_series(request, details,  start=False, stop=False, time_xaxis=True, 
             pass
 
     # Check if we should export altitude to graph
-    has_altitude = details[0].exercise.exercise_type.altitude
+    has_altitude = exercise.exercise_type.altitude
     if not has_altitude:
         del js_strings['altitude']
 
@@ -2177,7 +2176,7 @@ def exercise_player(request):
         distance = filldistance(details)
         if not alt_max:
             alt_max, alt_min = details.aggregate(max=Max('altitude'),min=Min('altitude')).values()
-        datasets.append(js_trip_series(request, details, time_xaxis=False, use_constraints=False))
+        datasets.append(js_trip_series(request, exercise, details, time_xaxis=False, use_constraints=False))
 
     return render_to_response('turan/exercise_player.html', locals(), context_instance=RequestContext(request))
 

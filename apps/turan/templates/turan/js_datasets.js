@@ -1,4 +1,5 @@
 {% load i18n %}
+{% autoescape off %}
 {
         {% if speed%}
         "speed": {
@@ -67,3 +68,5 @@
         {% if lat%}
         "lat":  {{ lat}},
         {% endif %}
+{% endautoescape %}
+
