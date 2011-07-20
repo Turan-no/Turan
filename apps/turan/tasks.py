@@ -1040,7 +1040,8 @@ def sanitize_entries(parser):
                 deltas = {}
                 for vt in val_types:
                     if hasattr(e, vt) and getattr(e, vt) and getattr(prev, vt): #could be none
-                        deltas[vt] = (getattr(e, vt) - getattr(prev, vt)) / time_d
+                        the_d = float(getattr(e, vt) - getattr(prev, vt)) / time_d
+                        deltas[vt] = the_d
                 for s in xrange(1, time_d):
                     fake_entry = deepcopy(prev)
                     fake_entry.time = fake_entry.time + timedelta(0, s)
@@ -1049,9 +1050,8 @@ def sanitize_entries(parser):
                             if not fake_entry.lon or not fake_entry.lat:
                                 continue
                         if hasattr(fake_entry, vt) and vt in deltas:
-                            newattr = getattr(prev, vt) + deltas[vt]*s
+                            newattr = getattr(prev, vt) + deltas[vt] * float(s)/time_d
                             setattr(fake_entry, vt, newattr)
-
                     entries.insert(prevIndex+s, fake_entry)
 
             prevIndex = index
