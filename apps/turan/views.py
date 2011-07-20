@@ -1093,7 +1093,7 @@ def js_trip_series(request, exercise, details,  start=False, stop=False, time_xa
     if not exercise.avg_cadence:
         del js_strings['cadence']
 
-    if not 'poweravg30s' in details[0]:
+    if not 'poweravg30s' in details[0] and 'poweravg30s' in js_strings:
         del js_strings['poweravg30s']
 
 
