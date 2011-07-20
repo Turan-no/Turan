@@ -174,7 +174,10 @@ def getslopes(values, userweight, eqweight):
         if inslope:
             if values[i].altitude > values[cur_end].altitude:
                 cur_end = i
-            hdelta = values[cur_end].altitude - values[cur_start].altitude
+            try:
+                hdelta = values[cur_end].altitude - values[cur_start].altitude
+            except TypeError: # None altitude sample
+                continue
             if stop_since:
                 stop_duration = (values[i].time - values[stop_since].time).seconds
             else:
