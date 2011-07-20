@@ -998,6 +998,8 @@ def json_trip_series(request, object_id, start=False):
     if not start and not exercise.live_state == 'L': # Caching not involved in slices or live exercises
         js = cache.get(cache_key)
     if not js:
+        details = exercise.exercisedetail_set.all().values('altitude', 'cadence', 'distance', 'hr', 'lat', 'lon', 'power', 'speed', 'temp', 'time')
+
         if start:
             details = details[start:]
         if exercise.avg_power:
