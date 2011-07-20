@@ -1030,6 +1030,9 @@ def js_trip_series(request, exercise, details,  start=False, stop=False, time_xa
     Argument use_constraints can be used to disable flot constraints for HR, used for compare feature
     Argument smooth to reduce number of elements by averaging by the number given in smooth'''
 
+    if not details:
+        return
+
     # The JS arrays
     js_strings = {
             'speed': [],
