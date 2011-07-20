@@ -1,7 +1,7 @@
 from models import *
 from tasks import smoothListGaussian, power_30s_average \
         , hr2zone, detailslice_info, search_trip_for_possible_segments_matches, filldistance, \
-        create_gpx_from_details
+        create_gpx_from_details, smoothList
 from itertools import groupby, islice
 from forms import ExerciseForm, ImportForm, BulkImportForm
 from profiles.models import Profile
@@ -958,7 +958,7 @@ def tripdetail_js(object_id, val, start=False, stop=False):
         #time_xaxis = 
     return simplejson.dumps(js)
 
-#@profile("json_trip_series")
+@profile("json_trip_series")
 def json_trip_series(request, object_id, start=False):
     ''' Generate a json file to be retrieved by web browsers and renderend in flot '''
     exercise = get_object_or_404(Exercise, pk=object_id)
@@ -1002,7 +1002,10 @@ def json_trip_series(request, object_id, start=False):
         if start:
             details = details[start:]
         if exercise.avg_power:
-            generate_30s_power = power_30s_average(details)
+            #generate_30s_power = power_30s_average(details)
+            vals = smoothList( [e.power for e in details])
+            for e, v in zip(details, vals):
+                e.poweravg30s = v
         has_distance = filldistance(details)
         if not has_distance:
             time_xaxis = True

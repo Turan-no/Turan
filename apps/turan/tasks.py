@@ -1589,7 +1589,14 @@ def detailslice_info(details):
     return ret
 
 def smoothList(list, strippedXs=False, degree=30):
-    list = [x if x else 0 for x in list] # Change None into 0
+    ''' From http://www.swharden.com/blog/2008-11-17-linear-data-smoothing-in-python/ 
+       Changed into padding in front of the list so that the running average happens
+    "after the fact" instead of a smooth build up to the point '''
+
+    # Change None into 0
+    list = [x if x else 0 for x in list]
+    # Pad list in front 
+    list = [list[0]]*((degree)) + list #+ [list[-1]]*(degree/2)
     if strippedXs == True:
         return Xs[0:-(len(list)-(len(list)-degree+1))]
     smoothed = [0]*(len(list)-degree+1)
