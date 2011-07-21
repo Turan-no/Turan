@@ -7,16 +7,16 @@
 <hr class="clearleft" />
 <ul class="segmenticons iconlist">
     {% if object.distance %}
-    <li class="distance"><h3 class="">{% trans "Distance" %}</h3> {{ object.distance|floatformat }} <span class="unit">{% trans "km" %}</span></li>
+    <li class="distance"><h4 class="">{% trans "Distance" %}</h4> {{ object.distance|floatformat }} <span class="unit">{% trans "km" %}</span></li>
     {% endif %}
     {% if object.segment_url %}
     <li class="url">
-        <h3 class="">{% trans "External URL" %}</h3> 
+        <h4 class="">{% trans "External URL" %}</h4> 
         <p>{{ object.segment_url|urlizetrunc:"30" }}</p>
     {% endif %}
     </li>
     {% if object.ascent %}
-    <li class="ascent"><h3 class="">{% trans "Ascent" %}</h3> {{ object.ascent }} <span class="unit">{% trans "m" %}</span>
+    <li class="ascent"><h4 class="">{% trans "Ascent" %}</h4> {{ object.ascent }} <span class="unit">{% trans "m" %}</span>
         {% if object.distance %}
             ({{ object.ascent|divide:object.distance }} <span class="unit">{% trans "m/km" %})</span>
         {% endif %}
@@ -28,23 +28,23 @@
     </li>
     {% endif %}
     {% if object.descent %}
-    <li class="descent"><h3 class="">{% trans "Descent" %}</h3> {{ object.descent }} <span class="unit">{% trans "m" %}</span></li>
+    <li class="descent"><h4 class="">{% trans "Descent" %}</h4> {{ object.descent }} <span class="unit">{% trans "m" %}</span></li>
     {% endif %}
     {% if object.min_altitude %}
-    <li class="altitude"><h3 class="">{% trans "Min altitude" %}</h3> {{ object.min_altitude }} <span class="unit">{% trans "m" %}</span></li>
+    <li class="altitude"><h4 class="">{% trans "Min altitude" %}</h4> {{ object.min_altitude }} <span class="unit">{% trans "m" %}</span></li>
     {% endif %}
     {% if object.max_altitude %}
-    <li class="altitude"><h3 class="">{% trans "Max altitude" %}</h3> {{ object.max_altitude }} <span class="unit">{% trans "m" %}</span></li>
+    <li class="altitude"><h4 class="">{% trans "Max altitude" %}</h4> {{ object.max_altitude }} <span class="unit">{% trans "m" %}</span></li>
     {% endif %}
     {% if object.grade %}
-    <li class="grade"><h3 class="">{% trans "Grade" %}</h3> {{ object.grade|floatformat }} <span class="unit">%</span></li>
+    <li class="grade"><h4 class="">{% trans "Grade" %}</h4> {{ object.grade|floatformat }} <span class="unit">%</span></li>
     {% endif %}
     {% if object.category %}
     <li class="">
-        <h3 class="">
+        <h4 class="">
             {% trans "Category" %}
             {{ "SlopeCategory"|wiki_help }}
-        </h3>
+        </h4>
         <p class="categorybutton">
             {{ object.category }}
         </p>

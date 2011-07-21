@@ -601,7 +601,10 @@ div.mapcontainer {
     list-style-type: decimal;
     padding-left: 8px;
 }
-h3.segmenttoplist {
+.segmentdetails .box {
+    width: 700px;
+}
+.segmentdetails h3.segmenttoplist {
     margin-bottom: 20px;
 }
 .segmenttoplist li {
