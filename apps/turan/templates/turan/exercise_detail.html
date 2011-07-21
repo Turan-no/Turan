@@ -49,15 +49,35 @@
             {% trans "Play" %}
         </a>
     </li>
-    <li style="padding: 0">
+    <li style="position: relative; overflow: visible">
+        <a id="toggleSharebox" href="#">
+            <img alt="{% trans "Share" %}" title="{% trans "Share" %}" src="{{ "group_link"|silk_icon }}">
+            {% trans "Share" %}
+        </a>
+        <script type="text/javascript">
+            jQuery("#toggleSharebox").bind("click", function (evt) {
+                jQuery(this).toggleClass("selected");
+                jQuery(this).nextAll(".tooltip").toggleClass("hidden");
+            });
+        </script>
+        <div class="tooltip hidden" style="position: absolute; z-index: 9500; right: 0; top: 26px">
             {% url exercise object.id as exercise_url %}
-            <a title="Post exercise on Twitter" href="http://twitter.com/home?status={{ object.exercise_type }}{% if object.route %} at {{ object.route }}{% endif %} - http://turan.no{{ exercise_url|urlencode }}"><img src="http://twitter-badges.s3.amazonaws.com/t_mini-a.png" alt="Twitter icon"/></a>
-    </li>
-    <li style="margin-top: 3px; padding: 0; margin-left: 5px">
-        {% url exercise object.id as exercise_url %}
-        <div id="fb-root"></div>
-        <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
-        <fb:send href="http://turan.no/{{exercise_url|urlencode}}"></fb:send>
+            <ul class="socialshare">
+                <li>
+                    <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://turan.no{{ exercise_url|urlencode }}" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+                </li>
+                <li>
+                    <script src="http://connect.facebook.net/nb_NO/all.js#xfbml=1"></script>
+                    <fb:like href="http://turan.no{{ exercise_url|urlencode }}" send="false" width="80" layout="button_count" show_faces="false" font="arial"></fb:like>
+                </li>
+                <li style="margin-top: 5px">
+                    <script src="https://apis.google.com/js/plusone.js">
+                        { lang: 'no' }
+                    </script>
+                    <g:plusone size="small" href="http://turan.no{{ exercise_url|urlencode }}"></g:plusone>
+                </li>
+            </ul>
+        </div>
     </li>
 </ul>
 {% endblock%}

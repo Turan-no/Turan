@@ -1486,3 +1486,7 @@ h2.header {
     border-radius: 5px;
     font-size: 16px;
 }
+#subnav ul.socialshare li {
+    margin-left: 0;
+    overflow: hidden;
+}
