@@ -1144,16 +1144,75 @@ def js_trip_series(request, exercise, details,  start=False, stop=False, time_xa
                 thevals = [sum(vals[i*smooth:(i+1)*smooth])/smooth for i in xrange(len(vals)/smooth)]
                 thevals = zip(dists, thevals)
         if len(thevals):
-            js_strings[val] =  simplejson.dumps(thevals, separators=(',',':'))
+            js_strings[val] = thevals
+        #if len(thevals):
+        #    js_strings[val] =  simplejson.dumps(thevals, separators=(',',':'))
 
-    js_strings['use_constraints'] = use_constraints
+    res = {}
+    _ = ugettext
+    if 'hr' in js_strings:
+        res['hr'] =  {
+            "data": js_strings['hr'],
+            "label": _('HR'),
+            "lines": {
+                "show": True,
+                "fill": 0.0
+            },
+            "color": 2,
+            "yaxis": 2
+            }
+    if 'speed' in js_strings:
+        res['speed'] =  {
+                "data": js_strings['speed'],
+                "label": _('Speed'),
+                "color": 0
+            }
+    if 'cadence' in js_strings:
+        res['cadence'] =  {
+            "data": js_strings['cadence'],
+            "label": _('Cadence'),
+            "color": 1,
+            "yaxis": 6
+            }
+    if 'altitude' in js_strings:
+        res['altitude'] =  {
+            "data": js_strings['altitude'],
+            "label": _('Altitude'),
+            "lines": {
+                "show": True,
+                "fill": 0.3
+            },
+            "color": 3,
+            "yaxis": 4
+            }
+    if 'power' in js_strings:
+        res['power'] =  {
+            "data": js_strings['power'],
+            "label": _('Power'),
+            "color": 5,
+            "yaxis": 3
+            }
+    if 'poweravg30s' in js_strings:
+        res['poweravg30s'] =  {
+            "data": js_strings['poweravg30s'],
+            "label": _('Power Avg30'),
+            "color": 4,
+            "yaxis": 3
+            }
+    if 'temp' in js_strings:
+        res['temp'] =  {
+            "data": js_strings['temp'],
+            "label": _('temp'),
+            "color": 6,
+            "yaxis": 5
+            }
+    if 'lon' in js_strings:
+        res['lon'] = js_strings['lon']
+        res['lat'] = js_strings['lat']
 
-    t = loader.get_template('turan/js_datasets.js')
-    c = Context(js_strings)
-    js = t.render(c)
-    # Remove last comma for nazi json parsing
-    js = js.rstrip(', \n') + '}'
-    return js
+    res = simplejson.dumps(res, separators=(',',':'))
+        #    js_strings[val] =  simplejson.dumps(thevals, separators=(',',':'))
+    return res
 
 def getzones_with_legend(exercise):
 
