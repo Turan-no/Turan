@@ -935,13 +935,14 @@ div.box {
     background: -o-linear-gradient(#eeeeee,  #ffffff); /* for opera */
     padding: 10px;
 }
-div.box h2 {
+div.box h2, div.box h3 {
     -moz-border-radius: 0.5em;
     -webkit-border-radius: 0.5em;
     border-radius: 0.5em;
     margin: 0 0 4px 0;
     padding: 3px;
-    background-color: #dfdfdf;
+    background-color: #4f96ca;
+    color: white;
 }
 
 /* nicolasgallagher.com/css-drop-shadows-without-images/demo/*/
