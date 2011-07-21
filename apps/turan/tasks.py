@@ -266,7 +266,7 @@ def slice_to_segmentdetail(exercise, segment, start, stop):
     new_object = SegmentDetail(**data)
     new_object.save()
 
-def search_trip_for_possible_segments_matches(exercise, start_offset=30, end_offset=90, dupedistance=200, search_in_segments=None):
+def search_trip_for_possible_segments_matches(exercise, start_offset=50, end_offset=90, dupedistance=200, search_in_segments=None):
     ''' For every segment
             iterate every detail searching for pos matching the start pos
             then find match for end pos if distance elapsed doesn't exceed segment distance
