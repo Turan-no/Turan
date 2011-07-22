@@ -27,7 +27,7 @@ class GPX2PNG(object):
             self.root = doc.getroot()
             self.ns = self.root.tag[:-3]
         except ET.ParseError, e:
-            pass
+            return None
 
         first = True
         if hasattr(self, 'root'):
