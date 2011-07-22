@@ -180,7 +180,7 @@ var Mapper = {
             }
             var selection_vectors = new OpenLayers.Layer.Vector("HR Line", {
                     strategies: [new OpenLayers.Strategy.Fixed()],                
-                    rendererOptions: { zIndexing: true },
+                    rendererOptions: { zIndexing: true},
                     protocol: new OpenLayers.Protocol.HTTP({
                         url: this.geojson_url + '?start=' + minIndex + '&stop=' + maxIndex,
                         format: new OpenLayers.Format.GeoJSON({ 'internalProjection': this.projection })
@@ -234,16 +234,16 @@ var Mapper = {
     var newPx = map.getPixelFromLonLat(lonLat);
     marker.moveTo(newPx);
   },
-  initFeature: function(athlete, icon_url) {
+  initFeature: function(athlete, icon_url, icon_size) {
       var athleteStyleMap = new OpenLayers.StyleMap({
 	  	externalGraphic: icon_url,
-	  	graphicWidth: 32,
-	  	graphicHeight: 32,
-        graphicZIndex:745, // Over other layers TODO
+	  	graphicWidth: icon_size,
+	  	graphicHeight: icon_size,
 	  	fillOpacity: 1,
 	  	rotation: "${angle}",
 	  });
-	  athleteLayer=new OpenLayers.Layer.Vector(athlete,{styleMap:athleteStyleMap});
+       // graphicZIndex:745, // Over other layers TODO
+	  athleteLayer = new OpenLayers.Layer.Vector(athlete,{styleMap:athleteStyleMap, rendererOptions: {zIndexing: true}});
       this.map.addLayer(athleteLayer)
       return athleteLayer;
 
@@ -253,7 +253,7 @@ var Mapper = {
     point = new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
     var feature = new OpenLayers.Feature.Vector(point, {
         angle: angle,
-        rendererOptions: { zIndexing: true },
+        rendererOptions: { zIndexing: true},
         poppedup: false
     });
     layer.addFeatures([feature]);

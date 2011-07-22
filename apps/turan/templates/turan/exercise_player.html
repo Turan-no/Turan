@@ -249,7 +249,7 @@ $(document).ready(function() {
     var lineLayers = [];
     {% for object in exercises %}
         lineLayers.push(Mapper.initLine('{{object.user}}'));
-        playerLayers.push(Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{ forloop.counter0|player_icon:object.exercise_type}}" ));
+        playerLayers.push(Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{ forloop.counter0|player_icon:object.exercise_type}}", 32 ));
     {% endfor %}
     Mapper.map.zoomTo(zoomLevel);
     Mapper.map.panMethod = OpenLayers.Easing.Linear.easeOut;

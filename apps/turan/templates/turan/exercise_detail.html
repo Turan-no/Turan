@@ -245,7 +245,60 @@
 $(document).ready(function() {
     if (Mapper.map) {
         // Init the marker for graph hover thingy
-        Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}");
+        Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
+
+
+        {% if speedmaxpos %}
+        var speedmaxpos = {{ speedmaxpos }};
+        if (speedmaxpos.max > 0 ) {
+            sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max speed" %}', "{{ "lightning_go"|silk_icon }}", 16);
+            feature = Mapper.createFeature(sml, speedmaxpos.lon, speedmaxpos.lat, 0);
+/*
+            var pop =  new OpenLayers.Popup.AnchoredBubble(
+                '{% trans "Max speed" %}',
+                new OpenLayers.LonLat(speedmaxpos.lon,speedmaxpos.lat),
+                new OpenLayers.Size(64,64),
+                "{% trans "Max speed"%}: "+speedmaxpos.max,
+                
+                true)
+             popup = new OpenLayers.Popup.AnchoredBubble(null, 
+
+              new OpenLayers.LonLat(speedmaxpos.lon,speedmaxpos.lat).transform(new OpenLayers.Projection("EPSG:4326"), Mapper.map.getProjectionObject()),
+
+              null,
+
+              "<div style='font-size:.8em'>Plane is flying at an angle of " + speedmaxpos.max + 
+
+              " &deg;<br>Current position is " + Math.round(feature.geometry.x*10000)/10000 + ", " + Math.round(feature.geometry.y*10000)/10000 + "</div>",
+
+              null,true,  function () {  } );
+            */
+
+        }
+        {% endif %}
+        {% if powermaxpos %}
+        var powermaxpos = {{ powermaxpos }};
+        if (powermaxpos.max > 0 ) {
+            sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max power" %}', "{{ "lightbulb"|silk_icon }}", 16);
+            Mapper.createFeature(sml, powermaxpos.lon, powermaxpos.lat, 0);
+        }
+        {% endif %}
+        {% if hrmaxpos %}
+        var hrmaxpos = {{ hrmaxpos }};
+        if (hrmaxpos.max > 0 ) {
+            sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max HR" %}', "{{ "heart"|silk_icon }}", 16);
+            Mapper.createFeature(sml, hrmaxpos.lon, hrmaxpos.lat, 0);
+        }
+        {% endif %}
+        {% if cadencemaxpos %}
+        var cadencemaxpos = {{ cadencemaxpos }};
+        if (cadencemaxpos.max > 0 ) {
+            sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max cadence" %}', "{{ "cog"|silk_icon }}", 16);
+            Mapper.createFeature(sml, cadencemaxpos.lon, cadencemaxpos.lat, 0);
+        }
+        {% endif %}
+
+
     }
 });
 
