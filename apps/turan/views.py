@@ -1,4 +1,5 @@
 from models import *
+from geojson import GeoJSONFeature, GeoJSONFeatureCollection
 from tasks import smoothListGaussian, power_30s_average \
         , hr2zone, detailslice_info, search_trip_for_possible_segments_matches, filldistance, \
         create_gpx_from_details, smoothList
@@ -823,12 +824,11 @@ def wikijson(request, slug, rev_id=None):
 #@decorator_from_middleware(GZipMiddleware)
 #@cache_page(86400*7)
 #@profile("geojson")
-def geojson(request, object_id):
+def exercise_geojson(request, object_id):
     ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
     give each line a zone property so it can be styled differently'''
 
     qs = ExerciseDetail.objects.filter(exercise=object_id).exclude(lon=0).exclude(lat=0).filter(lon__isnull=False,lat__isnull=False,hr__isnull=False).values('hr','lon','lat')
-    #qs = list(qs.exclude(lon=0).exclude(lat=0))
 
     start, stop = request.GET.get('start', ''), request.GET.get('stop', '')
     if start and stop:
@@ -839,7 +839,7 @@ def geojson(request, object_id):
     if not len(qs) > 1:
         return HttpResponse('{}')
 
-    cache_key = 'geojson_%s' %object_id
+    cache_key = 'exercise_geojson_%s' %object_id
     # Try and get the most common value from cache
     if not start and not stop:
         gjstr = cache.get(cache_key)
@@ -854,33 +854,8 @@ def geojson(request, object_id):
     if not max_hr: # sigh
         max_hr = 200
 
-    class Feature(object):
-
-        def __init__(self, zone):
-            self.linestrings = []
-            self.jsonhead = '''
-            { "type": "Feature",
-              "properties": {
-                  "ZONE": %s
-                },
-                "geometry": {
-                    "type": "LineString", "coordinates": [ ''' %zone
-            self.jsonfoot = ''']
-                }
-            }'''
-
-        def addLine(self, a, b, c, d):
-            self.linestrings.append('[%s,%s],[%s,%s]' %(a,b,c,d))
-
-        @property
-        def json(self):
-            if not self.linestrings:
-                # Don't return empty feature
-                return ''
-            return self.jsonhead + ','.join(self.linestrings) + self.jsonfoot
 
     features = []
-
     previous_lon, previous_lat, previous_zone = 0, 0, -1
     previous_feature = False
     for d in qs:
@@ -897,7 +872,7 @@ def geojson(request, object_id):
             else:
                 if previous_feature:
                     features.append(previous_feature)
-                previous_feature = Feature(zone)
+                previous_feature = GeoJSONFeature(zone)
 
             previous_zone = zone
         previous_lon = d['lon']
@@ -909,11 +884,7 @@ def geojson(request, object_id):
     features.append(previous_feature)
 
 
-    gjhead = '''{
-    "type": "FeatureCollection",
-        "features": ['''
-    gjstr = '%s%s]}' % (gjhead, ','.join(filter(lambda x: x, [f.json for f in features])))
-    gjstr = compress_string(gjstr)
+    gjstr = compress_string(str(GeoJSONFeatureCollection(features)))
 
     # save to cache if no start and stop
     if not start and not stop:
@@ -1145,8 +1116,6 @@ def js_trip_series(request, exercise, details,  start=False, stop=False, time_xa
                 thevals = zip(dists, thevals)
         if len(thevals):
             js_strings[val] = thevals
-        #if len(thevals):
-        #    js_strings[val] =  simplejson.dumps(thevals, separators=(',',':'))
 
     res = {}
     _ = ugettext

@@ -501,7 +501,7 @@ class Exercise(models.Model):
         return reverse('exercise', kwargs={ 'object_id': self.id }) + '/' + route_name
 
     def get_geojson_url(self):
-        return reverse('geojson', kwargs={'object_id': self.id})
+        return reverse('exercise_geojson', kwargs={'object_id': self.id})
 
     def get_simplegpx_url(self):
         ''' Also defined here in addition to in Route because of how Mapper.js is initiated '''
