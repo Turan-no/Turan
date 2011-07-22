@@ -895,6 +895,101 @@ def exercise_geojson(request, object_id):
     response['Content-Length'] = len(gjstr)
     return response
 
+def segment_geojson(request, object_id):
+    ''' Return GeoJSON with coords as linestring for use in openlayers stylemap,
+    give each line a zone property so it can be styled differently'''
+
+
+    object = get_object_or_404(Segment, pk=object_id)
+    slopes = object.get_slopes().select_related('exercise', 'exercise__route', 'exercise__user__profile', 'segment', 'profile', 'exercise__user')
+    done_altitude_profile = False
+    details = []
+    if slopes:
+        slope = slopes[0] # Select first detail for details for gradients and altitude profile, TODO: save in db
+        trip = slope.exercise
+        if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
+
+            tripdetails = trip.get_details().all()
+            i = 0
+            start, stop= 0, 0
+            for d in tripdetails:
+                if d.distance >= slope.start*1000 and not start:
+                    start = i
+                elif start:
+                    if d.distance > (slope.start*1000 + slope.length):
+                        stop = i
+                        break
+                i += 1
+            d_offset = tripdetails[start].distance
+            #alt = simplejson.dumps([((d.distance-d_offset)/1000, d.altitude) for d in tripdetails[start:stop]])
+            details = tripdetails[start:stop]
+    else:
+        return HttpResponse('{}')
+
+    cache_key = 'segment_geojson_%s' %object_id
+    gjstr = cache.get(cache_key)
+    if gjstr:
+        response = HttpResponse(gjstr, mimetype='text/javascript')
+        response['Content-Encoding'] = 'gzip'
+        response['Content-Length'] = len(gjstr)
+        return response
+
+    gradients, inclinesums = getgradients(details,d_offset=d_offset)
+    gradientslen = len(gradients) # TODO why isn't this same nr as details ?
+
+    features = []
+    previous_lon, previous_lat, previous_zone = 0, 0, -1
+    previous_feature = False
+    for i, d in enumerate(details):
+        if previous_lon and previous_lat:
+            if i == gradientslen: # we ran out of gradients! Why?
+                break
+
+            gradient = gradients[i][1]
+            if gradient < 3: # TODO share this constraint list with gradient_tab.html somehow
+                zone = 0
+            elif gradient < 6:
+                zone = 1
+            elif gradient < 8:
+                zone = 2
+            elif gradient < 10:
+                zone = 3
+            elif gradient < 15:
+                zone = 4
+            elif gradient < 20:
+                zone = 5
+            elif gradient < 25:
+                zone = 6
+            else:
+                zone = 7
+
+            if previous_zone == zone:
+                previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
+            else:
+                if previous_feature:
+                    features.append(previous_feature)
+                previous_feature = GeoJSONFeature(zone)
+
+            previous_zone = zone
+        previous_lon = d.lon
+        previous_lat = d.lat
+
+    # add last segment
+    if previous_zone == zone:
+        previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
+    features.append(previous_feature)
+
+    gjstr = compress_string(str(GeoJSONFeatureCollection(features)))
+
+    # save to cache if no start and stop
+    if not start and not stop:
+        cache.set(cache_key, gjstr, 86400)
+
+    response = HttpResponse(gjstr, mimetype='text/javascript')
+    response['Content-Encoding'] = 'gzip'
+    response['Content-Length'] = len(gjstr)
+    return response
+
 def json_trip_details(request, object_id, start=False, stop=False):
     pass
 
@@ -1411,8 +1506,6 @@ def exercise(request, object_id):
         slopes += object.segmentdetail_set.all()
         slopes = sorted(slopes, key=lambda x: x.start)
 
-        # Todo, maybe calculate and save in db or cache ?
-        #gradients, inclinesums = getgradients(details)
         # TODO inclinesums maybe needs a freqs cache thingy like speed/cadence
         gradients = simplejson.dumps(list(object.exercisealtitudegradient_set.values_list('xaxis', 'gradient')))
 

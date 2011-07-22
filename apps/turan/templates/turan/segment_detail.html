@@ -223,7 +223,13 @@
     });
     */
 
-        </script>
+$(document).ready(function() {
+    if (typeof(Mapper) != "undefined")
+        Mapper.loadGeoJSON(0, 0);
+
+    });
+
+    </script>
 </div>
 {% paginate %}
 {% endif %}

@@ -847,6 +847,9 @@ class Segment(models.Model):
     def get_absolute_url(self):
         return reverse('segment', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
 
+    def get_geojson_url(self):
+        return reverse('segment_geojson', kwargs={'object_id': self.id})
+
     def get_slopes(self):
         return self.segmentdetail_set.all().order_by('duration')
 
