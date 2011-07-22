@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load turan_extras %}
 {% load humanize %}
-{% load i18n %}
+{% load l10n %}
 {% load tagging_tags %}
 {% block title %}
 {{block.super}}
@@ -248,11 +248,10 @@ $(document).ready(function() {
         Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
 
 
-        {% if speedmaxpos %}
-        var speedmaxpos = {{ speedmaxpos }};
-        if (speedmaxpos.max > 0 ) {
+        {% localize off %}
+        {% if object.max_speed_lat %}
             sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max speed" %}', "{{ "lightning_go"|silk_icon }}", 16);
-            feature = Mapper.createFeature(sml, speedmaxpos.lon, speedmaxpos.lat, 0);
+            feature = Mapper.createFeature(sml, {{object.max_speed_lon}}, {{object.max_speed_lat}}, 0);
 /*
             var pop =  new OpenLayers.Popup.AnchoredBubble(
                 '{% trans "Max speed" %}',
@@ -274,30 +273,25 @@ $(document).ready(function() {
               null,true,  function () {  } );
             */
 
-        }
         {% endif %}
-        {% if powermaxpos %}
-        var powermaxpos = {{ powermaxpos }};
-        if (powermaxpos.max > 0 ) {
+        {% if object.max_power_lat %}
             sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max power" %}', "{{ "lightbulb"|silk_icon }}", 16);
-            Mapper.createFeature(sml, powermaxpos.lon, powermaxpos.lat, 0);
-        }
+            Mapper.createFeature(sml, {{object.max_power_lon}}, {{object.max_power_lat}}, 0);
         {% endif %}
-        {% if hrmaxpos %}
-        var hrmaxpos = {{ hrmaxpos }};
-        if (hrmaxpos.max > 0 ) {
+        {% if object.max_hr_lat %}
             sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max HR" %}', "{{ "heart"|silk_icon }}", 16);
-            Mapper.createFeature(sml, hrmaxpos.lon, hrmaxpos.lat, 0);
-        }
+            Mapper.createFeature(sml, {{object.max_hr_lon}}, {{object.max_hr_lat}}, 0);
         {% endif %}
-        {% if cadencemaxpos %}
-        var cadencemaxpos = {{ cadencemaxpos }};
-        if (cadencemaxpos.max > 0 ) {
+        {% if object.max_cadence_lat %}
             sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max cadence" %}', "{{ "cog"|silk_icon }}", 16);
-            Mapper.createFeature(sml, cadencemaxpos.lon, cadencemaxpos.lat, 0);
-        }
+            Mapper.createFeature(sml, {{object.max_cadence_lon}}, {{object.max_cadence_lat}}, 0);
+        {% endif %}
+        {% if object.max_altitude_lat %}
+            sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max altitude" %}', "{{ "arrow_up"|silk_icon }}", 16);
+            Mapper.createFeature(sml, {{object.max_altitude_lon}}, {{object.max_altitude_lat}}, 0);
         {% endif %}
 
+        {% endlocalize %}
 
     }
 });

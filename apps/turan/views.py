@@ -1533,16 +1533,6 @@ def exercise(request, object_id):
     if power_show:
         powerfreqs = freqobj_to_json('P')
 
-
-    speedmaxpos = None
-    powermaxpos = None
-    hrmaxpos = None
-    cadencemaxpos = None
-    speedmaxpos = mark_safe(simplejson.dumps(object.exercisedetail_set.annotate(max=Max('speed')).values('lon','lat','max').order_by('-max')[0]))
-    powermaxpos = mark_safe(simplejson.dumps(object.exercisedetail_set.annotate(max=Max('power')).values('lon','lat','max').order_by('-max')[0]))
-    hrmaxpos = mark_safe(simplejson.dumps(object.exercisedetail_set.annotate(max=Max('hr')).values('lon','lat','max').order_by('-max')[0]))
-    cadencemaxpos = mark_safe(simplejson.dumps(object.exercisedetail_set.annotate(max=Max('cadence')).values('lon','lat','max').order_by('-max')[0]))
-
     return render_to_response('turan/exercise_detail.html', locals(), context_instance=RequestContext(request))
 
 def json_serializer(request, queryset, root_name = None, relations = (), extras = ()):

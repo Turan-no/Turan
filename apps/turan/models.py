@@ -461,6 +461,17 @@ class Exercise(models.Model):
 
     tags = TagField(verbose_name=_('Tags'), help_text='f.eks. sol regn uhell punktering')
 
+    max_speed_lat = models.FloatField(blank=True, null=True, default=0.0)
+    max_speed_lon = models.FloatField(blank=True, null=True, default=0.0)
+    max_power_lat = models.FloatField(blank=True, null=True, default=0.0)
+    max_power_lon = models.FloatField(blank=True, null=True, default=0.0)
+    max_cadence_lat = models.FloatField(blank=True, null=True, default=0.0)
+    max_cadence_lon = models.FloatField(blank=True, null=True, default=0.0)
+    max_hr_lat = models.FloatField(blank=True, null=True, default=0.0)
+    max_hr_lon = models.FloatField(blank=True, null=True, default=0.0)
+    max_altitude_lat = models.FloatField(blank=True, null=True, default=0.0)
+    max_altitude_lon = models.FloatField(blank=True, null=True, default=0.0)
+
     #objects = models.Manager() # default manager
 
     #testm = CycleTripManager()

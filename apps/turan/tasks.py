@@ -1171,6 +1171,7 @@ def parse_and_calculate(exercise, callback=None):
             exercise.user.get_profile().get_weight(exercise.date),
             exercise.get_eq_weight())
     populate_interval_info(exercise)
+    find_max_positions(exercise)
     for segment in search_trip_for_possible_segments_matches(exercise):
         slice_to_segmentdetail(exercise, segment[0], segment[1], segment[2])
         # TODO: send notifications notification.send(friend_set_for(request.user.id), 'exercise_create', {'sender': request.user, 'exercise': new_object}, [request.user])
@@ -1368,6 +1369,27 @@ def populate_interval_info(exercise):
 
         # TODO add a bunch more
         interval.save()
+
+
+@task
+def find_max_positions(exercise):
+    ''' Use SQL to find the different lon, lats for maximum values '''
+    max = exercise.exercisedetail_set.annotate(max=Max('speed')).values('lon','lat','max').order_by('-max')[0]
+    exercise.max_speed_lat = max['lat']
+    exercise.max_speed_lon = max['lon']
+    max = exercise.exercisedetail_set.annotate(max=Max('power')).values('lon','lat','max').order_by('-max')[0]
+    exercise.max_power_lat = max['lat']
+    exercise.max_power_lon = max['lon']
+    max = exercise.exercisedetail_set.annotate(max=Max('hr')).values('lon','lat','max').order_by('-max')[0]
+    exercise.max_hr_lat = max['lat']
+    exercise.max_hr_lon = max['lon']
+    max = exercise.exercisedetail_set.annotate(max=Max('cadence')).values('lon','lat','max').order_by('-max')[0]
+    exercise.max_cadence_lat = max['lat']
+    exercise.max_cadence_lon = max['lon']
+    max = exercise.exercisedetail_set.annotate(max=Max('altitude')).values('lon','lat','max').order_by('-max')[0]
+    exercise.max_altitude_lat = max['lat']
+    exercise.max_altitude_lon = max['lon']
+    exercise.save()
 
 @task
 def create_tcx_from_details(event):
