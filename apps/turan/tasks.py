@@ -1375,33 +1375,51 @@ def populate_interval_info(exercise):
 def find_max_positions(exercise):
     ''' Use SQL to find the different lon, lats for maximum values '''
     try:
-        max = exercise.exercisedetail_set.annotate(max=Max('speed')).values('lon','lat','max').order_by('-max')[0]
-        exercise.max_speed_lat = max['lat']
-        exercise.max_speed_lon = max['lon']
+        if exercise.avg_speed:
+            max = exercise.exercisedetail_set.annotate(max=Max('speed')).values('lon','lat','max').order_by('-max')[0]
+            exercise.max_speed_lat = max['lat']
+            exercise.max_speed_lon = max['lon']
+        else:
+            exercise.max_speed_lat = 0
+            exercise.max_speed_lon = 0
     except IndexError:
         pass
     try:
-        max = exercise.exercisedetail_set.annotate(max=Max('power')).values('lon','lat','max').order_by('-max')[0]
-        exercise.max_power_lat = max['lat']
-        exercise.max_power_lon = max['lon']
+        if exercise.avg_power:
+            max = exercise.exercisedetail_set.annotate(max=Max('power')).values('lon','lat','max').order_by('-max')[0]
+            exercise.max_power_lat = max['lat']
+            exercise.max_power_lat = max['lat']
+        else:
+            exercise.max_power_lon = 0
+            exercise.max_power_lon = 0
     except IndexError:
         pass
     try:
-        max = exercise.exercisedetail_set.annotate(max=Max('hr')).values('lon','lat','max').order_by('-max')[0]
-        exercise.max_hr_lat = max['lat']
-        exercise.max_hr_lon = max['lon']
+        if exercise.avg_hr:
+            max = exercise.exercisedetail_set.annotate(max=Max('hr')).values('lon','lat','max').order_by('-max')[0]
+            exercise.max_hr_lat = max['lat']
+            exercise.max_hr_lon = max['lon']
+        else:
+            exercise.max_hr_lat = 0
+            exercise.max_hr_lon = 0
     except IndexError:
         pass
     try:
-        max = exercise.exercisedetail_set.annotate(max=Max('cadence')).values('lon','lat','max').order_by('-max')[0]
-        exercise.max_cadence_lat = max['lat']
-        exercise.max_cadence_lon = max['lon']
+        if exercise.avg_cadence:
+            max = exercise.exercisedetail_set.annotate(max=Max('cadence')).values('lon','lat','max').order_by('-max')[0]
+            exercise.max_cadence_lat = max['lat']
+            exercise.max_cadence_lon = max['lon']
+        else:
+            exercise.max_cadence_lat = 0
+            exercise.max_cadence_lon = 0
+
     except IndexError:
         pass
     try:
-        max = exercise.exercisedetail_set.annotate(max=Max('altitude')).values('lon','lat','max').order_by('-max')[0]
-        exercise.max_altitude_lat = max['lat']
-        exercise.max_altitude_lon = max['lon']
+        if exercise.route and exercise.route.max_altitude:
+            max = exercise.exercisedetail_set.annotate(max=Max('altitude')).values('lon','lat','max').order_by('-max')[0]
+            exercise.max_altitude_lat = max['lat']
+            exercise.max_altitude_lon = max['lon']
     except IndexError:
         pass
     exercise.save()
