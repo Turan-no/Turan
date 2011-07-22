@@ -61,46 +61,43 @@ class GPX2PNG(object):
                             self.minele = min(float(ele.text), self.minele)
                             self.maxele = max(float(ele.text), self.maxele)
 
-            # Small hack to fix drawing of only one point
-            if self.minlon == self.maxlon and self.minlat == self.maxlat:
-                self.maxlon = self.maxlon + 0.0001
-                self.maxlat = self.maxlat + 0.0001
-
             yscale = -math.cos( (self.minlat + self.maxlat) / 2 / 180 * 3.141592 )
-            for trk in self.root.findall(self.ns + 'trk'):
-                first = True
-                lat = 0
-                lon = 0
-                oldx = 0
-                oldy = 0
+            # Sanity check before drawing
+            if yscale != 0 and self.minlon != self.maxlon and self.minlat != self.maxlat:
+                for trk in self.root.findall(self.ns + 'trk'):
+                    first = True
+                    lat = 0
+                    lon = 0
+                    oldx = 0
+                    oldy = 0
 
-                trksegs = trk.find(self.ns + 'trkseg')
-                trkpts = trksegs.findall(self.ns + 'trkpt')
-                for trkpt in trkpts:
-                    lat = float(trkpt.attrib['lat'])
-                    lon = float(trkpt.attrib['lon'])
-                    ele = trkpt.find(self.ns + 'ele')
+                    trksegs = trk.find(self.ns + 'trkseg')
+                    trkpts = trksegs.findall(self.ns + 'trkpt')
+                    for trkpt in trkpts:
+                        lat = float(trkpt.attrib['lat'])
+                        lon = float(trkpt.attrib['lon'])
+                        ele = trkpt.find(self.ns + 'ele')
 
-                    x = (lon - self.minlon) / (self.maxlon - self.minlon) * xsize
-                    y = xsize+ ((lat - self.minlat) / (self.maxlat - self.minlat) * xsize * yscale)
-                    if first:
+                        x = (lon - self.minlon) / (self.maxlon - self.minlon) * xsize
+                        y = xsize+ ((lat - self.minlat) / (self.maxlat - self.minlat) * xsize * yscale)
+                        if first:
+                            oldx = x
+                            oldy = y
+                            first = False
+                            continue
+
+                        if ele is not None:
+                            i = int((float(ele.text) - self.minele) / (self.maxele - self.minele) * 255)
+                            p = aggdraw.Pen("rgb(%d,%d,%d)" % (i, 0, 0), 2.0)
+                            self.draw.line((oldx, oldy, x, y), p)
+                        else:
+                            p = aggdraw.Pen("black", 2.0)
+                            self.draw.line((oldx, oldy, x, y), p)
+
                         oldx = x
                         oldy = y
-                        first = False
-                        continue
 
-                    if ele is not None:
-                        i = int((float(ele.text) - self.minele) / (self.maxele - self.minele) * 255)
-                        p = aggdraw.Pen("rgb(%d,%d,%d)" % (i, 0, 0), 2.0)
-                        self.draw.line((oldx, oldy, x, y), p)
-                    else:
-                        p = aggdraw.Pen("black", 2.0)
-                        self.draw.line((oldx, oldy, x, y), p)
-
-                    oldx = x
-                    oldy = y
-
-                self.draw.flush()
+                    self.draw.flush()
 
     def get_file(self):
         f = StringIO()
