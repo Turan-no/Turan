@@ -371,42 +371,6 @@ class ExerciseManager(models.Manager):
     def get_query_set(self):
         return super(ExerciseManager, self).get_query_set().exclude(exercise_permission='N')
 
-    #def get_by_userteams(self, user_id):
-    #    innerq = TeamMembership.objects.filter(user=user_id).values('team').query
-    #    return self.filter(user__team__in=innerq)
-
-    #def get_by_teamname(self, teamname):
-    #    return self.filter(user__team__name__exact=teamname)
-#class Team(models.Model):
-#    name = models.CharField(max_length=160, help_text=_('Team name'))
-#    description = models.TextField(help_text=_('info'))
-#    slogan = models.TextField(blank=True, help_text=_('No pain - no gain'))
-#    logo = models.ImageField(upload_to='team_logos', blank=True, storage=gpxstore)
-#    url = models.URLField(blank=True)
-#
-#    members = models.ManyToManyField(User, through='TeamMembership')
-#
-#    def get_absolute_url(self):
-#        return reverse('team', kwargs={ 'object_id': self.id }) + '/' + slugify(self.name)
-#
-#    def __unicode__(self):
-#        return self.name
-#
-#    class Meta:
-#        verbose_name = _("Team")
-#        verbose_name_plural = _("Teams")
-#        ordering = ('name',)
-#
-#class TeamMembership(models.Model):
-#    user = models.ForeignKey(User)
-#    team = models.ForeignKey(Team)
-#    date_joined = models.DateField()
-#    role = models.CharField(max_length=64, help_text=_('i.e. Captain'))
-#
-#    class Meta:
-#        verbose_name = _("Team Membership")
-#        verbose_name_plural = _("Team Memberships")
-
 permission_choices = (
             ('A', _('All')),
             ('F', _('Friends')),
@@ -1083,54 +1047,6 @@ class SegmentAltitudeGradient(CommonAltitudeGradient):
     lat = models.FloatField(blank=True, null=True)
     lon = models.FloatField(blank=True, null=True)
 
-#class UserProfile(models.Model):
-#    user = models.ForeignKey(User, unique=True)
-#    height = models.IntegerField(blank=True, help_text=_('in cm'))
-#    weight = models.FloatField(blank=True, help_text=_('in kg'))
-#    resting_hr = models.IntegerField(blank=True, default=0, help_text=_('beats per minute'))
-#    max_hr = models.IntegerField(blank=True, default=0, help_text=_('beats per minute'))
-#    motto = models.CharField(max_length=160)
-#
-#    image = models.ImageField(upload_to='turan', blank=True)
-#    cycle = models.CharField(max_length=99, blank=True)
-#    cycle_image = models.ImageField(upload_to='turan', blank=True)
-#    info = models.TextField(blank=True, help_text=_('textual information'))
-
-#    def __unicode__(self):
-#        return unicode(self.user)
-#
-#    def get_absolute_url(self):
-#        return reverse('profile', kwargs={ 'object_id': self.id }) + '/' + slugify(self.user)
-#
-#    class Meta:
-#        verbose_name = _("User Profile")
-#        verbose_name_plural = _("User Profiles")
-#        ordering = ('user__username',)
-#
-#
-#class UserProfileDetail(models.Model):
-#    userprofile = models.ForeignKey(UserProfile)
-#    time = models.DateTimeField()
-#    weight = models.FloatField(blank=True, null=True, help_text=_('in kg'))
-#    resting_hr = models.IntegerField(blank=True,null=True, help_text=_('beats per minute'))
-#
-#    def save(self, force_insert=False, force_update=False):
-#
-#        ''' Overriden to update UserProfile with new data '''
-#        super(UserProfileDetail, self).save(force_insert, force_update)
-#        if self.weight:
-#            self.userprofile.weight = int(self.weight)
-#        if self.resting_hr:
-#            self.userprofile.esting_hr = self.resting_hr
-#        self.userprofile.save()
-
-#    def __unicode__(self):
-#        return unicode(self.userprofile.user)
-
-#    class Meta:
-#        verbose_name = _("User Profile Detail")
-#        verbose_name_plural = _("User Profile Details")
-#
 class Location(models.Model):
     lat = models.FloatField(blank=True, null=True)
     lon = models.FloatField(blank=True, null=True)
