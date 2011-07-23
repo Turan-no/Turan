@@ -871,9 +871,8 @@ class Segment(models.Model):
                         filename = 'gpx/segment/%s.gpx' %self.id
                         self.gpx_file.save(filename, ContentFile(g.xml), save=True)
                         break
-        try:
-            gradobj = SegmentAltitudeGradient.objects.get(segment=self.id)
-        except SegmentAltitudeGradient.DoesNotExist:
+        gradobj = SegmentAltitudeGradient.objects.filter(segment=self.id).exists()
+        if not gradobj:
             # No Gradient Found, try and generate
             for slope in self.get_slopes():
                 trip = slope.exercise
@@ -892,17 +891,18 @@ class Segment(models.Model):
                 lons = [d.lon for d in tripdetails]
                 lats = [d.lat for d in tripdetails]
                 distances, gradients, altitudes = getgradients(tripdetails)
-                d_offset = distances[0]
-                for i in xrange(0, len(tripdetails)):
-                    sag = SegmentAltitudeGradient()
-                    sag.segment_id = self.id
-                    sag.xaxis = distances[i]-d_offset
-                    sag.gradient = gradients[i]
-                    sag.altitude = altitudes[i]
-                    sag.lon = lons[i]
-                    sag.lat = lats[i]
-                    sag.save()
-                break
+                if distances:
+                    d_offset = distances[0]
+                    for i in xrange(0, len(tripdetails)):
+                        sag = SegmentAltitudeGradient()
+                        sag.segment_id = self.id
+                        sag.xaxis = distances[i]-d_offset
+                        sag.gradient = gradients[i]
+                        sag.altitude = altitudes[i]
+                        sag.lon = lons[i]
+                        sag.lat = lats[i]
+                        sag.save()
+                    break # only break if we found exercise with distances
 
         # generate png if it doesn't exist (after save, it uses id for filename)
         if self.gpx_file:
