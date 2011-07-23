@@ -57,7 +57,7 @@
     </style>
 <script type="text/javascript">
 var ids= 0;
-$(function() {
+$(document).ready(function() {
     var dateField = $('#id_date');
     if (dateField.val() != undefined ) {
         dateField.datepicker($.datepicker.regional['no'],{ //TODO region
@@ -100,8 +100,8 @@ $(function() {
 	                .data( "item.autocomplete", item )
 	                .append( '<a><img src="' +item.icon +'">' + item.name + '<br><span class="smaller">' + item.description + ", " + item.tcount + " {% trans "trips"%}</span></a>" )
 	                .appendTo( ul );
-	        };
-	};
+		};
+    }
 });
 
 $(document).ready(function() { 
