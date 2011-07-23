@@ -275,6 +275,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'wakawaka',
 
+
+    'groupcache',
+
 # Alternative to fastcgi
 #    'gunicorn',
 

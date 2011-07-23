@@ -14,7 +14,6 @@ from django.template import RequestContext, Context, loader
 from django.contrib.auth.decorators import login_required
 from django.utils.text import compress_string
 
-
 from django.contrib.auth import logout
 from django import forms
 from django.forms.models import inlineformset_factory
@@ -48,6 +47,9 @@ import cookielib
 import urllib
 import os
 import zipfile
+import re
+import locale
+import simplejson
 
 from BeautifulSoup import BeautifulSoup
 
@@ -56,27 +58,24 @@ from tribes.models import Tribe
 from friends.models import Friendship
 from wakawaka.models import WikiPage, Revision
 from photos.models import Pool, Image
-from photos.forms import PhotoUploadForm 
+from photos.forms import PhotoUploadForm
 
-
-
-import re
 from datetime import timedelta, datetime
 from datetime import date as datetimedate
 from datetime import time as datetimetime
 from time import mktime, strptime
-import locale
 
 from turancalendar import WorkoutCalendar
 from templatetags.turan_extras import durationformatshort
 from feeds import ExerciseCalendar
 
-import simplejson
 #from simplejson import encoder
 #encoder.c_make_encoder = None
 #encoder.FLOAT_REPR = lambda o: format(o, '.4f')
 
 from profiler import profile
+
+from groupcache.decorators import cache_page_against_model, cache_page_against_models
 
 from celery.result import AsyncResult
 
@@ -100,7 +99,7 @@ def index(request):
     c_lookup_kwargs = {}
     if 'friends' in request.GET:
         if request.user.is_authenticated():
-            friend_set = friend_set_for(request.user.id)  
+            friend_set = friend_set_for(request.user.id)
             friend_set = list(friend_set)
             friend_set.append(request.user)
             e_lookup_kwargs['user__in'] = friend_set
@@ -2018,6 +2017,7 @@ def segmentdetails(request, queryset):
 
     return object_list(request, queryset=queryset, extra_context=locals())
 
+@cache_page_against_models(Segment, SegmentDetail)
 def segments(request, queryset):
     ''' Segment list view, based on turan_object_list. Changed a bit for search
     and filter purposes '''
