@@ -1043,7 +1043,7 @@ class ExerciseAltitudeGradient(CommonAltitudeGradient):
     exercise   = models.ForeignKey(Exercise)
 
 class SegmentAltitudeGradient(CommonAltitudeGradient):
-    segment   = models.ForeignKey(Segment))
+    segment   = models.ForeignKey(Segment)
     lat = models.FloatField(blank=True, null=True)
     lon = models.FloatField(blank=True, null=True)
 
