@@ -281,33 +281,10 @@ def segment_detail(request, object_id):
         time = slope.duration/60
         usertimes[slope.exercise.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(slope.exercise.date), slope.duration))
 
-    done_altitude_profile = False
-    if slopes:
-        slope = slopes[0] # Select first detail for details for gradients and altitude profile, TODO: save in db
-        trip = slope.exercise
-        if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
-
-            tripdetails = trip.get_details().all()
-            if filldistance(tripdetails):
-                i = 0
-                start, stop= 0, 0
-                for d in tripdetails:
-                    if d.distance >= slope.start*1000 and not start:
-                        start = i
-                    elif start:
-                        if d.distance > (slope.start*1000 + slope.length):
-                            stop = i
-                            break
-                    i += 1
-            #start =  trip.get_details().filter(lon=slope.start_lon).filter(lat=slope.start_lat)[0].id
-            #stop =  trip.get_details().filter(lon=slope.end_lon).filter(lat=slope.end_lat)[0].id
-            #alt = tripdetail_js(None, trip.id, 'altitude', start=start, stop=stop)
-            d_offset = tripdetails[start].distance
-            alt = simplejson.dumps([((d.distance-d_offset)/1000, d.altitude) for d in tripdetails[start:stop]])
-            alt_max, alt_min = trip.get_details().aggregate(max=Max('altitude'),min=Min('altitude')).values()
-            done_altitude_profile = True
-        gradients, inclinesums = getgradients(tripdetails[start:stop],d_offset=d_offset)
-        gradients = simplejson.dumps(gradients)
+    gradients = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('xaxis', 'gradient')))
+    alt = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('xaxis', 'altitude')))
+    lonlats = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('lon', 'lat')))
+    alt_max, alt_min = object.segmentaltitudegradient_set.aggregate(max=Max('altitude'),min=Min('altitude')).values()
     return render_to_response('turan/segment_detail.html', locals(), context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):
