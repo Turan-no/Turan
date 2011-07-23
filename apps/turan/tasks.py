@@ -736,18 +736,16 @@ def getgradients(values):
     previous_altitude = 0
     previous_distance = 0
     for i, d in enumerate(distances):
+        gradient = 0
         if previous_distance:
             h_delta = altitudes[i] -  previous_altitude
             d_delta = d*1000 - previous_distance
-            if d_delta:
-                gradient = h_delta*100/d_delta
-                if gradient > 50 or gradient < -50: # Filter extremes
-                    gradient = 0
-            else:
-                gradient = 0
-            gradients.append(gradient)
-        else:
-            gradients.append(0)
+            if d_delta and h_delta:
+                f_gradient = h_delta*100/d_delta
+                # Filter extremes
+                if f_gradient < 50 and f_gradient > -50:
+                    gradient = f_gradient
+        gradients.append(gradient)
 
         previous_altitude = altitudes[i]
         previous_distance = d*1000
