@@ -34,7 +34,8 @@ from gpxwriter import GPXWriter
 
 from tasks import create_simplified_gpx, create_png_from_gpx, create_gpx_from_details, \
         merge_sensordata, calculate_ascent_descent_gaussian, calculate_best_efforts, \
-        parse_and_calculate, filldistance, hr2zone, watt2zone
+        parse_and_calculate, filldistance, hr2zone, watt2zone, \
+        getgradients
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
@@ -870,6 +871,38 @@ class Segment(models.Model):
                         filename = 'gpx/segment/%s.gpx' %self.id
                         self.gpx_file.save(filename, ContentFile(g.xml), save=True)
                         break
+        try:
+            gradobj = SegmentAltitudeGradient.objects.get(segment=self.id)
+        except SegmentAltitudeGradient.DoesNotExist:
+            # No Gradient Found, try and generate
+            for slope in self.get_slopes():
+                trip = slope.exercise
+                tripdetails = trip.get_details().all()
+                i = 0
+                start, stop = 0, 0
+                for d in tripdetails:
+                    if not start and d.distance >= slope.start*1000:
+                        start = i
+                    elif start:
+                        if d.distance > (slope.start*1000+ slope.length):
+                            stop = i
+                            break
+                    i += 1
+                tripdetails = tripdetails[start:stop]
+                lons = [d.lon for d in tripdetails]
+                lats = [d.lat for d in tripdetails]
+                distances, gradients, altitudes = getgradients(tripdetails)
+                d_offset = distances[0]
+                for i in xrange(0, len(tripdetails)):
+                    sag = SegmentAltitudeGradient()
+                    sag.segment_id = self.id
+                    sag.xaxis = distances[i]-d_offset
+                    sag.gradient = gradients[i]
+                    sag.altitude = altitudes[i]
+                    sag.lon = lons[i]
+                    sag.lat = lats[i]
+                    sag.save()
+                break
 
         # generate png if it doesn't exist (after save, it uses id for filename)
         if self.gpx_file:
