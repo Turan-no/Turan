@@ -1078,6 +1078,11 @@ class CommonAltitudeGradient(models.Model):
 class ExerciseAltitudeGradient(CommonAltitudeGradient):
     exercise   = models.ForeignKey(Exercise)
 
+class SegmentAltitudeGradient(CommonAltitudeGradient):
+    segment   = models.ForeignKey(Segment))
+    lat = models.FloatField(blank=True, null=True)
+    lon = models.FloatField(blank=True, null=True)
+
 #class UserProfile(models.Model):
 #    user = models.ForeignKey(User, unique=True)
 #    height = models.IntegerField(blank=True, help_text=_('in cm'))
