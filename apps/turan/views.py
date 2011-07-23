@@ -5,7 +5,7 @@ from tasks import smoothListGaussian, power_30s_average \
         create_gpx_from_details, smoothList
 from itertools import groupby, islice
 from forms import ExerciseForm, ImportForm, BulkImportForm
-from profiles.models import Profile
+from profiles.models import Profile, UserProfileDetail
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseForbidden, Http404, HttpResponseServerError
 from django.utils.translation import ugettext_lazy as _
@@ -34,6 +34,7 @@ from django.views.generic.list_detail import object_list
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 from django.core.cache import cache
 from django.utils.decorators import decorator_from_middleware
 from django.views.decorators.gzip import gzip_page
@@ -59,6 +60,7 @@ from friends.models import Friendship
 from wakawaka.models import WikiPage, Revision
 from photos.models import Pool, Image
 from photos.forms import PhotoUploadForm
+from avatar.models import Avatar
 
 from datetime import timedelta, datetime
 from datetime import date as datetimedate
@@ -90,6 +92,10 @@ def datetime2jstimestamp(obj):
     ''' Helper to generate js timestamp for usage in flot '''
     return mktime(obj.timetuple())*1000
 
+@cache_page_against_models(Tribe, Friendship, Avatar, Exercise, Route,
+                           Segment, SegmentDetail, ThreadedComment,
+                           Profile, User, notification.Notice)
+@vary_on_cookie
 def index(request):
     ''' Index view for Turan '''
 
@@ -176,6 +182,8 @@ class TripsFeed(Feed):
             pass # Some trips just doesn't have time set
         return
 
+@cache_page_against_models(ExerciseType, Exercise, Avatar, Route)
+@vary_on_cookie
 def events(request, group_slug=None, bridge=None, username=None, latitude=None, longitude=None):
     object_list = []
 
@@ -315,6 +323,8 @@ def week(request, week, user_id='all'):
 
     return render_to_response('turan/event_list.html', locals(), context_instance=RequestContext(request))
 
+@cache_page_against_models(Exercise, Profile, User, UserProfileDetail)
+@vary_on_cookie
 def statistics(request, year=None, month=None, day=None, week=None):
 
     month_format = '%m'
@@ -1700,6 +1710,8 @@ def update_object_user(request, model=None, object_id=None, slug=None,
             template_loader, extra_context, post_save_redirect, login_required,
             context_processors, template_object_name, form_class)
 
+@cache_page_against_models(ExerciseType, Exercise, Avatar, Route)
+@vary_on_cookie
 def turan_object_list(request, queryset):
 
     search_query = request.GET.get('q', '')
@@ -1984,6 +1996,8 @@ def slopes(request, queryset):
 
     return object_list(request, queryset=queryset, extra_context=locals())
 
+@cache_page_against_models(Segment, SegmentDetail, Avatar)
+@vary_on_cookie
 def segmentdetails(request, queryset):
     ''' Segment detail list view, based on turan_object_list. Changed a bit for search
     and filter purposes '''
@@ -2018,6 +2032,7 @@ def segmentdetails(request, queryset):
     return object_list(request, queryset=queryset, extra_context=locals())
 
 @cache_page_against_models(Segment, SegmentDetail)
+@vary_on_cookie
 def segments(request, queryset):
     ''' Segment list view, based on turan_object_list. Changed a bit for search
     and filter purposes '''

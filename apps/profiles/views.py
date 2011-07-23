@@ -21,8 +21,12 @@ from microblogging.models import Following
 from profiles.models import Profile, UserProfileDetail
 from profiles.forms import ProfileForm
 
-from turan.models import BestPowerEffort, BestSpeedEffort
+from avatar.models import Avatar
 
+from turan.models import BestPowerEffort, BestSpeedEffort, Exercise, Equipment, Component
+
+from django.views.decorators.vary import vary_on_cookie
+from groupcache.decorators import cache_page_against_model, cache_page_against_models
 from avatar.templatetags.avatar_tags import avatar
 from itertools import groupby
 #from gravatar.templatetags.gravatar import gravatar as avatar
@@ -36,6 +40,8 @@ def datetime2jstimestamp(obj):
     ''' Helper to generate js timestamp for usage in flot '''
     return mktime(obj.timetuple())*1000
 
+@cache_page_against_models(Profile, Exercise, Avatar)
+@vary_on_cookie
 def profiles(request, template_name="profiles/profiles.html", extra_context=None):
     if extra_context is None:
         extra_context = {}
@@ -77,7 +83,8 @@ def profile_redirect(request):
 
     return HttpResponseRedirect(reverse('turanindex'))
 
-
+@cache_page_against_models(Equipment, Friendship, UserProfileDetail, Exercise, Profile, User, Avatar)
+@vary_on_cookie
 def profile(request, username, template_name="profiles/profile.html", extra_context=None):
     if extra_context is None:
         extra_context = {}
