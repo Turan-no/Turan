@@ -750,8 +750,8 @@ def getgradients(values):
         previous_altitude = altitudes[i]
         previous_distance = d*1000
 
-    #if gradients: # Don't try to smooth empty list
-    #    gradients = smoothListGaussian(gradients)
+    if gradients: # Don't try to smooth empty list
+        gradients = smoothListGaussian(gradients, 5) # FIXME, maybe check sample length? make some assumptions aoubt sane smooth widths?
 
     return distances, gradients, altitudes
 
