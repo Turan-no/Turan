@@ -2352,7 +2352,8 @@ def search(request):
 
     exercise_list = Exercise.objects.select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')
     comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')
-    route_list = Route.objects.annotate( tcount=Count('exercise') ).order_by('-tcount')
+    # Do not include routes with only 1 trip, since they wll be found by exercise search
+    route_list = Route.objects.annotate( tcount=Count('exercise') ).filter(tcount__gt=1).order_by('-tcount')
     segment_list = Segment.objects.all()
 
     tag_list = Tag.objects.all()
