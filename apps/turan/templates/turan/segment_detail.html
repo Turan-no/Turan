@@ -79,6 +79,9 @@
     {% autosort object_list %}
     {% autopaginate object_list %}
     {% if object_list %}
+        <div id="gradientzonediv" style="width: 1000px; height:200px"></div>
+        {% include "turan/exercise/gradient_tab.html" %}
+        {% include "turan/altitude_profile.html" %}
         <div id="durationdiv" style="width:100%;height:100px"></div>
         <script id="source" language="javascript" type="text/javascript">
     $(function () {
@@ -106,9 +109,6 @@
             $.plot($("#durationdiv"), times, options);
         });
         </script>
-        {% include "turan/altitude_profile.html" %}
-        <div id="gradientzonediv" style="width: 1000px; height:200px"></div>
-        {% include "turan/exercise/gradient_tab.html" %}
         <form id="route_form">
 
         <table class="fullsize">
@@ -223,12 +223,68 @@
     });
     */
 
+var gposFeature = null;
+var lonlats = {{lonlats}};
 $(document).ready(function() {
     if (typeof(Mapper) != "undefined")
         Mapper.loadGeoJSON(0, 0);
 
     });
+    var moveFeature = function(posIndex) {
+        if (!Mapper.posLayer) {
+            // Init the marker for graph hover thingy
+            Mapper.posLayer = Mapper.initFeature('{% trans "Position" %}', "{{5|player_icon_huge:exercise_type}}", 48);
+        }
 
+        // Move marker to current pos
+        if (Mapper.map != null || Mapper.posLayer != undefined) {
+            if (lonlats.length >= posIndex) {
+                var x = lonlats[posIndex][0];
+                var y = lonlats[posIndex][1];
+                if (!gposFeature) {
+                    gposFeature = Mapper.createFeature(Mapper.posLayer, x, y, 0);
+                }
+                Mapper.moveFeature(gposFeature, x, y, 0); // Hardcoded to 0 degrees
+            }
+        }
+    }
+    var gplotHover = function (event, pos, item) {
+        var axes = gradientplot.getAxes(); 
+        if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max || 
+            pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) 
+            return; 
+        var posIndex = 0;
+        var series = gradientzonedata[0]['data'];
+        for (key in series) {
+            if (series[key][0] >= pos.x) {
+                var posIndex = key;
+                break;
+            }
+        }
+        if (posIndex <= 0)  // No index found
+            return;
+        moveFeature(posIndex);
+    };
+    var aplotHover = function (event, pos, item) {
+        var axes = altitudeprofileplot.getAxes(); 
+        if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max || 
+            pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) 
+            return; 
+        var posIndex = 0;
+        var series = alt['data'];
+        for (key in series) {
+            if (series[key][0] >= pos.x) {
+                var posIndex = key;
+                break;
+            }
+        }
+        if (posIndex <= 0)  // No index found
+            return;
+        moveFeature(posIndex);
+    };
+    $("#gradientzonediv").bind("plothover", gplotHover);
+    $("#altdiv").bind("plothover", aplotHover);
+        
     </script>
 </div>
 {% paginate %}

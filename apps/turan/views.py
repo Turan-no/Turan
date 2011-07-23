@@ -280,6 +280,8 @@ def segment_detail(request, object_id):
             usertimes[slope.exercise.user] = ''
         time = slope.duration/60
         usertimes[slope.exercise.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(slope.exercise.date), slope.duration))
+    if slope:
+        exercise_type = slope.exercise.exercise_type
 
     gradients = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('xaxis', 'gradient')))
     alt = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('xaxis', 'altitude')))
