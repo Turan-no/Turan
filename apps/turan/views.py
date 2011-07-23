@@ -1266,7 +1266,7 @@ def js_trip_series(request, exercise, details,  start=False, stop=False, time_xa
     if 'temp' in js_strings:
         res['temp'] =  {
             "data": js_strings['temp'],
-            "label": _('temp'),
+            "label": _('Temperature'),
             "color": 6,
             "yaxis": 5
             }
