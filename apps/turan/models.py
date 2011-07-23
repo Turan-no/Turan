@@ -871,8 +871,10 @@ class Segment(models.Model):
                         filename = 'gpx/segment/%s.gpx' %self.id
                         self.gpx_file.save(filename, ContentFile(g.xml), save=True)
                         break
-        gradobj = SegmentAltitudeGradient.objects.filter(segment=self.id).exists()
-        if not gradobj:
+        #gradobj = SegmentAltitudeGradient.objects.filter(segment=self.id).exists()
+        #if not gradobj:
+        SegmentAltitudeGradient.objects.filter(segment=self.id).delete()
+        if True: # TODO somehow figure out a way to get the sanest result
             # No Gradient Found, try and generate
             for slope in self.get_slopes():
                 trip = slope.exercise
