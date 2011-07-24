@@ -227,6 +227,7 @@ var gposFeature = null;
 var lonlats = {{lonlats}};
 $(document).ready(function() {
     if (typeof(Mapper) != "undefined")
+        Mapper.map.addControl(new OpenLayers.Control.MousePosition({}));
         Mapper.loadGeoJSON(0, 0);
 
     });
