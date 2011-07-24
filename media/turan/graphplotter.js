@@ -84,11 +84,11 @@ var GraphPlotter = {
                     ],
                 xaxis: xaxisattrs,
                 legend: { 
-                    container: $("#exercisegraph_legend"),
                     labelFormatter: function(label, series) {
                         // series is the series object for the label
                         return label;
                     },
+                    position: 'nw',
                     noColumns: 15
                 },
                 grid: { 
