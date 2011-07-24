@@ -889,14 +889,21 @@ def segment_geojson(request, object_id):
 
 
     object = get_object_or_404(Segment, pk=object_id)
-    slopes = object.get_slopes().select_related('exercise', 'exercise__route', 'exercise__user__profile', 'segment', 'profile', 'exercise__user')
-    done_altitude_profile = False
-    details = []
-    if slopes:
-        slope = slopes[0] # Select first detail for details for gradients and altitude profile, TODO: save in db
-        trip = slope.exercise
-        if trip.avg_speed and trip.get_details().count() and not done_altitude_profile: # Find trip with speed or else tripdetail_js bugs out
 
+    # Check for cache and return
+    cache_key = 'segment_geojson_%s' %object_id
+    gjstr = cache.get(cache_key)
+    if gjstr:
+        response = HttpResponse(gjstr, mimetype='text/javascript')
+        response['Content-Encoding'] = 'gzip'
+        response['Content-Length'] = len(gjstr)
+        return response
+
+    slopes = object.get_slopes().select_related('exercise', 'exercise__route', 'exercise__user__profile', 'segment', 'profile', 'exercise__user')
+    details = []
+    for slope in slopes:
+        trip = slope.exercise
+        if trip.get_details().exclude(lon=0.0).count(): # Find trip with lon, lat
             tripdetails = trip.get_details().all()
             i = 0
             start, stop= 0, 0
@@ -911,18 +918,11 @@ def segment_geojson(request, object_id):
             d_offset = tripdetails[start].distance
             #alt = simplejson.dumps([((d.distance-d_offset)/1000, d.altitude) for d in tripdetails[start:stop]])
             details = tripdetails[start:stop]
+            break
     else:
         return HttpResponse('{}')
 
-    cache_key = 'segment_geojson_%s' %object_id
-    gjstr = cache.get(cache_key)
-    if gjstr:
-        response = HttpResponse(gjstr, mimetype='text/javascript')
-        response['Content-Encoding'] = 'gzip'
-        response['Content-Length'] = len(gjstr)
-        return response
-
-    gradients, inclinesums = getgradients(details,d_offset=d_offset)
+    gradients, inclinesums = getgradients(details, d_offset=d_offset)
     gradientslen = len(gradients) # TODO why isn't this same nr as details ?
 
     features = []
@@ -963,7 +963,7 @@ def segment_geojson(request, object_id):
         previous_lat = d.lat
 
     # add last segment
-    if previous_zone == zone:
+    if previous_zone >= 0 and previous_zone == zone:
         previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
     features.append(previous_feature)
 
