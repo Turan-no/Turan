@@ -16,6 +16,12 @@
 <script type="text/javascript">
 {% localize off %}
     var gradplotoptions = {
+        tooltip: true,
+        tooltipOpts: {
+            xValText: '{% trans "Distance" %}: ',
+            yValText: '{% trans "Gradient" %}: ',
+            series: false,
+        },
         selection: { mode: "x" },
         grid: { 
             hoverable: true, 

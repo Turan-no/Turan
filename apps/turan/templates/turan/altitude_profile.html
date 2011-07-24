@@ -5,6 +5,12 @@
 <script id="source" language="javascript" type="text/javascript">
     var alt = { data: {{ alt }}, color: 3, lines: { fill: 0.7 } };
     var options = { 
+        tooltip: true,
+        tooltipOpts: {
+            xValText: '{% trans "Distance" %}: ',
+            yValText: '{% trans "Altitude" %}: ',
+            series: false,
+        },
         yaxis: { 
            tickFormatter: axisformatters['altitude'],  
            min: {{ alt_min }}, 

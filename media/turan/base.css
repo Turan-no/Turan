@@ -1240,7 +1240,7 @@ ul#last_comments p {
 div.tooltip ul {
     padding: 5px;
 }
-div.tooltip, .tooltip_help_box {
+div.tooltip, .tooltip_help_box, #flotTip {
     z-index: 10;
     position: fixed;
     background-color: #fff;
