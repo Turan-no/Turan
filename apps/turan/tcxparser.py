@@ -199,6 +199,11 @@ class TCXParser(object):
             except AttributeError:
                 power = 0
 
+            try:
+                cadence = int(e.find(garmin_ns + "Extensions").find("{http://www.garmin.com/xmlschemas/ActivityExtension/v2}TPX").find("{http://www.garmin.com/xmlschemas/ActivityExtension/v2}RunCadence").text)
+            except AttributeError:
+                pass # cadence is set to 0 further up
+
             # Quickfix to skip empty trackpoints found at least in Garmin Edge 500 tcx-files
             #if lat == 0.0 and lon == 0.0 and distance == 0 and hr == 0:
             #    print "watness"
