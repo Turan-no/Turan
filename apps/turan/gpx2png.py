@@ -63,7 +63,7 @@ class GPX2PNG(object):
 
             yscale = -math.cos( (self.minlat + self.maxlat) / 2 / 180 * 3.141592 )
             # Sanity check before drawing
-            if yscale != 0 and self.minlon != self.maxlon and self.minlat != self.maxlat:
+            if yscale != 0 and self.minlon != self.maxlon and self.minlat != self.maxlat and self.minele != self.maxele:
                 for trk in self.root.findall(self.ns + 'trk'):
                     first = True
                     lat = 0
