@@ -138,8 +138,10 @@
                 selectedIds.push(elem.value);
             }
         });
-        // todo.. yea this code is real bad. *sighface*
-        document.location = "/turan/exercise/compare/" + selectedIds.join("/");
+        if (selectedIds.length > 1)
+            document.location = "/turan/exercise/compare/" + selectedIds.join("/");
+        else
+            alert("{% trans "Select two or more routes to compare" %}");
     });
     </script>
 {% paginate %}

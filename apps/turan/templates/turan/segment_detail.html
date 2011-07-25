@@ -206,7 +206,11 @@
                 index++;
             }
             player_url += selectedStarts.join(',')
-            document.location = player_url;
+
+            if (selectedIds.length > 1)
+                document.location = player_url;
+            else
+                alert("{% trans "Select two or more segments to compare" %}");
 
         });
 
