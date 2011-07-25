@@ -75,11 +75,13 @@
     {% for segment in slopes %}
     {% endfor %}
 {% endcomment %}
+    {% if not time_xaxis %}
     {% for slope in slopes %}
         {% if slope.segment %}
         GraphPlotter.addGraphText({{slope.start}}, "{{ slope.segment.name }}" );
         {% endif %}
     {% endfor %}
+    {% endif %}
 
     $(document).ready(function () {
         // Get datasets from json
