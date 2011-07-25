@@ -775,8 +775,6 @@ def powerjson(request, object_id):
     all_details = object.get_details()
 
     details = all_details.all()[start:stop]
-    d = filldistance(details) # FIXME
-
     ret = detailslice_info(details)
     # Post proc for nicer numbers
     if ret['distance'] >= 1000:
@@ -1062,7 +1060,6 @@ def json_trip_series(request, object_id, start=False):
             for e, v in zip(details, vals):
                 e['poweravg30s'] = v
         has_distance = 0
-        #filldistance(details) FIXME needs better logic?
         if exercise.route and exercise.route.distance > 0:
             has_distance = 1
         if not has_distance:
@@ -1623,7 +1620,7 @@ def create_object(request, model=None, template_name=None,
             # Run filldistance on all dtails because filldistance doesn't support detail slices yet
             # this is a TODO
             details = details[0:stop+1]
-            d = filldistance(details)
+            #d = filldistance(details)
             ret = detailslice_info(details[start:stop])
             data = {}
             data['exercise'] = exercise
@@ -2295,7 +2292,6 @@ def exercise_player(request):
     alt_max = 0
     for exercise in exercises:
         details = exercise.get_details().all()
-        distance = filldistance(details)
         if not alt_max:
             alt_max, alt_min = details.aggregate(max=Max('altitude'),min=Min('altitude')).values()
         datasets.append(mark_safe(js_trip_series(request, exercise, details.values(), time_xaxis=False, use_constraints=False)))

@@ -157,7 +157,7 @@ def getslopes(values, userweight, eqweight):
     exercise_type = values[0].exercise.exercise_type
     #if not str(exercise_type) == 'Cycling':
     #    return []
-    if not filldistance(values):
+    if not values[0].exercise.avg_speed:
         return []
 
     slopes = []
@@ -920,7 +920,7 @@ def calculate_best_efforts(exercise, effort_range=[5, 10, 30, 60, 240, 300, 600,
     calc_power = exercise.avg_power and not exercise.is_smart_sampled()
 
     if details:
-        if filldistance(details):
+        if exercise.avg_speed:
             altvals = []
             for a in details:
                 altvals.append(a.altitude)
@@ -1325,7 +1325,7 @@ def parse_sensordata(exercise):
 @task
 def populate_interval_info(exercise):
     details = list(exercise.exercisedetail_set.all())
-    d = filldistance(details) # FIXME
+    #d = filldistance(details) # FIXME
     for interval in exercise.interval_set.all():
         start = 0 #= exercise.exercisedetail_set.get(time=interval.start_time)
         stop = 0 # exercise.exercisedetail_set.get(time=interval.start_time+interval.duration)
@@ -1428,16 +1428,15 @@ def create_tcx_from_details(event):
     # Check if the details have lon, some parsers doesn't provide position
     if event.get_details().filter(lon__gt=0).filter(lat__gt=0).count() > 0:
         details = event.get_details().all()
-        if filldistance(details):
-            cadence = 0
-            if event.avg_pedaling_cad:
-                cadence = event.avg_pedaling_cad
-            elif event.avg_cadence:
-                cadence = event.avg_cadence
-            g = TCXWriter(details, event.route.distance*1000, event.avg_hr, event.max_hr, event.kcal, event.max_speed, event.duration.total_seconds(), details[0].time, cadence)
-            filename = '/tmp/%s.tcx' %event.id
+        cadence = 0
+        if event.avg_pedaling_cad:
+            cadence = event.avg_pedaling_cad
+        elif event.avg_cadence:
+            cadence = event.avg_cadence
+        g = TCXWriter(details, event.route.distance*1000, event.avg_hr, event.max_hr, event.kcal, event.max_speed, event.duration.total_seconds(), details[0].time, cadence)
+        filename = '/tmp/%s.tcx' %event.id
 
-            file(filename, 'w').write(g.xml)
+        file(filename, 'w').write(g.xml)
 
 def calculate_ascent_descent(event):
     ''' Calculate ascent and descent for an exercise and put on the route.
@@ -1624,7 +1623,6 @@ def detailslice_info(details):
     else:
         ret['gradient'] = 0
         ret['power__avg_est'] = 0
-        
 
     ret['vam'] = 0
     if ascent:
