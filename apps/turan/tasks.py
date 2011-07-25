@@ -1624,8 +1624,11 @@ def detailslice_info(details):
     else:
         ret['gradient'] = 0
         ret['power__avg_est'] = 0
+        
 
-    ret['vam'] = int(round((float(ascent)/duration)*3600))
+    ret['vam'] = 0
+    if ascent:
+        ret['vam'] = int(round((float(ascent)/duration)*3600))
     ret['power__normalized'] = power_30s_average(details)
     if ret['power__avg']:
         power = ret['power__avg']
