@@ -9,6 +9,7 @@ var GraphPlotter = {
     backendUrl: null,
     max_hr: 200,
     markings: [],
+    graphlabels: [],
     ranges: {},
 
     setRange: function(range) {
@@ -88,7 +89,7 @@ var GraphPlotter = {
                         // series is the series object for the label
                         return label;
                     },
-                    position: 'nw',
+                    position: 'se',
                     noColumns: 15
                 },
                 grid: { 
@@ -102,6 +103,8 @@ var GraphPlotter = {
                 selection: { mode: "x" }
             });
         }
+
+        this.drawGraphText();
 
         if (minIndex != null && maxIndex != null) {
             if (typeof(Mapper) != "undefined")
@@ -189,6 +192,17 @@ var GraphPlotter = {
             padding: '10px',
             opacity: 0.9
         }).appendTo("body").delay(200).fadeIn(200);
+    },
+    addGraphText: function(x, text) {
+        this.graphlabels.push([x,text] );
+    },
+    drawGraphText: function() {
+        var ymax = plot.getAxes().yaxis.max;
+        for (key in this.graphlabels) {
+            var o= plot.pointOffset({ x: this.graphlabels[key][0], y: ymax});
+            var placeholder = plot.getPlaceholder()
+            placeholder.append('<div style="position:absolute;left:' + (o.left) + 'px;top:' + o.top + 'px;color:#666;font-size:smaller">' + this.graphlabels[key][1] + '</div>');
+        }
     },
     init: function(args) {
         this.datasets = args.datasets;

@@ -50,15 +50,6 @@
     <p class="" id="choices">{% trans "Graph" %}:</p>
 </div>
 <script type="text/javascript">
-{% comment %}
-    {% if lonlats %}
-    var route_coordinates = {{lonlats|as_json}};
-    {% else %}
-    var route_coordinates = [];
-    {% endif %}
-
-    var route_points = [];
-{% endcomment %}
 {% localize off %}
 
     var markings = [];
@@ -84,6 +75,11 @@
     {% for segment in slopes %}
     {% endfor %}
 {% endcomment %}
+    {% for slope in slopes %}
+        {% if slope.segment %}
+        GraphPlotter.addGraphText({{slope.start}}, "{{ slope.segment.name }}" );
+        {% endif %}
+    {% endfor %}
 
     $(document).ready(function () {
         // Get datasets from json
