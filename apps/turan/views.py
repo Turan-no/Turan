@@ -254,6 +254,7 @@ def route_detail(request, object_id):
     return render_to_response('turan/route_detail.html', locals(), context_instance=RequestContext(request))
 
 def segment_detail(request, object_id):
+    ''' View for a single segment '''
     object = get_object_or_404(Segment, pk=object_id)
     # Workaround for http://turan.no/sentry/group/147/messages/3326 and googlebot being persistent.
     if request.GET.get('sort', '') == 'object.exercise.user':
@@ -275,11 +276,17 @@ def segment_detail(request, object_id):
     if username:
         other_user = get_object_or_404(User, username=username)
         slopes = slopes.filter(exercise__user=other_user)
-    for slope in sorted(slopes, key=lambda x:x.exercise.date):
-        if not slope.exercise.user in usertimes:
-            usertimes[slope.exercise.user] = ''
-        time = slope.duration/60
-        usertimes[slope.exercise.user] += mark_safe('[%s, %s],' % (datetime2jstimestamp(slope.exercise.date), slope.duration))
+
+
+    series = {}
+    for i, slope in enumerate(sorted(slopes, key=lambda x:x.duration)[0:20]):
+        user = slope.exercise.user
+        if not user in series:
+            series[user] = []
+        time = slope.duration
+        series[user].append((i, time))
+    for key, val in series.items():
+        series[key]= simplejson.dumps(val)
     if slopes:
         exercise_type = slope.exercise.exercise_type
 

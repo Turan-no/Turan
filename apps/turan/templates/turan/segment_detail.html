@@ -87,12 +87,12 @@
     $(function () {
 
         var times = [
-            {% for user, series in usertimes.items %}
+            {% for user, series in series.items %}
             {% if series %}
                 {
                     label: "{{user}}",
                     bars: { show: true },
-                    data: [{{series}}],
+                    data: {{series}},
                     color: {{ forloop.counter }}
                 },
             {% endif %}
