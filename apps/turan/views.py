@@ -410,6 +410,9 @@ def statistics(request, year=None, month=None, day=None, week=None):
             sum_duration = Sum('user__exercise__duration'),
             sum_energy = Sum('user__exercise__kcal'),
             avg_normalized_power = Avg('user__exercise__normalized_power'),
+            max_normalized_power = Max('user__exercise__normalized_power'),
+            avg_avg_pedaling_power = Avg('user__exercise__avg_pedaling_power'),
+            max_avg_pedaling_power = Max('user__exercise__avg_pedaling_power'),
             max_max_power = Max('user__exercise__max_power'),
             sum_ascent = Sum('user__exercise__route__ascent'),
             avg_avg_hr = Avg('user__exercise__avg_hr'),
@@ -425,6 +428,9 @@ def statistics(request, year=None, month=None, day=None, week=None):
     ascentsums = userstats.filter(sum_ascent__gt=0).order_by('sum_ascent').reverse()
     avgavghrs = userstats.filter(avg_avg_hr__gt=0).filter(max_hr__gt=0)
     avgnormalizedpower =  userstats.filter(avg_normalized_power__gt=0).order_by('-avg_normalized_power')
+    maxnormalizedpower =  userstats.filter(max_normalized_power__gt=0).order_by('-max_normalized_power')
+    avgpedalingpower =  userstats.filter(avg_avg_pedaling_power__gt=0).order_by('-avg_avg_pedaling_power')
+    maxpedalingpower =  userstats.filter(max_avg_pedaling_power__gt=0).order_by('-max_avg_pedaling_power')
     maxpowers =  userstats.filter(max_max_power__gt=0).order_by('-max_max_power')
 
     for u in avgavghrs:
@@ -499,6 +505,9 @@ def statistics(request, year=None, month=None, day=None, week=None):
     energysums = energysums[:resultsize]
     avgavghrs = avgavghrs[:resultsize]
     avgnormalizedpower = avgnormalizedpower[:resultsize]
+    maxnormalizedpower = maxnormalizedpower[:resultsize]
+    avgpedalingpower = avgpedalingpower[:resultsize]
+    maxpedalingpower = maxpedalingpower[:resultsize]
     ascentsums = ascentsums[:resultsize]
     climbstats = climbstats[:resultsize]
     climbstatsbytime = climbstatsbytime[:resultsize]

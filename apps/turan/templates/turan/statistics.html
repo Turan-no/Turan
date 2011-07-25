@@ -160,6 +160,36 @@
     </div>
     <div class="time_and_length">
         <div class="box">
+
+            <h3> {% trans "Highest maximum Normalized Power" %} </h3>
+            <ol>
+                {% for u in maxnormalizedpower %}
+                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span>{{ u.max_normalized_power|floatformat }} W</li>
+                {% endfor %}
+            </ol>
+            
+        </div>
+        <div class="box">
+
+            <h3> {% trans "Highest average pedaling power" %} </h3>
+            <ol>
+                {% for u in avgpedalingpower %}
+                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span>{{ u.avg_avg_pedaling_power|floatformat }} W</li>
+                {% endfor %}
+            </ol>
+            
+        </div>
+        <div class="box">
+
+            <h3> {% trans "Highest maximum pedaling power" %} </h3>
+            <ol>
+                {% for u in maxnormalizedpower %}
+                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="label">{{ u }}:</span>{{ u.max_avg_pedaling_power|floatformat }} W</li>
+                {% endfor %}
+            </ol>
+            
+        </div>
+        <div class="box">
             <h3> {% trans "Fastest average climb" %} </h3>
             <ol>
                 {% for u in climbstatsbytime %}
@@ -167,6 +197,8 @@
                 {% endfor %}
             </ol>
         </div>
+    </div>
+    <div class="time_and_length">
         <div class="box">
 
         {% for i, hrzone in hrzonestats %}
