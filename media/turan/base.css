@@ -934,17 +934,17 @@ div.box {
     background-color: #eee;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#ffffff'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#ddd), to(#ffffff)); /* for webkit browsers */
-    background: -moz-linear-gradient(top, #eeeeee,  #ffffff); /* for firefox 3.6+ */
-    background: -o-linear-gradient(#eeeeee,  #ffffff); /* for opera */
+    background: -moz-linear-gradient(top, #dddddd,  #ffffff); /* for firefox 3.6+ */
+    background: -o-linear-gradient(#dddddd,  #ffffff); /* for opera */
     padding: 10px;
 }
 div.box h2, div.box h3 {
-    -moz-border-radius: 0.5em;
-    -webkit-border-radius: 0.5em;
-    border-radius: 0.5em;
-    margin: 0 0 4px 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0;
+    margin: -10px -10px 10px -10px;
     padding: 3px;
-    background-color: #4f96ca;
+    background-color: #888;
     color: white;
 }
 
