@@ -2285,16 +2285,10 @@ def exercise_player(request):
     if not ids:
         raise Http404()
 
-    alt = tripdetail_js(exercise.id, 'altitude')
-
-
-    datasets = []
-    alt_max = 0
     for exercise in exercises:
-        details = exercise.get_details().all()
-        if not alt_max:
-            alt_max, alt_min = details.aggregate(max=Max('altitude'),min=Min('altitude')).values()
-        datasets.append(mark_safe(js_trip_series(request, exercise, details.values(), time_xaxis=False, use_constraints=False)))
+        alt = simplejson.dumps(list(exercise.exercisealtitudegradient_set.values_list('xaxis', 'altitude')))
+        alt_max, alt_min = exercise.exercisealtitudegradient_set.aggregate(max=Max('altitude'),min=Min('altitude')).values()
+        break
 
     return render_to_response('turan/exercise_player.html', locals(), context_instance=RequestContext(request))
 

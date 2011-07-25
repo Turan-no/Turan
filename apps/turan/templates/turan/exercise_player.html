@@ -163,8 +163,14 @@ $('#control_live').bind("click", function (evt) {
 var graphoptions = [];
 var datasets = [];
 var histvals = {};
-{% for dataset in datasets %}
-datasets.push({{dataset}});
+{% for object in exercises %}
+    var player = {{forloop.counter0}};
+    $.getJSON("{% url json_trip_series object.id%}", { start: 0 }, function (dataset) {
+        datasets[player] = dataset;
+        {% if forloop.last %}
+        play();
+        {% endif %}
+    });
 {% endfor %}
 {% for object in exercises %}
     graphoptions.push( {
@@ -226,7 +232,7 @@ var math = {
 
 var interations;
 var interval = 0;
-$(document).ready(function() {
+var play = function() {
 
     //Mapper.gsat.setVisibility(1);
     Mapper.map.setBaseLayer(Mapper.gsat);
@@ -424,7 +430,7 @@ $(document).ready(function() {
     }
 
     interval = setInterval(updateMapAndGraph, updateInterval);
-});
+}
 
 {% endlocalize %}
 </script>
