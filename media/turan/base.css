@@ -1493,3 +1493,16 @@ h2.header {
     margin-left: 0;
     overflow: hidden;
 }
+.graphlabel {
+    position: absolute;
+    color: silver;
+    -webkit-transform-origin: 0% 100%;
+    -webkit-transform: rotate(90deg);
+    -moz-transform-origin: 0% 100%;
+    -moz-transform: rotate(90deg);
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: -15px;;
+    padding: 0;
+}
+

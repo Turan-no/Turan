@@ -79,6 +79,8 @@
     {% for slope in slopes %}
         {% if slope.segment %}
         GraphPlotter.addGraphText({{slope.start}}, "{{ slope.segment.name }}" );
+        markings.push( { color: '#f3f3f3', xaxis: { from: {{slope.start}}, to: {{slope.start}}+{{slope.length}}/1000 } });
+
         {% endif %}
     {% endfor %}
     {% endif %}

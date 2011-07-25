@@ -201,7 +201,7 @@ var GraphPlotter = {
         for (key in this.graphlabels) {
             var o= plot.pointOffset({ x: this.graphlabels[key][0], y: ymax});
             var placeholder = plot.getPlaceholder()
-            placeholder.append('<div style="position:absolute;left:' + (o.left) + 'px;top:' + o.top + 'px;color:#666;font-size:smaller">' + this.graphlabels[key][1] + '</div>');
+            placeholder.append('<div class="graphlabel" style="position:absolute;left:' + (o.left) + 'px;top:' + o.top + 'px;">' + this.graphlabels[key][1] + '</div>');
         }
     },
     init: function(args) {
