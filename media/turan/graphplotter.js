@@ -104,7 +104,6 @@ var GraphPlotter = {
             });
         }
 
-        this.drawGraphText();
 
         if (minIndex != null && maxIndex != null) {
             if (typeof(Mapper) != "undefined")
@@ -149,6 +148,7 @@ var GraphPlotter = {
             $("#averages h4").addClass("hidden");
         }
 
+        this.drawGraphText();
     },
     updateLegend: function(pos) {
         this.updateLegendTimeout = null;
