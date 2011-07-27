@@ -99,7 +99,25 @@
             {% endfor %}
         ];
         var options = { 
-            yaxis: { tickFormatter: axisformatters.duration },
+            tooltip: true,
+            tooltipOpts: {
+                xValText: '{% trans "Exerciser" %}: ',
+                yValText: '{% trans "Duration" %}: ',
+                series: false,
+            },
+            yaxis: { 
+                min: {{t_offset}},
+                tickFormatter: axisformatters.duration 
+            },
+            xaxis: { //Enable tickformatter for tooltip
+                tickFormatter: function (val) {
+                   return val;
+               },
+               tickSize: 1
+            },
+            grid: { 
+                hoverable: true, 
+            },
             legend: {
                 position: "nw",
                 noColumns: 0,
