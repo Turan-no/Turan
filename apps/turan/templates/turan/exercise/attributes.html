@@ -142,7 +142,12 @@
 
         {% if object.avg_pedaling_power %}
             <li class="power">
-                <span class="label">{% trans "Avg Pedaling Power" %}:</span> {{ object.avg_pedaling_power }} {% trans "W" %}
+            <span class="label">{% trans "Avg Pedaling Power" %}:</span> 
+            {{ object.avg_pedaling_power }} {% trans "W" %} 
+            <span class="smaller">
+            {% if userftp  %} {{ object.avg_pedaling_power|divide:userftp }} % FTP {% endif %}
+            {% if userweight %} {{ object.avg_pedaling_power|divide:userweight }} W/kg {% endif %}
+            </span>
         <ul class="extra">
 
         {% if object.avg_power %}
