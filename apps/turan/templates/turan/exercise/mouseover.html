@@ -89,7 +89,7 @@
 
         {% if object.comment %}
         <li class="comment">
-            {{ object.user }} {% trans "writes" %}:
+            {{ object.user.get_profile.name }} {% trans "writes" %}:
             <p>{{ object.comment }}</p>
         </li>
         {% endif %}
