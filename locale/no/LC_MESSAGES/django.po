@@ -896,7 +896,7 @@ msgstr "inviter"
 
 #: apps/turan/templates/friends_app/invitations.html:41
 msgid "Friendship Requests Received"
-msgstr "Venneforespørsel motatt"
+msgstr "Venneforespørsel mottatt"
 
 #: apps/turan/templates/friends_app/invitations.html:55
 #: templates/profiles/profile.html:296
