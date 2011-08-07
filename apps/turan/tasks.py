@@ -304,7 +304,10 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=50, end_off
                 end_distance = proj_distance(se.end_lat, se.end_lon, d['lat'], d['lon'])
                 #Check if distance from start is longer than segment plus some, means we didnt' find stop
                 search_distance = se.distance*1000 + 1000 + end_offset*2
+                search_distance_min = se.distance*1000 - 1000 - end_offset*2
                 found_distance = d['distance'] - started_at_distance
+                if found_distance < search_distance_min:
+                    continue
                 if found_distance > search_distance:
                     print started_at_distance, d['distance'], search_distance
                     print "Didn't find end, resetting state"
