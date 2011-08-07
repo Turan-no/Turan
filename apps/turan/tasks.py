@@ -281,7 +281,7 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=50, end_off
     segments = [] #'[(segment, start, stop)...'
     #old_segmentdetails = exercise.segmentdetail_set.all()
     for se in search_in_segments:
-        previous_start = 0
+        previous_start = -1
         started_at_distance = 0
         found_start = -1
         previous_end = 0
@@ -291,7 +291,7 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=50, end_off
                 start_distance = proj_distance(se.start_lat, se.start_lon, d['lat'], d['lon'])
                 if start_distance < start_offset:
                     print i, start_distance
-                    if previous_start:
+                    if previous_start >= 0:
                         if start_distance > previous_start:
                             found_start = i-1
                             started_at_distance = d['distance']
@@ -309,7 +309,7 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=50, end_off
                     print started_at_distance, d['distance'], search_distance
                     print "Didn't find end, resetting state"
                     # reset start
-                    found_start, found_end, previous_start, started_at_distance, previous_end = -1, 0, 0, 0, 0
+                    found_start, found_end, previous_start, started_at_distance, previous_end = -1, 0, -1, 0, 0
                     continue
                 if end_distance < end_offset: # We are closing in on end
                     print i, end_distance
@@ -344,7 +344,7 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=50, end_off
                         break
                 if -500 < found_distance-se.distance*1000 < 500 and not duplicate:
                     segments.append((se, found_start, found_end, started_at_distance, found_distance))
-                found_start, found_end, previous_start, started_at_distance, previous_end = -1, 0, 0, 0, 0
+                found_start, found_end, previous_start, started_at_distance, previous_end = -1, 0, -1, 0, 0
 
     return segments
 
