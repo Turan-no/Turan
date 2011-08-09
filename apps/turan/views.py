@@ -886,7 +886,8 @@ def exercise_geojson(request, object_id):
     # add last segment
     if previous_zone == zone:
         previous_feature.addLine(previous_lon, previous_lat, d['lon'], d['lat'])
-    features.append(previous_feature)
+    if previous_feature:
+        features.append(previous_feature)
 
 
     gjstr = compress_string(str(GeoJSONFeatureCollection(features)))
@@ -982,7 +983,8 @@ def segment_geojson(request, object_id):
     # add last segment
     if previous_zone >= 0 and previous_zone == zone:
         previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
-    features.append(previous_feature)
+    if previous_feature:
+        features.append(previous_feature)
 
     gjstr = compress_string(str(GeoJSONFeatureCollection(features)))
 
