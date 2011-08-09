@@ -184,7 +184,7 @@
 
         {% if object.temperature %}
         <li class="temperature" >
-            <span class="label">{% trans "Temperature" %}:</span> {{ object.temperature|floatformat }} {% trans "℃" %}
+            <span class="label">℃ {% trans "Temperature" %}:</span> {{ object.temperature|floatformat }} {% trans "℃" %}
             <ul class="extra">
 
             {% if object.min_temperature %}
