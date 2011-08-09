@@ -7,7 +7,7 @@
 <hr class="clearleft" />
 <ul class="segmenticons iconlist">
     {% if object.distance %}
-    <li class="distance"><h4 class="">{% trans "Distance" %}</h4> {{ object.distance|floatformat }} <span class="unit">{% trans "km" %}</span></li>
+    <li class="distance"><h4 class="">{% trans "Distance" %}</h4><h1> {{ object.distance|floatformat }} <span class="unit">{% trans "km" %}</span></h1></li>
     {% endif %}
     {% if object.segment_url %}
     <li class="url">
@@ -16,7 +16,7 @@
     {% endif %}
     </li>
     {% if object.ascent %}
-    <li class="ascent"><h4 class="">{% trans "Ascent" %}</h4> {{ object.ascent }} <span class="unit">{% trans "m" %}</span>
+    <li class="ascent"><h4 class="">{% trans "Ascent" %}</h4><h1>{{ object.ascent }} <span class="unit">{% trans "m" %}</span></h1>
         {% if object.distance %}
             ({{ object.ascent|divide:object.distance }} <span class="unit">{% trans "m/km" %})</span>
         {% endif %}
@@ -37,7 +37,7 @@
     <li class="altitude"><h4 class="">{% trans "Max altitude" %}</h4> {{ object.max_altitude }} <span class="unit">{% trans "m" %}</span></li>
     {% endif %}
     {% if object.grade %}
-    <li class="grade"><h4 class="">{% trans "Grade" %}</h4> {{ object.grade|floatformat }} <span class="unit">%</span></li>
+    <li class="grade"><h4 class="">{% trans "Grade" %}</h4><h1>{{ object.grade|floatformat }} <span class="unit">%</span></h1></li>
     {% endif %}
     {% if object.category %}
     <li class="">
