@@ -10,40 +10,41 @@ p {
 
 /* Headers */
 h1 {
-    font-family: 'PT Sans', Georgia, Times, serif;
+    font-family: Helvetica, Georgia, Times, serif;
 	font-size: 170%;
 	font-weight: bolder;
 	margin: 5px 0 7px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     /*text-shadow:1px 1px 4px #bbb;*/
 }
 h2 {
-    font-family: 'PT Sans', Georgia, Times, serif;
+    font-family: Helvetica, Georgia, Times, serif;
 	font-size: 150%;
 	font-weight: normal;
 	margin: 5px 0 4px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     /*text-shadow:1px 1px 4px #bbb;*/
 }
 h3 {
-    font-family: 'PT Sans', Georgia, Times, serif;
+    font-family: Helvetica, Georgia, Times, serif;
 	font-size: 125%;
 	font-weight: normal;
 	margin: 5px 0 4px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 }
 
 h4 {
-    font-family: 'PT Sans', Georgia, Times, serif;
+    font-family: Helvetica, Georgia, Times, serif;
 	font-size: 120%;
 	font-weight: normal;
 	margin: 5px 0 2px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 }
 label, .baseLbl, .dataLbl  {
 	font-size: 110%;
     color: #4F96CA !important; 
     font-weight: bolder;
+    letter-spacing: 2px;
 }
 /* Tables */
 table.fullsize {
@@ -102,7 +103,7 @@ form input, form textarea {
 	padding: 0.2em;
 	background: #eaeaea;
     /*font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;*/
-    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
 
 }
 form#new_set {
@@ -325,7 +326,7 @@ h1 a
 	border-top: 1px solid #eee;
 	border-left: 1px solid #eee;
 	/*font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;*/
-    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
 	line-height: 130%;
 	text-decoration: none;
 	font-weight: bold;
