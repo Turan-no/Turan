@@ -35,6 +35,8 @@ from fitparser import FITParser
 from polaronlineparser import POLParser
 from suuntoxlsxparser import SuuntoXLSXParser
 
+from utils import exponential_moving_average
+
 import socket
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
@@ -1661,7 +1663,7 @@ def smoothList(list, strippedXs=False, degree=30):
         smoothed[i] = sum(list[i:i+degree])/float(degree)
     return smoothed
 
-def normalized_attr(exercise, attr):
+def normalized_attr(exercise, attr, degree=30):
     exercise_details = exercise.get_details().all()
     count = exercise_details.count()
     if count < 23:
@@ -1671,11 +1673,20 @@ def normalized_attr(exercise, attr):
     if delta_t > 1: # Check smart sample
         return 0
     attrlist = exercise.exercisedetail_set.values_list(attr, flat=1)
-    attrlist = smoothList(attrlist, degree=30)
+    attrlist = smoothList(attrlist, degree=degree)
     fourth = sum([pow(x, 4) for x in attrlist])
     if fourth:
         normalized = int(round(pow(fourth/len(attrlist), (0.25))))
         return normalized
+
+def calculate_xPower(exercise):
+    attrlist = list(exercise.exercisedetail_set.values_list('power', flat=1))
+    attrlist = [attrlist[0]]*(25-1) + attrlist + [attrlist[-1]]*25
+    attrlist = exponential_moving_average(attrlist, 25)
+    fourth = sum([pow(x, 4) for x in attrlist])
+    if fourth:
+        xpower = int(round(pow(fourth/len(attrlist), (0.25))))
+        return xpower
 
 def watt2zone(watt_percentage):
     ''' Given watt_percentage in relation to FTP, return coggan zone
@@ -1724,3 +1735,5 @@ def notify_irc_sentry(sender, instance, created, **kwargs):
         client_socket.connect(("localhost", 5050))
         client_socket.send("#turan Sentry: %s %s%s" % (instance.message, current_site_url(), instance.get_absolute_url()))
         client_socket.close()
+
+
