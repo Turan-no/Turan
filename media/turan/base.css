@@ -747,23 +747,6 @@ ul.iconlist li {
     margin-left: 5px;
     list-style-position: inside;
 }
-ul.segmenticons {
-    width: 100%;
-}
-ul.segmenticons>:first-child {
-    margin-left: 0;
-}
-ul.segmenticons li {
-    float: left;
-    padding: 5px;
-    margin-left: 40px;
-}
-ul.segmenticons li>h3 {
-    font-size: 1em;
-}
-ul.segmenticons li{
-    font-weight: bold;
-}
 ul.iconlist>li>ul.extra>li {
     font-size: 75%;
     float: left;
@@ -1506,4 +1489,28 @@ h2.header {
     margin-top: -15px;;
     padding: 0;
 }
-
+.segmenticons li {
+    float: left;
+    padding: 0;
+    margin: 10px 30px 10px 0;
+    list-style-image: none;
+    font-weight: bold;
+    background-color: #cccccc;
+    border-radius: 15px;
+    box-shadow: inset -7px -7px 20px #aaa;
+}
+.segmenticons li h4 {
+    border-radius: 15px 15px 0 0;
+    margin: 0;
+    padding: 10px;
+    box-shadow: inset 7px 7px 10px #eee;
+    border: 2px solid silver;
+}
+.segmenticons li h4 {
+    background-color: #ddd;
+    border-bottom: 2px solid silver;
+}
+.segmenticons li .value {
+    font-size: 26px;
+    padding: 10px;
+}
