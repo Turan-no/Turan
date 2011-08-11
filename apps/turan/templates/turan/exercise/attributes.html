@@ -145,16 +145,16 @@
             <span class="label">{% trans "Avg Pedaling Power" %}:</span> 
             {{ object.avg_pedaling_power }} {% trans "W" %} 
             <span class="smaller">
-            {% if userftp  %} {{ object.avg_pedaling_power|divide:userftp }} % FTP {% endif %}
-            {% if userweight %} {{ object.avg_pedaling_power|divide:userweight }} W/kg {% endif %}
+            {% if userftp  %} {{ object.avg_pedaling_power|percent:userftp }} FTP {% endif %}
+            {% if object.userweight %} {{ object.avg_pedaling_power|divide:object.userweight }} W/kg {% endif %}
             </span>
         <ul class="extra">
 
-        {% if object.avg_power %}
-            <li class="power">
-            <span class="label">{% trans "Avg Power" %}:</span> {{ object.avg_power }} {% trans "W" %}
-            </li>
-        {% endif %}
+            {% if object.avg_power %}
+                <li class="power">
+                <span class="label">{% trans "Avg Power" %}:</span> {{ object.avg_power }} {% trans "W" %}
+                </li>
+            {% endif %}
 
             {% if object.normalized_power %}
             <li class="power">
@@ -177,6 +177,23 @@
             </li>
             {% endif %}
         </ul>
+        </li>
+        {% endif %}
+        {% if object.xPower %}
+        <li class="power">
+            <span class="label">{% trans "xPower" %}:</span> {{ object.xPower }} {% trans "W" %}
+            <ul class="extra">
+                {% if object.get_ri %}
+                <li class="power">
+                    <span class="label">{% trans "Relative Intensity (RI)" %}:</span> {{ object.get_ri|floatformat }}
+                </li>
+                {% endif %}
+                {% if object.get_bikescore %}
+                <li class="power">
+                    <span class="label">{% trans "BikeScore (tm)" %}:</span> {{ object.get_bikescore }}
+                </li>
+                {% endif %}
+            </ul>
         </li>
         {% endif %}
 

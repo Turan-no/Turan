@@ -35,8 +35,6 @@ from fitparser import FITParser
 from polaronlineparser import POLParser
 from suuntoxlsxparser import SuuntoXLSXParser
 
-from utils import exponential_moving_average, calculate_xPower
-
 import socket
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
@@ -1162,6 +1160,7 @@ def parse_and_calculate(exercise, callback=None):
     if exercise.avg_power:
         #exercise.normalized_power = power_30s_average(exercise.get_details().all())
         exercise.normalized_power = normalized_attr(exercise, 'power')
+        exercise.xPower = calculate_exercise_xPower(exercise)
         exercise.save()
     #exercise.normalized_hr = normalized_attr(exercise, 'hr')
     normalize_altitude(exercise)

@@ -542,6 +542,23 @@ class Exercise(models.Model):
         tss = int(round(float(self.duration.total_seconds() * self.normalized_power * self.get_intensityfactor() ) / ( userftp * 3600 ) * 100))
         return tss
 
+    def get_ri(self):
+        userftp = self.user.get_profile().get_ftp(self.date)
+        # TODO write memoize function attr for self.userftp
+        return float(self.xPower) / userftp
+
+    def get_bikescore(self):
+        ''' Find bikescore for exercise '''
+        userftp = self.user.get_profile().get_ftp(self.date)
+        try:
+            normalized_work = self.xPower * self.duration.seconds
+            bikescore = normalized_work * self.get_ri()
+            bikescore = bikescore / (3600 * userftp)
+            bikescore = bikescore * 100
+            return int(round(bikescore))
+        except ZeroDivisionError:
+            return 0
+
     def get_full_start_time(self):
         ''' Used to get date and time '''
 
