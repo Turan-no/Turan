@@ -1680,8 +1680,42 @@ def normalized_attr(exercise, attr, degree=30):
         return normalized
 
 def calculate_exercise_xPower(exercise):
-    attrlist = list(exercise.exercisedetail_set.values_list('power', flat=1))
-    xpower = calculate_xPower(attrlist)
+    ''' Adapted from  from GoldenCheetah src/BikeScore.cpp '''
+
+    attrlist = exercise.exercisedetail_set.values('time', 'power')
+
+    EPSILON = 0.1
+    NEGLIGIBLE = 0.1
+
+    secsDelta = 1
+    sampsPerWindow = 25.0 / secsDelta
+    attenuation = sampsPerWindow / (sampsPerWindow + secsDelta)
+    sampleWeight = secsDelta / (sampsPerWindow + secsDelta)
+
+    lastSecs = 0.0
+    weighted = 0.0
+
+    total = 0.0
+    count = 0
+
+    initial = attrlist[0]['time']
+
+    for point in attrlist:
+        secs = (point['time'] - initial).seconds
+        while (weighted > NEGLIGIBLE) \
+               and (secs > lastSecs + secsDelta + EPSILON):
+            weighted *= attenuation
+            lastSecs += secsDelta
+            total += pow(weighted, 4.0)
+            count += 1
+        weighted *= attenuation
+        weighted += sampleWeight * point['power']
+        lastSecs = secs
+        total += pow(weighted, 4.0)
+        count += 1
+    xpower = pow(total / count, 0.25)
+    xpower = int(round(xpower))
+    #secs = count * secsDelta
     return xpower
 
 def watt2zone(watt_percentage):
