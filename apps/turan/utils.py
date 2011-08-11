@@ -2,6 +2,13 @@
 
 import numpy
 
+def calculate_xPower(attrlist):
+    attrlist = exponential_moving_average(attrlist, 25)
+    fourth = sum([pow(x, 4) for x in attrlist])
+    if fourth:
+        xpower = int(round(pow(fourth/len(attrlist), (0.25))))
+        return xpower
+
 def exponential_moving_average(s, n):
     """
     returns an n period exponential moving average for

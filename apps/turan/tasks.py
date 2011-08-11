@@ -35,7 +35,7 @@ from fitparser import FITParser
 from polaronlineparser import POLParser
 from suuntoxlsxparser import SuuntoXLSXParser
 
-from utils import exponential_moving_average
+from utils import exponential_moving_average, calculate_xPower
 
 import socket
 
@@ -1679,14 +1679,10 @@ def normalized_attr(exercise, attr, degree=30):
         normalized = int(round(pow(fourth/len(attrlist), (0.25))))
         return normalized
 
-def calculate_xPower(exercise):
+def calculate_exercise_xPower(exercise):
     attrlist = list(exercise.exercisedetail_set.values_list('power', flat=1))
-    attrlist = [attrlist[0]]*(25-1) + attrlist + [attrlist[-1]]*25
-    attrlist = exponential_moving_average(attrlist, 25)
-    fourth = sum([pow(x, 4) for x in attrlist])
-    if fourth:
-        xpower = int(round(pow(fourth/len(attrlist), (0.25))))
-        return xpower
+    xpower = calculate_xPower(attrlist)
+    return xpower
 
 def watt2zone(watt_percentage):
     ''' Given watt_percentage in relation to FTP, return coggan zone
