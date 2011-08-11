@@ -1226,6 +1226,7 @@ div.tooltip ul {
 }
 div.tooltip, .tooltip_help_box, #flotTip {
     z-index: 10;
+    top: -5px;
     position: fixed;
     background-color: #fff;
     -webkit-box-shadow: 1px 1px 8px rgb(40, 40, 40);
