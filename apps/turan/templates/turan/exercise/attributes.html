@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load turan_extras %}
+{% load turanwaka_tags %}
 {% load avatar_tags %}
 <div class="box spacer" style="width: 470px" itemscope itemtype="http://schema.org/SportsEvent">
     <h2>
@@ -190,7 +191,7 @@
                 {% endif %}
                 {% if object.get_bikescore %}
                 <li class="power">
-                    <span class="label">{% trans "BikeScore (tm)" %}:</span> {{ object.get_bikescore }}
+                <span class="label">{% trans "BikeScore" %}{{"BikeScore"|wiki_help}}:</span> {{ object.get_bikescore }}
                 </li>
                 {% endif %}
             </ul>
