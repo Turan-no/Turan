@@ -754,9 +754,9 @@ ul.iconlist>li>ul.extra>li {
     margin-left: 5px;
     color: #999;
 }
-ul.iconlist>li>ul.extra {
+/*ul.iconlist>li>ul.extra {
     overflow: auto;
-}
+}*/
 
 
 /* Calendar */

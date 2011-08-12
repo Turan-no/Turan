@@ -11,23 +11,21 @@
     <li class="url"><span class="label">{% trans "External URL" %}:</span> {{ object.route_url|urlizetrunc:60 }}</li>
     {% endif %}
     {% if object.ascent %}
-    <li class="ascent"><span class="label">{% trans "Ascent" %}:</span> {{ object.ascent }} {% trans "m" %}
-        {% if object.distance %}
-            ({{ object.ascent|divide:object.distance }} {% trans "m/km" %})
-        {% endif %}
-    </li>
+        <li class="ascent"><span class="label">{% trans "Ascent" %}:</span> {{ object.ascent }} {% trans "m" %}
+            {% if object.distance %}
+                ({{ object.ascent|divide:object.distance }} {% trans "m/km" %})
+            {% endif %}
+            <ul class="clearfixl extra">
+                {% if object.descent %}
+                <li class="descent"><span class="label">{% trans "Descent" %}:</span> {{ object.descent }} {% trans "m" %}</li>
+                {% endif %}
+                {% if object.min_altitude %}
+                <li class="altitude"><span class="label">{% trans "Min altitude" %}:</span> {{ object.min_altitude }} {% trans "m" %}</li>
+                {% endif %}
+                {% if object.max_altitude %}
+                <li class="altitude"><span class="label">{% trans "Max altitude" %}:</span> {{ object.max_altitude }} {% trans "m" %}</li>
+                {% endif %}
+            </ul>
+        </li>
     {% endif %}
-    <li>
-    <ul class="extra">
-        {% if object.descent %}
-        <li class="descent"><span class="label">{% trans "Descent" %}:</span> {{ object.descent }} {% trans "m" %}</li>
-        {% endif %}
-        {% if object.min_altitude %}
-        <li class="altitude"><span class="label">{% trans "Min altitude" %}:</span> {{ object.min_altitude }} {% trans "m" %}</li>
-        {% endif %}
-        {% if object.max_altitude %}
-        <li class="altitude"><span class="label">{% trans "Max altitude" %}:</span> {{ object.max_altitude }} {% trans "m" %}</li>
-        {% endif %}
-    </ul>
-    </li>
 </ul>

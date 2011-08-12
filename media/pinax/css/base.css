@@ -2,7 +2,7 @@ body {
     background-color: #1d3853;
     margin: 0;
     color: #333;
-    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     font-size: 10pt;
 }
 a, a:visited {
@@ -347,22 +347,22 @@ div.notice_settings h2 {
  *   http://www.positioniseverything.net/easyclearing.html
  *   http://www.zeldman.com/2006/10/27/ie7fixes1/
  *      comment by michael on 10/28/2006
+ *      http://css-tricks.com/795-all-about-floats/
  */
-.clearfix {
-    min-height: 1%;
-}
-
 .clearfix:after {
     content: ".";
     display: block;
     height: 0;
-    clear: both;
+    clear: left;
     visibility: hidden;
 }
-
-/* hides from ie5-mac \*/
-* html .clearfix { height: 1%; }
-/* end hide from ie5-mac */
+.clearfixl:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: left;
+    visibility: hidden;
+}
 
 
 dl.what_next {
