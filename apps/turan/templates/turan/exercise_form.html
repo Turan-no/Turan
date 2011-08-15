@@ -98,7 +98,7 @@ $(document).ready(function() {
 	        .data( "autocomplete" )._renderItem = function( ul, item ) {
 	            return $( "<li></li>" )
 	                .data( "item.autocomplete", item )
-	                .append( '<a><img src="' +item.icon +'">' + item.name + '<br><span class="smaller">' + item.description + ", " + item.tcount + " {% trans "trips"%}</span></a>" )
+	                .append( '<a>'+ String.fromCharCode(0x3c)+'img src="' +item.icon +'">' + item.name + '<br><span class="smaller">' + item.description + ", " + item.tcount + " {% trans "trips"%}</span></a>" )
 	                .appendTo( ul );
 		};
     }
