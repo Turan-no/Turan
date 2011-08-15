@@ -197,8 +197,8 @@
         </form>
     {% if request.user.username %}
     <a href="?username={{request.user.username}}"><button>{% trans "My results" %}</button></a>
-    <a href="?distinct=user"><button>{% trans "Best individual results" %}</button></a>
     {% endif %}
+    <a href="?distinct=user"><button>{% trans "Best individual results" %}</button></a>
         <script language="javascript" type="text/javascript">
         $('#route_form').bind("submit", function (ev) {
             ev.preventDefault();
