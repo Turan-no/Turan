@@ -281,13 +281,13 @@ def segment_detail(request, object_id):
     series = {}
     t_offset = 0
     for i, slope in enumerate(sorted(slopes, key=lambda x:x.duration)[0:20]):
-        user = slope.exercise.user
-        if not user in series:
-            series[user] = []
+        other_user = slope.exercise.user
+        if not other_user in series:
+            series[other_user] = []
         time = slope.duration
         if not t_offset: # initialize time offsett
             t_offset = time
-        series[user].append((i, time))
+        series[other_user].append((i, time))
     for key, val in series.items():
         series[key]= simplejson.dumps(val)
     if slopes:
