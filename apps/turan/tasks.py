@@ -1682,6 +1682,8 @@ def calculate_exercise_xPower(exercise):
     ''' Adapted from  from GoldenCheetah src/BikeScore.cpp '''
 
     attrlist = exercise.exercisedetail_set.values('time', 'power')
+    if not attrlist:
+        return
 
     EPSILON = 0.1
     NEGLIGIBLE = 0.1
@@ -1708,7 +1710,10 @@ def calculate_exercise_xPower(exercise):
             total += pow(weighted, 4.0)
             count += 1
         weighted *= attenuation
-        weighted += sampleWeight * point['power']
+        try:
+            weighted += sampleWeight * point['power']
+        except TypeError:
+            pass # This happens when point['power'] is none
         lastSecs = secs
         total += pow(weighted, 4.0)
         count += 1
