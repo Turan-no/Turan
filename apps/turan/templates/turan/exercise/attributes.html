@@ -180,7 +180,7 @@
         {% endif %}
         {% if object.xPower %}
         <li class="power">
-            <span class="label">{% trans "xPower" %}:</span> {{ object.xPower }} {% trans "W" %}
+        <span class="label">{% trans "xPower" %}:</span> {{ object.xPower }} {% trans "W" %} {{ "CrossPower"|wiki_help}}
             <ul class="extra clearfixl">
                 {% if object.get_ri %}
                 <li class="power">
