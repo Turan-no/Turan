@@ -42,7 +42,10 @@
             {% anchortrans avg_hr "Avg HR" %}
         </th>
         <th>
-            {% anchortrans normalized_power "NP" %}
+            {% anchortrans kcal "kcal" %}
+        </th>
+        <th>
+            {% anchortrans xPower "xPower" %}
         </th>
         <th style="width: 32px">
         </th>
@@ -96,8 +99,13 @@
         {% endif %}
     </td>
     <td>
-        {% if object.normalized_power %}
-            {{ object.normalized_power}}  {% trans "W" %}
+        {% if object.kcal %}
+            {{ object.kcal}}  {% trans "kcal" %}
+        {% endif %}
+    </td>
+    <td>
+        {% if object.xPower %}
+            {{ object.xPower}}  {% trans "W" %}
         {% endif %}
     </td>
     <td>
