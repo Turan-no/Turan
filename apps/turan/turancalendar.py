@@ -59,6 +59,10 @@ class WorkoutCalendar(HTMLCalendar):
                     body.append(esc(workout.get_name()))
                     body.append('</a>')
                     body.append('<p class="fade">')
+                    bikescore = workout.get_bikescore()
+                    if bikescore:
+                        body.append(esc(bikescore) + '&nbsp;BikeScore')
+                        body.append(', ')
                     if workout.route and workout.route.distance:
                         body.append('%.1f&nbsp;km' %workout.route.distance)
                         body.append(', ')
