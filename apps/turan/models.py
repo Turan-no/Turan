@@ -557,7 +557,9 @@ class Exercise(models.Model):
             bikescore = bikescore * 100
             return int(round(bikescore))
         except ZeroDivisionError:
-            return 0
+            return None
+        except TypeError:
+            return None
 
     def get_full_start_time(self):
         ''' Used to get date and time '''
