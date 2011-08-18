@@ -4,9 +4,22 @@
 {% block content %}
 <div id="result">
     <h1>{% trans "Parsing exercise" %} {{ exercise }}</h1>
+    <p>{% trans "You can leave this page if you want, your upload will be parsed." %}</p>
+    <p>{% trans "If this takes a long time there might be a backlog of parsing going on. You do not have to reupload. The parsing will complete eventually." %}</p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
 <div align="center">
     <img alt="spinner" src="{{MEDIA_URL}}turan/cyclist.gif">
 </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
 <div id="progress"></div>
 </div>
 
