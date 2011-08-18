@@ -200,7 +200,7 @@ $(function () {
                 <li class="heart"><span class="label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}</li>
                 {% endif %}
                 {% if object.ftp %}
-                <li class="power"><span class="label">{% trans "Functional Threshold Power" %}:{{ "FunctionalThresholdPower"|wiki_help }}</span> {{ object.ftp }} {% trans "W" %}</li>
+                <li class="power"><span class="label">{% trans "Functional Threshold Power" %}:{{ "FunctionalThresholdPower"|wiki_help }}</span> {{ object.ftp }} {% trans "W" %} {% if object.weight %}<span class="smaller">{{ object.ftp|divide:object.weight }} W/kg</span>{% endif %}</li>
                 {% endif %}
                 {% if object.info %}
                 <li><span class="label">{% trans "About" %}:</span> {{ object.info }}</li>
