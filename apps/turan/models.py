@@ -2,7 +2,7 @@
 # -*- coding: UTF-8
 from django.db import models
 from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save, post_save, post_delete
 from django.contrib.contenttypes.models import ContentType
 
 from django.utils.translation import ugettext_lazy as _
@@ -1141,6 +1141,14 @@ def new_comment(sender, instance, **kwargs):
             notification.send([exercise.user], "exercise_comment",
                 {"user": instance.user, "exercise": exercise, "comment": instance})
 models.signals.post_save.connect(new_comment, sender=ThreadedComment)
+
+
+def delete_segmentdetail(sender, instance, **kwargs):
+    ''' Save parent, to generate new altitudegradient, etc '''
+    instance.segment.save()
+models.signals.post_delete.connect(delete_segmentdetail, sender=SegmentDetail)
+
+
 
 
 def get_category(grade, length):
