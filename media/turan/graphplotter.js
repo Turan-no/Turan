@@ -97,7 +97,7 @@ var GraphPlotter = {
                     clickable: true,
                     backgroundColor: { colors: ["#fff", "#eee"] },
                     markings: this.markings,
-                    markingsLineWidth: 1,
+                    markingsLineWidth: 2,
                 },
                 crosshair: { mode: "x" },
                 selection: { mode: "x" }
