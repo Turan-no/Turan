@@ -1390,9 +1390,9 @@ def find_max_positions(exercise):
         if exercise.avg_power:
             max = exercise.exercisedetail_set.annotate(max=Max('power')).values('lon','lat','max').order_by('-max')[0]
             exercise.max_power_lat = max['lat']
-            exercise.max_power_lat = max['lat']
+            exercise.max_power_lon = max['lon']
         else:
-            exercise.max_power_lon = 0
+            exercise.max_power_lat = 0
             exercise.max_power_lon = 0
     except IndexError:
         pass
