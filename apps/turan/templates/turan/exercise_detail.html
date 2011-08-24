@@ -83,7 +83,7 @@
 {% endblock%}
 {% block content %}
 {% if object.route.gpx_file %}
-<div class="mapcontainer"><div class="map" id="map"></div>
+<div class="mapcontainer"><div class="map ui-widget-content" id="map"></div>
     <a href="{{MEDIA_URL}}turan/{{ object.route.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
 </div>
 {% endif %}
@@ -296,8 +296,8 @@ $(document).ready(function() {
     }
 });
 
-
-
+// Make map resizable
+$('#map').resizable();
 
 </script>
 {% else %}
