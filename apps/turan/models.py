@@ -21,6 +21,8 @@ import types
 from os.path import join
 import re
 
+import urllib
+import json
 from photos.models import Pool, Image
 
 from celery.task.sets import subtask
@@ -44,6 +46,7 @@ else:
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 AUTOROUTE_DESCRIPTION = "Autoroute"
+GEOURL = "http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&username=turan&style=full&lng=%f&lat=%f"
 
 class ExerciseType(models.Model):
 
@@ -295,8 +298,15 @@ class Route(models.Model):
         lon1, lat1 = self.start_lon, self.start_lat
         start_town = ''
         if lon1 and lat1:
+            try:
+                f = urllib.urlopen(GEOURL % (self.start_lon, self.start_lat,))
+                start = json.load(f)["geonames"][0]
+                if start["countryCode"] != "NO":
+                    return start["toponymName"]
+            except:
+                pass
             s_distance = 99999999
-            for loc in Location.objects.all():
+            for loc in find_close_locations(lon1, lat1):
                 this_distance = proj_distance(lat1, lon1, loc.lat, loc.lon)
                 if this_distance < s_distance:
                     start_town = loc.town
@@ -317,16 +327,18 @@ class Route(models.Model):
             farthest_town = ''
             end_town = ''
 
-            for loc in Location.objects.all():
+            for loc in find_close_locations(lon1, lat1):
                 this_distance = proj_distance(lat1, lon1, loc.lat, loc.lon)
                 if this_distance < s_distance:
                     start_town = loc.town
                     s_distance = this_distance
+            for loc in find_close_locations(farthest_lon, farthest_lat):
                 if farthest_lon and farthest_lat:
                     this_distance = proj_distance(farthest_lat, farthest_lon, loc.lat, loc.lon)
                     if this_distance < f_distance:
                         farthest_town = loc.town
                         f_distance = this_distance
+            for loc in find_close_locations(lon2, lat2):
                 this_distance = proj_distance(lat2, lon2, loc.lat, loc.lon)
                 if this_distance < e_distance:
                     end_town = loc.town
@@ -1118,13 +1130,17 @@ class Location(models.Model):
         verbose_name = _("Location")
         verbose_name_plural = _("Locations")
 
+def find_close_locations(lon, lat):
+    """ Find any locations that are deemed close to lon/lat"""
+    return Location.objects.filter(lon__gt=lon-1).filter(lon__lt=lon+1).filter(lat__gt=lat-1).filter(lat__lt=lat+1)
+
 def find_nearest_town(lon, lat):
     ''' Iterate saved locations and find nearest town '''
 
     distance = 99999999
     town = ''
 
-    for loc in Location.objects.all():
+    for loc in find_close_locations(lon, lat):
         this_distance = proj_distance(lat, lon, loc.lat, loc.lon)
         if this_distance < distance:
             town = loc.town
