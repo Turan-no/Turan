@@ -34,6 +34,7 @@ from pwxparser import PWXParser
 from fitparser import FITParser
 from polaronlineparser import POLParser
 from suuntoxlsxparser import SuuntoXLSXParser
+from django.utils.translation import ugettext_lazy as _
 
 import socket
 
@@ -82,7 +83,7 @@ def find_parser(filename):
     elif filename.endswith('xlsx'): # Suunto Web export
         parser = SuuntoXLSXParser()
     else:
-        raise Exception('Parser not found') # Maybe warn user somehow?
+        raise Exception(_('Unknown file extension'))
     return parser
 
 def filldistance(values):
