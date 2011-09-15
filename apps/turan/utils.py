@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import numpy
+import urllib, urllib2, simplejson
 
 def calculate_xPower(attrlist):
     attrlist = exponential_moving_average(attrlist, 25)
@@ -41,4 +42,24 @@ def exponential_moving_average(s, n):
        ema.append(tmp)
 
     return ema
+
+
+def fetch_geonames_astergdem(lonlats):
+    ''' Given a list of (lon, lat) tuples, fetch the altitudes from aster gdem geonames service '''
+
+    apiurl = 'http://api.geonames.org/astergdem'
+    lats = ''
+    lngs = ''
+    for pos in lonlats:
+        lngs += '%s,' %pos[0]
+        lats += '%s,' %pos[1]
+    attrs = urllib.urlencode({
+        'username': 'turan',
+        'lats': lats,
+        'lngs': lngs,
+    })
+    url = '%s?%s' %(apiurl, attrs)
+    result = urllib2.urlopen(url).read()
+    result = result.split()
+    return result
 
