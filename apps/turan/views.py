@@ -970,6 +970,10 @@ def segment_geojson(request, object_id):
                 zone = 7
 
             if previous_zone == zone:
+                if not d.lon:
+                    d.lon = previous_lon
+                if not d.lat:
+                    d.lat = previous_lat
                 previous_feature.addLine(previous_lon, previous_lat, d.lon, d.lat)
             else:
                 if previous_feature:
