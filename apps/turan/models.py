@@ -562,6 +562,10 @@ class Exercise(models.Model):
     def get_bikescore(self):
         ''' Find bikescore for exercise '''
         userftp = self.user.get_profile().get_ftp(self.date)
+        if not self.duration:
+            return
+        if not self.xPower:
+            return
         try:
             normalized_work = self.xPower * self.duration.seconds
             bikescore = normalized_work * self.get_ri()
