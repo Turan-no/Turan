@@ -17,9 +17,19 @@ None of this should be run as root except apt-get.
 # Alternativly you can clone their git repo and link it into
 # turan-env/lib/python*/site-packages
 
+# You might need export CFLAGS="-fpermissive" for this to work. (aggdraw)
 (pinax-env) ~$ pip install -r turansite/reqs.txt
 
 # Wait for a while until the installation of the entire world is done.
+
+# reqs.txt should be upgraded with correct req.cd :
+# (pinax-env) ~$ pip install -U django-celery
+# (pinax-env) ~$ pip install -U django-social-auth
+# (pinax-env) ~$ pip install -U South
+
+# You need to install numpy and openpyxl unless you have theses
+# (pinax-env) ~$ pip install -U numpy
+# (pinax-env) ~$ pip install -U openpyxl
 
 (pinax-env) ~$ cd turansite
 
@@ -28,11 +38,46 @@ None of this should be run as root except apt-get.
   Add database settings ex:
    o DATABASE_ENGINE = 'sqlite3'
 
+  Change directory of storage ex:
+   o GPX_STORAGE = '/home/localuser/dev/turansite/site_media/turan'
+
 (pinax-env) ~/turansite$ ./manage.py syncdb
+(pinax-env) ~/turansite$ ./manage.py migrate
+(pinax-env) ~/turansite$ mkdir site_media
 (pinax-env) ~/turansite$ ./manage.py build_media -l --all
+
+# User creation crashes on sqlite, probably because of INTEGER type, and quotes.
+# Bypass this by creating the user manually:
+# INSERT INTO "auth_user" ("username", "first_name", "last_name", "email", "password", "is_staff", "is_active", "is_superuser", "last_login", "date_joined") VALUES ('admin', '', '', 'admin@turan', '', 0, 1, 0, '2011-01-01 00:01:01.000000', '2011-01-01 00:01:01.000000');
+# INSERT INTO "account_account" ("user_id", "timezone", "language") VALUES (1, 'Europe/Oslo', 'nn');
+
+
+# Creating the schema on mysql crashes. Something about the decimal data-type
+
+(pinax-env) ~/turansite$ ./manage.py shell
+>>> from django.contrib.sites.models import Site
+>>> Site.objects.create(pk=1, domain='mdev.5buckchuck.com', name='5buckchuck.com')
+
+# Before you make the server be sure that both your database engine, and 
+# messageque is running.
+
+# You also need gpsbabel.
+
+# You also need to set up the default database, but that is magic-sauce!
+INSERT INTO turan_exercisetype VALUES (null, '"Exercise"', '', 1, 1);
+
+# Be sure to add the celery user to rabbitmq, if you are using that
+# $ rabbitmqctl add_user turan tur4n
+# $ rabbitmqctl add_vhost turan
+# $ rabbitmqctl set_permissions -p turan turan ".*" ".*" ".*"
+
 (pinax-env) ~/turansite$ ./manage.py runserver <ip>:8082
 
 SUCCESS! Now go to http://<ip>:8082/
+
+# Start celerydaemon to get the whole site working
+
+(pinax-env) ~/turansite$ ./manage.py celeryd
 
 
 Remember to activate the virualenv by sourcing ./pinax-env/bin/activate 

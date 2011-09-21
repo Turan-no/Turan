@@ -129,8 +129,9 @@ class FullEquipmentForm(forms.ModelForm):
 
 def clean_import_url(url):
     if not (url.find("http://sportypal.com/Workouts/Details/") == 0 or
-            url.find("http://connect.garmin.com/activity/") == 0):
-        raise forms.ValidationError(_("You can only import from Sportypal and Garmin Connect."))
+            url.find("http://connect.garmin.com/activity/") == 0 or
+            url.find("http://app.strava.com/rides/") == 0):
+        raise forms.ValidationError(_("You can only import from Strava, Sportypal and Garmin Connect."))
     return url
 
 class ImportForm(forms.Form):

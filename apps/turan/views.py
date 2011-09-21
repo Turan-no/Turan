@@ -1870,6 +1870,31 @@ def import_data(request):
                 else:
                     raise Http404
 
+            elif url.find("http://app.strava.com/rides/") == 0:
+                id = url.split("/")[-1].rstrip("/")
+                url = "http://app.strava.com/api/v1/streams/" + id + "?streams[]=time,heartrate,speed,latlng,time,distance,altitude,watts,cadence"
+                meta_url = "http://app.strava.com/api/v1/rides/" + id
+                if id > 0:
+                    strava = {}
+                    stream_content = ContentFile(urllib2.urlopen(url).read())
+                    strava["stream"] = simplejson.load(stream_content)
+                    meta_content = ContentFile(urllib2.urlopen(meta_url).read())
+                    strava["meta"] = simplejson.load(meta_content)
+                    route = Route()
+                    route.name = strava["meta"]["ride"]["name"]
+                    route.single_serving = True
+                    route.save()
+                    exercise = Exercise()
+                    exercise.route = route
+                    exercise.user = request.user
+                    exercise.comment = strava["meta"]["ride"]["description"]
+                    exercise_filename = 'sensor/strava_' + id + '.strava_json'
+                    exercise.sensor_file.save(exercise_filename, ContentFile(simplejson.dumps(strava)))
+                    # exercise.sensor_file = exercise_filename
+                    exercise.save()
+                    exercise.parse()
+                    return render_to_response("turan/import_stage2.html", {'exercise': exercise}, context_instance=RequestContext(request))
+
             # Supports both route and exercise import
             elif url.find("http://connect.garmin.com/activity/") == 0:
                 cj = cookielib.LWPCookieJar()

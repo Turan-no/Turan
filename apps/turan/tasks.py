@@ -32,6 +32,7 @@ from tcxparser import TCXParser
 from csvparser import CSVParser
 from pwxparser import PWXParser
 from fitparser import FITParser
+from stravastreamparser import StravaStreamParser
 from polaronlineparser import POLParser
 from suuntoxlsxparser import SuuntoXLSXParser
 from django.utils.translation import ugettext_lazy as _
@@ -82,6 +83,8 @@ def find_parser(filename):
         parser = POLParser()
     elif filename.endswith('xlsx'): # Suunto Web export
         parser = SuuntoXLSXParser()
+    elif filename.endswith('strava_json'): # Strava Stream
+        parser = StravaStreamParser()
     else:
         raise Exception(_('Unknown file extension'))
     return parser
@@ -1194,7 +1197,7 @@ def parse_sensordata(exercise):
 
 
     if exercise.get_details().count(): # If the exercise already has details, delete them and reparse
-        # Django is super shitty when it comes to deleation. If you want to delete 25k objects, it uses 500 queries to do so.
+        # Django is super shitty when it comes to deletion. If you want to delete 25k objects, it uses 500 queries to do so.
         # So. We do some RAWness.
         cursor = connection.cursor()
 
@@ -1220,7 +1223,6 @@ def parse_sensordata(exercise):
     exercise.sensor_file.file.seek(0)
     parser = find_parser(exercise.sensor_file.name)
     parser.parse_uploaded_file(exercise.sensor_file.file)
-
 
     sanitize_entries(parser) # Sanity will prevail
     for val in parser.entries:

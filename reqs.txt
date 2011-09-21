@@ -98,3 +98,4 @@ django-social-auth
 django-piston
 django-groups
 django-groupcache
+#openpyxl
