@@ -1887,7 +1887,9 @@ def import_data(request):
                     exercise = Exercise()
                     exercise.route = route
                     exercise.user = request.user
-                    exercise.comment = strava["meta"]["ride"]["description"]
+                    comment = strava["meta"]["ride"]["description"]
+                    if comment: 
+                        exercise.comment = comment
                     exercise_filename = 'sensor/strava_' + id + '.strava_json'
                     exercise.sensor_file.save(exercise_filename, ContentFile(simplejson.dumps(strava)))
                     # exercise.sensor_file = exercise_filename
