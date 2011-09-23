@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 import datetime
 
+''' This module will parse a HRMfile into a Turan datastructure
+
+    http://www.polar.fi/files/Polar_HRM_file%20format.pdf
+'''
+
+
 class HRMEntry(object):
 
     def __init__(self, time, hr, speed, cadence, altitude, power, distance):
