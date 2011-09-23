@@ -74,50 +74,23 @@ class HRMParser(object):
                 line = line.strip()
                 power = 0
                 if line:
-                    if self.smode == '111111100':
+                    values = {}
+                    if self.smodes:
                         try:
-                            hr, speed, cadence, altitude, power, wat = line.split('\t')
+                            data = line.split('\t')
+                            for i in range(len(data)):
+                                values[self.smodes[i]] = data[i]
+                            # print values
                         except ValueError:
-                            #garbled data
                             continue
-                    elif self.smode == '111000100':
-                        hr, speed, cadence, altitude = line.split('\t')
-                    elif self.smode == '110000100':
-                        hr, speed, cadence = line.split('\t')
-                        altitude = 0
-                    elif self.smode == '001000100':
-                        hr, altitude = line.split('\t')
-                        speed, cadence = 0, 0
-                    elif self.smode == '011000100':
-                        hr, cadence, altitude = line.split('\t')
-                        speed = 0
-                    elif self.smode == '101000100':
-                        hr, speed, altitude = line.split('\t')
-                        cadence = 0
-                    elif self.smode == '010000100':
-                        hr, cadence = line.split('\t')
-                        speed, altitude = 0, 0
-                    elif self.smode == '000000000':
-                        hr = line.strip()
-                        speed, altitude, cadence = 0, 0, 0
-                    elif self.smode == '000000100':
-                        hr = line.strip()
-                        speed, altitude, cadence = 0, 0, 0
-                    elif self.smode == '100000100':
-                        hr, speed = line.split('\t')
-                        altitude, cadence = 0, 0
-                    elif self.smode == '110111100':
-                        hr, speed, cadence, power, wat = line.split('\t')
-                        altitude = 0
-                    elif self.smode == '11111110': # Tacx
-                        hr, speed, cadence, altitude, power = line.split('\t')
-                    elif self.smode == '10000010':
-                        power, hr = line.split('\t')
-                    else:
-                        assert False, "Unknown smode (combination of sensors), please mail file to turan@turan.no"
-                    #has_speed, has_cadence, has_altitude, has_power, power_l_balance, power_ped, hrcc, imperial, air_pressure = list(self.smode)
+                        hr = values['hr']
+                        speed = values['speed']
+                        cadence = values['cadence']
+                        altitude = values['altitude']
+                        power = values['power']
 
                     hr = int(hr)
+                    # TODO! Support for mph!
                     speed = float(speed)/10
                     cadence = int(cadence)
                     altitude = int(altitude)
@@ -210,8 +183,40 @@ class HRMParser(object):
                 hrstarted = True
             elif line.startswith('[Note]'):
                 notestarted = True
+            elif line.startswith('Version'):
+                self.file_version = line[8:].strip()
             elif line.startswith('SMode'):
+                self.smodes = []
                 self.smode = line[6:].strip()
+                self.smodes.append('hr')
+                if (self.file_version == '106') or (self.file_version == '107'):
+                    if self.smode[0] == '1':
+                        self.smodes.append('speed')
+                    if self.smode[1] == '1':
+                        self.smodes.append('cadence')
+                    if self.smode[2] == '1':
+                        self.smodes.append('altitude')
+                    if self.smode[3] == '1':
+                        self.smodes.append('power')
+                    if self.smode[4] == '1':
+                        self.smodes.append('powerbal')
+                    if self.smode[7] == '1':
+                        self.kph_mph = 'mph'
+                    else:
+                        self.kph_mph = 'kph'
+                else:
+                    if self.smode[0] == '0':
+                        self.smodes.append('cadence')
+                    if self.smode[0] == '1':
+                        self.smodes.append('altitude')
+                    if self.smode[2] == '1':
+                        self.kph_mph = 'mph'
+                    else:
+                        self.kph_mph = 'kph'
+                if self.file_version == '107':
+                    if self.smode[8] == '1':
+                        self.smodes.append('airpress')
+                        
             elif line.startswith('Length'):
                 hours, minutes, seconds = line.strip().split('=')[1].split(':')
                 #hours = line[7:9]
@@ -248,7 +253,7 @@ if __name__ == '__main__':
     print "temp"
     print h.temperature
 
-    print h.avg_hr, h.avg_speed, h.avg_cadence, h.avg_pedaling_cad
+    print h.avg_hr, h.avg_speed, h.avg_cadence
     print h.max_hr, h.max_speed, h.max_cadence
     print "Distance:", h.distance_sum
     if h.laps:
