@@ -995,13 +995,14 @@ def sanitize_entries(parser):
          The cause of this can be tcx-files that have laps cut out'''
         distance_offset = 0
 
-        if hasattr(entries[0], 'distance'):
-            if entries[0].distance > 100: # We don't care about small values
-                distance_offset = entries[0].distance
-                print "Parser: Offset distance: %s" %distance_offset
-                for e in entries:
-                    if e.distance != None:
-                        e.distance -= distance_offset
+        if entries:
+            if hasattr(entries[0], 'distance'):
+                if entries[0].distance > 100: # We don't care about small values
+                    distance_offset = entries[0].distance
+                    print "Parser: Offset distance: %s" %distance_offset
+                    for e in entries:
+                        if e.distance != None:
+                            e.distance -= distance_offset
         return entries
 
     def distance_inc_fixer(entries):
