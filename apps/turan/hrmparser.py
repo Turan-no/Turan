@@ -84,16 +84,20 @@ class HRMParser(object):
                     if self.smodes:
                         try:
                             data = line.split('\t')
-                            for i in range(len(data)):
-                                values[self.smodes[i]] = data[i]
+                            for index, value in enumerate(data):
+                                values[self.smodes[index]] = value
                             # print values
                         except ValueError:
                             continue
                         hr = values['hr']
-                        speed = values['speed']
-                        cadence = values['cadence']
-                        altitude = values['altitude']
-                        power = values['power']
+                        if 'speed' in values:
+                            speed = values['speed']
+                        if 'cadence' in values:
+                            cadence = values['cadence']
+                        if 'altitude' in values:
+                            altitude = values['altitude']
+                        if 'power' in values:
+                            power = values['power']
 
                     hr = int(hr)
                     # TODO! Support for mph!
