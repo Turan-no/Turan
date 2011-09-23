@@ -196,7 +196,11 @@ class HRMParser(object):
                 year, date, month = int(line[5:9]), int(line[9:11]), int(line[11:13])
                 self.date = datetime.date(year, date, month)
             elif line.startswith('StartTime'):
-                hour, minute, second = int(line[10:12]), int(line[13:15]), int(line[16:18])
+                #hour, minute, second = int(line[10:12]), int(line[13:15]), int(line[16:18])
+                parts = line.split(':')
+                hour = int(parts[0].split('=')[1])
+                minute = int(parts[1])
+                second = int(parts[2].split('.')[0]) # fixme millisecond
                 self.start_time = datetime.time(hour, minute, second)
                 self.time = datetime.datetime(self.date.year, self.date.month, self.date.day, \
                         self.start_time.hour, self.start_time.minute, self.start_time.second)
