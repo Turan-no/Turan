@@ -21,6 +21,7 @@ class ExerciseHandler(BaseHandler):
 class RouteHandler(BaseHandler):
     allowed_methods = ('GET',)
     model = Route
+    fields = ('id', 'name', 'description', ('exercise_set', ('id','duration', 'date',('user', ('username',))),),)
 
     def read(self, request, object_id=None):
         """
