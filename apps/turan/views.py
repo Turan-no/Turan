@@ -1497,7 +1497,7 @@ def exercise(request, object_id):
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
     smooth = 0
-    if object.sensor_file: # Instead of running details.exists, 
+    if object.sensor_file or object.live_state == 'L': # Instead of running details.exists, 
         #we make the assumption that if exercise has file, it has details
         #if filldistance(details): # Only do this if we actually have distance
             # xaxis by distance if we have distance in details unless user requested time !
