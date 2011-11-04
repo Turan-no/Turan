@@ -600,7 +600,10 @@ def generate_tshirt(request):
     data.seek(0)
     return HttpResponse(data.read(), mimetype='image/png',status=200)
 
+@cache_page(86400*7)
 def colorize_and_scale(request):
+    ''' Can scale and colorize any image.
+    Used to generate player icons in player and map '''
     import Image
     from cStringIO import StringIO
 
