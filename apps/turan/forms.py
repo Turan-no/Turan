@@ -87,7 +87,7 @@ class FullRouteForm(forms.ModelForm):
 class FullExerciseForm(forms.ModelForm):
     class Meta:
         model = Exercise
-        exclude = ('user', 'content_type', 'object_id')
+        exclude = ('user', 'content_type', 'object_id', 'avg_cadence', 'avg_pedaling_cad', 'avg_pedaling_power', 'normalized_power', 'xPower', 'normalized_hr', 'max_speed', 'max_cadence', 'max_power', 'max_hr', 'min_temperature', 'max_temperature', 'max_speed_lat', 'max_speed_lon', 'max_cadence_lat', 'max_cadence_lon', 'max_hr_lat', 'max_hr_lon', 'max_altitude_lat', 'max_altitude_lon', 'max_power_lat', 'max_power_lon')
         widgets = {
                 'exercise_type': ImageSelect(),
                 'exercise_permission': forms.RadioSelect(renderer=HorizRadioRenderer)
