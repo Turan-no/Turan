@@ -1367,15 +1367,6 @@ a.profilehoverpoint>img {
     margin: 0px;
     padding: 0px;
 }
-#exercisers {
-    padding: 0 0 10px 0;
-    width: 992px;
-    margin: 0 auto;
-}
-#exercisers img {
-    padding-right: 2px;
-}
-
 #login_popdown {
     background: white;
     opacity: 0.95;
