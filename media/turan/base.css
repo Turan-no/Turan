@@ -322,7 +322,7 @@ h1 a
  * from http://particletree.com/features/rediscovering-the-button-element/ */
 .buttons a, .buttons button {
 	background-color: #f5f5f5;
-	border: 1px solid #dedede;
+    border: 1px solid silver;
 	border-top: 1px solid #eee;
 	border-left: 1px solid #eee;
 	/*font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;*/
@@ -358,9 +358,8 @@ h1 a
 }
 /* Standard buttons */
 .buttons a:hover {
-	background-color: #dff4ff;
-	border: 1px solid #c2e1ef;
-	color: #336699;
+	border: 1px solid black;
+	color: black;
 }
 .buttons a:active {
 	background-color: #6299c5;
