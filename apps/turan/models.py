@@ -430,7 +430,7 @@ class Exercise(models.Model):
     sensor_file = models.FileField(_('Exercise file'), upload_to='sensor', blank=True, storage=gpxstore, help_text=_('File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, .gmd, .csv, .xml)'))
 
     exercise_permission = models.CharField(_('Exercise permission'), max_length=1, choices=permission_choices, default='A', )
-    live_state = models.CharField(max_length=1, choices=live_states, default='F', blank=True, null=True)
+    live_state = models.CharField(max_length=1, choices=live_states, default='F', blank=True, null=True, help_text=_(u'Interal field used to track live status for upcoming live tracker feature, always leave at setting "Finished"'))
     equipment = models.ForeignKey(Equipment, help_text=_('Select the equipment used for this exercise, for statistics and tracking'), verbose_name=_('Equipment'), null=True, blank=True)
 
     object_id = models.IntegerField(null=True)
