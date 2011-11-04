@@ -105,30 +105,6 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() { 
-    /*$("#id_exercise_type option").each (
-        function() {
-            var elem = $(this)[0];
-            elem.setAttribute( 'title', '/site_media/turan/exerciselogos/' + elem.innerHTML.toLowerCase() + '.png' );
-        });*/
-        exercises_by_count = {{ user.get_profile.get_exercise_types_by_count_json }};
-    $("#id_exercise_type").val(exercises_by_count[0]["exercise_type__id"])
-    $("#id_exercise_type").msDropDown();
-
-    for (var i = 2; i >= 0; i--) {
-	var option = $("#id_exercise_type option[value=" + exercises_by_count[i]["exercise_type__id"] + "]");
-	var index = option.index();
-	var imgurl = option.attr("title");
-	var title = option.text();
-	var img = $("<img>");
-	img.attr("id", "id_exercise_type_img_"+ i);
-	img.attr("title", title);
-	img.attr("src", imgurl);
-	img.click((function(index) {
-	    return function() {
-		$('#id_exercise_type').data("dd").set("selectedIndex", index);
-	    }})(index));
-	$("label[for=id_exercise_type]").after(img);
-    }
     $('#form').bind('submit', function(evt) {
         // If no object id set, just send the text in the field to django
         // And let it create a new route
@@ -137,7 +113,29 @@ $(document).ready(function() {
                 $( "#id_route" ).val( $('#route').val());
             }
         }
-})
+    })
+
+    exercises_by_count = {{ user.get_profile.get_exercise_types_by_count_json }};
+    {% if not object %}
+        $("#id_exercise_type").val(exercises_by_count[0]["exercise_type__id"])
+    {% endif %}
+    $("#id_exercise_type").msDropDown();
+
+    for (var i = 3; i >= 0; i--) {
+        var option = $("#id_exercise_type option[value=" + exercises_by_count[i]["exercise_type__id"] + "]");
+        var index = option.index();
+        var imgurl = option.attr("title");
+        var title = option.text();
+        var img = $("<img>");
+        img.attr("id", "id_exercise_type_img_"+ i);
+        img.attr("title", title);
+        img.attr("src", imgurl);
+        img.click((function(index) {
+            return function() {
+            $('#id_exercise_type').data("dd").set("selectedIndex", index);
+            }})(index));
+        $("label[for=id_exercise_type]").after(img);
+    }
 }); 
 </script> 
 {% endblock content %}
