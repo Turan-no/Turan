@@ -11,6 +11,12 @@
     bottom: -1px; /* must be same thickness as tab border */
 }
 
+ul.tabs a.red {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dd4b39', endColorstr='#520014'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#dd4b39), to(#520014)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #dd4b39,  #520014); /* for firefox 3.6+ */
+    background: -o-linear-gradient(top,  #dd4b39,  #520014); 
+}
 ul.tabs a, ul.tabs a:visited {
     color: #eee; /* unselected tab text colour */
     text-decoration: none;

@@ -356,6 +356,25 @@ h1 a
 	width: 16px;
 	height: 16px;
 }
+.redbutton {
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#dd4b39),to(#520014));
+    color: white;
+    border: 1 px solid transparent;
+    min-width: 72px;
+    padding-bottom: 7px;
+    padding-top: 7px;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    outline: none;
+    font: 85%;
+    font-weight: bold;
+    -webkit-transition: border-color .218s;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+}
 /* Standard buttons */
 .buttons a:hover {
 	border: 1px solid black;

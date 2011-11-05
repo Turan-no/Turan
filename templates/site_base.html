@@ -117,12 +117,6 @@
 {% endblock %}
 {% endcomment%}
 {% block locale_switcher %}
-{% if user.is_authenticated %}
-            <a href="{% url exercise_create %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/add.png" alt="{% trans "Add an exercise" %}" />
-                {% trans "Add an exercise" %}
-            </a>
-{% endif %}
 {% with "/search" as search_url %}
 {% include "turan/search_head.html" %}
 {% endwith %}
@@ -140,6 +134,13 @@
 {% endblock %}
 {% block right_tabs %}
         <ul class="tabs">{% spaceless %}
+{% if user.is_authenticated %}
+            <li id="tab_exercise_create">
+            <a class="red" href="{% url exercise_create %}">
+                {% trans "Add an exercise" %}
+            </a>
+            </li>
+{% endif %}
             <li id="tab_exercises"><a href="{% url events %}">{% trans "Exercises" %}</a></li>
             <li id="tab_routes"><a href="{% url routes %}">{% trans "Routes" %}</a></li>
             <li id="tab_segments"><a href="{% url segments %}">{% trans "Segments" %}</a></li>
