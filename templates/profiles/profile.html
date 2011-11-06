@@ -165,13 +165,13 @@ $(function () {
     </div>
     
     <div class="left_panel">
-        {% if other_user_display %}<h1><span class="fn">{{ other_user_display }}</span></h1>{% endif %}
         {% if other_user.get_profile.motto %}
             <span class="motto">«{{ other_user.get_profile.motto }}»</span>
         {% endif %}
     <div class="vcard">
 
         <div class="box spacer">
+        {% if other_user_display %}<h2><span class="fn">{{ other_user_display }}</span></h2>{% endif %}
         <div id="profile_avatar">
             <div><img src="{% avatar_url other_user 120 %}" alt="Photo of {{ other_user_display }}" class="photo" /></div>
             {% if is_me %}
@@ -184,6 +184,9 @@ $(function () {
             {% if other_user.get_profile.website %}<p><b>{% trans "Website" %}</b>: <a class="url" href="{{ other_user.get_profile.website }}">{{ other_user.get_profile.website }}</a></p>{% endif %}
             {% with other_user.get_profile as object %}
             <ul class="iconlist">
+                {% if object.gender %}
+                    <li class="gender"><span class="label">{% trans "Gender" %}:</span> {{ object.gender }}</li>
+                {% endif %}
                 {% if object.weight %}
                     <li class="weight"><span class="label">{% trans "Weight" %}:</span> {{ object.weight }} kg</li>
                 {% endif %}
