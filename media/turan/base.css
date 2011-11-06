@@ -797,9 +797,9 @@ table.month {
 table.month td,
 table.month th {
 	vertical-align: top;
-	border: 1px solid #999;
+	border: 1px dashed silver;
     padding: 2px;
-    width: 120px;
+    width: 120px;;
 }
 table.month th.month {
     background-color: white;
@@ -810,6 +810,7 @@ table.month th.month {
 table.month th {
     padding: 4px;
     background-color: #4F96CA;
+	border: 1px solid black;
     color: white;
 }
 

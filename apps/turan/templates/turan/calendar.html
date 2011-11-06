@@ -29,7 +29,7 @@
     {% trans "Calendar" %} 
     {{ year }} - {{ month }}
 </h1>
-<ul class="buttons floatright">
+<ul class="buttons">
     <li>
     <a href="{% url calendar previous_month.year previous_month.month %}{% if username %}/?username={{username}}{% endif %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_previous.png" alt="{% trans "Previous month"%}" />
@@ -41,12 +41,17 @@
     </a>
     </li>
 </ul>
+<div class="floatright">
+    <h3>{% trans "Time in HR zones by week"%}</h3>
+    <div id="weeks" style="width:300px;height:800px"></div>
+</div>
+<div id="calendar" style="width:700px">
 {{ calendar }}
-{% if hz_by_week %}
-<h3>{% trans "Time in HR zones by week"%}</h3>
-<div id="weeks" style="width:900px;height:700px"></div>
+</div>
 <script id="source" language="javascript" type="text/javascript">
 $(function () {
+$("#weeks").css("height", $("#calendar").css("height"));
+
 function weekxf(val, axis) {
     return "{% trans "Week" %} " + parseInt((val).toFixed(axis.tickDecimals));
 }
@@ -56,16 +61,17 @@ function houryf(val, axis) {
     var stack = true, bars = true, lines = false, steps = false;
     var z_by_week = [
 {% for week, zonevals in hz_by_week.items %}
-{% for zoneval in zonevals%}
-{
-    label: "{% trans "zone" %} {{forloop.counter0}}",
-    data: [[{{week}}-0.5,{{zoneval}}]],
-    color: colors[{{forloop.counter0}}]
-}
-{% if not forloop.last%},{%endif%}
+    {% for zoneval in zonevals%}
+        {
+            label: "{% trans "zone" %} {{forloop.counter0}}",
+            data: [[{{week}},{{zoneval}}]],
+            color: colors[{{forloop.counter0}}]
+        }
+        {% if not forloop.last%},{%endif%}
+    {% endfor %}
+    {% if not forloop.last%},{%endif%}
 {% endfor %}
-{% if not forloop.last%},{%endif%}
-{% endfor %}
+{% comment %}
 {% if pz_by_week %},
 {% for week, zonevals in pz_by_week.items %}
 {% for zoneval in zonevals%}
@@ -79,6 +85,7 @@ function houryf(val, axis) {
 {% if not forloop.last%},{%endif%}
 {% endfor %}
 {%endif %}
+{% endcomment %}
 ];
 
 function duration(time) {
@@ -122,11 +129,13 @@ function duration(time) {
         series: {
             stack: stack,
             lines: { show: lines, fill: true, steps: steps }, 
-            bars: { show: bars, barWidth: 0.5, align: 'center' },
+            bars: { show: bars, barWidth: 1, align: 'center' },
             shadowSize: 1
         },
         grid: { 
             show: true,
+            borderColor: 'white',
+            tickColor: 'white',
             clickable: true,
             hoverable: true
         },
@@ -175,6 +184,5 @@ function duration(time) {
 */
 });
 </script>
-{% endif %}
 {% endblock content %}
 
