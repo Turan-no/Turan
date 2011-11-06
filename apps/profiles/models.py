@@ -10,6 +10,10 @@ from django.utils.safestring import mark_safe
 from timezones.fields import TimeZoneField
 
 class Profile(models.Model):
+    gender_choices = (
+                  ('M', _('Male')),
+                  ('F', _('Female')),
+    )
     
     user = models.ForeignKey(User, unique=True, verbose_name=_('user'))
     name = models.CharField(_('name'), help_text=_('Optional real name'), max_length=50, null=True, blank=True)
@@ -23,6 +27,8 @@ class Profile(models.Model):
     ftp = models.IntegerField(blank=True,null=True, help_text=_('Functional Threshold Power'))
     max_hr = models.IntegerField(_('Max HR'), blank=True, default=0, help_text=_('beats per minute'))
     motto = models.CharField(_('Motto'), max_length=160)
+    gender = models.CharField(_(u'Gender'), max_length=1,choices=gender_choices,blank=True,null=True)
+
 
     #image = models.ImageField(upload_to='turan', blank=True)
     #cycle = models.CharField(max_length=99, blank=True)
