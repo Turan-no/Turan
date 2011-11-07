@@ -52,6 +52,7 @@ urlpatterns = patterns('',
     url(r'^json/geo/(?P<object_id>\d+)', exercise_geojson, name='exercise_geojson'),
     url(r'^json/segment/geo/(?P<object_id>\d+)', segment_geojson, name='segment_geojson'),
     url(r'^json/power/(?P<object_id>\d+)', powerjson, name='powerjson'),
+    url(r'^json/gradient/(?P<object_id>\d+)', json_altitude_gradient, name='json_altitude_gradient'),
     url(r'^json/wiki/(?P<slug>\w+)/?$', wikijson, name='wikijson'),
     url(r'^json/wiki/(?P<slug>\w+)/(?P<rev_id>\d+)/?', wikijson, name='wikijson'),
 

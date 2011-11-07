@@ -1519,8 +1519,6 @@ def exercise(request, object_id):
         slopes += object.segmentdetail_set.all()
         slopes = sorted(slopes, key=lambda x: x.start)
 
-        # TODO inclinesums maybe needs a freqs cache thingy like speed/cadence
-        gradients = simplejson.dumps(list(object.exercisealtitudegradient_set.values_list('xaxis', 'gradient')))
 
     userweight = profile.get_weight(object.date)
     userftp = profile.get_ftp(object.date)
@@ -2444,4 +2442,17 @@ def photo_add(request, content_type, object_id):
     return redirect(object.get_absolute_url())
 
 
+def json_altitude_gradient(request, object_id):
+    ''' Fetch common altitude gradient from db, and serve to javascript
+    clients that renders the graph. Used in exercise detail incline sum tab. '''
 
+    # TODO this function can be heavily cached
+    # TODO should be class based view
+    object = get_object_or_404(Exercise, pk=object_id)
+    gradients = simplejson.dumps(list(object.exercisealtitudegradient_set.values_list('xaxis', 'gradient')))
+    #js = compress_string(gradients)
+    js = gradients
+    response = HttpResponse(js, mimetype='text/javascript')
+    #response['Content-Encoding'] = 'gzip'
+    response['Content-Length'] = len(js)
+    return response
