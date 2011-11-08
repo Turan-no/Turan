@@ -17,99 +17,115 @@
 <script type="text/javascript">
 {% localize off %}
 $(document).ready(function () {
-    $('#tabs-select-7').bind('click', function() {
-        $.getJSON("{% url json_altitude_gradient object.id %}", function (gradients) {
+    var plotgrad = function (gradients) {
 
-            var gradplotoptions = {
-                tooltip: true,
-                tooltipOpts: {
-                    xValText: '{% trans "Distance" %}: ',
-                    yValText: '{% trans "Gradient" %}: ',
-                    series: false,
-                },
-                selection: { mode: "x" },
-                grid: { 
-                    hoverable: true, 
-                    clickable: true
-               },
-               legend: { position: 'nw' },
-               yaxis: { tickFormatter: axisformatters['percent'] },
-               xaxis: { tickFormatter: axisformatters['distance'] }
+        var gradplotoptions = {
+            tooltip: true,
+            tooltipOpts: {
+                xValText: '{% trans "Distance" %}: ',
+                yValText: '{% trans "Gradient" %}: ',
+                series: false,
+            },
+            selection: { mode: "x" },
+            grid: { 
+                hoverable: true, 
+                clickable: true
+           },
+           legend: { position: 'nw' },
+           yaxis: { tickFormatter: axisformatters['percent'] },
+           xaxis: { tickFormatter: axisformatters['distance'] }
 
-            };
-            var altconstraints = [
-                {
-                    below: 3,
-                    color: colors[0]
-                },
-                {
-                    below: 6,
-                    color: colors[1]
-                },
-                {
-                    below: 8,
-                    color: colors[2]
-                },
-                {
-                    below: 10,
-                    color: colors[3]
-                },
-                {
-                    below: 15,
-                    color: colors[4]
-                },
-                {
-                    below: 20,
-                    color: colors[5]
-                },
-                {
-                    below: 25,
-                    color: colors[6]
-                }
+        };
+        var altconstraints = [
+            {
+                below: 3,
+                color: colors[0]
+            },
+            {
+                below: 6,
+                color: colors[1]
+            },
+            {
+                below: 8,
+                color: colors[2]
+            },
+            {
+                below: 10,
+                color: colors[3]
+            },
+            {
+                below: 15,
+                color: colors[4]
+            },
+            {
+                below: 20,
+                color: colors[5]
+            },
+            {
+                below: 25,
+                color: colors[6]
+            }
 
-            ]
-            var gradientzonedata = [
-                {
-                    color: 3,
-                    lines: { fill: 0.7, },
-                    label: "{% trans "Gradients"%}",
-                    data: gradients,
-                    "threshold": altconstraints
-                }, 
-            ];
+        ]
+        var gradientzonedata = [
+            {
+                color: 3,
+                lines: { fill: 0.7, },
+                label: "{% trans "Gradients"%}",
+                data: gradients,
+                "threshold": altconstraints
+            }, 
+        ];
 
-            var gradientplot = $.plot($("#gradientzonediv"), gradientzonedata, gradplotoptions);
+        var gradientplot = $.plot($("#gradientzonediv"), gradientzonedata, gradplotoptions);
 
-            $("#gradientzonediv").bind("plotselected", function (event, ranges) {            
-                $("#gradientinfo").text(ranges.xaxis.from.toFixed(1) + " {% trans "to" %} " + ranges.xaxis.to.toFixed(1));
-                //$("#gradientinfo2").text( "{% trans "Click graph to reset selection" %}");
-                $("#gradientinfo2").removeClass('hidden');
-                $("#gradientinfo").removeClass('hidden');
-                
-                var newplot = $.plot(
-                    $("#gradientzonediv"), 
-                    gradientzonedata, 
-                    $.extend(true, {}, gradplotoptions, { 
-                        xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
-                    })
-                );
-                //gradientplot.setSelection(ranges, true );
-                
-            });                                                                      
+        $("#gradientzonediv").bind("plotselected", function (event, ranges) {            
+            $("#gradientinfo").text(ranges.xaxis.from.toFixed(1) + " {% trans "to" %} " + ranges.xaxis.to.toFixed(1));
+            //$("#gradientinfo2").text( "{% trans "Click graph to reset selection" %}");
+            $("#gradientinfo2").removeClass('hidden');
+            $("#gradientinfo").removeClass('hidden');
+            
+            var newplot = $.plot(
+                $("#gradientzonediv"), 
+                gradientzonedata, 
+                $.extend(true, {}, gradplotoptions, { 
+                    xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
+                })
+            );
+            //gradientplot.setSelection(ranges, true );
+            
+        });                                                                      
 
-            /*$("#gradientzonediv").bind("plotclick", function (event, pos, item) {
-                $("#gradientinfo").text("");
-                $("#gradientinfo2")..("");
-            });*/
-            $("#reset_gradient_zoom").bind("click", function(evt) {
-                evt.preventDefault();
-                $("#gradientinfo").addClass('hidden');
-                $("#gradientinfo2").addClass('hidden');
-                plot = $.plot($("#gradientzonediv"), gradientzonedata, gradplotoptions);
+        /*$("#gradientzonediv").bind("plotclick", function (event, pos, item) {
+            $("#gradientinfo").text("");
+            $("#gradientinfo2")..("");
+        });*/
+        $("#reset_gradient_zoom").bind("click", function(evt) {
+            evt.preventDefault();
+            $("#gradientinfo").addClass('hidden');
+            $("#gradientinfo2").addClass('hidden');
+            plot = $.plot($("#gradientzonediv"), gradientzonedata, gradplotoptions);
+        });
+    };
+
+    // Check if we want to fetch via ajax or it exists in view
+    if ($('#tabs-select-7').length) {
+        // We are on the exercise page
+        $('#tabs-select-7').bind('click', function() {
+            $.getJSON("{% url json_altitude_gradient object.id %}", function (data) {
+                plotgrad(data);
             });
-        })
-    })
+        });
+            
+    }
+    else {
+        // We are on any other page, e.g. segment detail
+        // Also check if template variable gradients exist, or else it will generate broken javascript
+        {% if gradients %}
+            var gradients = {{ gradients }};
+            plotgrad(gradients);
+        {% endif %}
+    }
 });
-    
 {% endlocalize %}
 </script>
