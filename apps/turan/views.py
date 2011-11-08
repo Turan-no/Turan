@@ -1467,10 +1467,7 @@ def exercise(request, object_id):
     # Can't be used with select_related so do this manually object = get_object_or_404(Exercise, pk=object_id)
     try:
         object = Exercise.objects.select_related('route', 'user', \
-                'exercisepermission', 'hrzonesummary', 'wzonesummary'\
-                'exercise_type', 'slope', 'segmentdetail'
-                )\
-                .get(pk=object_id)
+                'exercisepermission', 'exercise_type').get(pk=object_id)
     except Exercise.DoesNotExist:
         raise Http404
 
@@ -1496,7 +1493,6 @@ def exercise(request, object_id):
     else:
         max_hr = 190 # FIXME, maybe demand from user ?
 
-    #details = object.exercisedetail_set.all()
     # Default is false, many exercises don't have distance, we try to detect later
     time_xaxis = True
     smooth = 0
@@ -1505,7 +1501,8 @@ def exercise(request, object_id):
         #if filldistance(details): # Only do this if we actually have distance
             # xaxis by distance if we have distance in details unless user requested time !
         req_t = request.GET.get('xaxis', '')
-        if not (req_t == 'time' or str(object.exercise_type) == 'Rollers'): # TODO make exercise_type matrix for xaxis, like for altitude
+        # TODO make exercise_type matrix for xaxis, like for altitude
+        if not (req_t == 'time' or str(object.exercise_type).lower().endswith(('rollers', 'spinning'))):
             time_xaxis = False
         req_s = request.GET.get('smooth', '')
         if req_s:
@@ -1540,7 +1537,6 @@ def exercise(request, object_id):
     cadfreqs = freqobj_to_json('C')
     speedfreqs = freqobj_to_json('S')
     powerfreqs = []
-    #inclinesummary = getinclinesummary(details) TODO
     if power_show:
         powerfreqs = freqobj_to_json('P')
 
