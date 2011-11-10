@@ -28,7 +28,7 @@
     {% endcompress %}
     <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
     <script src="http://maps.google.com/maps/api/js?v=3.3&sensor=false"></script>
-    <script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script>
+    <!--<script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script>-->
     <!--<script type="text/javascript" extsrc="{{ MEDIA_URL }}pinax/js/topics.js"></script>-->
     <!--<script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.crosshair.js"></script>-->
     <!--[if lte IE 8]><script type="text/javascript" src="{{MEDIA_URL}}turan/flot/excanvas.min.js"></script> <![endif]-->
@@ -157,8 +157,8 @@
     {% trans "&copy; 2009-2011 &lt;turan.no&gt;" %}
     - <a href="{% url turan_about %}">{% trans "About" %}</a>
     - <a href="http://github.com/torhve/Turan/issues">{% trans "Issue tracker" %}</a>
-    <g:plusone size="small"></g:plusone>
     {% comment %}
+    <g:plusone size="small"></g:plusone>
     - <a href="{% url todo %}">{% trans "Todo" %}</a>
     {% endcomment %}
 </div>
