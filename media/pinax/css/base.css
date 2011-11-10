@@ -1,9 +1,21 @@
+html {
+    height: 100%;
+}
 body {
-    background-color: #1d3853;
+    height: 100%;
     margin: 0;
     color: #333;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 10pt;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-image: -webkit-gradient(radial, center 50, 0, center 50, 400, from(#42596f), to(#1d3853));
+    background-image: -moz-radial-gradient(50% 0%, farthest-side, #42596f, #1d3853);
+    background-color: #1d3853;
+    background-attachment: fixed;
+
 }
 a, a:visited {
     color: #13C;
@@ -79,7 +91,7 @@ input[type="text"], input[type="password"], textarea {
 /*    background: #005476 url('/site_media/pinax/images/heading.png') left top repeat-x;*/
     padding: 10px 10px 6px 10px;
     position: relative;
-    border-top: 1px solid #000;
+/*    border-top: 1px solid #000;*/
     width: 1000px;
     margin: 0 auto;
 }
