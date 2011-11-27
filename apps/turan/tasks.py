@@ -1655,6 +1655,9 @@ def smoothList(list, strippedXs=False, degree=30):
        Changed into padding in front of the list so that the running average happens
     "after the fact" instead of a smooth build up to the point '''
 
+    if list == []:
+        return []
+
     # Change None into 0
     list = [x if x else 0 for x in list]
     # Pad list in front 
