@@ -1619,7 +1619,7 @@ def detailslice_info(details):
     ret['start_lon'] = details[0].lon
     ret['end_lat'] = details[detailcount-1].lat
     ret['end_lon'] = details[detailcount-1].lon
-    ret['start'] = details[0].distance/1000
+    ret['start'] = (details[0].distance or 0)/1000
     userweight = exercise.user.get_profile().get_weight(exercise.date)
     distance = details[detailcount-1].distance - details[0].distance
     duration = (details[detailcount-1].time - details[0].time).seconds
