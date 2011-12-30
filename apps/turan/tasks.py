@@ -1621,7 +1621,10 @@ def detailslice_info(details):
     ret['end_lon'] = details[detailcount-1].lon
     ret['start'] = (details[0].distance or 0)/1000
     userweight = exercise.user.get_profile().get_weight(exercise.date)
-    distance = details[detailcount-1].distance - details[0].distance
+    try:
+        distance = details[detailcount-1].distance - details[0].distance
+    except TypeError:
+        distance = 0 # distance can be None
     duration = (details[detailcount-1].time - details[0].time).seconds
     if distance:
         gradient = ascent/distance
