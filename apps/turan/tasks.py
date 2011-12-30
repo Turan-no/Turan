@@ -1221,7 +1221,7 @@ def parse_sensordata(exercise):
     cache.delete_many(cache_keys)
 
 
-    exercise.sensor_file.file.seek(0)
+    # exercise.sensor_file.file.seek(0) 
     parser = find_parser(exercise.sensor_file.name)
     parser.parse_uploaded_file(exercise.sensor_file.file)
 
