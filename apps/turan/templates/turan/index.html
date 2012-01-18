@@ -28,19 +28,27 @@
     {% endblock %}
 {% block content %}
 
-<div id="exercisers">
-    {% for exerciser in user_list %}
-    <a class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
-    {{ exerciser|profile_hover }}
-    {% endfor %}
-    <hr class="clearleft" />
-</div>
 
-<div class="half floatright">
+    <div class="content">
+        <div class="page-header">
+            {% spaceless %}
+            <div id="exercisers">
+                {% for exerciser in user_list %}
+                <a class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
+                {{ exerciser|profile_hover }}
+                {% endfor %}
+            </div>
+            {% endspaceless  %}
+        </div>
+    </div>
+
+
+    <div class="row">
+    <div class="span8">
         {% for object in exercise_list %}
          {{ object|exercise_mouseover }}
         {% endfor %}
-    <h2 class="header drop-shadow">{% trans "Latest exercises" %}</h2>
+    <h2 class="">{% trans "Latest exercises" %}</h2>
     <ul class="trips">
         {% for object in exercise_list %}
         <li class="{% cycle "even" "odd" %} hoverpoint" id="trip_{{ object.id }}">
@@ -80,7 +88,7 @@
     </ul>
     <a href="{% url exercises %}">{% trans "View more exercises" %}</a>
 
-    <h2 class="header drop-shadow">{% trans "Most popular routes" %}</h2>
+    <h2 class="">{% trans "Most popular routes" %}</h2>
     <ul class="routes">
         {% for object in route_list %}
         <li class="{% cycle "even" "odd" %}">
@@ -115,15 +123,16 @@
     <a href="{% url routes %}">{% trans "View more routes" %}</a>
 </div>
 
-<div class="half leftcol">
-    <div id="tabs">
-        <ul>
-            <li class="tab selected" id="tabs-select-1"><p>{% trans "Turan?" %}</p></li>
-            <li class="tab" id="tabs-select-2"><p>{% trans "Analyze" %}</p></li>
-            <li class="tab" id="tabs-select-3"><p>{% trans "Map" %}</p></li>
-            <li class="tab" id="tabs-select-4"><p>{% trans "Log" %}</p></li>
+<div class="span8">
+    <div>
+        <ul class="tabs" data-tabs="pills">
+            <li class="active" id="tabs-select-1"><a href="#tabs-1"><p>{% trans "Turan?" %}</p></a></li>
+            <li class="" id="tabs-select-2"><a href="#tabs-2"><p>{% trans "Analyze" %}</p></a></li>
+            <li class="" id="tabs-select-3"><a href="#tabs-3"><p>{% trans "Map" %}</p></a></li>
+            <li class="" id="tabs-select-4"><a href="#tabs-4"><p>{% trans "Log" %}</p></a></li>
         </ul>
-        <div id="tabs-1" class="visible">
+    <div id="frontpage-tab-content" class="tab-content">
+        <div id="tabs-1" class="active">
             <p>
             {% comment %}
             <p>
@@ -170,21 +179,9 @@
             </p>
         </div>
     </div>
-    <script type="text/javascript">
-        function selectTab(evt) {
-            var id = evt.target.id ? evt.target.id : evt.target.parentNode.id;
-            id = "tabs-" + id.split('-')[2];
-            $('#tabs div.visible').removeClass('visible');
-            $('#tabs div#' + id).addClass('visible');
-            $('#tabs ul li').removeClass('selected');
-            $(this).addClass('selected');
-        }
-        $('#tabs ul li.tab').each(function () {
-            $(this).bind("click", selectTab);
-        });
-    </script>
+    </div>
 
-    <h2 class="header drop-shadow">{% trans "Latest segments" %}</h2>
+    <h2 class="">{% trans "Latest segments" %}</h2>
     <ul class="segments">
         {% for object in segment_list|slice:":10" %}
         <li class="{% cycle "even" "odd" %}">
@@ -210,7 +207,7 @@
         {% endfor %}
     </ul>
 
-    <h2 class="header drop-shadow">{% trans "Latest comments" %}</h2>
+    <h2 class="">{% trans "Latest comments" %}</h2>
     <ul id="last_comments" class="spacer">
         {% for comment in comment_list %}
         <li class="{% cycle "even" "odd" %}">
@@ -225,6 +222,8 @@
         {% endfor %}
     </ul>
     <hr class="clear" />
+</div>
+
 </div>
 
 

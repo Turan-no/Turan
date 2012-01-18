@@ -61,6 +61,7 @@ var Mapper = {
               '<a href="http://www.statkart.no/">Statens kartverk</a>, ' +
               '<a href="http://www.statkart.no/nor/Land/Fagomrader/Geovekst/">Geovekst</a> og ' +
               '<a href="http://www.statkart.no/?module=Articles;action=Article.publicShow;ID=14194">kommuner</a>'});
+
         var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
         var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
         var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");

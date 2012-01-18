@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load compress %}
+{% load turan_extras %}
 <!DOCTYPE html>
 <html dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
 <!--
@@ -30,7 +31,9 @@
         </style><![endif]-->
         {% compress css %}
         <link rel="stylesheet" href="{{ MEDIA_URL }}pinax/css/base.css" />
+        <!--
         <link rel="stylesheet" href="{{ MEDIA_URL }}pinax/css/tabs.css" />
+        -->
         <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}turan/base.css" />
 
         <link rel="stylesheet" href="{{ MEDIA_URL }}uni_form/uni-form.css" type="text/css" />
@@ -61,6 +64,9 @@
                 </ul>
             </div>
         {% endif %}
+
+
+        {% comment %}
         
         <div id="tabhead">
             <h1 class="logo" dir="ltr">
@@ -79,31 +85,72 @@
         <div id="subnav" class="clearfix">
             {% block subnav_base %}{% block subnav %}&nbsp;{% endblock %}{% endblock %}
         </div>
+        {% endcomment %}
+        <div class="topbar">
+          <div class="fill">
+            <div class="container">
+              <a class="brand" href="/">&nbsp;</a>
+            <ul class="nav">
+                {% block right_tabs %}{% endblock %}
+            </ul>
+
+            <ul class="nav secondary-nav">
+                <li class="dropdown" data-dropdown="dropdown">
+                {% if user.is_authenticated %}
+                  <a href="#" class="dropdown-toggle"><img src="{{ "cog"|silk_icon }}"></a>
+                {% else %}
+                  <a href="#" class="dropdown-toggle">Login</a>
+                {% endif %}
+                  <ul class="dropdown-menu">
+                      <li>{% block login %}{% endblock %}</li>
+                  </ul>
+                </li>
+            </ul>
+            <li class="divider"></li>
+
+                {% if user.is_authenticated %}
+            <ul class="nav secondary-nav">
+                <li id="tab_inbox"><a href="{% url messages_inbox %}"><img src="{{ "email"|silk_icon }}">{{ combined_inbox_count }}</a></li>
+            </ul>
+                {% endif %}
+
+            <ul class="nav secondary-nav">
+            <li>
+                    {% with "/search" as search_url %}
+                    {% include "turan/search_head.html" %}
+                    {% endwith %}
+            </li>
+            </ul>
+
+
+            </div>
+          </div>
+        </div>
         
+        <div id="body" class="container">
         {% block body_outer %}
-        <div id="body" class="drop-shadow raised">
             {% if messages %}
-                <ul id="messages">
-                    {% for message in messages %}
-                    <li id="message_{{ forloop.counter }}"><a href="#" onclick="$('#message_{{ forloop.counter }}').fadeOut(); return false;"><small>{% trans "clear" %}</small></a> {{ message }}</li>
-                    {% endfor %}
-                </ul>
+                {% for message in messages %}
+                    <div class="alert-message success" data-alert="alert">
+                          <a class="close" href="#">×</a>
+                          <p>{{message}}</p>
+                    </div>
+                {% endfor %}
             {% endif %}
             
             {% block body %}
             {% endblock %}
             
-            <hr class="clear" />
-        </div>
         {% endblock %}
         
-        <div id="footer">
+        <footer>
             {% block footer %}{% endblock %}
-        </div>
+        </footer>
         
         <script src="{{ MEDIA_URL }}uni_form/uni-form.jquery.js" type="text/javascript"></script>
         {% block extra_body_base %}
             {% block extra_body %}{% endblock %}
         {% endblock %}
+        </div> <!-- /container -->
     </body>
 </html>

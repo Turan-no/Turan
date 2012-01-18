@@ -4,158 +4,161 @@
 {% load humanize %}
 {% load l10n %}
 {% load tagging_tags %}
+{% load avatar_tags %}
+
 {% block title %}
 {{block.super}}
-{{ object }}, {{ object.date }}
+ {{ object }}, {{ object.date }}
 {% endblock %}
 {% block searchenginemeta %}
 {% tags_for_object object as tag_list %}
-<meta name="keywords" content="{% if tag_list %}{{ tag_list|join:","|escape }},{% endif %}sykkel,tur,trening,exercise" />
-<meta name="description" content="{% if object.comment %}{{ object.comment|truncatewords:20|escape }}. {% endif %}{{object.route.description}}" />
 {% endblock %}
 {% block extra_head %}
 {{ block.super }}
-    <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.crosshair.js"></script>
+     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.crosshair.js"></script>
 {% with object.route.gpx_file as gpx_file %}
-    {% include "turan/maphead.html" %}
+     {% include "turan/maphead.html" %}
 {% endwith %}
 {% endblock %}
-{% block submenu %}
-<ul class="submenu">
-    {% if user == object.user %}
-    <li>
-        <a href="{% url exercise_delete object.id %}">
-            <img alt="delete" title="{% trans "Delete exercise" %}" src="{{ "cross"|silk_icon }}"> {% trans "Delete" %}
-        </a>
-    </li>
-    <li>
-        <a href="{% url exercise_update object.id %}">
-            <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"> {% trans "Modify" %}
-        </a>
-    </li>
-    {% endif%}
-    {% if user == object.user or user.is_superuser%}
-        {% if object.sensor_file %}
-        <li>
-            <a href="{% url exercise_parse object.id %}">
-                <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}">
-            </a>
-        </li>
-        {% endif %}
-    {% endif %}
-    <li>
-        <a href="{% url exercise_player %}?id={{object.id }}">
-            <img alt="Play" title="{% trans "Play exercise" %}" src="{{ "control_play"|silk_icon }}">
-            {% trans "Play" %}
-        </a>
-    </li>
-    <li style="position: relative; overflow: visible">
-        <a id="toggleSharebox" href="#">
-            <img alt="{% trans "Share" %}" title="{% trans "Share" %}" src="{{ "group_link"|silk_icon }}">
-            {% trans "Share" %}
-        </a>
-        <script type="text/javascript">
-            jQuery("#toggleSharebox").bind("click", function (evt) {
-                jQuery(this).toggleClass("selected");
-                jQuery(this).nextAll(".tooltip").toggleClass("hidden");
-            });
-        </script>
-        <div class="tooltip hidden" style="position: absolute; z-index: 9500; right: 0; top: 26px">
-            {% url exercise object.id as exercise_url %}
-            <ul class="socialshare">
-                <li>
-                    <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://turan.no{{ exercise_url|urlencode }}" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-                </li>
-                <li>
-                    <script src="http://connect.facebook.net/nb_NO/all.js#xfbml=1"></script>
-                    <fb:like href="http://turan.no{{ exercise_url|urlencode }}" send="false" width="80" layout="button_count" show_faces="false" font="arial"></fb:like>
-                </li>
-                <li style="margin-top: 5px">
-                    <script src="https://apis.google.com/js/plusone.js">
-                        { lang: 'no' }
-                    </script>
-                    <g:plusone size="small" href="http://turan.no{{ exercise_url|urlencode }}"></g:plusone>
-                </li>
-            </ul>
-        </div>
-    </li>
-</ul>
-{% endblock%}
 {% block content %}
-{% if object.route.gpx_file %}
-<div class="mapcontainer"><div class="map ui-widget-content" id="map"></div>
-    <a href="{{MEDIA_URL}}turan/{{ object.route.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
-</div>
-{% endif %}
-{% include "turan/exercise/attributes.html" %}
-{% include "turan/tags.html" %}
-<hr class="clear" />
-{% block graph %}
+
+        <div class="content">
+            <div class="page-header">
+                <div class="floatright" itemprop="performers" itemscope itemtype="http://schema.org/Person">
+                    <a itemprop="url" href="{{object.user.get_profile.get_absolute_url }}">
+                        {% avatar object.user 40 %}
+                    </a>
+                    <meta itemprop="name" content="{{ object.user.username }}" />
+                </div>
+                <h2>
+                    <img height="32" width="32" class="floatleft" style="padding: 0 2px" alt="Exerciselogo" src="{{object.icon}}" />
+                    <span itemprop="name">{{ object.get_name }}</span>
+                    {% ifequal object.exercise_permission "N" %}
+                    <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock.png">
+                    {% else %}
+                    {% ifequal object.exercise_permission "F" %}
+                    {% ifequal user object.user %}
+                    <img title="{% trans "Exercise visible to friends"%}" alt="{% trans "Exercise visible to friends"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock_go.png">
+                    {% endifequal %}
+                    {% endifequal %}
+                    {% endifequal %}
+                    {% ifequal user object.user %}
+                    <a href="{% url exercise_update object.id %}">
+                        <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}">
+                    </a>
+                    {% endifequal %}
+                    <small>
+                        by
+                        <a href="{{ object.user.get_profile.get_absolute_url }}">
+                            {{ object.user }}
+                        </a> 
+                        <span class="label">{% trans "Date" %}:</span> {{ object.date|naturalday }}
+                        {% if object.duration %} 
+                        <span class="label">{% trans "Duration" %}:</span>
+                        {{ object.duration }}
+                    </span>
+                    {% endif %}
+
+
+                </small>
+            </h2>
+        </div>
+
+        <div style="clear: right" class="row">
+          <div style="background: white" class="span8">
+            {% include "turan/exercise/attributes.html" %}
+            {% include "turan/tags.html" %}
+          </div>
+          <div style="background: white" class="span8">
+            {% if object.route.gpx_file %}
+            <div class="mapcontainer"><div class="map ui-widget-content" id="map"></div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="row">
+          <div style="background: white" class="span16">
 {% if object.sensor_file or object.live_state == 'L' %}
-<div id="tabs">
     <!-- Tab selectors -->
-    <ul>
-        <li class="selected" id="tabs-select-1">
+    <ul class="tabs" data-tabs="tabs">
+        <li class="active">
+        <a href="#tabs-1">
             <p>
                 <img alt="Graph" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_curve.png">{% trans "Graph" %}
             </p>
+        </a>
         </li>
         <li id="tabs-select-2">
+        <a href="#tabs-2">
             <p>{% trans "Comments" %}</p>
+        </a>
         </li>
         {% if intervals %}
         <li id="tabs-select-3">
+        <a href="#tabs-3">
             <p>
+                {% trans "Intervals" %}<span class="">{{ intervals|length }}</span>
                 <img alt="Intervals" src="{{MEDIA_URL}}pinax/img/silk/icons/timeline_marker.png">
-                {% trans "Intervals" %}<span class="floatright">{{ intervals|length }}</span>
             </p>
+        </a>
         </li>
         {% endif %}
         <li id="tabs-select-4">
+        <a href="#tabs-4">
             <p>
                 <img alt="Zones" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_pie.png">
                 {% trans "Zones" %}
             </p>
+        </a>
         </li>
         <li id="tabs-select-5">
+        <a href="#tabs-5">
             <p>
                 <img alt="Freqs" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_bar.png">
                 {% trans "Freqs" %}
             </p>
+        </a>
         </li>
         {% if slopes %}
         <li id="tabs-select-6">
+        <a href="#tabs-6">
             <p>
+                {% trans "Slopes" %} <span class="">{{ slopes|length }}</span>
                 <img alt="Slopes" src="{{MEDIA_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
-                {% trans "Slopes" %} <span class="floatright">{{ slopes|length }}</span>
 
             </p>
+        </a>
         </li>
         {% endif %}
         {% ifequal object.exercise_type.altitude 1 %}
         <li id="tabs-select-7">
+        <a href="#tabs-7">
             <p>
                 <img alt="Inclinedata" src="{{MEDIA_URL}}pinax/img/silk/icons/sum.png">
                 {% trans "Inclinedata" %}
             </p>
+        </a>
         </li>
         {% endifequal %}
         <li id="tabs-select-9">
+        <a href="#tabs-9">
             <p>
                 <img alt="Zones" src="{{MEDIA_URL}}pinax/img/silk/icons/table_lightning.png">
                 {% trans "Best Efforts" %}
             </p>
+        </a>
         </li>
     </ul>
 
     <!-- Tab content -->
-    <div id="tabs-1" style="overflow: hidden" class="graph visible">
+      <div id="turan-tab-content" class="tab-content">
+    <div id="tabs-1" style="overflow: hidden" class="active graph tab-pane">
         <div id="graphcontainer">
         {% include "turan/exercise/graph.html" %}
         </div>
     </div>
 
-    <div id="tabs-2">
+    <div id="tabs-2" class="tab-pane">
         {% if object.comment %}
         <ul>
             <li class="comment">
@@ -168,16 +171,16 @@
     </div>
 
     {% if intervals %}
-    <div id="tabs-3" class="interval_tab">
+    <div id="tabs-3" class="interval_tab tab-pane">
         {% include "turan/exercise/interval_tab.html" %}
     </div>
     {% endif %}
 
-    <div id="tabs-4" class="zone_tab">
+    <div id="tabs-4" class="zone_tab tab-pane">
         {% include "turan/exercise/zone_tab.html" %}
     </div>
 
-    <div id="tabs-5" class="hrhzone_tab">
+    <div id="tabs-5" class="hrhzone_tab tab-pane">
         {% include "turan/exercise/hrhzone_tab.html" %}
     </div>
 
@@ -186,18 +189,20 @@
     {% endif %}
 
     {% ifequal object.exercise_type.altitude 1 %}
-    <div id="tabs-7">
+    <div id="tabs-7" class="tab-pane">
         <div id="gradientzonediv" style="width:980px;height:400px;"></div>
         {% include "turan/exercise/gradient_tab.html" %}
         {% include "turan/exercise/incline_tab.html" %}
     </div>
     {% endifequal %}
 
-    <div id="tabs-9">
+    <div id="tabs-9" class="tab-pane">
         {% include "turan/exercise/best_effort_tab.html" %}
     </div>
-</div>
+  </div>
 <script type="text/javascript">
+
+/*
     function selectTab(evt) {
         var id = evt.target.id ? evt.target.id : evt.target.parentNode.id;
         id = "tabs-" + id.split('-')[2];
@@ -209,7 +214,7 @@
             window.location.hash = $(this).attr("id");
         }
     }
-    $('#tabs>ul>li').each(function () {
+    /*$('#tabs>ul>li').each(function () {
         $(this).bind("click", selectTab);
     });
     $('.zoom-select').each(function () {
@@ -240,9 +245,10 @@
     {% if object.comment %}
     commentcount += 1;
     {% endif %}
-    $('#tabs-select-2').html('<p>{% trans "Comments" %} <span class="floatright">' + commentcount + '</span></p>');
+    */
+    //$('#tabs-select-2').html('<p>{% trans "Comments" %} <span class="floatright">' + commentcount + '</span></p>');
 
-$(document).ready(function() {
+$(document).ready(function(){
     if (Mapper.map) {
         // Init the marker for graph hover thingy
         Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
@@ -294,14 +300,48 @@ $(document).ready(function() {
         {% endlocalize %}
 
     }
-});
 
 // Make map resizable
-$('#map').resizable();
+//$('#map').resizable();
 
+});
 </script>
 {% else %}
 {% include "turan/commentform.html" %}
 {% endif %}
-{% endblock %}
-{% endblock content %}
+          </div>
+        </div>
+      </div>
+
+{% endblock%}
+{% block submenu %}
+<ul class="submenu">
+    {% if user == object.user %}
+    <li>
+        <a href="{% url exercise_delete object.id %}">
+            <img alt="delete" title="{% trans "Delete exercise" %}" src="{{ "cross"|silk_icon }}"> {% trans "Delete" %}
+        </a>
+    </li>
+    <li>
+        <a href="{% url exercise_update object.id %}">
+            <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"> {% trans "Modify" %}
+        </a>
+    </li>
+    {% endif%}
+    {% if user == object.user or user.is_superuser%}
+        {% if object.sensor_file %}
+        <li>
+            <a href="{% url exercise_parse object.id %}">
+                <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}">
+            </a>
+        </li>
+        {% endif %}
+    {% endif %}
+    <li>
+        <a href="{% url exercise_player %}?id={{object.id }}">
+            <img alt="Play" title="{% trans "Play exercise" %}" src="{{ "control_play"|silk_icon }}">
+            {% trans "Play" %}
+        </a>
+    </li>
+</ul>
+{% endblock%}

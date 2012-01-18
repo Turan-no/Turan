@@ -37,12 +37,6 @@ td {
     border: 0;
     padding: 0;
 }
-#body {
-    margin: 0 auto;
-    padding: 10px;
-    width: 1000px;
-    background: white;
-}
 #footer {
     color: #999; /* footer text colour */
     margin: 0 auto;
@@ -75,11 +69,10 @@ form th {
 }
 input[type="text"], input[type="password"], textarea {
     padding: 3px;
-    margin: 3px;
+    margin: 0px;
     border: solid 1px #C6C6C6;
     border-bottom: solid 1px #E3E3E3;
     color: #666;
-    font-size: 12pt;
     background: #F3F3F3 url('/site_media/pinax/images/form-shadow.png') left top repeat-x;
 }
 .clearboth {

@@ -1,12 +1,8 @@
 {% load i18n %}
 {% load turan_extras %}
-<ul class="iconlist">
     {% if object.distance %}
     <li class="distance"><span class="label">{% trans "Distance" %}:</span> {{ object.distance|floatformat }} {% trans "km" %}</li>
     {% endif %}
-    <li class="description">
-        <span class="label">{% trans "Description" %}: </span>{{ object.description }}
-    </li>
     {% if object.route_url %}
     <li class="url"><span class="label">{% trans "External URL" %}:</span> {{ object.route_url|urlizetrunc:60 }}</li>
     {% endif %}
@@ -15,7 +11,6 @@
             {% if object.distance %}
                 ({{ object.ascent|divide:object.distance }} {% trans "m/km" %})
             {% endif %}
-            <ul class="clearfixl extra">
                 {% if object.descent %}
                 <li class="descent"><span class="label">{% trans "Descent" %}:</span> {{ object.descent }} {% trans "m" %}</li>
                 {% endif %}
@@ -25,7 +20,5 @@
                 {% if object.max_altitude %}
                 <li class="altitude"><span class="label">{% trans "Max altitude" %}:</span> {{ object.max_altitude }} {% trans "m" %}</li>
                 {% endif %}
-            </ul>
         </li>
     {% endif %}
-</ul>
