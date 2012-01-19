@@ -7,6 +7,7 @@ None of this should be run as root except apt-get.
 
 ~$ sudo apt-get install python-sqlite
 ~$ sudo apt-get install python-dev
+~$ sudo apt-get install python-virtualenv
 
 ~$ virtualenv turan-env
 
