@@ -57,20 +57,9 @@
     {% endcompress %}
     <style type="text/css">
       /* Override some defaults */
-      html, body {
-        background-color: #1d3853;
-      }
-      body {
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-image: -webkit-gradient(radial, center 50, 0, center 50, 400, from(#42596f), to(#1d3853));
-    background-image: -moz-radial-gradient(50% 0%, farthest-side, #42596f, #1d3853);
-    background-color: #1d3853;
-    background-attachment: fixed;
-        padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
-      }
+    body {
+            padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+       }
       .container > footer p {
         text-align: center; /* center align it with the container */
       }
@@ -117,15 +106,13 @@
       .topbar .btn {
         border: 0;
       }
-    div.map {
-        width: 500px;
-        height: 500px;
-    }
-    div.mapcontainer {
-        float: right;
-        padding-top: -2px;
-        border: 1px solid #ddd;
-    }
+      .fill {
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d3853', endColorstr='#000000') !important; /* for IE */
+          background: -moz-linear-gradient(top,  #1d3853, #000000) !important;
+          background: -webkit-gradient(linear, left top, left bottom, from(#1D3853), to(#000000)) !important; /* for webkit browsers */
+          background: -o-linear-gradient(top,  #1d3853,  #000000) !important;
+
+      }
     .brand {
         background: url('/site_media/turan/turan.png') 0 40px;
         width: 124px;

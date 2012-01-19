@@ -35,7 +35,7 @@
             {% if redirect_field_value %}
                 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
-                <button type="submit">{% trans "Log in &raquo;" %}</button>
+                <button class="btn" type="submit">{% trans "Log in &raquo;" %}</button>
         </fieldset>
     </form>
 
@@ -47,7 +47,7 @@
                 <label for="login_fb">{% trans "Log in using Facebook" %}</label>
             </li>
             <li>
-                <button id="login_fb"><img src="{{MEDIA_URL}}turan/fbbutton.png" height="32" width="32"></button>
+                <button class="btn" id="login_fb"><img src="{{MEDIA_URL}}turan/fbbutton.png" height="32" width="32"></button>
             </li>
         </ul>
     </form>
@@ -73,7 +73,7 @@
                 </div>
             {% endif %}
             <div class="form_block">
-                <button type="submit">{% trans "Log in &raquo;" %}</button>
+                <button class="btn" type="submit">{% trans "Log in &rarr;" %}</button>
             </div>
         </fieldset>
     </form>
