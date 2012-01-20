@@ -374,10 +374,6 @@ ul.comments li {
     padding-top: 2px;
     padding-bottom: 2px;
 }
-.label {
-    cursor: pointer;
-    font-weight: bold;
-}
 .zoom-select {
     cursor: pointer;
 }
@@ -482,7 +478,7 @@ ul.iconlist>li.power {
 
 
 div.map {
-    width: 500px;
+    width: 480px;
     height: 500px;
 }
 div.mapcontainer {
@@ -540,16 +536,17 @@ div.mapcontainer {
 .tab-content>div.active {
     display: block;
     position: relative;
-    top: -15px;
-    left: 0px;
-    overflow: auto;
+    top: 0;
+    left: 0;
     padding: 0;
+    /*
     -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
        -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
             box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     -webkit-box-shadow:0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
        -moz-box-shadow:0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
             box-shadow:0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    */
 
 }
 #tabs>div.visible:before,
@@ -1128,6 +1125,13 @@ div.slope-category-0 {
 p#choices input {
     margin-left: 12px;
 }
+#choices>label {
+    padding: 0;
+    margin: 0;
+    float: none;
+    text-align: left;
+    line-height: normal;
+}
 p.description {
     font-size: 8pt;
     color: #888;
@@ -1237,7 +1241,7 @@ a.profilehoverpoint>img {
     background: white;
 }
 .exercisegraph {
-    width:980px;
+    width:960px;
     height: 500px;
 }
 .fullscreenicon {
@@ -1249,7 +1253,7 @@ a.profilehoverpoint>img {
 .olControlLayerSwitcher .layersDiv {
     color: black !important;
     background: white !important;
-    border: 1px solid #4F96CA;
+    border: 1px solid black;
     border-radius:5px;
     opacity: 0.85 !important;
     box-shadow: 2px 2px 8px black;
@@ -1340,7 +1344,29 @@ a.profilehoverpoint>img {
     font-size: 26px;
     padding: 10px;
 }
+
+/* Fixes for flot */
 .legend table {
         width: auto;
+        margin-bottom: 0;
+        border: 0;
+}
+.legend table>* {
+    padding 0;
+    line-height: normal;
+    background: transparent;
+}
+
+.uniForm>div>label {
+    text-align: left;
+}
+input[type="text"], input[type="password"], select, textarea {
+    padding: 3px;
+    margin: 3px;
+    border: solid 1px #C6C6C6;
+    border-bottom: solid 1px #E3E3E3;
+    color: #666;
+    font-size: 12pt;
+    background: #F3F3F3 url('/site_media/pinax/images/form-shadow.png?67eefa838a26') left top repeat-x;
 }
 

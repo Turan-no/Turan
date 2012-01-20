@@ -10,6 +10,8 @@ var Mapper = {
     },
 
     init: function(gpx_file, geojson_url, start, end) {
+        OpenLayers.ImgPath = "http://js.mapbox.com/theme/dark/";
+
         if (gpx_file) {
             var lgpx = new OpenLayers.Layer.GML("Route", gpx_file, {
                 format: OpenLayers.Format.GPX,

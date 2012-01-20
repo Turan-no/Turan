@@ -17,13 +17,15 @@
 {% block content %}
 {% block action_title %}
 <div id="result">
+    <div class="page-header">
     {% if object %}
         <h1>    {% trans "Modify exercise" %}</h1>
     {% else %}
         <h1>{% trans "Add Exercise" %}</h1>
     {% endif %}
     {% endblock %}
-    <form class="uniForm" id="form" enctype="multipart/form-data" method="post">
+    </div>
+    <form class="form-stacked" id="form" enctype="multipart/form-data" method="post">
 
     {% if not object.route %}
   <div id="div_route" class="ctrlHolder "> 
@@ -38,11 +40,13 @@
     {% endif %}
  
     {{ form|as_uni_form}}
-    {% comment %}
-    <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
-    {% endcomment%}
-    <button id="submit_btn" type="submit">{% trans "Save exercise" %}</button>
-    <input id="route_object_id" type="hidden">
+    <div class="actions" style="padding: 14px 19px;">
+        <button class="btn large primary" id="submit_btn" type="submit">{% trans "Save exercise" %}</button>
+        {% comment %}
+        <input class="btn" type="reset" value="{% trans "Cancel" %}" onClick="document.location='/';" />
+        {% endcomment%}
+        <input id="route_object_id" type="hidden">
+    </div>
     </form>
 </div>
 <style>

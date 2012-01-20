@@ -17,7 +17,7 @@
     
     {% if user.is_authenticated %}
         {% user_display user as user_display %}
-        <p><span class="warning">{% trans "Note" %}</span>: {% blocktrans %}you are already logged in as {{ user_display }}.{% endblocktrans %}</p>
+        <p class="alert-message"><span class="warning">{% trans "Note" %}</span>: {% blocktrans %}you are already logged in as {{ user_display }}.{% endblocktrans %}</p>
     {% else %}
         {% ifsetting ACCOUNT_OPEN_SIGNUP %}
         {% url acct_signup as signup_url %}
@@ -32,26 +32,27 @@
                 <a href="{% url acct_passwd_reset %}">{% trans "Forgot password?" %}</a>
             </div>
             {{ form|as_uni_form }}
+            <div class="actions">
             {% if redirect_field_value %}
                 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
-                <button class="btn" type="submit">{% trans "Log in &raquo;" %}</button>
+                <button class="primary btn" type="submit">{% trans "Log in &rarr;" %}</button>
+            </div>
         </fieldset>
     </form>
 
     <br>
 
-    <form method="POST" action="{% url begin "facebook" %}"> 
-        <ul>
-            <li>
-                <label for="login_fb">{% trans "Log in using Facebook" %}</label>
-            </li>
-            <li>
-                <button class="btn" id="login_fb"><img src="{{MEDIA_URL}}turan/fbbutton.png" height="32" width="32"></button>
-            </li>
-        </ul>
-    </form>
-    
+                <form method="POST" action="{% url begin "facebook" %}"> 
+                    <ul>
+                        <li>
+                            <label for="login_fb">{% trans "Log in using Facebook" %}</label>
+                        </li>
+                        <li>
+                            <button class="btn" id="login_fb"><img src="{{MEDIA_URL}}turan/fbbutton.png" height="32" width="32"></button>
+                        </li>
+                    </ul>
+                </form>
     <br>
     <p>{% trans "Or sign in with your OpenID" %}:</p>
     {# @@@ why isn't this just does as a form object ? #}
@@ -72,7 +73,7 @@
                     <input class="openid" type="text" name="openid_url" />
                 </div>
             {% endif %}
-            <div class="form_block">
+            <div class="actions form_block">
                 <button class="btn" type="submit">{% trans "Log in &rarr;" %}</button>
             </div>
         </fieldset>

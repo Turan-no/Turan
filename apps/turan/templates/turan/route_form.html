@@ -8,7 +8,9 @@
 {% endblock %}
 {% block content %}
 {% if not object %}
+<div class="page-header">
 <h1>{% trans "Create new route" %}</h1>
+
 {%blocktrans%}Create a named route if you want to have a public shared route that people can attach their exercises to.<br>
 You only need to provide Name and Description. The rest of the info will be populated when the first exercise is added to the route.
 
@@ -18,11 +20,14 @@ You only need to provide Name and Description. The rest of the info will be popu
 {% else %}
 <h1>{% trans "Update route" %}</h1>
 {% endif %}
+</div>
 <form class="uniForm" enctype="multipart/form-data" method="post">
 {{ form|as_uni_form}}
 {% comment %}
 <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
 {% endcomment %}
-<input type="submit" value="{% trans "Save route" %}" />
+<div class="actions">
+    <input class="primary large btn" type="submit" value="{% trans "Save route" %}" />
+</div>
 </form>
 {% endblock content %}
