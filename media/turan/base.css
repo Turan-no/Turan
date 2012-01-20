@@ -46,19 +46,6 @@ table.fullsize .number {
 
 
 /* Forms */
-form input[type=submit]:active {
-    margin-top: 3px; /* Regular button have 5 top margin */
-    margin-bottom: 2px;
-}
-form input, form textarea {
-	border: 1px solid #bbb;
-	color: black;
-	padding: 0.2em;
-	background: #eaeaea;
-    /*font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;*/
-    font-family: Helvetica, Arial, sans-serif;
-
-}
 form#new_set {
 	text-align: right;
 }
@@ -76,14 +63,6 @@ form#edit_set ul li {
 }
 form#feedback textarea {
 	width: 40em;
-}
-
-/* Text */
-p, ul {
-	font-size: 100%;
-}
-em {
-	font-style: italic;
 }
 
 #subnav a {
