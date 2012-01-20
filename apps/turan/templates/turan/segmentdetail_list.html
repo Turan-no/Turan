@@ -13,32 +13,29 @@
 {% autosort object_list %}
 {% autopaginate object_list %}
 
-{% include "turan/search_head.html" %}
+<div class="page-header">
 
-{% if search_query %}
-<h4>{% trans "Search results for " %}{{search_query}} <a class="remove" title="{% trans "Clear search query" %}" href="{% url segmentdetails %}">[X]</a></h4>
-{% endif %}
-<div class="searchfilters">
-    <ul class="buttons">
-        {% include "turan/geolocation.html" %}
-{% if request.user.username %}
-        <li class="floatleft">
-            {% if not username %}
-            <a href="{% url segmentdetails %}?username={{request.user.username}}">{% trans "My segment efforts" %}</a>
-            {% else %}
-            <a href="{% url segmentdetails %}">{% trans "All segment efforts" %}</a>
-            {% endif %}
-        </li>
-{% endif %}
-    </ul>
-</div>
-<div class="floatright" style="clear: right;">
-{% paginate %}
-</div>
+    <h1>
+        {% trans "Segment efforts" %}
+    </h1>
+    {% include "turan/search_head.html" %}
 
-<h1>
-    {% trans "Segment efforts" %}
-</h1>
+    {% if search_query %}
+    <h4>{% trans "Search results for " %}{{search_query}} <a class="remove" title="{% trans "Clear search query" %}" href="{% url segmentdetails %}">[X]</a></h4>
+    {% endif %}
+        <ul class="">
+            {% include "turan/geolocation.html" %}
+    {% if request.user.username %}
+            <li class="btn floatleft">
+                {% if not username %}
+                <a class="" href="{% url segmentdetails %}?username={{request.user.username}}">{% trans "My segment efforts" %}</a>
+                {% else %}
+                <a class="" href="{% url segmentdetails %}">{% trans "All segment efforts" %}</a>
+                {% endif %}
+            </li>
+    {% endif %}
+        </ul>
+</div>
 <table class="fullsize">
     <tr class="{% cycle odd,even %}">
         <th>

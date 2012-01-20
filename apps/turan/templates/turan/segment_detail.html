@@ -27,32 +27,34 @@
 {% endblock %}
 {% block content %}
 
-<div class="segmentdetails">
+<div class="page-header">
     <h1>
         {{ object.name }}
+        <small>
+            {{ object.description }}
+        </small>
     </h1>
+        {% include "turan/segment/attributes.html" %}
+    <hr class="clear" />
+    <br>
+</div>
+
     {% if slopes %}
-    <div class="segmenttoplist toplist floatright">
-        <span class="title">{% trans "Best efforts" %}</span>
+    <div class="">
+        <span class="label">{% trans "Best efforts" %}</span>
             <ol>
             {% for object in slopes|slice:":3" %}
-                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
-                    {{ object.duration|durationformatshort}}, {{object.exercise.date}}
-                    <div style="float: right">
+                <li class="floatleft {% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
                         <a href="{{ object.exercise.user.get_absolute_url }}" title="{{ object.exercise.user }}">
                             {% avatar object.exercise.user 32 %}
                         </a>
-                    </div>
-                    <hr class="clearright" />
+                    {{ object.duration|durationformatshort}}, {{object.exercise.date}}
                 </li>
             {% endfor %}
         </ol>
     </div>
+    <br>
     {% endif %}
-    <div class="box spacer">
-        {% include "turan/segment/attributes.html" %}
-    </div>
-
 
     <hr class="clear" />
     {% if object.gpx_file %}
@@ -307,8 +309,7 @@ $(document).ready(function() {
     $("#gradientzonediv").bind("plothover", gplotHover);
     $("#altdiv").bind("plothover", aplotHover);
         
-    </script>
-</div>
+</script>
 {% paginate %}
 {% endif %}
 {% endwith %}

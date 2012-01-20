@@ -192,12 +192,15 @@ div.profile_info p {
     padding: 0 10px;
     background: #ccc; /* tab colour */
     border-top: 1px solid #000;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#ffffff'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); /* for webkit browsers */
-    background: -moz-linear-gradient(top,  #ccc,  #fff); /* for firefox 3.6+ */
-    background: -o-linear-gradient(top,  #ccc,  #fff); 
-    border-radius: 10px 10px 0 0;
-    width: 1000px;
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#000000') !important; 
+          background: -moz-linear-gradient(top,  #f5f5f5, #cccccc) !important;
+          background: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#cccccc)) !important; 
+          background: -o-linear-gradient(top,  #f5f5f5,  #cccccc) !important;
+    /*border-radius: 10px 10px 0 0;*/
+    line-height: 28px;
+    width: 960px;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 #subnav ul {

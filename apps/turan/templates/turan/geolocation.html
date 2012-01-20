@@ -1,9 +1,9 @@
 {% load i18n %}
-        <li class="floatleft">
+        <li class="btn">
             {% if longitude %}
-            <a href="{% url events %}">{% trans "All events" %}</a>
+            <a class="" href="{% url events %}">{% trans "All events" %}</a>
             {% else %}
-            <a id="getLocation">{% trans "In my area" %}</a>
+            <a class="" id="getLocation">{% trans "In my area" %}</a>
             {% endif %}
             <script type="text/javascript">
                 $("#getLocation").bind("click", function (evt) {

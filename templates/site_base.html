@@ -199,7 +199,11 @@ footer {
 
 {% block login %}
     {% if user.is_authenticated %}
-    <a href="{% url profile_redirect %}"><img alt="profile" src="{{MEDIA_URL}}/pinax/img/silk/icons/user_suit.png"><b>{% trans "Profile" %}</b></a>
+    <a href="{% url profile_redirect %}"><img alt="profile" src="{{MEDIA_URL}}/pinax/img/silk/icons/user_suit.png"><b>{% trans "My profile" %}</b></a>
+            <a class="red" href="{% url exercise_create %}">
+                {% trans "Add an exercise" %}
+            </a>
+    <a href="{% url calendar-index %}?username={{user.username}}">{% trans "My calendar" %}</a>
     <a href="{% url acct_email %}">{% trans "Account" %}</a>
     {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> 
     {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
@@ -251,15 +255,12 @@ footer {
 {% block right_tabs %}
         <ul class="nav">
 {% if user.is_authenticated %}
-            <li id="tab_exercise_create">
-            <a class="red" href="{% url exercise_create %}">
-                {% trans "Add an exercise" %}
-            </a>
-            </li>
 {% endif %}
             <li id="tab_exercises"><a href="{% url events %}">{% trans "Exercises" %}</a></li>
             <li id="tab_routes"><a href="{% url routes %}">{% trans "Routes" %}</a></li>
             <li id="tab_segments"><a href="{% url segments %}">{% trans "Segments" %}</a></li>
+            <li><a href="{% url statistics %}/2011">{% trans "Statistics" %}</a></li>
+            <li id="tab_profile"><a href="{% url profile_list %}">{% trans "Exercisers" %}</a></li>
         </ul>
 {% endblock %}
 

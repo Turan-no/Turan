@@ -15,33 +15,28 @@
 {% endwith %}
 {% endblock %}
 {% block content %}
-<h1>{% trans "Playback of exercise" %}</h1>
-{% for exercise in exercises %}
-<a href="{% url exercise exercise.pk %}">
-    <img src="{{ forloop.counter0|player_icon:exercise.exercise_type}}" />
-    {{ exercise }}
-</a>
-{% endfor %}
-    <ul class="buttons spacer">
-        <li style="float: left">
+<div class="page-header">
+    <h1>{% trans "Playback of exercise" %}</h1>
+    <ul class="">
+        <li style="" class="btn">
             <a id="control_start" href="#">
                 <img class="icons" src="{{ "control_start"|silk_icon }}" alt="{% trans "Start" %}" />
                 {% trans "Start" %}
             </a>
         </li>
-        <li style="float: left">
+        <li style="" class="btn">
             <a id="control_play" href="#">
                 <img class="icons" src="{{ "control_play"|silk_icon }}" alt="{% trans "Play" %}" />
                 {% trans "Play" %}
             </a>
         </li>
-        <li style="float: left">
+        <li style="" class="btn">
             <a id="control_pause" href="#">
                 <img class="icons" src="{{ "control_pause"|silk_icon }}" alt="{% trans "Pause" %}" />
                 {% trans "Pause" %}
             </a>
         </li>
-        <li style="float: left">
+        <li style="" class="btn">
             <a id="control_fastforward" href="#">
                 <img class="icons" src="{{ "control_fastforward"|silk_icon }}" alt="{% trans "FFWD" %}" />
                 {% trans "Fast forward" %}
@@ -49,7 +44,7 @@
         </li>
         {% for object in exercises %}
         {% if object.live_state == 'L' %}
-        <li style="float: left">
+        <li style="" class="btn">
             <a id="control_live" href="#">
                 <img class="icons" src="{{ "control_fastforward"|silk_icon }}" alt="{% trans "Live" %}" />
                 {% trans "Go Live" %}
@@ -58,6 +53,13 @@
         {% endif %}
         {% endfor %}
     </ul>
+</div>
+{% for exercise in exercises %}
+<a href="{% url exercise exercise.pk %}">
+    <img src="{{ forloop.counter0|player_icon:exercise.exercise_type}}" />
+    {{ exercise }}
+</a>
+{% endfor %}
     {% comment %}
 <p id="choices">{% trans "Choose features" %}:</p>
 <input type="checkbox" checked="checked" name="graphs" id="chk_graph"><label for="chk_graph">{% trans "Graphs" %}</label></input>
@@ -434,6 +436,8 @@ var play = function() {
 
 {% endlocalize %}
 </script>
-<div class="mapcontainer"><div style="width:1000px;height:800px" class="drop-shadow raised" id="map"></div>
+<div class="container">
+<div class="mapcontainer" style="float: none" ><div style="width:950px;height:800px" class="" id="map"></div>
+</div>
 {% endblock content %}
 
