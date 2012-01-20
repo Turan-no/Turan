@@ -193,36 +193,6 @@ h1 a
 	color: black;
 	text-decoration: none;
 }
-/* Message panels */
-.info, .success, .warning, .notice, .error {
-	border: 2px solid black;
-	padding: 0.8em;
-	margin: 0.5em 0;
-	width: 30em;
-}
-.info h3, .success h3, .warning h3, .notice h3, .error h3 {
-	margin: 0 0 0.5em 0;
-}
-.info {
-	background: #eeeeec;
-	border-color: #d3d7cf;
-	color: black;
-}
-.success {
-	background: #e6efc2;
-	border-color: #c6d880;
-	color: #529214;
-}
-.warning, .notice {
-	background: #fff6bf;
-	border-color: #ffd324;
-	color: #817134;
-}
-.error {
-	background: #fbe3e4;
-	border-color: #fbc2c4;
-	color: #d12f19;
-}
 
 /* Emphasizing */
 .title {
@@ -561,20 +531,19 @@ div.mapcontainer {
     list-style-image: url(/site_media/pinax/img/silk/icons/shape_rotate_clockwise.png);
     font-size: 1.1em;
 }
-.tab-content {
-    /* HACK: Flot fails at display: none */
-    display: screen;
+.tab-pane {
+    display: block !important;
     position: absolute;
     top: -10000px;
     left: -10000px;
 }
-.tab-content .active {
+.tab-content>div.active {
     display: block;
     position: relative;
-    padding: 10px;
-    top: 0px;
+    top: -15px;
     left: 0px;
     overflow: auto;
+    padding: 0;
     -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
        -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
             box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;

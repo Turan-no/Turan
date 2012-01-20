@@ -107,10 +107,12 @@
         border: 0;
       }
       .fill {
-          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d3853', endColorstr='#000000') !important; /* for IE */
+          /*
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d3853', endColorstr='#000000') !important; 
           background: -moz-linear-gradient(top,  #1d3853, #000000) !important;
-          background: -webkit-gradient(linear, left top, left bottom, from(#1D3853), to(#000000)) !important; /* for webkit browsers */
+          background: -webkit-gradient(linear, left top, left bottom, from(#1D3853), to(#000000)) !important; 
           background: -o-linear-gradient(top,  #1d3853,  #000000) !important;
+          */
 
       }
     .brand {
@@ -224,7 +226,6 @@ footer {
         {% endifsetting %}
     {% endif %}
 {% endblock %}
-{% comment %}
 {% block locale_switcher %}
     <form action="{% if request.user.is_authenticated %}{% url acct_language_change %}{% else %}/i18n/setlang/{% endif %}" method="post" id="locale_switcher">
         <div class="floatright">
@@ -235,9 +236,6 @@ footer {
             </select>
         </div>
     </form>
-{% endblock %}
-{% endcomment%}
-{% block locale_switcher %}
 {% endblock %}
 
 {% block logo_link_image %}

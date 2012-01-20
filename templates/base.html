@@ -108,6 +108,17 @@
             </ul>
             <li class="divider"></li>
 
+            <ul class="nav secondary-nav">
+                <li class="dropdown" data-dropdown="dropdown">
+                <a href="#" class="dropdown-toggle">{% trans "Language" %}</a>
+                  <ul class="dropdown-menu">
+                      <li>
+                        {% block locale_switcher %}{% endblock %}
+                    </li>
+                  </ul>
+                </li>
+            </ul>
+
                 {% if user.is_authenticated %}
             <ul class="nav secondary-nav">
                 <li id="tab_inbox"><a href="{% url messages_inbox %}"><img src="{{ "email"|silk_icon }}">{{ combined_inbox_count }}</a></li>
