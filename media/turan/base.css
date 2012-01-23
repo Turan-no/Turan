@@ -483,7 +483,7 @@ div.mapcontainer {
 }
 
 .toplist ol {
-    padding-left: 10px;
+    padding-left: 0;
     font-size: 11px;
     list-style-position: inside;
 }
@@ -1294,10 +1294,14 @@ a.profilehoverpoint>img {
 .time_and_length {
     overflow: auto;
 }
-.time_and_length .box {
+.time_and_length .well {
     float: left;
     width: 220px;
+    padding: 0;
     margin: 5px;
+}
+.time_and_length .well h5 {
+    text-align: center;;
 }
 #subnav ul.socialshare li {
     margin-left: 0;

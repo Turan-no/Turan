@@ -385,6 +385,8 @@ def statistics(request, year=None, month=None, day=None, week=None):
 
     exercisename = request.GET.get('exercise')
 
+    exercisetypes = ExerciseType.objects.all()
+
     tfilter = {}
     if exercisename:
         exercise = get_object_or_404(ExerciseType, name=exercisename)
