@@ -135,6 +135,7 @@ class TCXParser(object):
         self.pedaling_cad = 0
         pedaling_cad_seconds = 0
         pedaling_power_seconds = 0
+        hr_seconds = 0
         self.powersum = 0
         need_initial_altitude = 0
         last_lat = 0
@@ -258,6 +259,7 @@ class TCXParser(object):
             if timedelta <= 60:
                 self.heartbeats += hr*timedelta
                 self.rotations += cadence*timedelta
+                hr_seconds += timedelta
                 if power:
                     self.powersum += power*timedelta
                     pedaling_power_seconds += timedelta
@@ -294,7 +296,7 @@ class TCXParser(object):
             self.avg_cadence = self.rotations/seconds
             self.avg_pedaling_cad = self.pedaling_cad/pedaling_cad_seconds
         if self.heartbeats > 1.0:
-            self.avg_hr = self.heartbeats/seconds
+            self.avg_hr = self.heartbeats/hr_seconds
         self.duration = '%is' % int(seconds)
         if self.powersum:
             self.avg_power = self.powersum/seconds
