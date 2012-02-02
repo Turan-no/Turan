@@ -44,7 +44,7 @@
 
 
     <div class="row">
-    <div class="span8">
+    <div class="span6">
         {% for object in exercise_list %}
          {{ object|exercise_mouseover }}
         {% endfor %}
@@ -123,16 +123,15 @@
     <a href="{% url routes %}">{% trans "View more routes" %}</a>
 </div>
 
-<div class="span8">
-    <div>
-        <ul class="tabs" data-tabs="pills">
-            <li class="active" id="tabs-select-1"><a href="#tabs-1"><p>{% trans "Turan?" %}</p></a></li>
-            <li class="" id="tabs-select-2"><a href="#tabs-2"><p>{% trans "Analyze" %}</p></a></li>
-            <li class="" id="tabs-select-3"><a href="#tabs-3"><p>{% trans "Map" %}</p></a></li>
-            <li class="" id="tabs-select-4"><a href="#tabs-4"><p>{% trans "Log" %}</p></a></li>
-        </ul>
+<div class="span6">
+    <ul class="tabs">
+        <li class="active" id="tabs-select-1"><a href="#tabs-1" data-toggle="tab"><p>{% trans "Turan?" %}</p></a></li>
+        <li class="" id="tabs-select-2"><a href="#tabs-2" data-toggle="tab"><p>{% trans "Analyze" %}</p></a></li>
+        <li class="" id="tabs-select-3"><a href="#tabs-3" data-toggle="tab"><p>{% trans "Map" %}</p></a></li>
+        <li class="" id="tabs-select-4"><a href="#tabs-4" data-toggle="tab"><p>{% trans "Log" %}</p></a></li>
+    </ul>
     <div id="frontpage-tab-content" class="well tab-content">
-        <div id="tabs-1" class="active">
+        <div id="tabs-1" class="active tab-pane">
             <p>
             {% comment %}
             <p>
@@ -155,7 +154,7 @@
             {% endblocktrans %}
             </p>
         </div>
-        <div id="tabs-2" class="">
+        <div id="tabs-2" class="tab-pane">
             <img class="floatright" style="padding-left: 8px" src="{{MEDIA_URL}}turan/graf-utsnitt.png" alt="Graph" />
             <p>
             {% blocktrans %}
@@ -163,7 +162,7 @@
             {% endblocktrans %}
             </p>
         </div>
-        <div id="tabs-3" class="">
+        <div id="tabs-3" class="tab-pane">
             <img class="floatleft" style="padding-right: 8px" src="{{MEDIA_URL}}turan/mapexample.png" alt="Graph" />
             <p>
             {% blocktrans %}
@@ -171,14 +170,13 @@
             {% endblocktrans %}
             </p>
         </div>
-        <div id="tabs-4" class="">
+        <div id="tabs-4" class="tab-pane">
             <p>
             {% blocktrans %}
             What good is training without progress? After a while you might want to look at the trends of your training. Turan(tm) provides several. Apart from the silly BMI-tracking-feature, you can view (and compare) different runs of the same route, comparing everything, speed, cadence and heart rate. Turan(tm) will also graph the time-usage of a spesific route as a function of time. In your profile you can view your own progress in terms of average speed, BMI and resting pulse.
             {% endblocktrans %}
             </p>
         </div>
-    </div>
     </div>
 
     <h2 class="">{% trans "Latest segments" %}</h2>
