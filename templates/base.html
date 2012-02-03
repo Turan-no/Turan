@@ -44,7 +44,8 @@
         {% endblock %}
     </head>
     
-    <body class="{% block body_class %}{% endblock %}">
+    <body data-spy="scroll" data-target=".subnav" data-offset="50" class="{% block body_class %}{% endblock %}">
+
         {% if site_wide_announcements %}
             <div id="site_wide_announcements">
                 <ul>
@@ -100,16 +101,6 @@
 
             <ul class="nav secondary-nav">
                 <li class="dropdown" data-dropdown="dropdown">
-                <a href="#" class="dropdown-toggle">{% trans "Actions" %}</a>
-                <ul class="dropdown-menu">
-                    <li>
-                {% block subnav_base %}{% block subnav %}&nbsp;{% endblock %}{% endblock %}
-                    </li>
-                </ul>
-            </ul>
-
-            <ul class="nav secondary-nav">
-                <li class="dropdown" data-dropdown="dropdown">
                 <a href="#" class="dropdown-toggle">{% trans "Language" %}</a>
                   <ul class="dropdown-menu">
                       <li>
@@ -121,7 +112,7 @@
 
                 {% if user.is_authenticated %}
             <ul class="nav secondary-nav">
-                <li id="tab_inbox"><a href="{% url messages_inbox %}"><img src="{{ "email"|silk_icon }}">{{ combined_inbox_count }}</a></li>
+                <li id="tab_inbox"><a href="{% url messages_inbox %}"><img src="{{ "email"|silk_icon }}"><span class="label">{{ combined_inbox_count }}</span></a></li>
             </ul>
                 {% endif %}
 
@@ -150,6 +141,11 @@
                 {% endfor %}
             {% endif %}
           <div class="content"> 
+          <div class="subnav">
+              <ul class="nav nav-pills">
+              {% block subnav_base %}{% block subnav %}{% endblock %}{% endblock %}
+              </ul>
+          </div>
             {% block body %}
             {% endblock %}
           </div>

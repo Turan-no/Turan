@@ -11,7 +11,7 @@
 
 
 {% block subnav %}
-    <ul>
+        {% comment %}
         <li><a href="{% url segmentdetails %}">{% trans "Segment efforts" %}</a></li>
         {% comment %}
         <li><a href="{% url calendar-index %}">{% trans "Calendar" %}</a></li>
@@ -28,7 +28,6 @@
         {% endif %}
         {% block extramenu %}
         {% endblock %}
-    </ul>
     {% block submenu %}
     {% endblock %}
 {% endblock %}

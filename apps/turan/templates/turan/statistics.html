@@ -14,6 +14,7 @@
     <h1> {% trans "Exercise Statistics" %} <small>{{now.year}} {{ month|default:"" }}</small></h1>
 <div class="floatright">
     <h2>{% trans "Month" %}</h2>
+    <div class="btn-group">
     <a class="btn" href="{% url statistics-month previous_month.year previous_month.month %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_previous.png" alt="{% trans "Previous"%}" />
         {% trans "Previous" %}
@@ -26,19 +27,24 @@
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_next.png" alt="{% trans "Next"%}" />
         {% trans "Next" %}
     </a>
+    </div>
 </div>
     <h3>{% trans "Filter by team" %}</h3>
+    <div class="btn-group">
         {% for team in team_list %}
-            <a href="{% url statistics%}/?team={{team.slug}}">{{team}}</a> 
+            <a class="btn" href="{% url statistics%}/?team={{team.slug}}">{{team}}</a> 
         {% endfor %}
+    </div>
 </div>
-<div class="well">
+<div class="">
 <h3>{% trans "Filter by exercise type" %} </h3>
+<div class="btn-group">
 {% for et in exercisetypes %}
 {% if et.icon %}
 <a class="btn" href="{% url statistics-year now.year %}?exercise={{et.name}}"><img alt="{{et}}" title="{{et}}" style="height:32px; width: 32px;" src="{{ et.icon}}"></a>
 {% endif %}
 {% endfor %}
+</div>
 </div>
 
 <div class="toplist" >

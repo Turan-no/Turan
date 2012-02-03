@@ -79,7 +79,7 @@
         <div class="row">
           <div style="background: white" class="span12">
 {% if object.sensor_file or object.live_state == 'L' %}
-    <ul class="tabs nav nav-tabs">
+    <ul class="nav nav-pills">
         <li class="active">
         <a href="#tabs-1" data-toggle="tab">
                 <img alt="Graph" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_curve.png">{% trans "Graph" %}
@@ -155,6 +155,9 @@
 
     {% if intervals %}
     <div id="tabs-3" class="interval_tab tab-pane">
+        <div class="page-header">
+            <h1>Intervals</h1>
+        </div>
         {% include "turan/exercise/interval_tab.html" %}
     </div>
     {% endif %}
@@ -298,7 +301,6 @@ $(document).ready(function(){
 
 {% endblock%}
 {% block submenu %}
-<ul class="submenu">
     {% if user == object.user %}
     <li>
         <a href="{% url exercise_delete object.id %}">
@@ -326,5 +328,4 @@ $(document).ready(function(){
             {% trans "Play" %}
         </a>
     </li>
-</ul>
 {% endblock%}

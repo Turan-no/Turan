@@ -220,55 +220,55 @@
                     {% endif %}
                     <br />
                 </div>
-            <div class="spacer box drop-shadow lifted">
+            <div class="box">
                 <h2>{% trans "What Next?" %}</h2>
-                <ul class="buttons spacer">
-                    <li>
+                <ul class="btn-group">
+                    <li class="btn">
                         <a href="{% url calendar-index %}?username={{ other_user }}">
                         <img alt="calendar" src="{{MEDIA_URL}}/pinax/img/silk/icons/calendar.png">
                         {% trans "Show" %} {{ other_user_display }}{% trans "'s calendar" %}</a>
                     </li>
                     {% if user.is_authenticated and is_me %}
-                    <li>
+                    <li class="btn">
                         <a href="{% url exercise_create %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
                             {% trans "Add an exercise" %}
                         </a>
                     </li>
-                    <li>
+                    <li class="btn">
                         <a href="{% url route_create %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="menu_button" />
                             {% trans "Add a route"%}
                         </a>
                     </li>
-                    <li>
+                    <li class="btn">
                         <a href="{% url import_data %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="menu_button" />
                             {% trans "Import exercises from another site"%}
                         </a>
                     </li>
-                    <li>
+                    <li class="btn">
                         <a href="{% url userprofiledetail_create %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/cake.png" alt="menu_button" />
                             {% trans "Update weight / resting HR"%}
                         </a>
                     </li>
-                    <li>
+                    <li class="btn">
                             <a href="{% url equipment_create %}">{%trans "Add exercise equipment" %}</a>
                     </li>
-                    <li>
+                    <li class="btn">
                         <a href="{% url acct_email %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/email_go.png" alt="menu_button" />
                             {% trans "Verify an email address"%}
                         </a>
                     </li>
-                    <li>
+                    <li class="btn">
                         <a href="{% url avatar_change %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/photo.png" alt="menu_button" />
                             {% trans "Add an avatar"%}
                         </a>
                     </li>
-                    <li><a href="{% url invitations %}">
+                    <li class="btn"><a href="{% url invitations %}">
                         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/user_go.png" alt="menu_button" />
                         {% trans "Invite people"%}</a>
                     </li>
@@ -290,18 +290,18 @@
             {% endcomment %}
 
             <h3>{% trans "Cycle trips"%}</h3>
-            <div class="drop-shadow lifted" id="tripdiv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="tripdiv" style="width:300px;height:150px"></div>
             <h3>{% trans "Avg speed trend: cycling"%}</h2>
-            <div class="drop-shadow lifted" id="avgspeeddiv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="avgspeeddiv" style="width:300px;height:150px"></div>
             <h3>{% trans "Avg HR trend overall"%}</h3>
-            <div class="drop-shadow lifted" id="avghrdiv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="avghrdiv" style="width:300px;height:150px"></div>
             <h3>{% trans "BMI"%}</h3>
-            <div class="drop-shadow lifted" id="bmidiv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="bmidiv" style="width:300px;height:150px"></div>
             <h3>{% trans "Resting pulse"%}</h3>
-            <div class="drop-shadow lifted" id="pulsediv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="pulsediv" style="width:300px;height:150px"></div>
             {% if ftpdataseries %}
             <h3>{% trans "FTP" %}{{ "FunctionalThresholdPower"|wiki_help }}</h3>
-            <div class="drop-shadow lifted" id="ftpdiv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="ftpdiv" style="width:300px;height:150px"></div>
             {% endif %}
             <script id="source" language="javascript" type="text/javascript">
             $(function () {
