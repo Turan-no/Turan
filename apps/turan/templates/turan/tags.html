@@ -3,13 +3,11 @@
 {% tags_for_object object as tag_list %}
 {% if tag_list %}
 <ul class="spacer">
-        <li style="float: left" class="tag">
+        <li style="" class="tag">
             <img alt="Tag" src="{{ MEDIA_URL }}pinax/img/silk/icons/tag_blue.png" class="noborder" />
         </li>
-        <li style="float:left" class="label">{% trans "Tags" %}: </li>
         {% for tag in tag_list %}
-        <li style="float:left"  class="tag {{ tag }}"><a href="/tags/{{ tag }}">{{ tag }}</a></li>
+        <li style=""  class="tag {{ tag }}"><a href="/tags/{{ tag }}">{{ tag }}</a></li>
         {% endfor %}
 </ul>
-<hr style="clear:both">
 {% endif %}

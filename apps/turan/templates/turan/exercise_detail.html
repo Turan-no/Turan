@@ -30,6 +30,38 @@
                     </a>
                     <meta itemprop="name" content="{{ object.user.username }}" />
                 </div>
+                <div class="btn-group floatright">
+                    <a class="btn" href="{% url exercise_player %}?id={{object.id }}">
+                        <img alt="Play" title="{% trans "Play exercise" %}" src="{{ "control_play"|silk_icon }}">
+                        {% trans "Play" %}
+                    </a>
+                    {% if user == object.user %}
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{% url exercise_update object.id %}">
+                                <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"> {% trans "Modify" %}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url exercise_delete object.id %}">
+                                <img alt="delete" title="{% trans "Delete exercise" %}" src="{{ "cross"|silk_icon }}"> {% trans "Delete" %}
+                            </a>
+                        </li>
+                    {% endif%}
+                    {% if user == object.user or user.is_superuser%}
+                        {% if object.sensor_file %}
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{% url exercise_parse object.id %}">
+                                <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}"> {% trans "Reparse" %}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+                </div>
                 <h2>
                     <img height="32" width="32" class="floatleft" style="padding: 0 2px" alt="Exerciselogo" src="{{object.icon}}" />
                     <span itemprop="name">{{ object.get_name }}</span>
@@ -52,12 +84,6 @@
                         <a href="{{ object.user.get_profile.get_absolute_url }}">
                             {{ object.user }}
                         </a> 
-                        <span class="label">{% trans "Date" %}:</span> {{ object.date|naturalday }}
-                        {% if object.duration %} 
-                        <span class="label">{% trans "Duration" %}:</span>
-                        {{ object.duration }}
-                    </span>
-                    {% endif %}
 
 
                 </small>
@@ -67,7 +93,6 @@
         <div style="clear: right" class="row">
           <div style="" class="span6">
             {% include "turan/exercise/attributes.html" %}
-            {% include "turan/tags.html" %}
           </div>
           <div style="" class="span6">
             {% if object.route.gpx_file %}
@@ -79,7 +104,7 @@
         <div class="row">
           <div style="background: white" class="span12">
 {% if object.sensor_file or object.live_state == 'L' %}
-    <ul class="nav nav-pills">
+    <ul class="nav nav-tabs">
         <li class="active">
         <a href="#tabs-1" data-toggle="tab">
                 <img alt="Graph" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_curve.png">{% trans "Graph" %}
@@ -87,6 +112,7 @@
         </li>
         <li id="tabs-select-2">
         <a href="#tabs-2" data-toggle="tab">
+            <img alt="Comments" src="{{ "comments"|silk_icon }}">
             {% trans "Comments" %}
         </a>
         </li>
@@ -299,33 +325,4 @@ $(document).ready(function(){
         </div>
       </div>
 
-{% endblock%}
-{% block submenu %}
-    {% if user == object.user %}
-    <li>
-        <a href="{% url exercise_delete object.id %}">
-            <img alt="delete" title="{% trans "Delete exercise" %}" src="{{ "cross"|silk_icon }}"> {% trans "Delete" %}
-        </a>
-    </li>
-    <li>
-        <a href="{% url exercise_update object.id %}">
-            <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"> {% trans "Modify" %}
-        </a>
-    </li>
-    {% endif%}
-    {% if user == object.user or user.is_superuser%}
-        {% if object.sensor_file %}
-        <li>
-            <a href="{% url exercise_parse object.id %}">
-                <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}">
-            </a>
-        </li>
-        {% endif %}
-    {% endif %}
-    <li>
-        <a href="{% url exercise_player %}?id={{object.id }}">
-            <img alt="Play" title="{% trans "Play exercise" %}" src="{{ "control_play"|silk_icon }}">
-            {% trans "Play" %}
-        </a>
-    </li>
 {% endblock%}

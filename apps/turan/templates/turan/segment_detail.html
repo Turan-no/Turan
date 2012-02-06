@@ -20,24 +20,20 @@
     {% include "turan/maphead.html" %}
 {% endwith %}
 {% endblock %}
-{% block extramenu %}
-{% if user.is_authenticated %}
-        <li class="right"><a href="{% url segment_update object.id %}">{% trans "Modify" %}</a></li>
-{% endif %}
-{% endblock %}
 {% block content %}
 
 <div class="page-header">
+    {% if user.is_authenticated %}
+            <a class="btn btn-primary pull-right"href="{% url segment_update object.id %}">{% trans "Modify" %}</a>
+    {% endif %}
     <h1>
         {{ object.name }}
         <small>
             {{ object.description }}
         </small>
     </h1>
-        {% include "turan/segment/attributes.html" %}
-    <hr class="clear" />
-    <br>
 </div>
+        {% include "turan/segment/attributes.html" %}
 
     {% if slopes %}
     <div class="">
@@ -195,7 +191,7 @@
             </tr>
             {% endfor %}
         </table>
-    <div class="actions">
+    <div class="form-actions">
         <input class="btn"  type="submit" value="{% trans "Compare"%}">
         </form>
     {% if request.user.username %}
