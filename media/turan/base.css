@@ -1236,7 +1236,7 @@ a.profilehoverpoint>img {
 }
 @media (min-width: 1200px) {
   div.map {
-      width: 600px;
+      width: 570px;
   }
   div.exercisegraph {
       width: 1160px;
