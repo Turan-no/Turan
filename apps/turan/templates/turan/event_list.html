@@ -96,9 +96,13 @@
 </tr>
 {%endfor %}
 </table>
-<div class="floatright">
+<div class="">
 {% paginate %}
 </div>
 
+<script>
+$('#tab_exercises').toggleClass('active');
+</script>
+    
 {% endblock content %}
 

@@ -80,10 +80,13 @@
                     </a>
                     {% endifequal %}
                     <small>
-                        by
+                        {% trans "by" %}
                         <a href="{{ object.user.get_profile.get_absolute_url }}">
                             {{ object.user }}
                         </a> 
+                         
+                        {{ object.date|naturalday }}
+                        
 
 
                 </small>

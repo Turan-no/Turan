@@ -30,7 +30,7 @@
             <div class="span8">
                 {% if exerciseqs.count %}
                 <div class="box spacer">
-                <a class="tools" href="{% url exercises %}?username={{other_user.username}}">{% trans "Show all" %}</a>
+                <a class="btn tools" href="{% url exercises %}?username={{other_user.username}}">{% trans "Show all" %}</a>
                 <h2>{% trans "Latest exercises" %}</h2>
                     <div class="gg">
                         <ul class="trips">
