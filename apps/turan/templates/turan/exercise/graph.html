@@ -78,7 +78,7 @@
     {% if not time_xaxis %}
     {% for slope in slopes %}
         {% if slope.segment %}
-        GraphPlotter.addGraphText({{slope.start}}, "{{ slope.segment.name }}" );
+        GraphPlotter.addGraphText({{slope.start}}, '<a href="{{slope.segment.get_absolute_url}}">{{ slope.segment.name }}</a>' );
         markings.push( { color: '#f3f3f3', xaxis: { from: {{slope.start}}, to: {{slope.start}}+{{slope.length}}/1000 } });
 
         {% endif %}
