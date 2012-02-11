@@ -243,11 +243,12 @@
 	labels.bind("click", function(ev) {
 		var clickedLabel = $(this);
 		var selectedLabels = labels.filter(function (i) { if ($(this).text() == clickedLabel.text()) return true; })
-		if ($(this).hasClass('selected'))
-			selectedLabels.removeClass('selected');
+        var className = 'label-important';
+		if ($(this).hasClass(className))
+			selectedLabels.removeClass(className);
 		else {
-			labels.removeClass('selected');
-			selectedLabels.addClass('selected');
+			labels.removeClass(className);
+			selectedLabels.addClass(className);
 		}
 
 	});
