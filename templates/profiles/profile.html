@@ -222,58 +222,48 @@
                 </div>
             <div class="box">
                 <h2>{% trans "What Next?" %}</h2>
-                <ul class="btn-group">
-                    <li class="btn">
-                        <a href="{% url calendar-index %}?username={{ other_user }}">
+                        <a class="btn" href="{% url calendar-index %}?username={{ other_user }}">
                         <img alt="calendar" src="{{MEDIA_URL}}/pinax/img/silk/icons/calendar.png">
                         {% trans "Show" %} {{ other_user_display }}{% trans "'s calendar" %}</a>
-                    </li>
+                        <br>
                     {% if user.is_authenticated and is_me %}
-                    <li class="btn">
-                        <a href="{% url exercise_create %}">
+                        <a class="btn" href="{% url exercise_create %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
                             {% trans "Add an exercise" %}
                         </a>
-                    </li>
-                    <li class="btn">
-                        <a href="{% url route_create %}">
+                        <br>
+                        <a class="btn" href="{% url route_create %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="menu_button" />
                             {% trans "Add a route"%}
                         </a>
-                    </li>
-                    <li class="btn">
-                        <a href="{% url import_data %}">
+                    <br>
+                        <a class="btn" href="{% url import_data %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="menu_button" />
                             {% trans "Import exercises from another site"%}
                         </a>
-                    </li>
-                    <li class="btn">
-                        <a href="{% url userprofiledetail_create %}">
+                    <br>
+                        <a class="btn" href="{% url userprofiledetail_create %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/cake.png" alt="menu_button" />
                             {% trans "Update weight / resting HR"%}
                         </a>
-                    </li>
-                    <li class="btn">
-                            <a href="{% url equipment_create %}">{%trans "Add exercise equipment" %}</a>
-                    </li>
-                    <li class="btn">
-                        <a href="{% url acct_email %}">
+                    <br>
+                            <a class="btn" href="{% url equipment_create %}">{%trans "Add exercise equipment" %}</a>
+                    <br>
+                        <a class="btn" href="{% url acct_email %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/email_go.png" alt="menu_button" />
                             {% trans "Verify an email address"%}
                         </a>
-                    </li>
-                    <li class="btn">
-                        <a href="{% url avatar_change %}">
+                    <br>
+                        <a class="btn" href="{% url avatar_change %}">
                             <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/photo.png" alt="menu_button" />
                             {% trans "Add an avatar"%}
                         </a>
-                    </li>
-                    <li class="btn"><a href="{% url invitations %}">
+                    <br>
+                    <a class="btn" href="{% url invitations %}">
                         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/user_go.png" alt="menu_button" />
                         {% trans "Invite people"%}</a>
-                    </li>
+                    <br>
                     {% endif %}
-                </ul>
             </div>
 
             {% include "profiles/profile_right_panel.html" %}
