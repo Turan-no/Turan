@@ -1175,23 +1175,6 @@ p.description {
     box-shadow: none;
     min-width: 0;
 }
-button, input[type="button"], input[type="submit"] {
-    border-radius: 3px;
-    -webkit-box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.1);
-    -o-box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.1);
-    background: -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
-    background: -moz-linear-gradient(top,  #FAFAFA,  #F4F4F4);
-    background: -o-linear-gradient(top,  #FAFAFA,  #F4F4F4); 
-    border: 1px solid #AAA;
-    color: #444;
-    font-size: inherit;
-    margin-bottom: 0px;
-    margin-top: 5px;
-    min-width: 4em;
-    padding: 6px 24px 6px 24px;
-    -webkit-box-reflect:below 0 -webkit-gradient(linear,0 0,0 100%,from(transparent),color-stop(.7,transparent),to(rgba(255,255,255,0.3)));
-}
 a.profilehoverpoint {
     margin: 0;
     padding: 0;
