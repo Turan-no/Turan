@@ -48,19 +48,17 @@ var GraphPlotter = {
                 break;
             }
         }
-        $("#choices").find("input:checked").each(function () {
+        $("#choices>button.active").each(function () {
+            console.log($("#choices>button.active"));
             var key = $(this).attr("name");
             if (key && that.datasets[key]) {
                 if (key == 'hr') {
                     //that.datasets[key]['constraints'] = that.hrconstraints;
-                    //
                   that.datasets[key]['threshold']= that.newhrconstraints;
                 }
                 else if (key == 'altitude') {
                     //that.datasets[key]['constraints'] = segmentconstraints;
-
                 }
-
                 if (key != 'lon' && key != 'lat') { // lon and lat doesn't go in the graph
                     data.push(that.datasets[key]);
                 }
@@ -276,7 +274,7 @@ var GraphPlotter = {
         this.choiceContainer = $("#choices");
 
         $.each(this.datasets, function(key, val) {
-            var checked = "checked = checked";
+            var checked = 'checked=checked';
             if (key == 'cadence') 
                 checked = ''
             if (key == 'temp') 
@@ -286,11 +284,10 @@ var GraphPlotter = {
 
             if (key != 'lon' && key != 'lat') {
 
-                that.choiceContainer.append('<input type="checkbox" name="' + key +
-                    '" ' + checked + ' id="chk_' + key + '"><label for="chk_' + key + 
-                    '">' + val.label + '</label></input>');
+                that.choiceContainer.append('<button class="btn" name="' + key + '" ' + checked + ' id="chk_' + key + '">' + val.label + '</button>');
             }
         });
+        $('#choices>button[checked]').button('toggle')
         $("#reset_zoom").bind("click", function(evt) {
             evt.preventDefault();
             $("#gtooltip").remove(); // tooltips messes up pos
@@ -327,15 +324,10 @@ var GraphPlotter = {
                 $("#averages").appendTo($('#graphcontainer'));
                 that.fullscreen = false;
             }
-        /* resize.js plugin does this
-            plot.resize();             
-            plot.setupGrid();          
-            plot.draw();               
-        */
         });
-        //$("#segment_add").bind("click", function(evt) {
-        //});
-        this.choiceContainer.find("input").bind("change", function(evt) {
+        this.choiceContainer.find("button").bind("click", function(evt) {
+                evt.stopPropagation(); // Stop bootstrap event from firing
+                $(this).toggleClass('active'); // Handle bootstrap event ourselves before we plot so class is set
                 that.plot(); 
         });
         $('.legendColorBox > div').each(function(i){
