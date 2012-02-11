@@ -37,7 +37,6 @@
         <li class="hidden temp"><span class="data temp__avg"></span> ℃</li>
         <li class="hidden temp"><span class="data temp__avg_est"></span> ℃</li>
     </ul>
-    <div class="btn-group pull-right">
         <a class="btn hidden" href="{% url segmentdetail_create %}?exercise={{object.id }}" title="{% trans "Add segment for this selection" %}" id="segment_add" >
             <img id="segment_add_img" src="{{ MEDIA_URL }}pinax/img/silk/icons/world_add.png" /> {% trans "Add segment" %}
         </a>
@@ -47,7 +46,6 @@
         <a class="btn" href="#" title="{% trans "Full screen graph" %}" id="enlarge" >
             <img class="fullscreenicon" src="{{MEDIA_URL}}turan/fs.png">
         </a>
-    </div>
 <div class="" id="exercisegraph_legend"></div>
     <div class="btn-group" data-toggle="buttons-checkbox" id="choices"></div>
 </div>

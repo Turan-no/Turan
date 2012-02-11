@@ -11,20 +11,6 @@
 {% trans "Turan: It's what matters." %}
 {% endblock %}
     {% block extramenu %}
-    <ul class="submenu">
-        <li style="float: left">
-            <a href="{% url route_create %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add route" %}" />
-                {% trans "Add route" %}
-            </a>
-        </li>
-        <li>
-            <a href="{% url import_data %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="{% trans "Import exercise" %}" />
-                {% trans "Import exercise" %}
-            </a>
-        </li>
-    </ul>
     {% endblock %}
 {% block content %}
 

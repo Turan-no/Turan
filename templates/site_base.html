@@ -80,9 +80,18 @@
 {% block login %}
     {% if user.is_authenticated %}
     <a href="{% url profile_redirect %}"><img alt="profile" src="{{MEDIA_URL}}/pinax/img/silk/icons/user_suit.png"><b>{% trans "My profile" %}</b></a>
-            <a class="red" href="{% url exercise_create %}">
-                {% trans "Add an exercise" %}
-            </a>
+    <a class="red" href="{% url exercise_create %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/add.png" alt="{% trans "Add route" %}" />
+        {% trans "Add an exercise" %}
+    </a>
+    <a href="{% url route_create %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add route" %}" />
+        {% trans "Add route" %}
+    </a>
+    <a href="{% url import_data %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="{% trans "Import exercise" %}" />
+        {% trans "Import exercise" %}
+    </a>
     <a href="{% url calendar-index %}?username={{user.username}}">{% trans "My calendar" %}</a>
     <a href="{% url acct_email %}">{% trans "Account" %}</a>
     {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> 
