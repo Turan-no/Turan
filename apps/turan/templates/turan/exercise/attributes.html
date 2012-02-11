@@ -14,9 +14,9 @@
                     <a href="#hearttab" data-toggle="tab">
                         <img src="{{ "heart"|silk_icon }}">
                         {% if object.user.get_profile.max_hr %}
-                        {{ object.avg_hr|percent:object.user.get_profile.max_hr }}
+                            {{ object.avg_hr|percent:object.user.get_profile.max_hr }}
                         {% else %}
-                        {{ object.avg_hr }} {% trans "BPM" %} 
+                            {{ object.avg_hr }} {% trans "BPM" %} 
                         {% endif %}
                     </a>
                 </li>
@@ -128,7 +128,6 @@
                             %
                         </td>
                     </tr>
-                {% endif %}
                 {% if object.max_hr %}
                     <tr>
                         <td>
@@ -154,6 +153,7 @@
                             %
                         </td>
                     </tr>
+                {% endif %}
                 </table>
             </div>
             {% endif %}
