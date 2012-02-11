@@ -49,7 +49,6 @@ var GraphPlotter = {
             }
         }
         $("#choices>button.active").each(function () {
-            console.log($("#choices>button.active"));
             var key = $(this).attr("name");
             if (key && that.datasets[key]) {
                 if (key == 'hr') {
@@ -293,6 +292,7 @@ var GraphPlotter = {
             $("#gtooltip").remove(); // tooltips messes up pos
             that.setRange({});
             that.plot(); 
+            $('#reset_zoom').toggleClass('hide');
         });
         $(window).bind("keyup", function(evt) { if (evt.keyCode == 70) { $('#enlarge').click() } });
         $("#enlarge").bind("click", function(evt) {
@@ -358,6 +358,10 @@ var GraphPlotter = {
             var posIndex = 0;
             for (serieskey in that.datasets) { // Find first and best series that we got
                 var series = that.datasets[serieskey]['data'];
+                if (series == undefined) {
+                    continue; // lon and lat dataseries does not have data object
+                }
+                console.log(serieskey);
                 for (key in series) {
                     if (series[key][0] >= pos.x) {
                         var posIndex = key;
@@ -411,17 +415,18 @@ var GraphPlotter = {
             
 
         });
-        $("#exercisegraph").bind("plotclick", function (event, pos, item) {
+        /*$("#exercisegraph").bind("plotclick", function (event, pos, item) {
             if (item) {
                 plot.highlight(item.series, item.datapoint);
             }
             // reset zoom on click
             that.setRange({});
             that.plot(); 
-        });
+        });*/
 
 
         $("#exercisegraph").bind("plotselected", function (event, ranges) {
+            $('#reset_zoom.hide').toggleClass('hide');
             that.setRange(ranges);
             that.plot();
         });
