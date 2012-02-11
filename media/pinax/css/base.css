@@ -24,18 +24,16 @@ img {
 dt {
     font-weight: bold;
 }
-#footer {
+footer {
     color: #999; /* footer text colour */
     margin: 0 auto;
     padding: 10px;
-    clear: both;
-    width: 1000px;
     background: white;
 }
-#footer a, #footer a:visited {
+footer a, footer a:visited {
     color: white; /* footer link colour */
 }
-#footer a:hover {
+footer a:hover {
     color: #933; /* footer link hover colour */
     text-decoration: none !important;
 }
@@ -409,26 +407,16 @@ legend { padding: 0 .4em; font-weight: bold; font-size: 1.2em; }
     background: #DEF;
     border: 1px solid #9BC;
 }
-div#lyricContainer {
-    height: 1.0em;
-    overflow: hidden;
-    float: right;
-}
-pre#footerLyrics {
-    margin-top: 0em;
-    color: #eee;
-}
-
 /* Footer area */
-#footer {
+footer {
 	background: #609A43;
 	color: white;
 }
-#footer .cloud {
+footer .cloud {
 	background: #508A33;
     padding: 5px;
 }
-#footer .cloud a {
+footer .cloud a {
 	color: #eee;
 	text-decoration: none;
 }

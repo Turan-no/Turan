@@ -1441,12 +1441,12 @@ display: none;
 }
 
 footer {
-background: #609A43;
-border-top: 1px solid #ddd;
--webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
--moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-color: white;
+    background: #609A43;
+    border-top: 1px solid #ddd;
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    color: white;
     padding: 20px;
     margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
     -webkit-border-radius: 0 0 6px 6px;
