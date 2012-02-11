@@ -119,11 +119,12 @@
                 {% endfor %}
             {% endif %}
           <div class="content"> 
-            <div class="subnav">
+              <div class="subnav">
                 <ul class="nav nav-pills">
-                {% block subnav_base %}{% block subnav %}{% endblock %}{% endblock %}
+                  {% block subnav_base %}{% block subnav %}{% endblock %}{% endblock %}
                 </ul>
-            </div>
+              </div>
+
             {% block body %}
             {% endblock %}
           </div>
