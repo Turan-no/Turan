@@ -361,7 +361,6 @@ var GraphPlotter = {
                 if (series == undefined) {
                     continue; // lon and lat dataseries does not have data object
                 }
-                console.log(serieskey);
                 for (key in series) {
                     if (series[key][0] >= pos.x) {
                         var posIndex = key;
