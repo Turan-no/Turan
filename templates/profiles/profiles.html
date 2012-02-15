@@ -39,7 +39,7 @@
             {% regroup users by date_joined.date as users_by_date_joined %}
 
             {% for date in users_by_date_joined %}
-                <h2 class="join_date">{{ date.grouper|naturalday:_("MONTH_DAY_FORMAT")|capfirst }}</h2>
+                <h6 class="join_date">{{ date.grouper|naturalday:_("MONTH_DAY_FORMAT")|capfirst }}</h6>
 
                 {% for user in date.list %}
                     {% show_profile user %}
