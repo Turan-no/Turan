@@ -101,34 +101,24 @@
                 </li>
             {% endif %}
         </ul>
-        <div class="tab-content">
+        <div id="exercise-attributes" class="tab-content">
             {% if object.avg_hr %}
             <div class="tab-pane" id="hearttab">
-                    <dl>
-                        <dt>
-                            {% trans "Avg HR" %}
-                        </dt>
-                        <dd>
+                <h6>
+                    {% trans "Avg HR" %}
+                </h6>
                             {{ object.avg_hr }} {% trans "BPM" %} 
-                            {% if object.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.user.get_profile.max_hr }} {%endif %}
-                        </dd>
+                            , {% if object.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.user.get_profile.max_hr }} {%endif %}
                 {% if object.max_hr %}
-                        <dt>
+                        <h6>
                              {% trans "Max HR" %}
-                        </dt>
-                        <dd>
+                        </h6>
                             {{ object.max_hr }} {% trans "BPM" %} 
                 {% endif %}
                 {% if object.max_hr %}
-                        <dt>
-                             {% trans "Max HR" %}
-                        </dt>
-                        <dd>
-                            {% if object.user.get_profile.max_hr %} {{ object.max_hr|percent:object.user.get_profile.max_hr }}{% endif %}
+                            , {% if object.user.get_profile.max_hr %} {{ object.max_hr|percent:object.user.get_profile.max_hr }}{% endif %}
                             
-                        </dd>
                 {% endif %}
-                    </dl>
             </div>
             {% endif %}
             {% if object.route %}

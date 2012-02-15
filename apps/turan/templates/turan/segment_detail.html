@@ -37,7 +37,7 @@
 
     {% if slopes %}
     <div class="">
-        <span class="label">{% trans "Best efforts" %}</span>
+        <h6>{% trans "Best efforts" %}</h6>
             <ol>
             {% for object in slopes|slice:":3" %}
                 <li class="floatleft {% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
