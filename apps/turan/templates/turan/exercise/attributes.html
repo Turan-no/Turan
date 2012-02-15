@@ -88,7 +88,7 @@
                 <li class="">
                     <a href="#13" data-toggle="tab">
                         <img src="{{ "tag_blue"|silk_icon }}">
-                        <span class="label">{{ tag_list|length }}</span>
+                        <span class="labelast">{{ tag_list|length }}</span>
                     </a>
                 </li>
             {% endif %}
@@ -148,31 +148,21 @@
             {% if object.avg_speed %}
             <div class="tab-pane" id="4">
                 {% if object.max_speed %}
-                <li>
-                <span class="label">{% trans "Max Speed" %}:</span> {{ object.max_speed|floatformat }} {% trans "km/h" %}
-                </li>
+                <h6>{% trans "Max Speed" %}</h6> {{ object.max_speed|floatformat }} {% trans "km/h" %}
                 {% endif %}
             </div>
             {% endif %}
             <div class="tab-pane" id="5">
-                <ul class="">
-                <li class="temperature" >
-                    <span class="label">℃ {% trans "Temperature" %}:</span> {{ object.temperature|floatformat }} {% trans "℃" %}
+                    <h6>{% trans "Temperature" %}</h6> {{ object.temperature|floatformat }} {% trans "℃" %}
 
                     {% if object.min_temperature %}
-                    <li class="temperature" >
-                        <span class="label">{% trans "Min Temperature" %}:</span> {{ object.min_temperature|floatformat }} {% trans "℃" %}
-                    </li>
+                        <h6>{% trans "Min Temperature" %}</h6> {{ object.min_temperature|floatformat }} {% trans "℃" %}
                     {% endif %}
 
                     {% if object.max_temperature %}
-                    <li class="temperature" >
-                        <span class="label">{% trans "Max Temperature" %}:</span> {{ object.max_temperature|floatformat }} {% trans "℃" %}
-                    </li>
+                        <h6>{% trans "Max Temperature" %}</h6> {{ object.max_temperature|floatformat }} {% trans "℃" %}
                     {% endif %}
                     {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})
-                </li>
-                </ul>
             </div>
             {% if object.comment %}
             <div class="active tab-pane" id="commenttab">
@@ -183,17 +173,15 @@
             {% endif %}
             {% if object.avg_cadence %}
             <div class="tab-pane" id="10">
-                <ul class="">
                 {% if object.avg_pedaling_cad %}
-                <li class="cadence"><span class="label">{% trans "Avg Pedaling Cadence" %}:</span> {{ object.avg_pedaling_cad }} {% trans "RPM" %}
+                <h6>{% trans "Avg Pedaling Cadence" %}</h6> {{ object.avg_pedaling_cad }} {% trans "RPM" %}
                 {% if object.avg_cadence %}
 
-                        <li class="cadence">
-                            <span class="label">{% trans "Avg Cadence" %}:</span> {{ object.avg_cadence }} {% trans "RPM" %}</li>
+                            <h6 class="labelast">{% trans "Avg Cadence" %}</h6> {{ object.avg_cadence }} {% trans "RPM" %}</li>
 
                 {% endif %}
                 {% if object.max_cadence %}
-                <li><span class="label">{% trans "Max Cadence" %}:</span> {{ object.max_cadence }} {% trans "RPM" %}</li>
+                <li><h6 class="labelast">{% trans "Max Cadence" %}</h6> {{ object.max_cadence }} {% trans "RPM" %}</li>
                 {% endif %}
                 </li>
                 {% endif %}
@@ -202,9 +190,7 @@
             {% endif %}
             {% if object.avg_pedaling_power %}
             <div class="tab-pane" id="11">
-                <ul class="">
-                <li class="power">
-                <span class="label">{% trans "Avg Pedaling Power" %}:</span> 
+                <h6 class="labelast">{% trans "Avg Pedaling Power" %}</h6> 
                 {{ object.avg_pedaling_power }} {% trans "W" %} 
                 <span class="smaller">
                 {% if userftp  %} {{ object.avg_pedaling_power|percent:userftp }} FTP {% endif %}
@@ -212,53 +198,35 @@
                 </span>
 
                 {% if object.avg_power %}
-                    <li class="power">
-                    <span class="label">{% trans "Avg Power" %}:</span> {{ object.avg_power }} {% trans "W" %}
-                    </li>
+                    <h6 class="labelast">{% trans "Avg Power" %}</h6> {{ object.avg_power }} {% trans "W" %}
                 {% endif %}
 
                 {% if object.normalized_power %}
-                <li class="power">
-                    <span class="label">{% trans "Normalized Power" %}:</span> {{ object.normalized_power }} {% trans "W" %}
-                </li>
+                    <h6 class="labelast">{% trans "Normalized Power" %}</h6> {{ object.normalized_power }} {% trans "W" %}
                 {% endif %}
                 {% if object.get_intensityfactor %}
-                <li class="intensity">
-                    <span class="label">{% trans "Intensity Factor" %}:</span> {{ object.get_intensityfactor }}
-                </li>
+                    <h6 class="labelast">{% trans "Intensity Factor" %}</h6> {{ object.get_intensityfactor }}
                 {% if object.get_tss %}
-                <li class="tss">
-                    <span class="label">{% trans "TSS" %}:</span> {{ object.get_tss }}
-                </li>
+                    <h6 class="labelast">{% trans "TSS" %}</h6> {{ object.get_tss }}
                 {% endif %}
                 {% endif %}
                 {% if object.max_power %}
-                <li class="power">
-                    <span class="label">{% trans "Max Power" %}:</span> {{ object.max_power }} {% trans "W" %}
-                </li>
+                    <h6 class="labelast">{% trans "Max Power" %}</h6> {{ object.max_power }} {% trans "W" %}
                 {% endif %}
                 {% if object.xPower %}
-                <li class="power">
-                <span class="label">{% trans "xPower" %}:</span> {{ object.xPower }} {% trans "W" %} {{ "CrossPower"|wiki_help}}
+                <h6 class="labelast">{% trans "xPower" %}</h6> {{ object.xPower }} {% trans "W" %} {{ "CrossPower"|wiki_help}}
                         {% if object.get_ri %}
-                        <li class="power">
-                            <span class="label">{% trans "Relative Intensity (RI)" %}:</span> {{ object.get_ri|floatformat }}
-                        </li>
+                            <h6 class="labelast">{% trans "Relative Intensity (RI)" %}</h6> {{ object.get_ri|floatformat }}
                         {% endif %}
                         {% if object.get_bikescore %}
-                        <li class="power">
-                        <span class="label">{% trans "BikeScore" %}{{"BikeScore"|wiki_help}}:</span> {{ object.get_bikescore }}
-                        </li>
+                        <h6 class="labelast">{% trans "BikeScore" %}{{"BikeScore"|wiki_help}}</h6> {{ object.get_bikescore }}
                         {% endif %}
-                </li>
                 {% endif %}
-                </li>
-                </ul>
                 </div>
                 {% endif %}
                 {% if object.url %}
                 <div class="tab-pane" id="12">
-                        <span class="label">{% trans "URL" %}:</span> {{ object.url|urlize }}
+                        <h6 class="labelast">{% trans "URL" %}</h6> {{ object.url|urlize }}
                 </div>
                 {% endif %}
                 {% if tag_list %}
