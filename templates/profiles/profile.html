@@ -16,11 +16,12 @@
 <div class="content">
     <div class="page-header">
         {% if other_user_display %}<h2>{{ other_user_display }}{% endif %}
-            <small>
         {% if other_user.get_profile.motto %}
-            <span class="motto">«{{ other_user.get_profile.motto }}»</span>
-        </small>
+            <small>
+            «{{ other_user.get_profile.motto }}»
+            </small>
         {% endif %}
+        </h2>
 
     </div>
 </div>
