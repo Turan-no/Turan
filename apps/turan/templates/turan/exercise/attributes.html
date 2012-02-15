@@ -5,7 +5,7 @@
 {% load tagging_tags %}
 
 
-<div class="well" style="" itemscope itemtype="http://schema.org/SportsEvent">
+<div class="" style="" itemscope itemtype="http://schema.org/SportsEvent">
 
     <div class="tabbable tabs-left">
         <ul class="nav nav-tabs">
@@ -104,57 +104,31 @@
         <div class="tab-content">
             {% if object.avg_hr %}
             <div class="tab-pane" id="hearttab">
-                <table class="table-condensed table-striped">
-                    <tr>
-                        <td>
+                    <dl>
+                        <dt>
                             {% trans "Avg HR" %}
-                        </td>
-                        <td>
-                            {{ object.avg_hr }} 
-                        </td>
-                        <td>
-                            {% trans "BPM" %} 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            {% trans "Avg HR" %}
-                        </td>
-                        <td>
-                            {% if object.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.user.get_profile.max_hr }}
-                            {%endif %}
-                        </td>
-                        <td>
-                            %
-                        </td>
-                    </tr>
+                        </dt>
+                        <dd>
+                            {{ object.avg_hr }} {% trans "BPM" %} 
+                            {% if object.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.user.get_profile.max_hr }} {%endif %}
+                        </dd>
                 {% if object.max_hr %}
-                    <tr>
-                        <td>
+                        <dt>
                              {% trans "Max HR" %}
-                        </td>
-                        <td>
-                            {{ object.max_hr }}
-                        </td>
-                        <td>
-                            {% trans "BPM" %} 
-                        </td>
-                    </tr>
+                        </dt>
+                        <dd>
+                            {{ object.max_hr }} {% trans "BPM" %} 
                 {% endif %}
                 {% if object.max_hr %}
-                    <tr>
-                        <td>
+                        <dt>
                              {% trans "Max HR" %}
-                        </td>
-                        <td>
-                            {% if object.user.get_profile.max_hr %} ({{ object.max_hr|percent:object.user.get_profile.max_hr }}){% endif %}
-                        </td>
-                        <td>
-                            %
-                        </td>
-                    </tr>
+                        </dt>
+                        <dd>
+                            {% if object.user.get_profile.max_hr %} {{ object.max_hr|percent:object.user.get_profile.max_hr }}{% endif %}
+                            
+                        </dd>
                 {% endif %}
-                </table>
+                    </dl>
             </div>
             {% endif %}
             {% if object.route %}
@@ -166,26 +140,20 @@
             {% endif %}
             <div class="tab-pane" id="3">
                 {% if object.time %}
-                <ul class="">
-                <li class="time">
-                    <span class="label">
-                        {% trans "Start time" %}:
-                    </span>
+                    <h6>
+                        {% trans "Start time" %}
+                    </h6>
                     <span itemprop="startDate" datetime="{{ object.date|date:"Y-m-d" }}T{{ object.time|time:"H:i:s" }}Z">
                         {{ object.time }}
                     </span>
 
-                </li>
                 {% endif %}
                 {% if object.date %}
-                <li class="date">
-                    <span class="label">
-                        {% trans "Date" %}:
-                    </span>
+                <h6>
+                        {% trans "Date" %}
+                </h6>
                         {{ object.date }}
-                </li>
                 {% endif %}
-                </ul>
             </div>
             {% if object.avg_speed %}
             <div class="tab-pane" id="4">
