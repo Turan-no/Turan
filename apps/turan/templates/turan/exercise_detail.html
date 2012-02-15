@@ -263,11 +263,7 @@
 
 $(document).ready(function(){
     // Trigger tab change on page load
-    var orly = window.location.hash.split('-')
-    if (orly) {
-        if (orly[0] == "#tabs")
-            $("a[href='"+orly[0]+"-"+orly[1]+"']").click()
-    }
+    $("a[href='"+window.location.hash+"']").click();
     if (Mapper.map) {
         // Init the marker for graph hover thingy
         Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
