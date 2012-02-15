@@ -729,6 +729,7 @@ div.averages ul,
 div.averages h4,
 div.averages>ul.iconlist>li {
     float: left;
+    clear: none;
 }
 div.averages>ul.iconlist>li {
     margin-left: 5px;
@@ -1397,6 +1398,7 @@ body {
 ul.iconlist li {
     list-style-type: none;
     margin-left: 0;
+    clear: both;
 }
 ul.iconlist li>span {
     display: block;
