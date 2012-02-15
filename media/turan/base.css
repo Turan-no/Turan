@@ -671,7 +671,7 @@ table.month div.day {
 	background-color: yellow;
 }
 
-table.month .fade {
+table.month .faded {
     color: #eee;
 }
 
@@ -731,7 +731,7 @@ div.averages>ul.iconlist>li {
     float: left;
 }
 div.averages>ul.iconlist>li {
-    margin-left: 30px;
+    margin-left: 5px;
 }
 div.averages h4 {
     margin: 0;
@@ -1395,22 +1395,14 @@ body {
     height: 20px;
 }
 ul.iconlist li {
-list-style-type: none;
-clear: both;
+    list-style-type: none;
+    margin-left: 0;
 }
 ul.iconlist li>span {
-display: block;
-float: left;
-margin-right: 5px;
-margin-bottom: 1px;
-}
-a {
-background: transparent;
-color: #533;
-text-decoration: none;
-}
-a:visited {
-color: #333;
+    display: block;
+    float: left;
+    margin-right: 3px;
+    margin-bottom: 1px;
 }
 a:hover {
 color: #933;
@@ -1533,4 +1525,27 @@ footer {
 }
 .clearboth {
     clear: both;
+}
+/* Footer area */
+footer {
+	background: #609A43;
+	color: white;
+}
+footer .cloud {
+	background: #508A33;
+    padding: 5px;
+}
+footer .cloud a {
+	color: #eee;
+	text-decoration: none;
+}
+div.cloud ul {
+	font-size: 100%;
+	margin: 0;
+}
+div.cloud ul li {
+	display: inline;
+	list-style-type: none;
+	margin: 0;
+	padding-right: 1em;
 }

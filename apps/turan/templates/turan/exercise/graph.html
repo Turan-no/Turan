@@ -37,6 +37,7 @@
         <li class="hidden temp"><span class="data temp__avg"></span> ℃</li>
         <li class="hidden temp"><span class="data temp__avg_est"></span> ℃</li>
     </ul>
+</div>
     <div class="pull-right btn-group" data-toggle="buttons-checkbox" id="choices"></div>
     <div class="btn-group">
             <a class="btn hide" href="{% url segmentdetail_create %}?exercise={{object.id }}" title="{% trans "Add segment for this selection" %}" id="segment_add" >
@@ -49,8 +50,6 @@
                 <img class="fullscreenicon" src="{{MEDIA_URL}}turan/fs.png">
             </a>
     </div>
-    <div class="" id="exercisegraph_legend"></div>
-</div>
 <script type="text/javascript">
 {% localize off %}
 

@@ -49,7 +49,7 @@
                 {{ object.get_name }}
             </a>
             {% if object.segmentdetail_set.exists %}
-            <p class="smaller fade floatright">
+            <p class="smaller floatright">
 
             {% for sd in object.segmentdetail_set.select_related %}
             {% if sd.segment%}
@@ -59,7 +59,7 @@
 
             </p>
             {% endif %}
-            <p class="smaller fade">
+            <p class="smaller faded">
                 {% if object.route.distance %}
                     {{ object.route.distance|floatformat }} {% trans "km" %}
                 {% endif %}
@@ -91,7 +91,7 @@
                 <img class="floatright" src="{{ object.get_png_url }}" width="32" height="32"/>
             </a> 
             <a href="{{ object.get_absolute_url }}">{{ object.name }}</a> 
-            <p class="smaller fade">
+            <p class="smaller faded">
                 {% if object.distance %}
                     {{ object.distance|floatformat }} {% trans "km" %},
                 {% endif %}
@@ -181,7 +181,7 @@
             <hr class="clearleft" />
         </div>
                 <p>{{ object }}</p>
-                <p class="smaller fade">
+                <p class="smaller faded">
                     {{ object.distance|floatformat }} km, 
                     {{ object.ascent }} m {% trans "ascent" %}
                 </p>
