@@ -101,16 +101,12 @@ var GraphPlotter = {
             });
         }
 
-
         if (minIndex != null && maxIndex != null) {
-            if (typeof(Mapper) != "undefined")
-                Mapper.loadGeoJSON(minIndex, maxIndex);
 
             var segment_link = $("#segment_add");
             segment_link.attr('href' , segment_link.attr('href')+ '&start=' + minIndex + '&stop=' + maxIndex);
             $("#segment_add").removeClass("hidden");
 
-            //window.location.hash = 'graph-zoom-' + Math.round(min*10)/10 + '-' + Math.round(max*10)/10;
             window.location.hash = 'graph-zoom-' + min + '-' + max;
 
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
@@ -137,6 +133,8 @@ var GraphPlotter = {
                     }
                 });
             });
+            if (typeof(Mapper) != "undefined")
+                Mapper.loadGeoJSON(minIndex, maxIndex);
         }
         else {
             if (typeof(Mapper) != "undefined")

@@ -217,19 +217,18 @@
   </div>
 <script type="text/javascript">
 
-/*
     function selectTab(evt) {
-        var id = evt.target.id ? evt.target.id : evt.target.parentNode.id;
-        id = "tabs-" + id.split('-')[2];
-        $('#tabs div.visible').removeClass('visible');
-        $('#tabs div#' + id).addClass('visible');
-        $('#tabs>ul>li').removeClass('selected');
-        $(this).addClass('selected');
-        if ($(this).attr("id").split('-')[0] == "tabs") {
-            window.location.hash = $(this).attr("id");
-        }
+        var id = $(this).attr('href');
+        //id = "tabs-" + id.split('-')[2];
+        //$('#tabs div.active').removeClass('visible');
+        //$('#tabs div#' + id).addClass('active');
+        //$('#tabs>ul>li').removeClass('selected');
+        //$(this).addClass('selected');
+        //if ($(this).attr("id").split('-')[0] == "tabs") {
+        window.location.hash = id;
+        //}
     }
-    /*$('#tabs>ul>li').each(function () {
+    $('.span12 .nav-tabs>li>a').each(function () {
         $(this).bind("click", selectTab);
     });
     $('.zoom-select').each(function () {
@@ -245,16 +244,15 @@
                 GraphPlotter.plot();
             }
             else if (orly[0] == "#tabs") {
-                $(window.location.hash).trigger("click");
+                // Switch active tab content
+                $("a[href='"+orly[0]+"-"+orly[1]+"']").click()
+                //$('#exercise-tab-content .tab-pane.active').toggleClass('active');
+                //$(window.location.hash).trigger("click");
             }
         }
     });
-    var orly = window.location.hash.split('-')
-    if (orly) {
-        if (orly[0] == "#tabs")
-            $(window).trigger("hashchange");
-            //$(window.location.hash).trigger("click");
-    }
+
+    /*
 
     var commentcount = $('.bulk').size();
     {% if object.comment %}
@@ -264,6 +262,12 @@
     //$('#tabs-select-2').html('<p>{% trans "Comments" %} <span class="floatright">' + commentcount + '</span></p>');
 
 $(document).ready(function(){
+    // Trigger tab change on page load
+    var orly = window.location.hash.split('-')
+    if (orly) {
+        if (orly[0] == "#tabs")
+            $("a[href='"+orly[0]+"-"+orly[1]+"']").click()
+    }
     if (Mapper.map) {
         // Init the marker for graph hover thingy
         Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
