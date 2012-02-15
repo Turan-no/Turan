@@ -1399,7 +1399,6 @@ list-style-type: none;
 clear: both;
 }
 ul.iconlist li>span {
-width: 100px;
 display: block;
 float: left;
 margin-right: 5px;

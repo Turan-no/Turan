@@ -7,30 +7,36 @@
 <div class="profile">
     <div class="floatleft">{% avatar user 40 %}</div>
     <ul class="iconlist">
-        <li class="label"><a href="{% url profile_detail user.username %}">{{ user.get_profile }}</a></li>
-    {% if user.get_profile.motto %}
-        <li><span class="label">{% trans "Motto" %}</span>: {{ user.get_profile.motto }}</li>
-    {% endif %}
+        <li class="">
+            <h4>
+            <a href="{% url profile_detail user.username %}">{{ user.get_profile }}</a>
+            <small class="labbel">
+                {% if user.get_profile.motto %}
+                    «{{ user.get_profile.motto }}»
+                {% endif %}
+            </small>
+        </h4>
+        </span>
     {% if user.get_profile.about %}
-        <li><span class="label">{% trans "About" %}</span>: {{ user.get_profile.about }}</li>
+        <span><span class="labbel">{% trans "About" %}</span>: {{ user.get_profile.about }}</span>
     {% endif %}
     {% if user.duration %}
-        <li><span class="label">{% trans "Exercise duration" %}</span>: {{ user.duration|retarddurationformat }}</li>
+        <span><span class="labbel">{% trans "Exercise duration" %}</span>: {{ user.duration|retarddurationformat }}</span>
     {% endif %}
     {% if user.get_profile.location%}
-        <li><span class="label">{% trans "Location" %}</span>: {{ user.get_profile.location }}</li>
+        <span><span class="labbel">{% trans "Location" %}</span>: {{ user.get_profile.location }}</span>
     {% endif %}
     {% if user.get_profile.height or user.get_profile.weight %}
-        <li>
+        <span>
             <ul class="extra horizlist">
             {% if user.get_profile.height %}
-                <li><span class="label">{% trans "Height" %}</span>: {{ user.get_profile.height }} cm</li>
+                <span><span class="labbel">{% trans "Height" %}</span>: {{ user.get_profile.height }} cm</span>
             {% endif %}
             {% if user.get_profile.weight %}
-                <li><span class="label">{% trans "Weight" %}</span>: {{ user.get_profile.weight }} kg</li>
+                <span><span class="labbel">{% trans "Weight" %}</span>: {{ user.get_profile.weight }} kg</span>
             {% endif %}
             </ul>
-        </li>
+        </span>
     {% endif %}
     </ul>
 </div>
