@@ -1,4 +1,20 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+    color: #333;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-image: -webkit-gradient(radial, center 50, 0, center 50, 400, from(#42596f), to(#1d3853));
+    background-image: -moz-radial-gradient(50% 0%, farthest-side, #42596f, #1d3853);
+    background-color: #1d3853;
+    background-attachment: fixed;
 
+}
 /* Tables */
 table.fullsize {
 	margin: 0.3em 0;
@@ -474,12 +490,13 @@ ul.iconlist>li.power {
 
 
 div.map {
-    width: 480px;
+    width: 620px;
     height: 500px;
 }
 div.mapcontainer {
-    float: right;
     padding-top: -2px;
+    padding-right: 2px;
+    border: 1px solid #ddd;
 }
 
 .toplist ol {
@@ -523,13 +540,13 @@ div.mapcontainer {
     list-style-image: url(/site_media/pinax/img/silk/icons/shape_rotate_clockwise.png);
     font-size: 1.1em;
 }
-.tab-pane {
+#exercise-tab-content .tab-pane {
     display: block !important;
     position: absolute;
     top: -10000px;
     left: -10000px;
 }
-.tab-content>div.active {
+#exercise-tab-content div.active {
     display: block;
     position: relative;
     top: 0;
@@ -545,22 +562,6 @@ div.mapcontainer {
     */
 
 }
-#tabs>div.visible:before,
-#tabs>div.visible:after { 
-    bottom:15px;
-    left:10px;
-    width:50%;
-    height:20%;
-    -webkit-box-shadow:0 15px 10px rgba(0, 0, 0, 0.7);   
-       -moz-box-shadow:0 15px 10px rgba(0, 0, 0, 0.7);
-            box-shadow:0 15px 10px rgba(0, 0, 0, 0.7);
-    -webkit-transform:rotate(-3deg);    
-       -moz-transform:rotate(-3deg);   
-        -ms-transform:rotate(-3deg);   
-         -o-transform:rotate(-3deg);
-            transform:rotate(-3deg);
-}
-
 
 li {
 	list-style-type: none;
@@ -1219,7 +1220,7 @@ a.profilehoverpoint>img {
 }
 @media (min-width: 1200px) {
   div.map {
-      width: 570px;
+      width: 770px;
   }
   div.exercisegraph {
       width: 1160px;
@@ -1530,4 +1531,7 @@ footer {
        -moz-border-radius: 0;
             border-radius: 0;
   }
+}
+.clearboth {
+    clear: both;
 }
