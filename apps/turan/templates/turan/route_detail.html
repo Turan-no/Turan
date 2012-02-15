@@ -20,22 +20,21 @@
 {% endwith %}
 {% endblock %}
 {% block content %}
-
-{% if object.gpx_file %}
-<div class="mapcontainer"><div class="map drop-shadow raised" id="map"></div>
-    <a href="{{MEDIA_URL}}turan/{{ object.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
-</div>
-{% endif %}
 <div class="page-header">
-{% if user.is_authenticated %}
-        <a class="pull-right btn-primary btn" href="{% url route_update object.id %}">{% trans "Modify" %}</a></li>
-{% endif %}
 <h1>
     {{ object.name }}
+{% if user.is_authenticated %}
+    <a class="pull-right btn-primary btn" href="{% url route_update object.id %}">{% trans "Modify" %}</a>
 </h1>
-<div class="spacer">
-{% include "turan/route/attributes.html" %}
+{% endif %}
 </div>
+<div class="row">
+<div class="span4">
+{% include "turan/route/attributes.html" %}
+
+
+
+
 <ul class="photos hlist">
     {% for photo in object.get_photos %}
     <li>
@@ -45,7 +44,6 @@
     </li>
     {% endfor %}
 </ul>
-<hr class="clearleft" />
 
 {% comment %}
 <ul class="buttons">
@@ -64,7 +62,7 @@
 {% autopaginate object_list %}
 {% if object_list %}
     <h2>{% trans "Average speed" %}</h2>
-    <div id="avgspeeddiv" style="width:460px;height:200px"></div>
+    <div id="avgspeeddiv" style="height:200px"></div>
     <script id="source" language="javascript" type="text/javascript">
     $(function () {
         var times = [
@@ -89,6 +87,16 @@
             $.plot($("#avgspeeddiv"), times, options);
         });
     </script>
+    </div>
+    <div class="span8">
+        {% if object.gpx_file %}
+        <div class="mapcontainer"><div class="map" id="map"></div>
+            <a href="{{MEDIA_URL}}turan/{{ object.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+    
     {% include "turan/altitude_profile.html" %}
     <form id="route_form">
     <h2>{% trans "Trips on this route" %}</h2>
