@@ -90,7 +90,7 @@
             <ol>
             {% for other_user in object.get_toplist %}
                 <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
-                    <span class="smaller">
+                    <span class="">
                         <span class="duration">
                             {{ other_user.duration|durationformatshort}}
                         </span>
