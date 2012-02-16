@@ -17,42 +17,32 @@
 {% block content %}
 <div class="page-header">
     <h1>{% trans "Playback of exercise" %}</h1>
-    <ul class="btn-group">
-        <li style="" class="btn">
-            <a id="control_start" href="#">
+    <div class="btn-group">
+            <a class="btn" id="control_start" href="#">
                 <img class="icons" src="{{ "control_start"|silk_icon }}" alt="{% trans "Start" %}" />
                 {% trans "Start" %}
             </a>
-        </li>
-        <li style="" class="btn">
-            <a id="control_play" href="#">
+            <a class="btn" id="control_play" href="#">
                 <img class="icons" src="{{ "control_play"|silk_icon }}" alt="{% trans "Play" %}" />
                 {% trans "Play" %}
             </a>
-        </li>
-        <li style="" class="btn">
-            <a id="control_pause" href="#">
+            <a class="btn" id="control_pause" href="#">
                 <img class="icons" src="{{ "control_pause"|silk_icon }}" alt="{% trans "Pause" %}" />
                 {% trans "Pause" %}
             </a>
-        </li>
-        <li style="" class="btn">
-            <a id="control_fastforward" href="#">
+            <a class="btn" id="control_fastforward" href="#">
                 <img class="icons" src="{{ "control_fastforward"|silk_icon }}" alt="{% trans "FFWD" %}" />
                 {% trans "Fast forward" %}
             </a>
-        </li>
         {% for object in exercises %}
         {% if object.live_state == 'L' %}
-        <li style="" class="btn">
-            <a id="control_live" href="#">
+            <a class="btn" id="control_live" href="#">
                 <img class="icons" src="{{ "control_fastforward"|silk_icon }}" alt="{% trans "Live" %}" />
                 {% trans "Go Live" %}
             </a>
-        </li>
         {% endif %}
         {% endfor %}
-    </ul>
+    </div>
 </div>
 {% for exercise in exercises %}
 <a href="{% url exercise exercise.pk %}">
@@ -66,6 +56,7 @@
 <input type="checkbox" checked="checked" name="altitude" id="chk_altitude"><label for="chk_altitude">{% trans "Altitude profile"%}</label></input>
 <input type="checkbox" checked="checked" name="map" id="chk_map"><label for="chk_map">{% trans "Map" %}</label></input>
 {% endcomment %}
+<br>
 {% trans "You can click in the altitude profile to fast forward to that point "%}
 {% include "turan/altitude_profile.html" %}
 {% for object in exercises %}
@@ -89,7 +80,7 @@
 <p class="graphheader power floatleft">{% trans "Power" %}<br><span class="title" id="powerval{{forloop.counter0}}"></span></p>
 <div class="playergraph power floatleft drop-shadow" id="powerdiv{{forloop.counter0}}" style="width:130px;height:40px"></div>
 {% endif %}
-<hr class="clearleft">
+<hr class="clear">
 
 <p class="graphheader speed floatleft">{% trans "Speed" %}<br><span class="title" id="2speedval{{forloop.counter0}}"></span></p>
 <div class="drop-shadow playergraph speed floatleft" id="2speeddiv{{forloop.counter0}}" style="width:130px;height:60px"></div>
@@ -107,6 +98,10 @@
 {% endif %}
 
 {% endfor %}
+<hr class="clear">
+<div class="row">
+<div class="span12 mapcontainer" style="float: none" ><div style="height:800px;" class="" id="map"></div>
+</div>
 <script  language="javascript" type="text/javascript">
     {% localize off %}
 
@@ -436,8 +431,5 @@ var play = function() {
 
 {% endlocalize %}
 </script>
-<div class="container">
-<div class="mapcontainer" style="float: none" ><div style="width:950px;height:800px" class="" id="map"></div>
-</div>
 {% endblock content %}
 
