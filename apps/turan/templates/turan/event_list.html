@@ -65,13 +65,12 @@
 {% for object in object_list %}
 <tr class="{% cycle "odd" "even" %} hoverpoint" id="trip_{{object.id}}">
     <td>
-        {{ object|exercise_mouseover }}
         <img width="64" height="64" alt="{{ object.exercise_type }}" src="{{ object.icon }}" />
         <p style="text-align: center"><small class="fade"> {{ object.date|naturalday }} </small></p>
     </td>
     <td>
         <h4>
-            <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+            <a {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">{{ object }}</a>
         </h4>
         <p class="comment">
             <small>{{ object.comment|truncatewords:20 }}</small>

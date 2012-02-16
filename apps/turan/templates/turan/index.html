@@ -30,21 +30,18 @@
 
     <div class="row">
     <div class="span6">
-        {% for object in exercise_list %}
-         {{ object|exercise_mouseover }}
-        {% endfor %}
     <h2 class="">{% trans "Latest exercises" %}</h2>
     <ul class="trips">
         {% for object in exercise_list %}
         <li class="{% cycle "even" "odd" %} hoverpoint" id="trip_{{ object.id }}">
-            <a href="{{ object.get_absolute_url }}">
+        <a href="{{ object.get_absolute_url }}">
                 <img alt="User image" class="floatleft" src="{{ object.icon|safe }}" width="32" height="32" />
             </a>
             <a class="floatright" href="{% url profile_detail object.user %}">{% avatar object.user 30 %}</a>
             {% if object.route.gpx_file %}
             <img class="floatright" src="{{ object.route.get_png_url }}" width="32" height="32"/>
             {% endif %}
-            <a href="{{ object.get_absolute_url }}">
+            <a {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">
                 {{ object.get_name }}
             </a>
             {% if object.segmentdetail_set.exists %}
