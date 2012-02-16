@@ -1554,3 +1554,7 @@ div.cloud ul li {
 .wellast {
     margin-right: 15px;
 }
+.value {
+    font-size: 1.5em;
+    font-weight: bold;
+}
