@@ -94,15 +94,15 @@
         </div>
 
         <div style="clear: right" class="row">
-          <div style="" class="span4">
+            <div style="" class="span{% if object.route.gpx_file%}4{%else%}12{%endif%}">
             {% include "turan/exercise/attributes.html" %}
           </div>
-          <div style="" class="span8">
             {% if object.route.gpx_file %}
-            <div class="mapcontainer"><div class="map ui-widget-content" id="map"></div>
-            </div>
+              <div style="" class="span8">
+                <div class="mapcontainer"><div class="map ui-widget-content" id="map"></div>
+                </div>
+              </div>
             {% endif %}
-          </div>
         </div>
         <div class="row">
           <div style="background: white" class="span12">
