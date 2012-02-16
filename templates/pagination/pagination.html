@@ -10,7 +10,15 @@
             <li class="{% ifequal page page_obj.number %}active{%endifequal%}">
                 <a href="?page={{ page }}{{ getvars }}" class="page">{{ page }}</a>
             </li>
+            {% else %}
+            <li>
+            <a href="#">
+                …
+            </a>
+            </li>
         {% endif %}
+        
+        
     {% endfor %}
     {% if page_obj.has_next %}
     <li class="">
