@@ -9,23 +9,19 @@
 {% block extra_head %}
 {{ form.media }}
 <script type="text/javascript" src="{{MEDIA_URL}}jquery.ui.datepicker-no.js"></script>
-<script type="text/javascript" src="{{MEDIA_URL}}jquery.ui.datepicker-no.js"></script>
 <script type="text/javascript" src="{{MEDIA_URL}}msdropdown/js/jquery.dd.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}/msdropdown/dd.css" />
 {% endblock %}
 
 {% block content %}
-{% block action_title %}
-<div id="result">
     <div class="page-header">
     {% if object %}
         <h1>    {% trans "Modify exercise" %}</h1>
     {% else %}
         <h1>{% trans "Add Exercise" %}</h1>
     {% endif %}
-    {% endblock %}
     </div>
-    <form class="form-stacked" id="form" enctype="multipart/form-data" method="post">
+    <form class="" id="form" enctype="multipart/form-data" method="post">
 
     {% if not object.route %}
   <div id="div_route" class="ctrlHolder "> 
@@ -40,15 +36,14 @@
     {% endif %}
  
     {{ form|as_uni_form}}
-    <div class="actions" style="padding: 14px 19px;">
-        <button class="btn large primary" id="submit_btn" type="submit">{% trans "Save exercise" %}</button>
+    <div class="form-actions">
+        <button class="btn btn-large btn-primary" id="submit_btn" type="submit">{% trans "Save exercise" %}</button>
         {% comment %}
         <input class="btn" type="reset" value="{% trans "Cancel" %}" onClick="document.location='/';" />
         {% endcomment%}
         <input id="route_object_id" type="hidden">
     </div>
     </form>
-</div>
 <style>
     .ui-autocomplete {
         max-height: 500px;
@@ -62,6 +57,8 @@
 <script type="text/javascript">
 var ids= 0;
 $(document).ready(function() {
+    // Fix for design
+    $('#div_id_equipment').attr('style', 'clear: both');
     var dateField = $('#id_date');
     if (dateField.val() != undefined ) {
         dateField.datepicker($.datepicker.regional['no'],{ //TODO region

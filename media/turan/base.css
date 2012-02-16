@@ -1449,3 +1449,10 @@ div.cloud ul li {
     font-size: 1.5em;
     font-weight: bold;
 }
+label, .baseLbl, .dataLbl  {
+    font-size: 110%;
+    color: #4F96CA !important;
+    font-weight: bolder;
+    letter-spacing: 1px;
+}
+
