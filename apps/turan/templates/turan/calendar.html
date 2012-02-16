@@ -41,12 +41,14 @@
     </a>
 </div>
 </div>
-<div class="floatright">
-    <h3>{% trans "Time in HR zones by week"%}</h3>
-    <div id="weeks" style="width:300px;height:800px"></div>
-</div>
-<div id="calendar" style="width:700px">
+<div class="row">
+<div id="calendar"  class="span8" style="">
 {{ calendar }}
+</div>
+<div class="span4">
+    <h3>{% trans "Time in HR zones by week"%}</h3>
+    <div id="weeks" style="height:800px"></div>
+</div>
 </div>
 <script id="source" language="javascript" type="text/javascript">
 $(function () {

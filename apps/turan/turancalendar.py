@@ -58,7 +58,7 @@ class WorkoutCalendar(HTMLCalendar):
                     body.append('<img src="' + workout.icon() + '" />')
                     body.append(esc(workout.get_name()))
                     body.append('</a>')
-                    body.append('<p class="fade">')
+                    body.append('<p class="faded">')
                     bikescore = workout.get_bikescore()
                     if bikescore:
                         body.append(esc(bikescore) + '&nbsp;BikeScore')
