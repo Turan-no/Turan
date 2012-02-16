@@ -61,13 +61,23 @@
 
 
             <ul class="nav pull-right">
-                <li class="dropdown">
                 {% if user.is_authenticated %}
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        {% avatar user 18 %}
+                <li>
+                <a class="red" title="{% trans "Add an exercise" %}" href="{% url exercise_create %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/add.png" alt="{% trans "Add and exercise" %}" />
+                    </a>
+                </li>
+                <li class="nav-avatar">
+                <a class="" tooltip="tooltip" title="{% trans "My profile" %}" href="{% url profile_redirect %}">
+                        {% avatar user 32 %}
+                    </a>
+                </li>
+                <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
-                  </a>
+                      </a>
                 {% else %}
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Login"%}</a>
                 {% endif %}
                   <ul class="dropdown-menu">
@@ -78,7 +88,7 @@
 
             {% if user.is_authenticated %}
             <ul class="nav pull-right">
-                <li id="tab_inbox"><a href="{% url messages_inbox %}"><img src="{{ "email"|silk_icon }}"><span class="label">{{ combined_inbox_count }}</span></a></li>
+                <li id="tab_inbox"><a href="{% url messages_inbox %}"><img src="{{ "email"|silk_icon }}">{% if combined_inbox_count %}<span class="label">{{ combined_inbox_count }}</span>{% endif %}</a></li>
             </ul>
             {% endif %}
 
