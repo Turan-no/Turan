@@ -506,8 +506,8 @@ table.month td,
 table.month th {
 	vertical-align: top;
 	border: 1px dashed silver;
-    padding: 2px;
-    width: 120px;;
+    padding: 1px;
+    width: 120px;
 }
 table.month th.month {
     background-color: white;
@@ -521,7 +521,9 @@ table.month th {
 	border: 1px solid black;
     color: white;
 }
-
+table.month ul {
+    margin: 0;
+}
 table.month td>ul li {
     list-style-type: none;
     padding: 2px 2px 4px 4px;
