@@ -22,8 +22,8 @@
 <div class="page-header">
 {% if username %}
 <div class="floatleft">
-    <a class="profilehoverpoint" id="user_{{other_user.id}}" title="{{other_user.username}}" href="{{other_user.get_profile.get_absolute_url }}">{% avatar other_user 60 %}</a>
-    {{ other_user|profile_hover }}
+    <a {{ other_user|profile_hover }} class="profilehoverpoint" id="user_{{other_user.id}}" title="{{other_user.username}}" href="{{other_user.get_profile.get_absolute_url }}">{% avatar other_user 60 %}</a>
+    
 </div>
 {% endif %}
 <h1>

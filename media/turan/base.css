@@ -1455,4 +1455,6 @@ label, .baseLbl, .dataLbl  {
     font-weight: bolder;
     letter-spacing: 1px;
 }
-
+.popover-inner {
+    width: 380px;
+}

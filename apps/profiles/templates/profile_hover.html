@@ -1,10 +1,13 @@
 {% load i18n %}
 {% load avatar_tags %}
 {% load turan_extras %}
-<div class="tooltip hidden" id="profile_{{object.id}}">
+rel='popover' 
+data-placement='bottom' 
+data-title='{% if profile.name%}{{ profile.name}}{%else%}{{ object }}{%endif%}' data-content='
 {% with object.get_profile as profile %}
-<div class="floatright">{% avatar object 80 %}</div>
-<h1>{% if profile.name%}{{ profile.name}}{%else%}{{ object }}{%endif%}</h1>
+{% comment %}
+{% avatar object 80 %}
+{% endcomment %}
 <div class="profile">
     <ul class="iconlist">
         {% if object.exercise__duration__sum %} 
@@ -22,4 +25,4 @@
     </ul>
 </div>
     {% endwith %}
-</div>
+'  

@@ -162,6 +162,9 @@
 {% block extra_body_base %}
     <script type="text/javascript">
 $(document).ready(function(){
+        // Activate popovers
+        $('[rel]="popover"').popover();
+
         // Stop form from disappearing on clicks in drop dow menu
         $('#loginform').click(function(e) {
                 e.stopPropagation();

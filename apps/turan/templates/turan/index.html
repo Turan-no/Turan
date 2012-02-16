@@ -20,8 +20,7 @@
             {% spaceless %}
             <div class="" id="exercisers">
                 {% for exerciser in user_list %}
-                <a class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
-                {{ exerciser|profile_hover }}
+                <a {{ exerciser|profile_hover }} class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
                 {% endfor %}
             </div>
             {% endspaceless  %}
