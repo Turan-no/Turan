@@ -1125,6 +1125,17 @@ a.profilehoverpoint>img {
       margin-left: 18px;
     }
 }
+@media (max-width: 980px) { 
+    .navbar .brand {/* Fix for turan logo when responsive layout is trigered */
+        width: 140px !important; 
+    }
+  div.map {
+      width: 476px;
+  }
+  div.exercisegraph {
+      width: 724px;;
+  }
+}
 
 .fullscreenicon {
     margin-left: 5px;
@@ -1240,7 +1251,6 @@ input[type="text"], input[type="password"], select, textarea {
     border: solid 1px #C6C6C6;
     border-bottom: solid 1px #E3E3E3;
     color: #666;
-    font-size: 12pt;
     background: #F3F3F3 url('/site_media/pinax/images/form-shadow.png?67eefa838a26') left top repeat-x;
 }
 
@@ -1276,11 +1286,6 @@ body {
     min-height: 500px;
     background-color: #fff;
   }
-@media (max-width: 980px) { /* Fix for turan logo when responsive layout is trigered */
-    .navbar .brand {
-        width: 140px !important; 
-    }
-}
 .navbar .brand {
     background: url('/site_media/turan/turan.png') 0 40px;
     width: 124px;
