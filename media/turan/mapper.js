@@ -10,6 +10,8 @@ var Mapper = {
     },
 
     init: function(gpx_file, geojson_url, start, end) {
+        OpenLayers.ImgPath = "http://js.mapbox.com/theme/dark/";
+
         if (gpx_file) {
             var lgpx = new OpenLayers.Layer.GML("Route", gpx_file, {
                 format: OpenLayers.Format.GPX,
@@ -61,6 +63,7 @@ var Mapper = {
               '<a href="http://www.statkart.no/">Statens kartverk</a>, ' +
               '<a href="http://www.statkart.no/nor/Land/Fagomrader/Geovekst/">Geovekst</a> og ' +
               '<a href="http://www.statkart.no/?module=Articles;action=Article.publicShow;ID=14194">kommuner</a>'});
+
         var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
         var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
         var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");

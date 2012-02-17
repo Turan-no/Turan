@@ -7,15 +7,19 @@
 {% trans "Segment" %}
 {% endblock %}
 {% block content %}
+<div class="page-header">
 {% if object %}
 <h1>{% trans "Update segment" %}</h1>
 {% else %}
 <h1>{% trans "Create new segment" %}</h1>
 <p>{% trans "Note: You have to add the first entry on this segment manually using zoom and the press the globe icon in the top right corner of the graph" %}</p>
 {% endif %}
+</div>
 <form class="uniForm" enctype="multipart/form-data" method="post">
 {{ form|as_uni_form}}
-<input type="submit" value="{% trans "Save" %}" />
+<div class="form-actions">
+    <button class="btn btn-large btn-primary" type="submit"> {% trans "Save" %}</button>
+</div>
 </form>
 {% if not object %}
 <p>{% trans "Note: The rest of the data (ascent/grade/distance/etc) will be pull from the first entry you add to this segment" %}</p>

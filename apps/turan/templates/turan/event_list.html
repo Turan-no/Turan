@@ -14,6 +14,7 @@
 {% block content %}
 {% autopaginate object_list %}
 
+<div class="page-header">
 {% include "turan/search_head.html" %}
 
 {% if search_query %}
@@ -21,34 +22,25 @@
 {% endif %}
 {% if request.user.username %}
 <div class="searchfilters">
-    <ul class="buttons">
         {% include "turan/geolocation.html" %}
-        <li class="floatleft">
             {% if not username %}
-            <a href="{% url events username=request.user.username %}">{% trans "My events" %}</a>
+            <a class="btn" href="{% url events username=request.user.username %}">{% trans "My events" %}</a>
             {% else %}
-            <a href="{% url events %}">{% trans "All events" %}</a>
+            <a class="btn" href="{% url events %}">{% trans "All events" %}</a>
             {% endif %}
-        </li>
-    </ul>
 </div>
 {% endif %}
 
 <h1>
     {% trans "Events" %}
 </h1>
-<div class="floatright">
-{% paginate %}
+<a class="btn" href="{% url exercise_create %}">
+    <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
+    {% trans "Add an exercise" %}
+</a>
 </div>
 
-<ul class="buttons">
-    <li>
-        <a href="{% url exercise_create %}">
-            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
-            {% trans "Add an exercise" %}
-        </a>
-    </li>
-</ul>
+
 <table class="fullsize">
     <tr class="{% cycle odd,even %}">
         <th>
@@ -73,13 +65,12 @@
 {% for object in object_list %}
 <tr class="{% cycle "odd" "even" %} hoverpoint" id="trip_{{object.id}}">
     <td>
-        {{ object|exercise_mouseover }}
         <img width="64" height="64" alt="{{ object.exercise_type }}" src="{{ object.icon }}" />
         <p style="text-align: center"><small class="fade"> {{ object.date|naturalday }} </small></p>
     </td>
     <td>
         <h4>
-            <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+            <a {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">{{ object }}</a>
         </h4>
         <p class="comment">
             <small>{{ object.comment|truncatewords:20 }}</small>
@@ -104,9 +95,9 @@
 </tr>
 {%endfor %}
 </table>
-<div class="floatright">
 {% paginate %}
-</div>
-
+<script>
+$('#tab_exercises').toggleClass('active');
+</script>
 {% endblock content %}
 

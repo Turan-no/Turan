@@ -1,33 +1,31 @@
 {% if is_paginated %}
 {% load i18n %}
-<div style:"width=500px" class="floatright buttons">
-<ul class="buttons spacer pagination">
-    {% if page_obj.has_previous %}
-    <li class="floatleft">
-        <a href="?page={{ page_obj.previous_page_number }}{{ getvars }}" class="prev">&lsaquo;&lsaquo; {% trans "previous" %}</a>
+<div class="pagination">
+<ul class="">
+    <li class="{% if notpage_obj.has_previous %}disabled{%endif%}">
+        <a href="?page={{ page_obj.previous_page_number }}{{ getvars }}" class="prev">&larr; {% trans "previous" %}</a>
     </li>
-    {% else %}
-        <li class="floatleft disabled prev">&lsaquo;&lsaquo; {% trans "previous" %}</li>
-    {% endif %}
     {% for page in pages %}
         {% if page %}
-            {% ifequal page page_obj.number %}
-            <li class="floatleft current">{{ page }}</li>
-            {% else %}
-            <li class="floatleft">
+            <li class="{% ifequal page page_obj.number %}active{%endifequal%}">
                 <a href="?page={{ page }}{{ getvars }}" class="page">{{ page }}</a>
             </li>
-            {% endifequal %}
-        {% else %}
-        <li class="floatleft">...</li>
+            {% else %}
+            <li>
+            <a href="#">
+                …
+            </a>
+            </li>
         {% endif %}
+        
+        
     {% endfor %}
     {% if page_obj.has_next %}
-    <li class="floatleft">
-        <a href="?page={{ page_obj.next_page_number }}{{ getvars }}" class="next">{% trans "next" %} &rsaquo;&rsaquo;</a>
+    <li class="">
+        <a href="?page={{ page_obj.next_page_number }}{{ getvars }}" class="next">{% trans "next" %} &rarr;</a>
     </li>
     {% else %}
-        <li class="floatleft disabled next">{% trans "next" %} &rsaquo;&rsaquo;</li>
+        <li class="disabled next">{% trans "next" %} &rarr;</li>
     {% endif %}
 </ul>
 </div>

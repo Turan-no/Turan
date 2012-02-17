@@ -42,6 +42,7 @@
 </ul>
 
 {% if user.is_authenticated %}
+{% trans "Leave a comment" %}:
     <form class="uniForm" method="post" action="{% get_comment_url object %}">
         <fieldset class="inlineLabels">
             <div class="ctrlHolder">
@@ -49,7 +50,7 @@
             </div>
             <div class="form_block">
                 <input type="hidden" name="next" value="{{ request.path }}" />
-                <button type="submit">{% trans "Post Response" %}</button>
+                <button class="btn" type="submit">{% trans "Post comment" %}</button>
             </div>
         </fieldset>
     </form>

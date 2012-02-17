@@ -48,19 +48,16 @@ var GraphPlotter = {
                 break;
             }
         }
-        $("#choices").find("input:checked").each(function () {
+        $("#choices>button.active").each(function () {
             var key = $(this).attr("name");
             if (key && that.datasets[key]) {
                 if (key == 'hr') {
                     //that.datasets[key]['constraints'] = that.hrconstraints;
-                    //
                   that.datasets[key]['threshold']= that.newhrconstraints;
                 }
                 else if (key == 'altitude') {
                     //that.datasets[key]['constraints'] = segmentconstraints;
-
                 }
-
                 if (key != 'lon' && key != 'lat') { // lon and lat doesn't go in the graph
                     data.push(that.datasets[key]);
                 }
@@ -104,21 +101,17 @@ var GraphPlotter = {
             });
         }
 
-
         if (minIndex != null && maxIndex != null) {
-            if (typeof(Mapper) != "undefined")
-                Mapper.loadGeoJSON(minIndex, maxIndex);
 
             var segment_link = $("#segment_add");
             segment_link.attr('href' , segment_link.attr('href')+ '&start=' + minIndex + '&stop=' + maxIndex);
-            $("#segment_add").removeClass("hidden");
+            $("#segment_add").removeClass("hide");
 
-            //window.location.hash = 'graph-zoom-' + Math.round(min*10)/10 + '-' + Math.round(max*10)/10;
             window.location.hash = 'graph-zoom-' + min + '-' + max;
 
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
                 var items = $("#averages ul .data");
-                $("#averages h4").removeClass("hidden");
+                $("#averages h4").removeClass("hide");
 
                 $.each(items, function (i, elem) {
                     var classlist = elem.className.split(" ");
@@ -132,7 +125,7 @@ var GraphPlotter = {
                                     val = Math.round(val * 10) / 10;
                                 }
                                 e.text(val);
-                                e.parents(".hidden").removeClass("hidden");
+                                e.parents(".hide").removeClass("hide");
                                 e.attr('title', key.replace(/_/g, ' '))
                                 e.parents('li').attr('title', key.replace(/_/g, ' '))
                             }
@@ -140,6 +133,8 @@ var GraphPlotter = {
                     }
                 });
             });
+            if (typeof(Mapper) != "undefined")
+                Mapper.loadGeoJSON(minIndex, maxIndex);
         }
         else {
             if (typeof(Mapper) != "undefined")
@@ -276,7 +271,7 @@ var GraphPlotter = {
         this.choiceContainer = $("#choices");
 
         $.each(this.datasets, function(key, val) {
-            var checked = "checked = checked";
+            var checked = 'checked=checked';
             if (key == 'cadence') 
                 checked = ''
             if (key == 'temp') 
@@ -286,16 +281,16 @@ var GraphPlotter = {
 
             if (key != 'lon' && key != 'lat') {
 
-                that.choiceContainer.append('<input type="checkbox" name="' + key +
-                    '" ' + checked + ' id="chk_' + key + '"><label for="chk_' + key + 
-                    '">' + val.label + '</label></input>');
+                that.choiceContainer.append('<button class="btn" name="' + key + '" ' + checked + ' id="chk_' + key + '">' + val.label + '</button>');
             }
         });
+        $('#choices>button[checked]').button('toggle')
         $("#reset_zoom").bind("click", function(evt) {
             evt.preventDefault();
             $("#gtooltip").remove(); // tooltips messes up pos
             that.setRange({});
             that.plot(); 
+            $('#reset_zoom').toggleClass('hide');
         });
         $(window).bind("keyup", function(evt) { if (evt.keyCode == 70) { $('#enlarge').click() } });
         $("#enlarge").bind("click", function(evt) {
@@ -327,15 +322,10 @@ var GraphPlotter = {
                 $("#averages").appendTo($('#graphcontainer'));
                 that.fullscreen = false;
             }
-        /* resize.js plugin does this
-            plot.resize();             
-            plot.setupGrid();          
-            plot.draw();               
-        */
         });
-        //$("#segment_add").bind("click", function(evt) {
-        //});
-        this.choiceContainer.find("input").bind("change", function(evt) {
+        this.choiceContainer.find("button").bind("click", function(evt) {
+                evt.stopPropagation(); // Stop bootstrap event from firing
+                $(this).toggleClass('active'); // Handle bootstrap event ourselves before we plot so class is set
                 that.plot(); 
         });
         $('.legendColorBox > div').each(function(i){
@@ -366,6 +356,9 @@ var GraphPlotter = {
             var posIndex = 0;
             for (serieskey in that.datasets) { // Find first and best series that we got
                 var series = that.datasets[serieskey]['data'];
+                if (series == undefined) {
+                    continue; // lon and lat dataseries does not have data object
+                }
                 for (key in series) {
                     if (series[key][0] >= pos.x) {
                         var posIndex = key;
@@ -378,7 +371,8 @@ var GraphPlotter = {
                 return;
 
             // Move marker to current pos
-            if (Mapper.map != null || Mapper.posLayer != undefined) {
+            if (typeof(Mapper) != "undefined" && Mapper.map != null && Mapper.posLayer != undefined) {
+            
                 var route_lon = that.datasets['lon'];
                 var route_lat = that.datasets['lat'];
                 if (route_lon.length >= posIndex) {
@@ -419,17 +413,18 @@ var GraphPlotter = {
             
 
         });
-        $("#exercisegraph").bind("plotclick", function (event, pos, item) {
+        /*$("#exercisegraph").bind("plotclick", function (event, pos, item) {
             if (item) {
                 plot.highlight(item.series, item.datapoint);
             }
             // reset zoom on click
             that.setRange({});
             that.plot(); 
-        });
+        });*/
 
 
         $("#exercisegraph").bind("plotselected", function (event, ranges) {
+            $('#reset_zoom.hide').toggleClass('hide');
             that.setRange(ranges);
             that.plot();
         });

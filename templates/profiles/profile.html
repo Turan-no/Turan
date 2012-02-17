@@ -13,343 +13,342 @@
 
 {% block body %}
 {% user_display other_user as other_user_display %}
-    <div class="right_panel">
-<div class="spacer box drop-shadow lifted">
-    <h2>{% trans "What Next?" %}</h2>
-    <ul class="buttons spacer">
-        <li>
-            <a href="{% url calendar-index %}?username={{ other_user }}">
-            <img alt="calendar" src="{{MEDIA_URL}}/pinax/img/silk/icons/calendar.png">
-            {% trans "Show" %} {{ other_user_display }}{% trans "'s calendar" %}</a>
-        </li>
-        {% if user.is_authenticated and is_me %}
-        <li>
-            <a href="{% url exercise_create %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
-                {% trans "Add an exercise" %}
-            </a>
-        </li>
-        <li>
-            <a href="{% url route_create %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="menu_button" />
-                {% trans "Add a route"%}
-            </a>
-        </li>
-        <li>
-            <a href="{% url import_data %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="menu_button" />
-                {% trans "Import exercises from another site"%}
-            </a>
-        </li>
-        <li>
-            <a href="{% url userprofiledetail_create %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/cake.png" alt="menu_button" />
-                {% trans "Update weight / resting HR"%}
-            </a>
-        </li>
-        <li>
-                <a href="{% url equipment_create %}">{%trans "Add exercise equipment" %}</a>
-        </li>
-        <li>
-            <a href="{% url acct_email %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/email_go.png" alt="menu_button" />
-                {% trans "Verify an email address"%}
-            </a>
-        </li>
-        <li>
-            <a href="{% url avatar_change %}">
-                <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/photo.png" alt="menu_button" />
-                {% trans "Add an avatar"%}
-            </a>
-        </li>
-        <li><a href="{% url invitations %}">
-            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/user_go.png" alt="menu_button" />
-            {% trans "Invite people"%}</a>
-        </li>
-        {% endif %}
-    </ul>
-</div>
-
-            {% if total_duration %}
-            <div class="box spacer">
-                <a class="tools" href="{% url profile_statistics other_user %}">{% trans "Show all" %}</a>
-                <h2>{% trans "Statistics" %}</h2>
-                <ul class="iconlist">
-                    <li class="time"><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
-                    <li class="distance"><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
-                    <li class="speed"><span class="label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>
-                    <li class="count"><span class="label">{% trans "Total exercise count"%}:</span> {{ exerciseqs.count}} {% trans "trips" %}</li>
-                    <li class="distance"><span class="label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
-                    <li class="kcal"><span class="label">{% trans "Total energy expenditure"%}:</span> {{ total_kcals }} {% trans "kcal" %} (= {{total_kcals|bodyfat|floatformat}} {% trans "kg" %} {% trans "fat" %} ) </li>
-                {% for item, val in avg_speed_dict.items %}
-                <li>{{item}}: {{val|floatformat}}</li>
-                {% endfor %}
-                {% for item, val in hr_dict.items %}
-                <li>{{item}}: {{val|floatformat}}</li>
-                {% endfor %}
-                {% for item, val in cadence_dict.items %}
-                <li>{{item}}: {{val|floatformat}}</li>
-                {% endfor %}
-                {% for item, val in duration_dict.items %}
-                <li>{{item}}: {{val|floatformat}}</li>
-                {% endfor %}
-                {% for item, val in distance_dict.items %}
-                <li>{{item}}: {{val|floatformat}}</li>
-                {% endfor %}
-                </ul>
-            </div>
-            {% endif %}
-{% include "profiles/profile_right_panel.html" %}
-
-{% comment %}
-<div style="float: right">
-    {% if other_user.get_profile.image %}
-    <img alt="{% trans "User image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.image }}"><br>
-    {% endif %}
-    {% if other_user.get_profile.cycle_image %}
-    <img alt="{% trans "Cycle image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.cycle_image }}">
-    {% endif %}
-</div>
-{% endcomment %}
-
-<h3>{% trans "Cycle trips"%}</h3>
-<div class="drop-shadow lifted" id="tripdiv" style="width:300px;height:150px"></div>
-<h3>{% trans "Avg speed trend: cycling"%}</h2>
-<div class="drop-shadow lifted" id="avgspeeddiv" style="width:300px;height:150px"></div>
-<h3>{% trans "Avg HR trend overall"%}</h3>
-<div class="drop-shadow lifted" id="avghrdiv" style="width:300px;height:150px"></div>
-<h3>{% trans "BMI"%}</h3>
-<div class="drop-shadow lifted" id="bmidiv" style="width:300px;height:150px"></div>
-<h3>{% trans "Resting pulse"%}</h3>
-<div class="drop-shadow lifted" id="pulsediv" style="width:300px;height:150px"></div>
-{% if ftpdataseries %}
-<h3>{% trans "FTP" %}{{ "FunctionalThresholdPower"|wiki_help }}</h3>
-<div class="drop-shadow lifted" id="ftpdiv" style="width:300px;height:150px"></div>
-{% endif %}
-<script id="source" language="javascript" type="text/javascript">
-$(function () {
-    var d1 = { color: 2, data: [{{pulsedataseries}}], }
-    var d2 = { color: 4, data: [{{bmidataseries}}], }
-    var d3 = { color: 5, data: [{{ftpdataseries}}], }
-    var bmiline = { color: 2, data: [{{bmiline}}], }
-    var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0} }
-	var hroptions = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 100, max: 200 } }
-    var d2options =  { yaxis: { min: 20, max: 45 }, xaxis: { mode: "time", timeformat: "%y/%m/%d" } }
-    var d3options =  { xaxis: { mode: "time", timeformat: "%y/%m/%d" } }
-    $.plot($("#pulsediv"), [d1], options);
-    $.plot($("#bmidiv"), [d2, bmiline], d2options);
-    $.plot($("#tripdiv"), [{
-            color: 1,
-            data: [{{tripdataseries}}],
-            bars: { show: true },
-            //label: "km",
-        }] );
-    $.plot($("#avgspeeddiv"), [{
-            color: 3,
-            data: [{{avgspeeddataseries}}],
-            lines: { show: true },
-            //label: "km",
-        }], options );
-    $.plot($("#avghrdiv"), [{
-            color: 2,
-            data: [{{avghrdataseries}}],
-            lines: { show: true },
-            //label: "km",
-        }], hroptions );
-    {% if ftpdataseries %}
-    $.plot($("#ftpdiv"), [d3], options);
-    {% endif %}
-
-});
-</script>
-    </div>
-    
-    <div class="left_panel">
+<div class="content">
+    <div class="page-header">
+        {% if other_user_display %}<h2>{{ other_user_display }}{% endif %}
         {% if other_user.get_profile.motto %}
-            <span class="motto">«{{ other_user.get_profile.motto }}»</span>
+            <small>
+            «{{ other_user.get_profile.motto }}»
+            </small>
         {% endif %}
-    <div class="vcard">
-
-        <div class="box spacer">
-        {% if other_user_display %}<h2><span class="fn">{{ other_user_display }}</span></h2>{% endif %}
-        <div id="profile_avatar">
-            <div><img src="{% avatar_url other_user 120 %}" alt="Photo of {{ other_user_display }}" class="photo" /></div>
-            {% if is_me %}
-            <a href="{% url avatar_change %}" id="avatar_replace">(replace)</a>
-            {% endif %}
-        </div>
-            {% if other_user.date_joined%}<p><b>{% trans "Date joined" %}</b>: {{other_user.date_joined|naturalday:_("F j, Y")|capfirst }}</p>{% endif %}
-            {% if other_user.get_profile.about %}<p><b>{% trans "About" %}</b>: {{ other_user.get_profile.about }}</p>{% endif %}
-            {% if other_user.get_profile.location%}<p><b>{% trans "Location" %}</b>: {{ other_user.get_profile.location }}</p>{% endif %}
-            {% if other_user.get_profile.website %}<p><b>{% trans "Website" %}</b>: <a class="url" href="{{ other_user.get_profile.website }}">{{ other_user.get_profile.website }}</a></p>{% endif %}
-            {% with other_user.get_profile as object %}
-            <ul class="iconlist">
-                {% if object.gender %}
-                    <li class="gender"><span class="label">{% trans "Gender" %}:</span> {{ object.gender }}</li>
-                {% endif %}
-                {% if object.weight %}
-                    <li class="weight"><span class="label">{% trans "Weight" %}:</span> {{ object.weight }} kg</li>
-                {% endif %}
-                {% if object.height %}
-                    <li class="height"><span class="label">{% trans "Height" %}:</span> {{ object.height }} cm</li>
-                {% endif %}
-                {% if object.cycle %}
-                <li class="gear"><span class="label">{% trans "Cycle" %}:</span> {{ object.cycle }}</li>
-                {% endif %}
-                {% if object.resting_hr %}
-                <li class="heart"><span class="label">{% trans "Resting pulse" %}:</span> {{ object.resting_hr }} {% trans "BPM" %}</li>
-                {% endif %}
-                {% if object.max_hr %}
-                <li class="heart"><span class="label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}</li>
-                {% endif %}
-                {% if object.ftp %}
-                <li class="power"><span class="label">{% trans "Functional Threshold Power" %}:{{ "FunctionalThresholdPower"|wiki_help }}</span> {{ object.ftp }} {% trans "W" %} {% if object.weight %}<span class="smaller">{{ object.ftp|divide:object.weight }} W/kg</span>{% endif %}</li>
-                {% endif %}
-                {% if object.info %}
-                <li><span class="label">{% trans "About" %}:</span> {{ object.info }}</li>
-                {% endif %}
-            </ul>
-            {% endwith %}
-        </div>
-    
-        {% if user.is_authenticated %}
-            {% if is_me %}
-                    <p><button id="edit-profile-toggle"><span>{% trans "Edit profile" %}</span></button></p>
-                
-                <form class="uniForm" id="edit-profile" method="post" action="" style="display: none;">
-                    <fieldset class="inlineLabels">
-                        {{ profile_form|as_uni_form }}
-                        <div class="form_block">
-                        <input type="hidden" name="action" value="update" />
-                        <input type="submit" value="{% trans "update" %}"/>
-                        </div>
-                    </fieldset>
-                </form>
-            {% endif %}
-        {% endif %}
-        <br />
-    </div>
-    {% if other_user.equipment_set.exists %}
-    <div class="box spacer">
-            <div class="box spacer">
-                <a class="tools" href="{% url equipment_create %}">{%trans "Add equipment" %}</a>
-        <h2>{% trans "Exercise equipment" %}</h2>
-        <ul>
-        {% for equipment in other_user.equipment_set.all %}
-            {% include "equipment/equipment_attributes.html" %}
-        {% endfor %}
-        </ul>
-    </ul>
+        </h2>
 
     </div>
-    {% endif %}
-
-            {% if exerciseqs.count %}
-            <div class="box spacer">
-            <a class="tools" href="{% url exercises %}?username={{other_user.username}}">{% trans "Show all" %}</a>
-            <h2>{% trans "Latest exercises" %}</h2>
-                <div class="gg">
-                    <ul class="trips">
-                {% for trip in latest_exercises %}
-                <li class="{% cycle "even" "odd" %} hoverpoint" id="trip_{{trip.id}}">
-                    <img class="floatleft" width="32" height="32" alt="{{ trip.exercise_type }}" src="{{ trip.icon }}" />
-                    <a href="{{ trip.get_absolute_url }}">{{ trip.get_name }}</a> 
-                    {% if trip.route.distance %}
-                    {{ trip.route.distance|floatformat}} km
-                    {%endif%}
-                    {{ trip.duration }}
-                    <span class="floatright">{{ trip.date }}</span>
-                    </li>
-                {% endfor %}
-                    </ul>
-                {% for trip in latest_exercises %}
-                    {{ trip|exercise_mouseover }}
-                {% endfor %}
-                </div>
-            </div>
-            {% else %}
-            {% comment %}
-               {% trans "No exercises added yet." %}
-            {% endcomment %}
-            {% endif %}
-
-            {% if user.is_authenticated %}
-                {% if is_me %}
-                {% else %}
-                    
-                    {# @@@ this should be an inclusion tag #}
-                    {% if is_friend %}
-                        <p>{% blocktrans %}You are friends with{% endblocktrans %} {{ other_user_display }}. <a href="{% url messages_compose %}{{ other_user }}/">{% trans "Send a message" %}</a>.</p>
-                        <div>
-                            <form method="post" action="">
-                                <input type="hidden" name="action" value="remove" /><input type="submit" value="{% trans "remove from friends" %}"/>
-                            </form>
-                        </div>
-                    {% else %}
-                        {% if previous_invitations_from %}
-                            <p>{{ other_user_display }}{% blocktrans %}has requested friendship.{% endblocktrans %}</p>
-                            {% for invitation in previous_invitations_from %}
-                                <div class="friendship_request">
-                                    <p>From <a href="{% url profile_detail invitation.from_user.username %}">{{ invitation.from_user }}</a> ({{ invitation.sent }}):</p>
-                                    <p class="invitation_message">{{ invitation.message }}</p>
-                                    <form method="post" action="">
-                                        <input type="hidden" name="invitation" value="{{ invitation.id }}"/>
-                                        <input type="hidden" name="action" value="accept"/>
-                                        <input type="submit" value="{% trans 'accept' %}" />
-                                    </form>
-                                    <form method="post" action="">
-                                        <input type="hidden" name="invitation" value="{{ invitation.id }}"/>
-                                        <input type="hidden" name="action" value="decline"/>
-                                        <input type="submit" value="{% trans 'decline' %}" />
-                                    </form>
-                                </div>
+</div>
+<div class="container">
+    <div class="content">
+        <div class="row">
+            <div class="span8">
+                {% if exerciseqs.count %}
+                <div class="box spacer">
+                <a class="btn tools" href="{% url exercises %}?username={{other_user.username}}">{% trans "Show all" %}</a>
+                <h2>{% trans "Latest exercises" %}</h2>
+                    <div class="gg">
+                        <ul class="trips">
+                            {% for trip in latest_exercises %}
+                            <li class="{% cycle "even" "odd" %} hoverpoint" id="trip_{{trip.id}}">
+                                <img class="floatleft" width="32" height="32" alt="{{ trip.exercise_type }}" src="{{ trip.icon }}" />
+                                <a {{ trip|exercise_mouseover }} href="{{ trip.get_absolute_url }}">{{ trip.get_name }}</a> 
+                                
+                                {% if trip.route.distance %}
+                                {{ trip.route.distance|floatformat}} km
+                                {%endif%}
+                                {{ trip.duration }}
+                                <span class="floatright">{{ trip.date }}</span>
+                                </li>
                             {% endfor %}
-                        {% else %}
-                            {% if previous_invitations_to %}
-                                <p>{% trans "Friendship request sent." %}</p>
-                            {% else %}
-                                <h2>{% trans "Add As Friend" %}</h2>
-                                <form class="uniForm" method="post" action="">
-                                    <fieldset class="inlineLabels">  
-                                        {{ invite_form|as_uni_form }}
-                                        <div class="form_block">
-                                            <input type="hidden" name="action" value="invite" />
-                                            <input type="submit" value="{% trans "invite" %}"/>
-                                            {% blocktrans %}{{ other_user_display }} to be a friend.{%  endblocktrans %}
-                                        </div>
-                                    </fieldset>
+                                </ul>
+                    </div>
+                </div>
+                {% else %}
+                {% comment %}
+                   {% trans "No exercises added yet." %}
+                {% endcomment %}
+                {% endif %}
+
+                {% if other_user.equipment_set.exists %}
+                <div class="box spacer">
+                        <div class="box spacer">
+                            <a class="btn tools" href="{% url equipment_create %}">{%trans "Add equipment" %}</a>
+                            <h2>{% trans "Exercise equipment" %}</h2>
+                            <ul>
+                                {% for equipment in other_user.equipment_set.all %}
+                                    {% include "equipment/equipment_attributes.html" %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                </div>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                    {% if is_me %}
+                    {% else %}
+                        
+                        {# @@@ this should be an inclusion tag #}
+                        {% if is_friend %}
+                            <p>{% blocktrans %}You are friends with{% endblocktrans %} {{ other_user_display }}. <a href="{% url messages_compose %}{{ other_user }}/">{% trans "Send a message" %}</a>.</p>
+                            <div>
+                                <form method="post" action="">
+                                    <input type="hidden" name="action" value="remove" /><input type="submit" value="{% trans "remove from friends" %}"/>
                                 </form>
-                            {% endif %} {# previous_invitations_to #}
-                        {% endif %} {# previous_invitations_from #}
-                    {% endif %} {# is_friend #}
+                            </div>
+                        {% else %}
+                            {% if previous_invitations_from %}
+                                <p>{{ other_user_display }}{% blocktrans %}has requested friendship.{% endblocktrans %}</p>
+                                {% for invitation in previous_invitations_from %}
+                                    <div class="friendship_request">
+                                        <p>From <a href="{% url profile_detail invitation.from_user.username %}">{{ invitation.from_user }}</a> ({{ invitation.sent }}):</p>
+                                        <p class="invitation_message">{{ invitation.message }}</p>
+                                        <form method="post" action="">
+                                            <input type="hidden" name="invitation" value="{{ invitation.id }}"/>
+                                            <input type="hidden" name="action" value="accept"/>
+                                            <input type="submit" value="{% trans 'accept' %}" />
+                                        </form>
+                                        <form method="post" action="">
+                                            <input type="hidden" name="invitation" value="{{ invitation.id }}"/>
+                                            <input type="hidden" name="action" value="decline"/>
+                                            <input type="submit" value="{% trans 'decline' %}" />
+                                        </form>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% if previous_invitations_to %}
+                                    <p>{% trans "Friendship request sent." %}</p>
+                                {% else %}
+                                    <h2>{% trans "Add As Friend" %}</h2>
+                                    <form class="uniForm" method="post" action="">
+                                        <fieldset class="inlineLabels">  
+                                            {{ invite_form|as_uni_form }}
+                                            <div class="form_block">
+                                                <input type="hidden" name="action" value="invite" />
+                                                <input type="submit" value="{% trans "invite" %}"/>
+                                                {% blocktrans %}{{ other_user_display }} to be a friend.{%  endblocktrans %}
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                {% endif %} {# previous_invitations_to #}
+                            {% endif %} {# previous_invitations_from #}
+                        {% endif %} {# is_friend #}
+                        
+                    {% endif %} {# is me #}
                     
-                {% endif %} {# is me #}
+                    
+                {% else %} {# not user.is_authenticated #}
+                    {% url acct_signup as signup_url %}
+                    {% url acct_login as login_url %}
+                    <p>{% blocktrans %}<a href="{{ signup_url }}">Sign up</a> and <a href="{{ login_url }}">log in </a> to add this person as a friend and see more of their content.{% endblocktrans %}</p>
+                {% endif %}
+            </div>
+            <div class="span4">
+                <div class="vcard">
+
+                    <div class="box spacer">
+                    <div id="profile_avatar">
+                        <h2>{% trans "Profile" %}</h2>
+                        <div><img src="{% avatar_url other_user 120 %}" alt="Photo of {{ other_user_display }}" class="photo" /></div>
+                        {% if is_me %}
+                        <a href="{% url avatar_change %}" id="avatar_replace">(replace)</a>
+                        {% endif %}
+                    </div>
+                        {% if other_user.date_joined%}<p><b>{% trans "Date joined" %}</b>: {{other_user.date_joined|naturalday:_("F j, Y")|capfirst }}</p>{% endif %}
+                        {% if other_user.get_profile.about %}<p><b>{% trans "About" %}</b>: {{ other_user.get_profile.about }}</p>{% endif %}
+                        {% if other_user.get_profile.location%}<p><b>{% trans "Location" %}</b>: {{ other_user.get_profile.location }}</p>{% endif %}
+                        {% if other_user.get_profile.website %}<p><b>{% trans "Website" %}</b>: <a class="url" href="{{ other_user.get_profile.website }}">{{ other_user.get_profile.website }}</a></p>{% endif %}
+                        {% with other_user.get_profile as object %}
+                        <ul class="iconlist">
+                            {% if object.gender %}
+                                <li class="gender"><span class="old-label">{% trans "Gender" %}:</span> {{ object.gender }}</li>
+                            {% endif %}
+                            {% if object.weight %}
+                                <li class="weight"><span class="old-label">{% trans "Weight" %}:</span> {{ object.weight }} kg</li>
+                            {% endif %}
+                            {% if object.height %}
+                                <li class="height"><span class="old-label">{% trans "Height" %}:</span> {{ object.height }} cm</li>
+                            {% endif %}
+                            {% if object.cycle %}
+                            <li class="gear"><span class="old-label">{% trans "Cycle" %}:</span> {{ object.cycle }}</li>
+                            {% endif %}
+                            {% if object.resting_hr %}
+                            <li class="heart"><span class="old-label">{% trans "Resting pulse" %}:</span> {{ object.resting_hr }} {% trans "BPM" %}</li>
+                            {% endif %}
+                            {% if object.max_hr %}
+                            <li class="heart"><span class="old-label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}</li>
+                            {% endif %}
+                            {% if object.ftp %}
+                            <li class="power"><span class="old-label">{% trans "Functional Threshold Power" %}:{{ "FunctionalThresholdPower"|wiki_help }}</span> {{ object.ftp }} {% trans "W" %} {% if object.weight %}<span class="smaller">{{ object.ftp|divide:object.weight }} W/kg</span>{% endif %}</li>
+                            {% endif %}
+                            {% if object.info %}
+                            <li><span class="old-label">{% trans "About" %}:</span> {{ object.info }}</li>
+                            {% endif %}
+                        </ul>
+                        {% endwith %}
+
+                        {% if total_duration %}
+                            <h4>{% trans "Statistics" %}</h4>
+                            <a class="btn tools" href="{% url profile_statistics other_user %}">{% trans "Show all" %}</a>
+                            <ul class="iconlist">
+                                <li class="time"><span class="old-label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
+                                <li class="distance"><span class="old-label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
+                                <li class="speed"><span class="old-label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>
+                                <li class="count"><span class="old-label">{% trans "Total exercise count"%}:</span> {{ exerciseqs.count}} {% trans "trips" %}</li>
+                                <li class="distance"><span class="old-label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
+                                <li class="kcal"><span class="old-label">{% trans "Total energy expenditure"%}:</span> {{ total_kcals }} {% trans "kcal" %} (= {{total_kcals|bodyfat|floatformat}} {% trans "kg" %} {% trans "fat" %} ) </li>
+                            {% for item, val in avg_speed_dict.items %}
+                            <li>{{item}}: {{val|floatformat}}</li>
+                            {% endfor %}
+                            {% for item, val in hr_dict.items %}
+                            <li>{{item}}: {{val|floatformat}}</li>
+                            {% endfor %}
+                            {% for item, val in cadence_dict.items %}
+                            <li>{{item}}: {{val|floatformat}}</li>
+                            {% endfor %}
+                            {% for item, val in duration_dict.items %}
+                            <li>{{item}}: {{val|floatformat}}</li>
+                            {% endfor %}
+                            {% for item, val in distance_dict.items %}
+                            <li>{{item}}: {{val|floatformat}}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
                 
-                
-            {% else %} {# not user.is_authenticated #}
-                {% url acct_signup as signup_url %}
-                {% url acct_login as login_url %}
-                <p>{% blocktrans %}<a href="{{ signup_url }}">Sign up</a> and <a href="{{ login_url }}">log in </a> to add this person as a friend and see more of their content.{% endblocktrans %}</p>
+                    {% if user.is_authenticated %}
+                        {% if is_me %}
+                                <p><button class="btn btn-primary" id="edit-profile-toggle"><span>{% trans "Edit profile" %}</span></button></p>
+                            
+                            <form class="uniForm" id="edit-profile" method="post" action="" style="display: none;">
+                                <fieldset class="inlineLabels">
+                                    {{ profile_form|as_uni_form }}
+                                    <div class="form_block">
+                                    <input type="hidden" name="action" value="update" />
+                                    <input type="submit" value="{% trans "update" %}"/>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                    <br />
+                </div>
+            <div class="box">
+                <h2>{% trans "What Next?" %}</h2>
+                        <a class="btn" href="{% url calendar-index %}?username={{ other_user }}">
+                        <img alt="calendar" src="{{MEDIA_URL}}/pinax/img/silk/icons/calendar.png">
+                        {% trans "Show" %} {{ other_user_display }}{% trans "'s calendar" %}</a>
+                        <br>
+                    {% if user.is_authenticated and is_me %}
+                        <a class="btn" href="{% url exercise_create %}">
+                            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
+                            {% trans "Add an exercise" %}
+                        </a>
+                        <br>
+                        <a class="btn" href="{% url route_create %}">
+                            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="menu_button" />
+                            {% trans "Add a route"%}
+                        </a>
+                    <br>
+                        <a class="btn" href="{% url import_data %}">
+                            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="menu_button" />
+                            {% trans "Import exercises from another site"%}
+                        </a>
+                    <br>
+                        <a class="btn" href="{% url userprofiledetail_create %}">
+                            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/cake.png" alt="menu_button" />
+                            {% trans "Update weight / resting HR"%}
+                        </a>
+                    <br>
+                            <a class="btn" href="{% url equipment_create %}">{%trans "Add exercise equipment" %}</a>
+                    <br>
+                        <a class="btn" href="{% url acct_email %}">
+                            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/email_go.png" alt="menu_button" />
+                            {% trans "Verify an email address"%}
+                        </a>
+                    <br>
+                        <a class="btn" href="{% url avatar_change %}">
+                            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/photo.png" alt="menu_button" />
+                            {% trans "Add an avatar"%}
+                        </a>
+                    <br>
+                    <a class="btn" href="{% url invitations %}">
+                        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/user_go.png" alt="menu_button" />
+                        {% trans "Invite people"%}</a>
+                    <br>
+                    {% endif %}
+            </div>
+
+            {% include "profiles/profile_right_panel.html" %}
+
+            {% comment %}
+            <div style="float: right">
+                {% if other_user.get_profile.image %}
+                <img alt="{% trans "User image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.image }}"><br>
+                {% endif %}
+                {% if other_user.get_profile.cycle_image %}
+                <img alt="{% trans "Cycle image" %}" style="border: 1px solid black; max-width: 300px" src="{{ MEDIA_URL}}{{other_user.get_profile.cycle_image }}">
+                {% endif %}
+            </div>
+            {% endcomment %}
+
+            <h3>{% trans "Cycle trips"%}</h3>
+            <div class="well lifted" id="tripdiv" style="height:150px"></div>
+            <h3>{% trans "Avg speed trend: cycling"%}</h2>
+            <div class="well lifted" id="avgspeeddiv" style="height:150px"></div>
+            <h3>{% trans "Avg HR trend overall"%}</h3>
+            <div class="well lifted" id="avghrdiv" style="height:150px"></div>
+            <h3>{% trans "BMI"%}</h3>
+            <div class="well lifted" id="bmidiv" style="height:150px"></div>
+            <h3>{% trans "Resting pulse"%}</h3>
+            <div class="well lifted" id="pulsediv" style="height:150px"></div>
+            {% if ftpdataseries %}
+            <h3>{% trans "FTP" %}{{ "FunctionalThresholdPower"|wiki_help }}</h3>
+            <div class="well lifted" id="ftpdiv" style="height:150px"></div>
             {% endif %}
+            <script id="source" language="javascript" type="text/javascript">
+            $(function () {
+                var d1 = { color: 2, data: [{{pulsedataseries}}], }
+                var d2 = { color: 4, data: [{{bmidataseries}}], }
+                var d3 = { color: 5, data: [{{ftpdataseries}}], }
+                var bmiline = { color: 2, data: [{{bmiline}}], }
+                var options = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 0} }
+                var hroptions = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 100, max: 200 } }
+                var d2options =  { yaxis: { min: 20, max: 45 }, xaxis: { mode: "time", timeformat: "%y/%m/%d" } }
+                var d3options =  { xaxis: { mode: "time", timeformat: "%y/%m/%d" } }
+                $.plot($("#pulsediv"), [d1], options);
+                $.plot($("#bmidiv"), [d2, bmiline], d2options);
+                $.plot($("#tripdiv"), [{
+                        color: 1,
+                        data: [{{tripdataseries}}],
+                        bars: { show: true },
+                        //label: "km",
+                    }] );
+                $.plot($("#avgspeeddiv"), [{
+                        color: 3,
+                        data: [{{avgspeeddataseries}}],
+                        lines: { show: true },
+                        //label: "km",
+                    }], options );
+                $.plot($("#avghrdiv"), [{
+                        color: 2,
+                        data: [{{avghrdataseries}}],
+                        lines: { show: true },
+                        //label: "km",
+                    }], hroptions );
+                {% if ftpdataseries %}
+                $.plot($("#ftpdiv"), [d3], options);
+                {% endif %}
+
+            });
+            </script>
+            </div>
         </div>
-        <hr class="clear" />
     </div>
+</div>
+
 {% endblock %}
 
 {% block extra_body %}
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#edit-profile').hide();
-            $('#edit-profile-toggle').click(function() {
-                $('#edit-profile').toggle();
-                $('#edit-profile').autoscroll();
-                return false;
-            });
-            if ($('#edit-profile .errorField').length) {
-                $('#edit-profile').show();
-                $('#edit-profile .errorField').autoscroll();
-            }
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#edit-profile').hide();
+        $('#edit-profile-toggle').click(function() {
+            $('#edit-profile').toggle();
+            $('#edit-profile').autoscroll();
+            return false;
         });
-    </script>
+        if ($('#edit-profile .errorField').length) {
+            $('#edit-profile').show();
+            $('#edit-profile .errorField').autoscroll();
+        }
+    });
+</script>
 {% endblock %}
 

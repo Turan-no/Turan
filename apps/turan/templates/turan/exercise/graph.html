@@ -37,18 +37,18 @@
         <li class="hidden temp"><span class="data temp__avg"></span> ℃</li>
         <li class="hidden temp"><span class="data temp__avg_est"></span> ℃</li>
     </ul>
-        <a class="floatright" href="#" title="{% trans "Full screen graph" %}" id="enlarge" >
-            <img class="fullscreenicon" src="{{MEDIA_URL}}turan/fs.png">
-        </a>
-        <a class="floatright" href="#" title="{% trans "Zoom out" %}" id="reset_zoom" >
-            <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_out.png" /> 
-        </a>
-        <a class="floatright hidden" href="{% url segmentdetail_create %}?exercise={{object.id }}" title="{% trans "Add segment for this selection" %}" id="segment_add" >
-            <img id="segment_add_img" src="{{ MEDIA_URL }}pinax/img/silk/icons/world_add.png" /> {% trans "Add segment" %}
-        </a>
-<div id="exercisegraph_legend"></div>
-    <p class="" id="choices">{% trans "Graph" %}:</p>
 </div>
+    <div class="pull-right"  data-toggle="buttons-checkbox" id="choices">
+            <a class="btn hide" href="{% url segmentdetail_create %}?exercise={{object.id }}" title="{% trans "Add segment for this selection" %}" id="segment_add" >
+                <img id="segment_add_img" src="{{ MEDIA_URL }}pinax/img/silk/icons/world_add.png" /> {% trans "Add segment" %}
+            </a>
+            <a class="btn hide" href="#" title="{% trans "Zoom out" %}" id="reset_zoom" >
+                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom_out.png">{% trans "Zoom out"%}
+            </a>
+            <a class="btn" href="#" title="{% trans "Full screen graph" %}" id="enlarge" >
+                <img class="fullscreenicon" src="{{MEDIA_URL}}turan/fs.png">
+            </a>
+    </div>
 <script type="text/javascript">
 {% localize off %}
 
@@ -101,6 +101,7 @@
                     var x = orly[2];
                     var x2 = orly[3];
                     GraphPlotter.setRange({ xaxis: { from: x, to: x2 }});
+                    $('#reset_zoom.hide').toggleClass('hide');
                 }
                 else {
                     GraphPlotter.setRange({});

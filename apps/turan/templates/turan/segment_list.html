@@ -15,23 +15,35 @@
 {% autosort object_list %}
 {% autopaginate object_list %}
 
+<div class="page-header">
+        <h1>
+            <a href="#" data-placement="below" rel="popover" data-original-title="{% trans "What are segments" %}?" data-content="{{ "WhatAreSegments"|wiki_content }}">
+            {% trans "Segment list" %}
+    </a>
+        </h1>
 
-<h1>
-    {% trans "Segment list" %}
-</h1>
-{{ "WhatAreSegments"|wiki_help }}
-<div class="floatright" style="clear: right;">
-{% paginate %}
-</div>
-<ul class="buttons">
-    <li class="floatleft">
+<script>
+            $(function () {
+              $("a[rel=popover]")
+                .popover({
+                    placement: 'below',
+                  offset: 10
+                })
+                .click(function(e) {
+                  e.preventDefault()
+                })
+            })
+</script>
+          
+<ul class="">
+    <li class="btn ">
         <a href="{% url segment_create %}">
             <img alt="Segment" src="{{MEDIA_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
             {% trans "Create new segment" %}
         </a>
     </li>
 {% if request.user.username %}
-        <li class="floatleft">
+        <li class="btn ">
             {% if not username %}
             <a href="{% url segments %}?username={{request.user.username}}">{% trans "My segment efforts" %}</a>
             {% else %}
@@ -40,6 +52,7 @@
         </li>
 {% endif %}
 </ul>
+</div>
 
 <table class="fullsize">
     <tr>
@@ -77,7 +90,7 @@
             <ol>
             {% for other_user in object.get_toplist %}
                 <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
-                    <span class="smaller">
+                    <span class="">
                         <span class="duration">
                             {{ other_user.duration|durationformatshort}}
                         </span>
@@ -113,7 +126,9 @@
 </tr>
 {%endfor %}
 </table>
-<hr>
 {% paginate %}
+<script>
+$('#tab_segments').toggleClass('active');
+</script>
 {% endblock content %}
 

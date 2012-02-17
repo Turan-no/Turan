@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block content %}
+<div class="page-header">
 <h1>Turan - Log, analyze and graph your exercises </h1>
+</div>
 <div id="container">
 	<h2>
         <img alt="Package" src="{{ MEDIA_URL }}pinax/img/silk/icons/package.png">
@@ -17,22 +19,27 @@
 		<img src="{{ MEDIA_URL }}pinax/img/silk/icons/heart.png" alt="heart" />
 		Thanks to
 	</h3>
-	<pre>
-CURRENT DEVELOPERS
+<h3>
+OUR DEVELOPERS
+</h3>
 
- o falxx
- o si-m1
- o Ixan
- o tor
- o N`Grath
- o asbjorjo
+<ul>
+    <li>falxx</li>
+    <li>si-m1</li>
+    <li>Ixan</li>
+    <li>Tor Hveem</li>
+    <li>N`Grath</li>
+    <li>asbjorjo</li>
+    <li>Tollef Fog Heen</li>
+</ul>
 
 Logo by <a href="http://www.visuello.no/">Visuello</a>
-</pre>
 and contributers of the great shoulders we stand on
 <h3>
 Contact
 </h3>
+EMAIL: <a href="mailto:{{ CONTACT_EMAIL }}">turan@turan.no</a>
+<br>
 IRC: #turan @ freenode
 	<h3>
 		<img src="{{ MEDIA_URL }}pinax/img/silk/icons/layout.png" alt="layout" />
@@ -43,7 +50,7 @@ IRC: #turan @ freenode
 		the <a href="http://www.python.org/">Python</a> programming language,
 		the <a href="http://www.djangoproject.com/">Django</a> web framework,
 		the <a href="http://www.pinaxproject.com/">Pinax</a> social web framework,
-		<a href="http://developer.yahoo.com/yui/">Yahoo! UI Library</a> for style
+		<a href="http://twitter.github.com/bootstrap/">Twitter bootstrap</a> for style
 		sheets, and icons from
 		<a href="http://www.famfamfam.com/lab/icons/silk/">FamFamFam</a>.
 		And also Flot, openlayers, openstreetmap, and jquery.

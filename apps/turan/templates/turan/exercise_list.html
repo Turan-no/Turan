@@ -9,15 +9,13 @@
 {% trans "Exercises" %}
 {% endblock %}
 {% block content %}
-
+<div class="page-header">
 <h1>
     {% trans "Exercises" %}
 </h1>
+</div>
 {% autosort object_list %}
 {% autopaginate object_list %}
-<div class="floatright" style="clear: right;">
-{% paginate %}
-</div>
 
 <table class="fullsize">
     <tr>
@@ -53,8 +51,8 @@
 {% for object in object_list %}
 <tr class="{% cycle even,odd %} hoverpoint" id="trip_{{object.id}}">
     <td>
-        {{ object|exercise_mouseover }}
-        <a href="{{ object.get_absolute_url }}">
+       
+        <a  {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">
             <img width="32" height="32" alt="{{ object.exercise_type }}" src="{{ object.icon }}" />
         </a>
     </td>
@@ -116,5 +114,6 @@
 </tr>
 {%endfor %}
 </table>
+{% paginate %}
 {% endblock content %}
 

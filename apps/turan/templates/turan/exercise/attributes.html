@@ -2,233 +2,260 @@
 {% load turan_extras %}
 {% load turanwaka_tags %}
 {% load avatar_tags %}
-<div class="box spacer" style="width: 470px" itemscope itemtype="http://schema.org/SportsEvent">
-    <h2>
-        <img height="32" width="32" class="floatleft" style="padding: 0 2px" alt="Exerciselogo" src="{{object.icon}}" />
-        <span itemprop="name">{{ object.get_name }}</span>
-        {% ifequal object.exercise_permission "N" %}
-        <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock.png">
-        {% else %}
-        {% ifequal object.exercise_permission "F" %}
-        {% ifequal user object.user %}
-        <img title="{% trans "Exercise visible to friends"%}" alt="{% trans "Exercise visible to friends"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock_go.png">
-        {% endifequal %}
-        {% endifequal %}
-        {% endifequal %}
-        {% ifequal user object.user %}
-        <a href="{% url exercise_update object.id %}">
-            <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}">
-        </a>
-        {% endifequal %}
-    </h2>
-
-    <div class="floatright" itemprop="performers" itemscope itemtype="http://schema.org/Person">
-        <a itemprop="url" href="{{object.user.get_profile.get_absolute_url }}">
-            {% avatar object.user %}
-        </a>
-        <meta itemprop="name" content="{{ object.user.username }}" />
-    </div>
-
-    <ul class="iconlist">
-        {% comment %}
-        Tor: Isn't displaying picture enough?
-        <li class="person">
-            <span class="label">{% trans "Exerciser" %}:</span> 
-            <a href="{{ object.user.get_profile.get_absolute_url }}">
-                {{ object.user }}
-            </a> 
-        </li>
-        {% endcomment %}
-
-        {% if object.route %}
-        <li class="route">
-            <a href="{{ object.route.get_absolute_url }}">
-            <span class="label">{% trans "Route" %}</span>
-            </a>
-            {% ifequal object.route.single_serving 1 %}
-            {% ifequal object.user request.user %}
-            <a href="{% url route_update object.route.id %}">
-                {{ object.route }}
-                <img alt="modify" src="{{ "wrench"|silk_icon }}">
-            </a>
-            {% else %}
-            {% endifequal %}
-            {% else %}
-            {% endifequal %}
-            {% with object.route as object %}
-                {% include "turan/route/attributes.html" %}
-            {% endwith %}
-        </li>
-        {% endif %}
-
-        {% if object.duration %} 
-        <li class="duration">
-            <span class="label">{% trans "Duration" %}:</span>
-            {{ object.duration }}
-            </span>
-        <ul class="extra clearfixl">
-
-            <li class="date">
-                <span class="label">{% trans "Date" %}:</span> {{ object.date }}
-            </li>
-
-            {% if object.time %}
-            <li class="time">
-                <span class="label">
-                    {% trans "Start time" %}:
-                </span>
-                <span itemprop="startDate" datetime="{{ object.date|date:"Y-m-d" }}T{{ object.time|time:"H:i:s" }}Z">
-                    {{ object.time }}
-                </span>
-            </li>
-            {% endif %}
-        </ul>
-        </li>
-        {% endif %}
-
-        {% if object.url %}
-        <li class="url">
-            <span class="label">{% trans "URL" %}:</span> {{ object.url|urlize }}
-        </li>
-        {% endif %}
-
-        {% if object.avg_speed %}
-        <li class="speed">
-            <span class="label">{% trans "Avg Speed" %}:</span> {{ object.avg_speed|floatformat }} {% trans "km/h" %}
-        <ul class="extra clearfixl">
-            {% if object.max_speed %}
-            <li>
-            <span class="label">{% trans "Max Speed" %}:</span> {{ object.max_speed|floatformat }} {% trans "km/h" %}
-            </li>
-            {% endif %}
-        </ul>
-        </li>
-        {% endif %}
-
-        {% if object.avg_hr %}
-            <li class="heart">
-            <span class="label">{% trans "Avg HR" %}:</span> {{ object.avg_hr }} {% trans "BPM" %} {% if object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}){% endif %}
-            <ul class="extra clearfixl">
-            {% if object.max_hr %}
-                <li>
-                <span class="label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}{% if object.user.get_profile.max_hr %} ({{ object.max_hr|percent:object.user.get_profile.max_hr }}){% endif %}
+{% load tagging_tags %}
+<div class="" style="" itemscope itemtype="http://schema.org/SportsEvent">
+    <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            {% if object.avg_hr %}
+                <li class="">
+                    <a href="#hearttab" data-toggle="tab">
+                        <img src="{{ "heart"|silk_icon }}">
+                        {% if object.user.get_profile.max_hr %}
+                            {{ object.avg_hr|percent:object.user.get_profile.max_hr }}
+                        {% else %}
+                            {{ object.avg_hr }} {% trans "BPM" %} 
+                        {% endif %}
+                    </a>
                 </li>
             {% endif %}
-            {% if object.normalized_hr %}
-                <li>
-                <span class="label">{% trans "Normalized HR" %}:</span> {{ object.normalized_hr }} {% trans "BPM" %}{% if object.user.get_profile.max_hr %} ({{ object.normalized_hr|percent:object.user.get_profile.max_hr }}){% endif %}
+            {% if object.route %}
+                <li class="">
+                    <a href="#2" data-toggle="tab">
+                        <img src="{{ "sum"|silk_icon }}">
+                        <span class="">{{object.route.distance|floatformat}}</span> km
+                        <br>
+                        <img src="{{ "arrow_up"|silk_icon }}">
+                        <span class="">{{object.route.ascent|floatformat}}</span> m
+                    </a>
                 </li>
             {% endif %}
-            </ul>
-            </li>
-        {% endif %}
-
-        {% if object.avg_pedaling_cad %}
-        <li class="cadence"><span class="label">{% trans "Avg Pedaling Cadence" %}:</span> {{ object.avg_pedaling_cad }} {% trans "RPM" %}
-        {% if object.avg_cadence %}
-
-            <ul class="extra clearfixl">
+            {% if object.duration %} 
+                <li class="">
+                    <a href="#3" data-toggle="tab">
+                        <img src="{{ "clock"|silk_icon }}">
+                        {{ object.duration }}
+                    </a>
+                </li>
+            {% endif %}
+            {% if object.avg_speed %}
+                <li class="speed">
+                    <a href="#4" data-toggle="tab">
+                        <img src="{{ "lightning_go"|silk_icon }}">
+                        {{ object.avg_speed|floatformat }} {% trans "km/h" %}
+                    </a>
+                </li>
+            {% endif %}
+            {% if object.avg_cadence %}
                 <li class="cadence">
-                    <span class="label">{% trans "Avg Cadence" %}:</span> {{ object.avg_cadence }} {% trans "RPM" %}</li>
-
-        {% endif %}
-        {% if object.max_cadence %}
-        <li><span class="label">{% trans "Max Cadence" %}:</span> {{ object.max_cadence }} {% trans "RPM" %}</li>
-        {% endif %}
-            </ul>
-        </li>
-        {% endif %}
-
-        {% if object.avg_pedaling_power %}
-            <li class="power">
-            <span class="label">{% trans "Avg Pedaling Power" %}:</span> 
-            {{ object.avg_pedaling_power }} {% trans "W" %} 
-            <span class="smaller">
-            {% if userftp  %} {{ object.avg_pedaling_power|percent:userftp }} FTP {% endif %}
-            {% if object.userweight %} {{ object.avg_pedaling_power|divide:object.userweight }} W/kg {% endif %}
-            </span>
-        <ul class="extra clearfixl">
-
+                    <a href="#10" data-toggle="tab">
+                        <img src="{{ "cog"|silk_icon }}">
+                        {{ object.avg_pedaling_cad }} {% trans "RPM" %}
+                    </a>
+                </li>
+            {% endif %}
             {% if object.avg_power %}
                 <li class="power">
-                <span class="label">{% trans "Avg Power" %}:</span> {{ object.avg_power }} {% trans "W" %}
+                    <a href="#11" data-toggle="tab">
+                        <img src="{{ "lightbulb"|silk_icon }}">
+                        {{ object.avg_pedaling_power }} {% trans "W" %}
+                    </a>
                 </li>
             {% endif %}
-
-            {% if object.normalized_power %}
-            <li class="power">
-                <span class="label">{% trans "Normalized Power" %}:</span> {{ object.normalized_power }} {% trans "W" %}
-            </li>
+            {% if object.url %}
+                <li class="">
+                    <a href="#12" data-toggle="tab">
+                        <img src="{{ "link"|silk_icon }}">
+                        {% trans "URL" %}
+                    </a>
+                </li>
             {% endif %}
-            {% if object.get_intensityfactor %}
-            <li class="intensity">
-                <span class="label">{% trans "Intensity Factor" %}:</span> {{ object.get_intensityfactor }}
-            </li>
-            {% if object.get_tss %}
-            <li class="tss">
-                <span class="label">{% trans "TSS" %}:</span> {{ object.get_tss }}
-            </li>
+            {% if object.temperature %}
+                <li class="temp">
+                    <a href="#5" data-toggle="tab">
+                        <img src="{{ "cake"|silk_icon }}">
+                        {{ object.temperature|floatformat }} {% trans "℃" %}
+                        <br>
+                        {% if object.kcal %}
+                            {{ object.kcal }} {% trans "kcal" %} 
+                        {% endif %}
+                    </a>
+                </li>
             {% endif %}
+            {% tags_for_object object as tag_list %}
+            {% if tag_list %}
+                <li class="">
+                    <a href="#13" data-toggle="tab">
+                        <img src="{{ "tag_blue"|silk_icon }}">
+                        <span class="labelast">{{ tag_list|length }}</span>
+                    </a>
+                </li>
             {% endif %}
-            {% if object.max_power %}
-            <li class="power">
-                <span class="label">{% trans "Max Power" %}:</span> {{ object.max_power }} {% trans "W" %}
-            </li>
+            {% if object.comment %}
+                <li class="comment">
+                    <a href="#commenttab" data-toggle="tab">
+                        <img src="{{ "comment"|silk_icon }}">
+                        {% trans "Comment" %}
+                    </a>
+                </li>
             {% endif %}
         </ul>
-        </li>
-        {% endif %}
-        {% if object.xPower %}
-        <li class="power">
-        <span class="label">{% trans "xPower" %}:</span> {{ object.xPower }} {% trans "W" %} {{ "CrossPower"|wiki_help}}
-            <ul class="extra clearfixl">
-                {% if object.get_ri %}
-                <li class="power">
-                    <span class="label">{% trans "Relative Intensity (RI)" %}:</span> {{ object.get_ri|floatformat }}
+        <div id="exercise-attributes" class="tab-content">
+            {% if object.avg_hr %}
+            <div class="tab-pane" id="hearttab">
+                <h6>
+                    {% trans "Avg HR" %}
+                </h6>
+                            {{ object.avg_hr }} {% trans "BPM" %} 
+                            , {% if object.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.user.get_profile.max_hr }} {%endif %}
+                {% if object.max_hr %}
+                        <h6>
+                             {% trans "Max HR" %}
+                        </h6>
+                            {{ object.max_hr }} {% trans "BPM" %} 
+                {% endif %}
+                {% if object.max_hr %}
+                            , {% if object.user.get_profile.max_hr %} {{ object.max_hr|percent:object.user.get_profile.max_hr }}{% endif %}
+                            
+                {% endif %}
+            </div>
+            {% endif %}
+            {% if object.route %}
+            <div class="tab-pane" id="2">
+                <h6 class="">{% trans "Route" %}</h6>
+                    <a href="{{ object.route.get_absolute_url }}">
+                    {{ object.route }}
+                </a>
+                {% ifequal object.route.single_serving 1 %}
+                {% ifequal object.user request.user %}
+                <a href="{% url route_update object.route.id %}">
+                    <img alt="modify" src="{{ "wrench"|silk_icon }}">
+                </a>
+                {% else %}
+                {% endifequal %}
+                {% else %}
+                {% endifequal %}
+
+                {% with object.route as object %}
+                    {% include "turan/route/attributes.html" %}
+                {% endwith %}
+            </div>
+            {% endif %}
+            <div class="tab-pane" id="3">
+                {% if object.time %}
+                    <h6>
+                        {% trans "Start time" %}
+                    </h6>
+                    <span itemprop="startDate" datetime="{{ object.date|date:"Y-m-d" }}T{{ object.time|time:"H:i:s" }}Z">
+                        {{ object.time }}
+                    </span>
+
+                {% endif %}
+                {% if object.date %}
+                <h6>
+                        {% trans "Date" %}
+                </h6>
+                        {{ object.date }}
+                {% endif %}
+            </div>
+            {% if object.avg_speed %}
+            <div class="tab-pane" id="4">
+                {% if object.max_speed %}
+                <h6>{% trans "Max Speed" %}</h6> {{ object.max_speed|floatformat }} {% trans "km/h" %}
+                {% endif %}
+            </div>
+            {% endif %}
+            {% if object.temperature %}
+            <div class="tab-pane" id="5">
+                    <h6>{% trans "Temperature" %}</h6> {{ object.temperature|floatformat }} {% trans "℃" %}
+
+                    {% if object.min_temperature %}
+                        <h6>{% trans "Min Temperature" %}</h6> {{ object.min_temperature|floatformat }} {% trans "℃" %}
+                    {% endif %}
+
+                    {% if object.max_temperature %}
+                        <h6>{% trans "Max Temperature" %}</h6> {{ object.max_temperature|floatformat }} {% trans "℃" %}
+                    {% endif %}
+                    {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})
+            </div>
+            {% endif %}
+            {% if object.avg_cadence %}
+            <div class="tab-pane" id="10">
+                {% if object.avg_pedaling_cad %}
+                <h6>{% trans "Avg Pedaling Cadence" %}</h6> {{ object.avg_pedaling_cad }} {% trans "RPM" %}
+                {% if object.avg_cadence %}
+
+                            <h6 class="labelast">{% trans "Avg Cadence" %}</h6> {{ object.avg_cadence }} {% trans "RPM" %}</li>
+
+                {% endif %}
+                {% if object.max_cadence %}
+                <li><h6 class="labelast">{% trans "Max Cadence" %}</h6> {{ object.max_cadence }} {% trans "RPM" %}</li>
+                {% endif %}
                 </li>
                 {% endif %}
-                {% if object.get_bikescore %}
-                <li class="power">
-                <span class="label">{% trans "BikeScore" %}{{"BikeScore"|wiki_help}}:</span> {{ object.get_bikescore }}
-                </li>
+                </ul>
+            </div>
+            {% endif %}
+            {% if object.avg_pedaling_power %}
+            <div class="tab-pane" id="11">
+                <h6 class="labelast">{% trans "Avg Pedaling Power" %}</h6> 
+                {{ object.avg_pedaling_power }} {% trans "W" %} 
+                <span class="smaller">
+                {% if userftp  %} {{ object.avg_pedaling_power|percent:userftp }} FTP {% endif %}
+                {% if object.userweight %} {{ object.avg_pedaling_power|divide:object.userweight }} W/kg {% endif %}
+                </span>
+
+                {% if object.avg_power %}
+                    <h6 class="labelast">{% trans "Avg Power" %}</h6> {{ object.avg_power }} {% trans "W" %}
                 {% endif %}
-            </ul>
-        </li>
-        {% endif %}
 
-
-
-        {% if object.temperature %}
-        <li class="temperature" >
-            <span class="label">℃ {% trans "Temperature" %}:</span> {{ object.temperature|floatformat }} {% trans "℃" %}
-            <ul class="extra clearfixl">
-
-            {% if object.min_temperature %}
-            <li class="temperature" >
-                <span class="label">{% trans "Min Temperature" %}:</span> {{ object.min_temperature|floatformat }} {% trans "℃" %}
-            </li>
+                {% if object.normalized_power %}
+                    <h6 class="labelast">{% trans "Normalized Power" %}</h6> {{ object.normalized_power }} {% trans "W" %}
+                {% endif %}
+                {% if object.get_intensityfactor %}
+                    <h6 class="labelast">{% trans "Intensity Factor" %}</h6> {{ object.get_intensityfactor }}
+                {% if object.get_tss %}
+                    <h6 class="labelast">{% trans "TSS" %}</h6> {{ object.get_tss }}
+                {% endif %}
+                {% endif %}
+                {% if object.max_power %}
+                    <h6 class="labelast">{% trans "Max Power" %}</h6> {{ object.max_power }} {% trans "W" %}
+                {% endif %}
+                {% if object.xPower %}
+                <h6 class="labelast">{% trans "xPower" %}</h6> {{ object.xPower }} {% trans "W" %} {{ "CrossPower"|wiki_help}}
+                        {% if object.get_ri %}
+                            <h6 class="labelast">{% trans "Relative Intensity (RI)" %}</h6> {{ object.get_ri|floatformat }}
+                        {% endif %}
+                        {% if object.get_bikescore %}
+                        <h6 class="labelast">{% trans "BikeScore" %}{{"BikeScore"|wiki_help}}</h6> {{ object.get_bikescore }}
+                        {% endif %}
+                {% endif %}
+            </div>
             {% endif %}
-
-            {% if object.max_temperature %}
-            <li class="temperature" >
-                <span class="label">{% trans "Max Temperature" %}:</span> {{ object.max_temperature|floatformat }} {% trans "℃" %}
-            </li>
+            {% if object.url %}
+            <div class="tab-pane" id="12">
+                    <h6 class="labelast">{% trans "URL" %}</h6> {{ object.url|urlize }}
+            </div>
             {% endif %}
-        </ul>
-        </li>
-        {% endif %}
-        {% if object.kcal %}
-        <li class="kcal" >
-            <span class="label">{% trans "Used kcal" %}:</span> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})
-        </li>
-        {% endif %}
-
-        {% if object.comment %}
-        <li class="comment">{{ object.user }} {% trans "writes" %}:
-            <p itemprop="description">
-                {{ object.comment|linebreaksbr }}
-            </p>
-        </li>
-        {% endif %}
-    </ul>
+            {% if tag_list %}
+            <div class="tab-pane" id="13">
+                {% include "turan/tags.html" %}
+            </div>
+            {% endif %}
+            {% if object.comment %}
+            <div class="tab-pane" id="commenttab">
+                    <p itemprop="description">
+                        {{ object.comment|linebreaksbr }}
+                    </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
+<script type="text/javascript">
+$(function() {
+    // Enable active tab
+    // Find last tab link, activate it
+        $('.tabs-left>ul>li>a:last').click();
+});
+    
+</script>

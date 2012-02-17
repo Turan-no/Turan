@@ -1,31 +1,23 @@
 {% load i18n %}
 {% load turan_extras %}
-<ul class="iconlist">
     {% if object.distance %}
-    <li class="distance"><span class="label">{% trans "Distance" %}:</span> {{ object.distance|floatformat }} {% trans "km" %}</li>
+    <h6 class="oldlabel">{% trans "Distance" %}</h6> {{ object.distance|floatformat }} {% trans "km" %}
     {% endif %}
-    <li class="description">
-        <span class="label">{% trans "Description" %}: </span>{{ object.description }}
-    </li>
     {% if object.route_url %}
-    <li class="url"><span class="label">{% trans "External URL" %}:</span> {{ object.route_url|urlizetrunc:60 }}</li>
+    <h6 class="oldlabel">{% trans "External URL" %}</h6> {{ object.route_url|urlizetrunc:60 }}
     {% endif %}
     {% if object.ascent %}
-        <li class="ascent"><span class="label">{% trans "Ascent" %}:</span> {{ object.ascent }} {% trans "m" %}
+        <h6 class="oldlabel">{% trans "Ascent" %}</h6> {{ object.ascent }} {% trans "m" %}
             {% if object.distance %}
                 ({{ object.ascent|divide:object.distance }} {% trans "m/km" %})
             {% endif %}
-            <ul class="clearfixl extra">
                 {% if object.descent %}
-                <li class="descent"><span class="label">{% trans "Descent" %}:</span> {{ object.descent }} {% trans "m" %}</li>
+                <h6 class="oldlabel">{% trans "Descent" %}</h6> {{ object.descent }} {% trans "m" %}
                 {% endif %}
                 {% if object.min_altitude %}
-                <li class="altitude"><span class="label">{% trans "Min altitude" %}:</span> {{ object.min_altitude }} {% trans "m" %}</li>
+                <h6 class="oldlabel">{% trans "Min altitude" %}</h6> {{ object.min_altitude }} {% trans "m" %}
                 {% endif %}
                 {% if object.max_altitude %}
-                <li class="altitude"><span class="label">{% trans "Max altitude" %}:</span> {{ object.max_altitude }} {% trans "m" %}</li>
+                <h6 class="oldlabel">{% trans "Max altitude" %}</h6> {{ object.max_altitude }} {% trans "m" %}
                 {% endif %}
-            </ul>
-        </li>
     {% endif %}
-</ul>

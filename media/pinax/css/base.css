@@ -5,8 +5,6 @@ body {
     height: 100%;
     margin: 0;
     color: #333;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 10pt;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -26,35 +24,16 @@ img {
 dt {
     font-weight: bold;
 }
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    border: 0;
-    font-size: inherit;
-}
-td {
-    margin: 0;
-    border: 0;
-    padding: 0;
-}
-#body {
-    margin: 0 auto;
-    padding: 10px;
-    width: 1000px;
-    background: white;
-}
-#footer {
+footer {
     color: #999; /* footer text colour */
     margin: 0 auto;
     padding: 10px;
-    clear: both;
-    width: 1000px;
     background: white;
 }
-#footer a, #footer a:visited {
+footer a, footer a:visited {
     color: white; /* footer link colour */
 }
-#footer a:hover {
+footer a:hover {
     color: #933; /* footer link hover colour */
     text-decoration: none !important;
 }
@@ -70,18 +49,6 @@ td {
 /*h1 {
     margin: 0;
 }*/
-form th {
-    text-align : left;
-}
-input[type="text"], input[type="password"], textarea {
-    padding: 3px;
-    margin: 3px;
-    border: solid 1px #C6C6C6;
-    border-bottom: solid 1px #E3E3E3;
-    color: #666;
-    font-size: 12pt;
-    background: #F3F3F3 url('/site_media/pinax/images/form-shadow.png') left top repeat-x;
-}
 .clearboth {
     clear: both;
 }
@@ -221,12 +188,15 @@ div.profile_info p {
     padding: 0 10px;
     background: #ccc; /* tab colour */
     border-top: 1px solid #000;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#ffffff'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); /* for webkit browsers */
-    background: -moz-linear-gradient(top,  #ccc,  #fff); /* for firefox 3.6+ */
-    background: -o-linear-gradient(top,  #ccc,  #fff); 
-    border-radius: 10px 10px 0 0;
-    width: 1000px;
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#000000') !important; 
+          background: -moz-linear-gradient(top,  #f5f5f5, #cccccc) !important;
+          background: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#cccccc)) !important; 
+          background: -o-linear-gradient(top,  #f5f5f5,  #cccccc) !important;
+    /*border-radius: 10px 10px 0 0;*/
+    line-height: 28px;
+    width: 960px;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 #subnav ul {
@@ -437,26 +407,16 @@ legend { padding: 0 .4em; font-weight: bold; font-size: 1.2em; }
     background: #DEF;
     border: 1px solid #9BC;
 }
-div#lyricContainer {
-    height: 1.0em;
-    overflow: hidden;
-    float: right;
-}
-pre#footerLyrics {
-    margin-top: 0em;
-    color: #eee;
-}
-
 /* Footer area */
-#footer {
+footer {
 	background: #609A43;
 	color: white;
 }
-#footer .cloud {
+footer .cloud {
 	background: #508A33;
     padding: 5px;
 }
-#footer .cloud a {
+footer .cloud a {
 	color: #eee;
 	text-decoration: none;
 }

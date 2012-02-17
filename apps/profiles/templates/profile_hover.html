@@ -1,25 +1,28 @@
 {% load i18n %}
 {% load avatar_tags %}
 {% load turan_extras %}
-<div class="tooltip hidden" id="profile_{{object.id}}">
+rel='popover' 
+data-placement='bottom' 
+data-title='{% if profile.name%}{{ profile.name}}{%else%}{{ object }}{%endif%}' data-content='
 {% with object.get_profile as profile %}
-<div class="floatright">{% avatar object 80 %}</div>
-<h1>{% if profile.name%}{{ profile.name}}{%else%}{{ object }}{%endif%}</h1>
+{% comment %}
+{% avatar object 80 %}
+{% endcomment %}
 <div class="profile">
     <ul class="iconlist">
         {% if object.exercise__duration__sum %} 
-        <li><span class="label">{% trans "Last 14 days" %}</span>: {{object.exercise__duration__sum|retarddurationformat }}</li>
+        <li><span class="old-label">{% trans "Last 14 days" %}</span>: {{object.exercise__duration__sum|retarddurationformat }}</li>
         {% endif %}
     {% if profile.about %}
-        <li><span class="label">{% trans "About" %}</span>: {{ profile.about }}</li>
+        <li><span class="old-label">{% trans "About" %}</span>: {{ profile.about }}</li>
     {% endif %}
     {% if profile.location%}
-    <li><span class="label">{% trans "Location" %}</span>: {{ profile.location }}</li>
+        <li><span class="old-label">{% trans "Location" %}</span>: {{ profile.location }}</li>
     {% endif %}
     {% if profile.motto %}
-        <li><span class="label">{% trans "Motto" %}</span>: {{ profile.motto }}</li>
+        <li><span class="old-label">{% trans "Motto" %}</span>: {{ profile.motto }}</li>
     {% endif %}
     </ul>
 </div>
     {% endwith %}
-</div>
+'  

@@ -19,34 +19,36 @@
     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.stack.js"></script>
 {% endblock %}
 {% block content %}
+<div class="page-header">
 {% if username %}
 <div class="floatleft">
-    <a class="profilehoverpoint" id="user_{{other_user.id}}" title="{{other_user.username}}" href="{{other_user.get_profile.get_absolute_url }}">{% avatar other_user 60 %}</a>
-    {{ other_user|profile_hover }}
+    <a {{ other_user|profile_hover }} class="profilehoverpoint" id="user_{{other_user.id}}" title="{{other_user.username}}" href="{{other_user.get_profile.get_absolute_url }}">{% avatar other_user 60 %}</a>
+    
 </div>
 {% endif %}
 <h1>
     {% trans "Calendar" %} 
     {{ year }} - {{ month }}
 </h1>
-<ul class="buttons">
-    <li>
-    <a href="{% url calendar previous_month.year previous_month.month %}{% if username %}/?username={{username}}{% endif %}">
+<div class="btn-group">
+    <a class="btn" href="{% url calendar previous_month.year previous_month.month %}{% if username %}/?username={{username}}{% endif %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_previous.png" alt="{% trans "Previous month"%}" />
         {% trans "Previous month" %}
     </a>
-    <a href="{% url calendar next_month.year next_month.month %}{% if username %}/?username={{username}}{% endif %}">
+    <a class="btn" href="{% url calendar next_month.year next_month.month %}{% if username %}/?username={{username}}{% endif %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_next.png" alt="{% trans "Next month"%}" />
         {% trans "Next month" %}
     </a>
-    </li>
-</ul>
-<div class="floatright">
-    <h3>{% trans "Time in HR zones by week"%}</h3>
-    <div id="weeks" style="width:300px;height:800px"></div>
 </div>
-<div id="calendar" style="width:700px">
+</div>
+<div class="row">
+<div id="calendar"  class="span8" style="">
 {{ calendar }}
+</div>
+<div class="span4">
+    <h3>{% trans "Time in HR zones by week"%}</h3>
+    <div id="weeks" style="height:800px"></div>
+</div>
 </div>
 <script id="source" language="javascript" type="text/javascript">
 $(function () {

@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load l10n %}
 {% load turan_extras %}
-<div id="tabs-6" class="slope_tab">
+<div id="tabs-6" class="slope_tab tab-pane">
     <table class="fullsize">
         <tr>
             <th>
@@ -148,15 +148,10 @@
         </tr>
         {% endfor %}
     </table>
-<hr>
-<ul class="buttons">
-{% if object.user == request.user or request.user.is_superuser %}
-<li class="floatleft">
-<a href="{% url exercise_segment_search object.id %}">{% trans "Search for named segments" %}</a>
-</li>
-{% endif %}
-<li class="floatleft">
-<a href="{% url segment_create %}">{% trans "Create new segment" %}</a>
-</li>
-</ul>
+<div class="form-actions">
+    {% if object.user == request.user or request.user.is_superuser %}
+    <a class="btn" href="{% url exercise_segment_search object.id %}">{% trans "Search for named segments" %}</a>
+    {% endif %}
+    <a class="btn" href="{% url segment_create %}">{% trans "Create new segment" %}</a>
+</div>
 </div>

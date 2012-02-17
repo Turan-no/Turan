@@ -51,14 +51,13 @@ class WorkoutCalendar(HTMLCalendar):
             if weekday in workouts_by_weekday:
                 cssclass += ' filled'
                 body = ['<ul>']
-                mouseover_html = []
                 for workout in workouts_by_weekday[weekday]:
                     body.append('<li class="hoverpoint" id="workout_%s">' %workout.id)
-                    body.append('<a href="%s">' % workout.get_absolute_url())
+                    body.append('<a %s href="%s">' % (unicode(exercise_mouseover(workout)), workout.get_absolute_url()))
                     body.append('<img src="' + workout.icon() + '" />')
                     body.append(esc(workout.get_name()))
                     body.append('</a>')
-                    body.append('<p class="fade">')
+                    body.append('<p class="faded">')
                     bikescore = workout.get_bikescore()
                     if bikescore:
                         body.append(esc(bikescore) + '&nbsp;BikeScore')
@@ -71,10 +70,8 @@ class WorkoutCalendar(HTMLCalendar):
                     body.append(esc(str(workout.duration).replace(" ", "&nbsp;")))
                     body.append('</p>')
                     body.append('</li>')
-                    mouseover_html.append(unicode(exercise_mouseover(workout)))
                 body.append('</ul>')
 
-                body.append(''.join(mouseover_html))
                 dayhtml = '<div class="day">%d</div>' %day
                 if day == 0:
                     dayhtml = ''

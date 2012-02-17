@@ -62,7 +62,6 @@ class ExerciseType(models.Model):
         return unicode(self.name)
 
     def icon(self):
-        # FIXME use media url
         if self.logo:
             return settings.MEDIA_URL + 'turan/%s' %(self.logo)
         return ''
