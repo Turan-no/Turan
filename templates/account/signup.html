@@ -6,12 +6,15 @@
 {% block head_title %}{% trans "Sign Up" %}{% endblock %}
 
 {% block body %}
-    <h1>{% trans "Sign Up" %}</h1>
+<div class="page-header">
+    <h1>{% trans "Sign Up" %}
+    <small>{% trans "You need an account to log exercises"%}</small>
+    </h1>
+</div>
     
     {% if user.is_authenticated %}
         <p>{% trans "You are already logged in." %}</p>
     {% else %}
-        <p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p>
         
         <form class="signup uniForm" id="signup_form" method="post" action="{% url acct_signup %}">
             {% csrf_token %}
@@ -20,8 +23,8 @@
                 {% if redirect_field_value %}
                     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                 {% endif %}
-                <div class="form_block">
-                    <input type="submit" value="{% trans "Sign Up" %} &raquo;" />
+                <div class="form-actions">
+                    <button class="btn btn-primary btn-large"  type="submit">{% trans "Sign Up" %} &rarr;</button>
                 </div>
             </fieldset>
         </form>
@@ -31,8 +34,10 @@
         <h2>{% trans "Register using your Facebook account" %}</h2>
 
         <form class="" action="{% url begin "facebook" %}">
-            <button>{% trans "Sign Up" %} &raquo;</button>
+            <button class="btn">
 <img height="32" width="32" src="{{MEDIA_URL}}turan/fbbutton.png">
+                {% trans "Sign Up" %}
+            </button>
         </form>
         <hr>
         
@@ -57,8 +62,8 @@
                             <input class="openid" type="text" name="openid_url" />
                         </div>
                     {% endif %}
-                    <div class="form_block">
-                        <input type="submit" value="{% trans "Log in &raquo;" %}" />
+                    <div class="form-actions">
+                        <button class="btn" type="submit" >{% trans "Log in" %} &rarr;</button>
                     </div>
                 </fieldset>
             </form>
@@ -67,12 +72,14 @@
                 <div><a href="{% url acct_logout %}?next={{ request.path }}&amp;sm={{ split_test }}&amp;sn=logout">logout</a></div>
             {% endif %}
         {% endif %}
-        
+        {% comment  %}
         {% url terms as terms_url %}
         {% url privacy as privacy_url %}
         <p>{% blocktrans %}By clicking "Sign Up", you are indicating that you have read and agree to the <a href="{{ terms_url }}">Terms of Use</a> and <a href="{{ privacy_url }}">Privacy Policy</a>.{% endblocktrans %}</p>
+        {% endcomment %}
         
         <p>{% blocktrans %}If you have any trouble creating your account, contact us at <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.{% endblocktrans %}</p>
+            <p>{% trans "Already have an account?" %} <a href="{% url acct_login %}">{% trans "Log In" %}</a>!</p>
         
     {% endif %}
 {% endblock %}
