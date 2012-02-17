@@ -13,20 +13,15 @@
     {% block extramenu %}
     {% endblock %}
 {% block content %}
-
-
-    <div class="content">
-        <div class="page-header">
-            {% spaceless %}
-            <div class="" id="exercisers">
-                {% for exerciser in user_list %}
-                <a {{ exerciser|profile_hover }} class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
-                {% endfor %}
-            </div>
-            {% endspaceless  %}
+    <div class="page-header">
+        {% spaceless %}
+        <div class="" id="exercisers">
+            {% for exerciser in user_list %}
+            <a {{ exerciser|profile_hover }} class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
+            {% endfor %}
         </div>
+        {% endspaceless  %}
     </div>
-
 
     <div class="row">
     <div class="span6">

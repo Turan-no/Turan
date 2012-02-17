@@ -3,7 +3,6 @@ html {
 }
 body {
     height: 100%;
-    margin: 0;
     color: #333;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -244,7 +243,7 @@ h1 a
     font-weight: bold;
     -webkit-transition: border-color .218s;
     text-shadow: 0 1px rgba(0, 0, 0, 0.1);
-    height: 22px;
+    height: 19px;
 }
 ul.comments {
     width: 450px;
@@ -1053,8 +1052,6 @@ p.description {
 #search input {
     opacity: 0.8;
     outline: none;
-    background: #fff;
-    color: #000;
     width: 60px;
     padding: 4px 9px;
     margin: 0px 2px 0 0;
@@ -1279,10 +1276,18 @@ body {
     min-height: 500px;
     background-color: #fff;
   }
-.brand {
+@media (max-width: 980px) { /* Fix for turan logo when responsive layout is trigered */
+    .navbar .brand {
+        width: 140px !important; 
+    }
+}
+.navbar .brand {
     background: url('/site_media/turan/turan.png') 0 40px;
     width: 124px;
     height: 20px;
+}
+.navbar .brand:hover {
+    background-position: 0px 0px;
 }
 ul.iconlist li {
     list-style-type: none;
@@ -1456,4 +1461,21 @@ label, .baseLbl, .dataLbl {
 }
 .popover-inner {
     width: 380px;
+}
+.navbar-inner {
+    background-image: -webkit-gradient(radial, center 50, 0, center 50, 400, from(#42596f), to(#1d3853));
+    background-image: -moz-radial-gradient(50% 0%, farthest-side, #42596f, #1d3853);
+    background-color: #1d3853;
+}
+.navbar ul.nav>li {
+    height: 20px !important;
+}
+.navbar ul.nav>li>a {
+    color: #eee;
+    text-shadow: 1px 1px 2px black;
+    /*
+    background: -webkit-gradient(linear, left top, left bottom, from(#4F96CA), to(#1D3853));
+    width: 80px;
+    margin-right: 5px;
+    */
 }
