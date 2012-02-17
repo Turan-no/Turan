@@ -1465,6 +1465,8 @@ label, .baseLbl, .dataLbl {
     background-image: -webkit-gradient(radial, center 50, 0, center 50, 400, from(#42596f), to(#1d3853));
     background-image: -moz-radial-gradient(50% 0%, farthest-side, #42596f, #1d3853);
     background-color: #1d3853;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#42596f', endColorstr='#1d3853'); /* for IE */
+    background: -o-linear-gradient(#42596f,  #1d3853); /* for opera */
 }
 .navbar ul.nav>li {
     height: 20px !important;
