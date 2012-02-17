@@ -160,33 +160,33 @@
 {% endblock %}
 
 {% block extra_body_base %}
-    <script type="text/javascript">
-$(document).ready(function(){
-        // Activate popovers
-        $('[rel]="popover"').popover();
+<script type="text/javascript">
+$(function() {
+    // Activate popovers
+    $('[rel]="popover"').popover();
 
-        // Stop form from disappearing on clicks in drop dow menu
-        $('#loginform').click(function(e) {
-                e.stopPropagation();
-        });
+    // Stop form from disappearing on clicks in drop dow menu
+    $('#loginform').click(function(e) {
+            e.stopPropagation();
+    });
 
-  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-  $.getScript(gaJsHost + "google-analytics.com/ga.js", function(){
+    // Google analytics
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    $.getScript(gaJsHost + "google-analytics.com/ga.js", function(){
       try {
           var pageTracker = _gat._getTracker("UA-7885298-3");
           pageTracker._trackPageview();
       } catch(err) {}
-});});
-</script>
-<script type="text/javascript">
+    });
+
+    // iDrift Analytics
     var pkBaseURL = (("https:" == document.location.protocol) ? "https://statistikk.idrift.no/" : "http://statistikk.idrift.no/");
-    document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-    </script><script type="text/javascript">
-    try {
+    $.getScript(pkBaseURL + 'piwik.js', function(){
         var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 102);
         piwikTracker.trackPageView();
         piwikTracker.enableLinkTracking();
-    } catch( err ) {}
-</script><noscript><p><img src="http://statistikk.idrift.no/piwik.php?idsite=102" style="border:0" alt="" /></p></noscript>
+    });
+});
+</script>
     {% block extra_body %}{% endblock %}
 {% endblock %}
