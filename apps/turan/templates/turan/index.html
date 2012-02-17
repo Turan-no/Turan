@@ -160,7 +160,6 @@
     <ul class="segments">
         {% for object in segment_list|slice:":10" %}
         <li class="{% cycle "even" "odd" %}">
-            <a href="{{ object.get_absolute_url }}">
                 <img class="floatright" src="{{ object.get_png_url }}" width="32" height="32"/>
         <div style="height: 32px; width: 32px; margin-right: 13px; color: #999; background-color: #eee; float: left">
             <p style="font-size: 14px; color: #888; width: 32px; text-align: center; float: left; padding: 0; margin: 2px 0 0 0">
@@ -171,6 +170,7 @@
             </p>
             <hr class="clearleft" />
         </div>
+            <a href="{{ object.get_absolute_url }}">
                 <p>{{ object }}</p>
                 <p class="smaller faded">
                     {{ object.distance|floatformat }} km, 
