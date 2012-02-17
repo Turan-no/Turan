@@ -411,7 +411,7 @@ def statistics(request, year=None, month=None, day=None, week=None):
     total_avg_speed = stats_dict['avg_speed__avg']
     longest_trip = stats_dict['route__distance__max']
     if not total_duration:
-        return HttpResponse('No trips found')
+        raise Http404('No trips found')
 
     userstats = statsprofiles.filter(**tfilter).annotate(
             avg_avg_speed = Avg('user__exercise__avg_speed'),
