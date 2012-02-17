@@ -3,10 +3,7 @@
 {% load turanwaka_tags %}
 {% load avatar_tags %}
 {% load tagging_tags %}
-
-
 <div class="" style="" itemscope itemtype="http://schema.org/SportsEvent">
-
     <div class="tabbable tabs-left">
         <ul class="nav nav-tabs">
             {% if object.avg_hr %}
@@ -77,6 +74,7 @@
                     <a href="#5" data-toggle="tab">
                         <img src="{{ "cake"|silk_icon }}">
                         {{ object.temperature|floatformat }} {% trans "℃" %}
+                        <br>
                         {% if object.kcal %}
                             {{ object.kcal }} {% trans "kcal" %} 
                         {% endif %}
@@ -93,7 +91,7 @@
                 </li>
             {% endif %}
             {% if object.comment %}
-                <li class="active comment">
+                <li class="comment">
                     <a href="#commenttab" data-toggle="tab">
                         <img src="{{ "comment"|silk_icon }}">
                         {% trans "Comment" %}
@@ -152,6 +150,7 @@
                 {% endif %}
             </div>
             {% endif %}
+            {% if object.temperature %}
             <div class="tab-pane" id="5">
                     <h6>{% trans "Temperature" %}</h6> {{ object.temperature|floatformat }} {% trans "℃" %}
 
@@ -163,12 +162,6 @@
                         <h6>{% trans "Max Temperature" %}</h6> {{ object.max_temperature|floatformat }} {% trans "℃" %}
                     {% endif %}
                     {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})
-            </div>
-            {% if object.comment %}
-            <div class="active tab-pane" id="commenttab">
-                    <p itemprop="description">
-                        {{ object.comment|linebreaksbr }}
-                    </p>
             </div>
             {% endif %}
             {% if object.avg_cadence %}
@@ -222,27 +215,33 @@
                         <h6 class="labelast">{% trans "BikeScore" %}{{"BikeScore"|wiki_help}}</h6> {{ object.get_bikescore }}
                         {% endif %}
                 {% endif %}
-                </div>
-                {% endif %}
-                {% if object.url %}
-                <div class="tab-pane" id="12">
-                        <h6 class="labelast">{% trans "URL" %}</h6> {{ object.url|urlize }}
-                </div>
-                {% endif %}
-                {% if tag_list %}
-                <div class="tab-pane" id="13">
-                    {% include "turan/tags.html" %}
-                </div>
-                {% endif %}
+            </div>
+            {% endif %}
+            {% if object.url %}
+            <div class="tab-pane" id="12">
+                    <h6 class="labelast">{% trans "URL" %}</h6> {{ object.url|urlize }}
+            </div>
+            {% endif %}
+            {% if tag_list %}
+            <div class="tab-pane" id="13">
+                {% include "turan/tags.html" %}
+            </div>
+            {% endif %}
+            {% if object.comment %}
+            <div class="tab-pane" id="commenttab">
+                    <p itemprop="description">
+                        {{ object.comment|linebreaksbr }}
+                    </p>
+            </div>
+            {% endif %}
         </div>
     </div>
-
-
-
-
-
-
-
-
-
 </div>
+<script type="text/javascript">
+$(function() {
+    // Enable active tab
+    // Find last tab link, activate it
+        $('.tabs-left>ul>li>a:last').click();
+});
+    
+</script>

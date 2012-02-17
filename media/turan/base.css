@@ -1117,6 +1117,9 @@ a.profilehoverpoint>img {
   div.exercisegraph {
       width: 1160px;
   }
+  a.profilehoverpoint {
+      margin-left: 18px;
+    }
 }
 
 .fullscreenicon {
