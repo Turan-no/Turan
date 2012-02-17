@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load compress %}
 {% load turan_extras %}
 {% load avatar_tags %}
 <!DOCTYPE html>
@@ -24,7 +23,7 @@
         <meta name="y_key" content="f7a9fd1f90cc1d60" />
         <meta name="msvalidate.01" content="BBA90F86915278854DF651EAB2F7403D" />
 
-        <title>{% if site_name %}{{ site_name }} : {% endif %}{% block head_title %}{% endblock %}</title>
+        <title>Turan.no : {% block head_title %}{% endblock %}</title>
         <!--[if IE]><style>
             div {
                 zoom: 1; /* trigger hasLayout */
@@ -38,18 +37,6 @@
     
     <body class="{% block body_class %}{% endblock %}">
 
-        {% if site_wide_announcements %}
-            <div id="site_wide_announcements">
-                <ul>
-                    {% for announcement in site_wide_announcements %}
-                    <li>
-                        <a href="{{ announcement.get_absolute_url }}">{{ announcement }}</a> -
-                        <a href="{% url announcement_hide announcement.pk %}?next={{ request.path }}">{% trans "Hide announcement" %}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
 
         <div class="navbar navbar-fixed-top">
           <div class="navbar-inner">
@@ -137,6 +124,20 @@
                     </div>
                 {% endfor %}
             {% endif %}
+            {% comment %}
+            {% if site_wide_announcements %}
+                <div id="site_wide_announcements">
+                    <ul>
+                        {% for announcement in site_wide_announcements %}
+                        <li>
+                            <a href="{{ announcement.get_absolute_url }}">{{ announcement }}</a> -
+                            <a href="{% url announcement_hide announcement.pk %}?next={{ request.path }}">{% trans "Hide announcement" %}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            {% endcomment %}
           <div class="content"> 
               <div class="subnav">
                 <ul class="nav nav-pills">

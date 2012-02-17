@@ -947,7 +947,7 @@ div.tooltip ul {
     padding: 5px;
 }
 div.tooltip, .tooltip_help_box, #flotTip {
-    z-index: 10;
+    z-index: 1040;
     top: -5px;
     position: fixed;
     background-color: #fff;
@@ -1293,12 +1293,6 @@ ul.iconlist li {
     margin-left: 0;
     clear: both;
 }
-ul.iconlist li>span {
-    display: block;
-    float: left;
-    margin-right: 3px;
-    margin-bottom: 1px;
-}
 a:hover {
 color: #933;
 }
@@ -1460,6 +1454,9 @@ div.cloud ul li {
 label, .baseLbl, .dataLbl {
     font-weight: bolder;
     color: #4F96CA !important;
+}
+.popover {
+    z-index: 1090;
 }
 .popover-inner {
     width: 380px;

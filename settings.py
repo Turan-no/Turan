@@ -47,8 +47,8 @@ CACHES = {
 }
 
 COMPRESS_CACHE_BACKEND = 'default'
-#COMPRESS = True
 COMPRESS_ROOT = os.path.join(PROJECT_ROOT, "site_media")
+COMPRESS_ENABLED = True
 
 
 
@@ -100,7 +100,8 @@ STATICFILES_EXTRA_MEDIA = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
+#    'compressor.finders.CompressorFinder',
+
 )
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -234,7 +235,7 @@ INSTALLED_APPS = (
     'django_sorting',
     'django_markup',
 
-    'compressor',
+#    'compressor',
 
 # TUUURAN
     'turan',

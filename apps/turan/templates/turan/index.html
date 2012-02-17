@@ -8,7 +8,7 @@
 {% load turan_extras %}
 {% block title %}
 {{ block.super }}
-{% trans "Turan: It's what matters." %}
+{% trans "The unexamined exercise is not worth doing" %}
 {% endblock %}
     {% block extramenu %}
     {% endblock %}
@@ -25,7 +25,7 @@
 
     <div class="row">
     <div class="span6">
-    <h2 class="">{% trans "Latest exercises" %}</h2>
+    <h3 class="">{% trans "Latest exercises" %}</h2>
     <ul class="trips">
         {% for object in exercise_list %}
         <li class="{% cycle "even" "odd" %} hoverpoint" id="trip_{{ object.id }}">
@@ -65,7 +65,7 @@
     </ul>
     <a href="{% url exercises %}">{% trans "View more exercises" %}</a>
 
-    <h2 class="">{% trans "Most popular routes" %}</h2>
+    <h3 class="">{% trans "Most popular routes" %}</h2>
     <ul class="routes">
         {% for object in route_list %}
         <li class="{% cycle "even" "odd" %}">
@@ -109,12 +109,10 @@
     </ul>
     <div id="frontpage-tab-content" class="well tab-content">
         <div id="tabs-1" class="active tab-pane">
-            <p>
-            {% comment %}
-            <p>
-            <b>T</b>uran is currently an invite only site. Contact a member you know for an invite.
+            <h6>{% trans "New design" %}!</h6>
+            <p class="alert alert-success strong">
+            {% trans "We have a just relased a new and improved design, with main focus on less clutter, cleaner, tidier, while optimizing for different sized screen resoultions. If you have comments and/or questions/problems, do not hesitate to contact <a href='mailto:turan@turan.no'>turan@turan.no</a> " %}
             </p>
-            {% endcomment %}
             {% blocktrans %}
             <b>T</b>uran is a hobby project created by a few exercise enthusiasts for logging and analyzing exercise data from heart rate monitors / cycle computers. It supports a variety of devices.
             </p>
@@ -138,6 +136,7 @@
             Provided you have one of the supported devices you can analyze your training, kilometre by kilometre, or minute by minute if distance isn't relevant. You can, again provided your device supports it, graph everything the device records. Speed, altitude, cadence, heart rate, power, the whole <a href="http://www.urbandictionary.com/define.php?term=shebang">shebang</a>. Obviously, analyzing means breaking down a complex issue into smaller parts, so zooming in on any part of any lenght is supported. Just click and mark an interesting part of the graph and drool on the immense depth of the data <strong>you</strong> have produced.
             {% endblocktrans %}
             </p>
+            <hr class="clearright">
         </div>
         <div id="tabs-3" class="tab-pane">
             <img class="floatleft" style="padding-right: 8px" src="{{MEDIA_URL}}turan/mapexample.png" alt="Graph" />
@@ -146,6 +145,7 @@
             The map serves two purposes. First and foremost the function of showing where you've been. That one's easy. The second is the killer: intensities during the exercises are embedded in the trace of the trip. The intensity of your exercise is indicated by the color, showing where which parts of your trip was relatively speaking the hardest. The levels are also relative to the user's own max-pulse, so make sure yours is correct.
             {% endblocktrans %}
             </p>
+            <hr class="clearleft">
         </div>
         <div id="tabs-4" class="tab-pane">
             <p>
@@ -156,7 +156,7 @@
         </div>
     </div>
 
-    <h2 class="">{% trans "Latest segments" %}</h2>
+    <h3 class="">{% trans "Latest segments" %}</h2>
     <ul class="segments">
         {% for object in segment_list|slice:":10" %}
         <li class="{% cycle "even" "odd" %}">
@@ -182,7 +182,7 @@
         {% endfor %}
     </ul>
 
-    <h2 class="">{% trans "Latest comments" %}</h2>
+    <h3 class="">{% trans "Latest comments" %}</h2>
     <ul id="last_comments" class="spacer">
         {% for comment in comment_list %}
         <li class="{% cycle "even" "odd" %}">

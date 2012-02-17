@@ -18,7 +18,12 @@
     {% if object %}
         <h1>    {% trans "Modify exercise" %}</h1>
     {% else %}
-        <h1>{% trans "Add Exercise" %}</h1>
+        <h1>{% trans "Add Exercise" %}
+        <a class="pull-right btn" href="{% url import_data %}">
+            <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/page_white_go.png" alt="{% trans "Import exercise" %}" />
+            {% trans "Import exercise" %}
+        </a>
+        </h1>
     {% endif %}
     </div>
     <form class="" id="form" enctype="multipart/form-data" method="post">

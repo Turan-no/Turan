@@ -59,7 +59,7 @@
                 {% if other_user.equipment_set.exists %}
                 <div class="box spacer">
                         <div class="box spacer">
-                            <a class="tools" href="{% url equipment_create %}">{%trans "Add equipment" %}</a>
+                            <a class="btn tools" href="{% url equipment_create %}">{%trans "Add equipment" %}</a>
                             <h2>{% trans "Exercise equipment" %}</h2>
                             <ul>
                                 {% for equipment in other_user.equipment_set.all %}
@@ -147,28 +147,28 @@
                         {% with other_user.get_profile as object %}
                         <ul class="iconlist">
                             {% if object.gender %}
-                                <li class="gender"><span class="label">{% trans "Gender" %}:</span> {{ object.gender }}</li>
+                                <li class="gender"><span class="old-label">{% trans "Gender" %}:</span> {{ object.gender }}</li>
                             {% endif %}
                             {% if object.weight %}
-                                <li class="weight"><span class="label">{% trans "Weight" %}:</span> {{ object.weight }} kg</li>
+                                <li class="weight"><span class="old-label">{% trans "Weight" %}:</span> {{ object.weight }} kg</li>
                             {% endif %}
                             {% if object.height %}
-                                <li class="height"><span class="label">{% trans "Height" %}:</span> {{ object.height }} cm</li>
+                                <li class="height"><span class="old-label">{% trans "Height" %}:</span> {{ object.height }} cm</li>
                             {% endif %}
                             {% if object.cycle %}
-                            <li class="gear"><span class="label">{% trans "Cycle" %}:</span> {{ object.cycle }}</li>
+                            <li class="gear"><span class="old-label">{% trans "Cycle" %}:</span> {{ object.cycle }}</li>
                             {% endif %}
                             {% if object.resting_hr %}
-                            <li class="heart"><span class="label">{% trans "Resting pulse" %}:</span> {{ object.resting_hr }} {% trans "BPM" %}</li>
+                            <li class="heart"><span class="old-label">{% trans "Resting pulse" %}:</span> {{ object.resting_hr }} {% trans "BPM" %}</li>
                             {% endif %}
                             {% if object.max_hr %}
-                            <li class="heart"><span class="label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}</li>
+                            <li class="heart"><span class="old-label">{% trans "Max HR" %}:</span> {{ object.max_hr }} {% trans "BPM" %}</li>
                             {% endif %}
                             {% if object.ftp %}
-                            <li class="power"><span class="label">{% trans "Functional Threshold Power" %}:{{ "FunctionalThresholdPower"|wiki_help }}</span> {{ object.ftp }} {% trans "W" %} {% if object.weight %}<span class="smaller">{{ object.ftp|divide:object.weight }} W/kg</span>{% endif %}</li>
+                            <li class="power"><span class="old-label">{% trans "Functional Threshold Power" %}:{{ "FunctionalThresholdPower"|wiki_help }}</span> {{ object.ftp }} {% trans "W" %} {% if object.weight %}<span class="smaller">{{ object.ftp|divide:object.weight }} W/kg</span>{% endif %}</li>
                             {% endif %}
                             {% if object.info %}
-                            <li><span class="label">{% trans "About" %}:</span> {{ object.info }}</li>
+                            <li><span class="old-label">{% trans "About" %}:</span> {{ object.info }}</li>
                             {% endif %}
                         </ul>
                         {% endwith %}
@@ -177,12 +177,12 @@
                             <h4>{% trans "Statistics" %}</h4>
                             <a class="btn tools" href="{% url profile_statistics other_user %}">{% trans "Show all" %}</a>
                             <ul class="iconlist">
-                                <li class="time"><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
-                                <li class="distance"><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
-                                <li class="speed"><span class="label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>
-                                <li class="count"><span class="label">{% trans "Total exercise count"%}:</span> {{ exerciseqs.count}} {% trans "trips" %}</li>
-                                <li class="distance"><span class="label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
-                                <li class="kcal"><span class="label">{% trans "Total energy expenditure"%}:</span> {{ total_kcals }} {% trans "kcal" %} (= {{total_kcals|bodyfat|floatformat}} {% trans "kg" %} {% trans "fat" %} ) </li>
+                                <li class="time"><span class="old-label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
+                                <li class="distance"><span class="old-label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
+                                <li class="speed"><span class="old-label">{% trans "Total Avg Speed"%}:</span> {{ total_avg_speed|floatformat }} {% trans "km/h" %}</li>
+                                <li class="count"><span class="old-label">{% trans "Total exercise count"%}:</span> {{ exerciseqs.count}} {% trans "trips" %}</li>
+                                <li class="distance"><span class="old-label">{% trans "Longest trip"%}:</span> {{ longest_trip}} {% trans "km" %}</li>
+                                <li class="kcal"><span class="old-label">{% trans "Total energy expenditure"%}:</span> {{ total_kcals }} {% trans "kcal" %} (= {{total_kcals|bodyfat|floatformat}} {% trans "kg" %} {% trans "fat" %} ) </li>
                             {% for item, val in avg_speed_dict.items %}
                             <li>{{item}}: {{val|floatformat}}</li>
                             {% endfor %}
