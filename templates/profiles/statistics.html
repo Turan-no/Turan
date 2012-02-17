@@ -21,8 +21,10 @@
     </a>
     </div>
 
-    <h3>{% trans "Type exercise graph"%}</h3>
+    <h3>{% trans "Type exercise chart"%}</h3>
     <div id="piechart" style="height:400px"></div>
+    <h3>{% trans "Type exercise time chart"%}</h3>
+    <div id="hourpiechart" style="height:400px"></div>
     <h3>{% trans "Avg speed: cycling"%}</h3>
     <div id="avgspeeddiv" style="height:400px"></div>
     <h3>{% trans "Avg HR"%}</h3>
@@ -55,7 +57,7 @@ $(function () {
 	var hroptions = { xaxis: { mode: "time", timeformat: "%y/%m/%d" }, yaxis: { min: 100, max: 200 } };
     var d2options =  { yaxis: { min: 20, max: 45 }, xaxis: { mode: "time", timeformat: "%y/%m/%d" } };
     var d3options =  { xaxis: { mode: "time", timeformat: "%y/%m/%d" } };
-        var pieoptions = { 
+    var pieoptions = { 
             grid: { show: false },
             series: {
                     pie: { 
@@ -80,6 +82,7 @@ $(function () {
     $.plot($("#pulsediv"), [d1], options);
     $.plot($("#bmidiv"), [d2, bmiline], d2options);
     $.plot($("#piechart"), [{{piechartdata}}], pieoptions);
+    $.plot($("#hourpiechart"), [{{hourpiechartdata}}], pieoptions);
     $.plot($("#avgspeeddiv"), [{
             color: 3,
             data: [{{avgspeeddataseries}}],

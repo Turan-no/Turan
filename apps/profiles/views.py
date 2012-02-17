@@ -370,6 +370,7 @@ def profile_statistics(request, username, template_name="profiles/statistics.htm
     avghrdataseries = ""
 
     typestats = {}
+    hourstats = {}
 
     height = other_user.get_profile().height
 
@@ -402,15 +403,20 @@ def profile_statistics(request, username, template_name="profiles/statistics.htm
             nr_hr_trips += 1
         if event.exercise_type.name not in typestats:
             typestats[event.exercise_type.name] = 1
+            hourstats[event.exercise_type.name] = 0
         else:
             typestats[event.exercise_type.name] += 1
-            
+            hourstats[event.exercise_type.name] += float(event.duration.total_seconds())/60/60
     piechartdata = ""
     for exercisetype, value in typestats.items():
         piechartdata += '{ label: \'%s: %d\', data: %d } ,' % (exercisetype, value, value)
+    piechartdata = mark_safe(piechartdata.rstrip(' ,'))
+    hourpiechartdata = ""
 
-    piechartdata = piechartdata.rstrip(' ,')
-    piechartdata = mark_safe(piechartdata)
+    for exercisetype, value in hourstats.items():
+        hourpiechartdata += '{ label: \'%s: %d %s\', data: %d } ,' % (exercisetype, value, _('hours'), value)
+
+    hourpiechartdata = mark_safe(hourpiechartdata.rstrip(' ,'))
     if total_avg_hr:
         total_avg_hr = total_avg_hr/nr_hr_trips
 
