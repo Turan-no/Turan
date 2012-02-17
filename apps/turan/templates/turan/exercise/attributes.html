@@ -121,6 +121,20 @@
             {% endif %}
             {% if object.route %}
             <div class="tab-pane" id="2">
+                <h6 class="">{% trans "Route" %}</h6>
+                    <a href="{{ object.route.get_absolute_url }}">
+                    {{ object.route }}
+                </a>
+                {% ifequal object.route.single_serving 1 %}
+                {% ifequal object.user request.user %}
+                <a href="{% url route_update object.route.id %}">
+                    <img alt="modify" src="{{ "wrench"|silk_icon }}">
+                </a>
+                {% else %}
+                {% endifequal %}
+                {% else %}
+                {% endifequal %}
+
                 {% with object.route as object %}
                     {% include "turan/route/attributes.html" %}
                 {% endwith %}
