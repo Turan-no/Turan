@@ -1286,7 +1286,7 @@ body {
     height: 20px;
 }
 .navbar .brand:hover {
-    background-position: 0px 0px;
+    background-position: 0px 90px;
 }
 ul.iconlist li {
     list-style-type: none;
