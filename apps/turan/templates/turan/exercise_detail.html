@@ -264,7 +264,7 @@
 $(document).ready(function(){
     // Trigger tab change on page load
     $("a[href='"+window.location.hash+"']").click();
-    if (Mapper.map) {
+    if (typeof(Mapper) != "undefined" && Mapper.map) {
         // Init the marker for graph hover thingy
         Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
 

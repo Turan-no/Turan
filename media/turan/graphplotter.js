@@ -105,13 +105,13 @@ var GraphPlotter = {
 
             var segment_link = $("#segment_add");
             segment_link.attr('href' , segment_link.attr('href')+ '&start=' + minIndex + '&stop=' + maxIndex);
-            $("#segment_add").removeClass("hidden");
+            $("#segment_add").removeClass("hide");
 
             window.location.hash = 'graph-zoom-' + min + '-' + max;
 
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
                 var items = $("#averages ul .data");
-                $("#averages h4").removeClass("hidden");
+                $("#averages h4").removeClass("hide");
 
                 $.each(items, function (i, elem) {
                     var classlist = elem.className.split(" ");
@@ -125,7 +125,7 @@ var GraphPlotter = {
                                     val = Math.round(val * 10) / 10;
                                 }
                                 e.text(val);
-                                e.parents(".hidden").removeClass("hidden");
+                                e.parents(".hide").removeClass("hide");
                                 e.attr('title', key.replace(/_/g, ' '))
                                 e.parents('li').attr('title', key.replace(/_/g, ' '))
                             }
@@ -371,7 +371,8 @@ var GraphPlotter = {
                 return;
 
             // Move marker to current pos
-            if (Mapper.map != null || Mapper.posLayer != undefined) {
+            if (typeof(Mapper) != "undefined" && Mapper.map != null && Mapper.posLayer != undefined) {
+            
                 var route_lon = that.datasets['lon'];
                 var route_lat = that.datasets['lat'];
                 if (route_lon.length >= posIndex) {

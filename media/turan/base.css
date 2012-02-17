@@ -88,12 +88,6 @@ a {
 	color: #533;
 	text-decoration: none;
 }
-a:visited {
-	color: #333;
-}
-a:hover {
-	color: #933;
-}
 /* Clearing ruler */
 hr.clearleft,
 hr.clearright,
@@ -1435,6 +1429,9 @@ footer {
 footer .cloud {
 	background: #508A33;
     padding: 5px;
+}
+footer a:visited {
+	color: #eee;
 }
 footer a {
 	color: #eee;
