@@ -175,7 +175,7 @@
 
                         {% if total_duration %}
                             <h4>{% trans "Statistics" %}</h4>
-                            <a class="tools" href="{% url profile_statistics other_user %}">{% trans "Show all" %}</a>
+                            <a class="btn tools" href="{% url profile_statistics other_user %}">{% trans "Show all" %}</a>
                             <ul class="iconlist">
                                 <li class="time"><span class="label">{% trans "Total Duration"%}:</span> {{ total_duration }}</li>
                                 <li class="distance"><span class="label">{% trans "Total Distance"%}:</span> {{ total_distance|floatformat }} {% trans "km" %} </li>
@@ -279,18 +279,18 @@
             {% endcomment %}
 
             <h3>{% trans "Cycle trips"%}</h3>
-            <div class="well lifted" id="tripdiv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="tripdiv" style="height:150px"></div>
             <h3>{% trans "Avg speed trend: cycling"%}</h2>
-            <div class="well lifted" id="avgspeeddiv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="avgspeeddiv" style="height:150px"></div>
             <h3>{% trans "Avg HR trend overall"%}</h3>
-            <div class="well lifted" id="avghrdiv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="avghrdiv" style="height:150px"></div>
             <h3>{% trans "BMI"%}</h3>
-            <div class="well lifted" id="bmidiv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="bmidiv" style="height:150px"></div>
             <h3>{% trans "Resting pulse"%}</h3>
-            <div class="well lifted" id="pulsediv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="pulsediv" style="height:150px"></div>
             {% if ftpdataseries %}
             <h3>{% trans "FTP" %}{{ "FunctionalThresholdPower"|wiki_help }}</h3>
-            <div class="well lifted" id="ftpdiv" style="width:300px;height:150px"></div>
+            <div class="well lifted" id="ftpdiv" style="height:150px"></div>
             {% endif %}
             <script id="source" language="javascript" type="text/javascript">
             $(function () {
