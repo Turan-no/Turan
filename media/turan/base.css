@@ -387,10 +387,10 @@ div.mapcontainer {
     padding-right: 2px;
     border: 1px solid #ddd;
 }
-
 .toplist ol {
+    margin: 0;
+    padding: 0;
     padding-left: 0;
-    font-size: 11px;
     list-style-position: inside;
 }
 .toplist ol li {
@@ -655,6 +655,13 @@ div.box h2, div.box h3 {
     background-color: #888;
     color: white;
 }
+.statbox>ol {
+    margin-bottom: 15px;
+}
+.statbox>h4 {
+    margin-bottom: 5px;
+}
+
 
 /* nicolasgallagher.com/css-drop-shadows-without-images/demo/*/
 
@@ -1173,18 +1180,6 @@ a.profilehoverpoint>img {
     color: #666;
     font-weight: lighter;
 }
-.time_and_length {
-    overflow: auto;
-}
-.time_and_length .well {
-    float: left;
-    width: 220px;
-    padding: 0;
-    margin: 5px;
-}
-.time_and_length .well h5 {
-    text-align: center;;
-}
 #subnav ul.socialshare li {
     margin-left: 0;
     overflow: hidden;
@@ -1452,11 +1447,12 @@ div.cloud ul li {
     font-size: 1.5em;
     font-weight: bold;
 }
-label, .baseLbl, .dataLbl  {
-    font-size: 110%;
-    color: #4F96CA !important;
+.old-label {
     font-weight: bolder;
-    letter-spacing: 1px;
+}
+label, .baseLbl, .dataLbl {
+    font-weight: bolder;
+    color: #4F96CA !important;
 }
 .popover-inner {
     width: 380px;
