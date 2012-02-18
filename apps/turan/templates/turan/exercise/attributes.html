@@ -106,7 +106,7 @@
                     {% trans "Avg HR" %}
                 </h6>
                             {{ object.avg_hr }} {% trans "BPM" %} 
-                            , {% if object.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.user.get_profile.max_hr }} {%endif %}
+                            ,{% if object.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.user.get_profile.max_hr }} {%endif %}
                 {% if object.max_hr %}
                         <h6>
                              {% trans "Max HR" %}
@@ -114,7 +114,7 @@
                             {{ object.max_hr }} {% trans "BPM" %} 
                 {% endif %}
                 {% if object.max_hr %}
-                            , {% if object.user.get_profile.max_hr %} {{ object.max_hr|percent:object.user.get_profile.max_hr }}{% endif %}
+                            ,{% if object.user.get_profile.max_hr %} {{ object.max_hr|percent:object.user.get_profile.max_hr }}{% endif %}
                             
                 {% endif %}
             </div>
