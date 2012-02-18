@@ -47,8 +47,8 @@ CACHES = {
 }
 
 COMPRESS_CACHE_BACKEND = 'default'
-COMPRESS_ROOT = os.path.join(PROJECT_ROOT, "site_media")
-COMPRESS_ENABLED = True
+COMPRESS_ROOT = os.path.join(PROJECT_ROOT, "static")
+COMPRESS_ENABLED = False
 
 
 
