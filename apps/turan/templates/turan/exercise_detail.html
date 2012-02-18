@@ -14,7 +14,7 @@
 {% tags_for_object object as tag_list %}
 {% endblock %}
 {% block extra_body %}
-{{ block.super }}
+{{ block.super}}
      <script type="text/javascript" src="{{STATIC_URL}}flot/jquery.flot.crosshair.js"></script>
 {% with object.route.gpx_file as gpx_file %}
      {% include "turan/maphead.html" %}
@@ -32,7 +32,7 @@
                 </div>
                 <div class="btn-group pull-right">
                     <a class="btn" href="{% url exercise_player %}?id={{object.id }}">
-                        <img alt="Play" title="{% trans "Play exercise" %}" src="{{ "control_play"|silk_icon }}">
+                        {{ "control_play"|silk_sprite }}
                         {% trans "Play" %}
                     </a>
                     {% if user == object.user %}
@@ -42,12 +42,14 @@
                     <ul class="dropdown-menu">
                         <li>
                             <a href="{% url exercise_update object.id %}">
-                                <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}"> {% trans "Modify" %}
+                                {{ "wrench"|silk_sprite }}
+                                {% trans "Modify" %}
                             </a>
                         </li>
                         <li>
                             <a href="{% url exercise_delete object.id %}">
-                                <img alt="delete" title="{% trans "Delete exercise" %}" src="{{ "cross"|silk_icon }}"> {% trans "Delete" %}
+                                {{ "cross"|silk_sprite }}
+                                {% trans "Delete" %}
                             </a>
                         </li>
                     {% endif%}
@@ -56,7 +58,8 @@
                         <li class="divider"></li>
                         <li>
                             <a href="{% url exercise_parse object.id %}">
-                                <img alt="modify" title="{% trans "Reparse exercise" %}" src="{{ "page_refresh"|silk_icon }}"> {% trans "Reparse" %}
+                                {{ "page_refresh"|silk_sprite }}
+                                {% trans "Reparse" %}
                             </a>
                         </li>
                         {% endif %}
@@ -76,7 +79,7 @@
                     {% endifequal %}
                     {% ifequal user object.user %}
                     <a href="{% url exercise_update object.id %}">
-                        <img alt="modify" title="{% trans "Modify exercise" %}" src="{{ "wrench"|silk_icon }}">
+                        {{ "wrench"|silk_sprite }}
                     </a>
                     {% endifequal %}
                     <small>
@@ -110,39 +113,40 @@
     <ul class="nav nav-tabs">
         <li class="active">
         <a href="#tabs-1" data-toggle="tab">
-                <img alt="Graph" src="{{STATIC_URL}}pinax/img/silk/icons/chart_curve.png">{% trans "Graph" %}
+            {{ "chart_curve"|silk_sprite }}
+            {% trans "Graph" %}
         </a>
         </li>
         <li id="tabs-select-2">
         <a href="#tabs-2" data-toggle="tab">
-            <img alt="Comments" src="{{ "comments"|silk_icon }}">
+            {{ "comments"|silk_sprite }}
             {% trans "Comments" %}
         </a>
         </li>
         {% if intervals %}
         <li id="tabs-select-3">
         <a href="#tabs-3" data-toggle="tab">
-                <img alt="Intervals" src="{{STATIC_URL}}pinax/img/silk/icons/timeline_marker.png">
+                {{ "timeline_marker"|silk_sprite }}
                 {% trans "Intervals" %} <span class="label">{{ intervals|length }}</span>
         </a>
         </li>
         {% endif %}
         <li id="tabs-select-4">
         <a href="#tabs-4" data-toggle="tab">
-                <img alt="Zones" src="{{STATIC_URL}}pinax/img/silk/icons/chart_pie.png">
+                {{ "chart_pie"|silk_sprite }}
                 {% trans "Zones" %}
         </a>
         </li>
         <li id="tabs-select-5">
         <a href="#tabs-5" data-toggle="tab">
-                <img alt="Freqs" src="{{STATIC_URL}}pinax/img/silk/icons/chart_bar.png">
+                {{ "chart_bar"|silk_sprite }}
                 {% trans "Freqs" %}
         </a>
         </li>
         {% if slopes %}
         <li id="tabs-select-6">
             <a href="#tabs-6" data-toggle="tab">
-                <img alt="Slopes" src="{{STATIC_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
+                {{ "shape_rotate_clockwise"|silk_sprite }}
                 {% trans "Slopes" %} <span class="label">{{ slopes|length }}</span>
             </a>
         </li>
@@ -150,14 +154,14 @@
         {% ifequal object.exercise_type.altitude 1 %}
         <li id="tabs-select-7">
             <a href="#tabs-7" data-toggle="tab">
-                <img alt="Inclinedata" src="{{STATIC_URL}}pinax/img/silk/icons/sum.png">
+                {{ "sum"|silk_sprite }}
                 {% trans "Inclinedata" %}
             </a>
         </li>
         {% endifequal %}
         <li id="tabs-select-9">
             <a href="#tabs-9" data-toggle="tab">
-                <img alt="Zones" src="{{STATIC_URL}}pinax/img/silk/icons/table_lightning.png">
+                {{ "table_lightning"|silk_sprite }}
                 {% trans "Best Efforts" %}
             </a>
         </li>
@@ -315,10 +319,6 @@ $(document).ready(function(){
         {% endlocalize %}
 
     }
-
-// Make map resizable
-//$('#map').resizable();
-
 });
 </script>
 {% else %}

@@ -1,6 +1,5 @@
 /**
- * Class for handeling graph plotting of pulse data.
- * Still needs loads of work and is only a cut/paste from template for now
+ * Class for handling graph plotting of pulse data.
  */
 var plot;
 var GraphPlotter = {
@@ -48,7 +47,7 @@ var GraphPlotter = {
                 break;
             }
         }
-        $("#choices>button.active").each(function () {
+        $("#choices>button[checked=checked]").each(function () {
             var key = $(this).attr("name");
             if (key && that.datasets[key]) {
                 if (key == 'hr') {
@@ -284,7 +283,6 @@ var GraphPlotter = {
                 that.choiceContainer.append('<button class="btn" name="' + key + '" ' + checked + ' id="chk_' + key + '">' + val.label + '</button>');
             }
         });
-        $('#choices>button[checked]').button('toggle')
         $("#reset_zoom").bind("click", function(evt) {
             evt.preventDefault();
             $("#gtooltip").remove(); // tooltips messes up pos

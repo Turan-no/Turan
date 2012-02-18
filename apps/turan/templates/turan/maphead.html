@@ -11,7 +11,6 @@
 
     <script type="text/javascript">
         var map;
-        $(function(evt) {
             map = Mapper.init(
                 {% if object.get_simplegpx_url %}
                     "{{ MEDIA_URL }}turan/{{ object.get_simplegpx_url }}", 
@@ -26,7 +25,6 @@
                 [{{object.start_lon}}, {{object.start_lat}}], 
                 [{{object.end_lon}}, {{object.end_lat}}]
             );
-        });
     </script>
     {% endcompress %}
 {% endif %} 

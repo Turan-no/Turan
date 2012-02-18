@@ -279,6 +279,10 @@ def profile_hover(obj):
 @register.filter
 def silk_icon(name):
     return settings.MEDIA_URL + 'pinax/img/silk/icons/%s.png' %name
+@register.filter
+def silk_sprite(name):
+    return '<i class="ss_sprite ss_%s"></i>' %name
+silk_sprite.is_safe = True
 
 @register.filter
 def as_json(obj):

@@ -40,10 +40,11 @@
 </div>
     <div class="pull-right"  data-toggle="buttons-checkbox" id="choices">
             <a class="btn hide" href="{% url segmentdetail_create %}?exercise={{object.id }}" title="{% trans "Add segment for this selection" %}" id="segment_add" >
-                <img id="segment_add_img" src="{{ STATIC_URL }}pinax/img/silk/icons/world_add.png" /> {% trans "Add segment" %}
+                {{ "world_add"|silk_sprite }}
+                {% trans "Add segment" %}
             </a>
             <a class="btn hide" href="#" title="{% trans "Zoom out" %}" id="reset_zoom" >
-                <img src="{{ STATIC_URL }}pinax/img/silk/icons/zoom_out.png">{% trans "Zoom out"%}
+                {{ "zoom_out"|silk_sprite }}
             </a>
             <a class="btn" href="#" title="{% trans "Full screen graph" %}" id="enlarge" >
                 <img class="fullscreenicon" src="{{STATIC_URL}}turan/turan/img/fs.png">
@@ -51,9 +52,8 @@
     </div>
 <script type="text/javascript">
 {% localize off %}
-$(function() {
-
     var markings = [];
+$(function() {
 
     {% if intervals %}
     {% for interval in intervals %}
@@ -85,8 +85,6 @@ $(function() {
         {% endif %}
     {% endfor %}
     {% endif %}
-
-    $(document).ready(function () {
         // Get datasets from json
         $.getJSON("{% url json_trip_series object.id %}?smooth={{smooth}}{% if time_xaxis %}&xaxis=time{%endif%}", function (datasets) {
             GraphPlotter.init({
@@ -111,6 +109,13 @@ $(function() {
             }
         });
     });
+
+
 {% endlocalize %}
+</script>
+{% block body_base %}
+<script type="text/javascript">
+$(function() {
 });
 </script>
+{% endblock %}
