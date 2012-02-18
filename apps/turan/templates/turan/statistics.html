@@ -11,9 +11,8 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h1> {% trans "Exercise Statistics" %} <small>{{now.year}} {{ month|default:"" }}</small></h1>
-<div class="floatright">
-    <h2>{% trans "Month" %}</h2>
+    <h1> {% trans "Exercise Statistics" %} <small>{% trans "Showing statistics for" %} {{now.year}}{% if month %}.{{ month|default:"" }}{% endif %}</small></h1>
+    <h5>{% trans "Select month" %}</h5>
     <div class="btn-group">
     <a class="btn" href="{% url statistics-month previous_month.year previous_month.month %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_previous.png" alt="{% trans "Previous"%}" />
@@ -28,7 +27,6 @@
         {% trans "Next" %}
     </a>
     </div>
-</div>
     <h3>{% trans "Filter by team" %}</h3>
     <div class="btn-group">
         {% for team in team_list %}
