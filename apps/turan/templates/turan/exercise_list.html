@@ -12,6 +12,9 @@
 <div class="page-header">
 <h1>
     {% trans "Exercises" %}
+    {% if username %}
+    <small>{% trans "username" %}: {{username}}</small>
+    {% endif %}
 </h1>
 </div>
 {% autosort object_list %}
