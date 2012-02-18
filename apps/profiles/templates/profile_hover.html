@@ -1,15 +1,16 @@
 {% load i18n %}
 {% load avatar_tags %}
 {% load turan_extras %}
-rel='popover' 
-data-placement='bottom' 
-data-title='{% if profile.name%}{{ profile.name}}{%else%}{{ object }}{%endif%}' data-content='
 {% with object.get_profile as profile %}
+rel='popover' 
+data-placement='right' 
+data-title='{% if profile.name%}{{ profile.name}}{%else%}{{ object }}{%endif%}' data-content='
 {% comment %}
 {% avatar object 80 %}
 {% endcomment %}
-<div class="profile">
-    <ul class="iconlist">
+<div class="row">
+    <div class="span2">{% avatar profile.user 160 %}</div>
+    <ul class="iconlist span2">
         {% if object.exercise__duration__sum %} 
         <li><span class="old-label">{% trans "Last 14 days" %}</span>: {{object.exercise__duration__sum|retarddurationformat }}</li>
         {% endif %}
