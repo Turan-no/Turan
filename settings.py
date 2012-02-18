@@ -93,7 +93,6 @@ STATICFILES_DIRS = (
     ('silksprites', os.path.join(PROJECT_ROOT, 'media', 'silksprites')),
     ('flot', os.path.join(PROJECT_ROOT, 'media', 'flot')),
     ('openlayers', os.path.join(PROJECT_ROOT, 'media', 'openlayers')),
-    ('jquery', os.path.join(PROJECT_ROOT, 'media', 'jquery')),
     ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
 )
 
