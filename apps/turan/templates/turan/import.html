@@ -1,11 +1,11 @@
 {% extends "turan/base.html" %}
 {% load i18n %}
 {% load uni_form_tags %}
-{{ block.super }}
 {% block content %}
+<div class="page-header">
 <h2>{% trans "Import exercise from external site" %}</h2>
 <p>{% trans "Note: You can also upload file .tcx or .fit file directly from Garmin device"%}</p>
-<hr>
+</div>
 <p>{% trans "Currently supported sites" %}:</p>
 <ul>
     <li>
@@ -27,7 +27,7 @@
 {% endif %}
 <form class="uniForm" action="" method="post">
     {{ form|as_uni_form }}
-    <input type="submit" value="{% trans "Import exercise"%}" />
+    <input class="btn" type="submit" value="{% trans "Import exercise"%}" />
 </form>
 
 
@@ -35,6 +35,6 @@
 <p>{% trans "Zip all your exercise files into a .zip-file and upload." %}</p>
 <form enctype="multipart/form-data" class="uniForm" action="{% url import_bulk %}" method="post">
     {{ bulkform|as_uni_form }}
-    <input type="submit" value="{% trans "Import exercises"%}" />
+    <input class="btn" type="submit" value="{% trans "Import exercises"%}" />
 </form>
 {% endblock %}
