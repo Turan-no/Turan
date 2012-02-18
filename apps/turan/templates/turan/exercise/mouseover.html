@@ -2,94 +2,68 @@
 {% load avatar_tags %}
 {% load turan_extras %}
 rel='popover' data-placement='right' data-title='{{ object }}' data-content='
-<div class="" id="mouseover_{{object.id}}">
-    <a href="{% url profile_detail object.user %}">{% avatar object.user %}</a>
-    <div class="floatright">
+    {% avatar object.user %}
+    <div class="pull-right">
         <img alt="Exerciselogo" src="{{object.icon}}" />
     </div>
-    <div style="clear: both"></div>
-
-    <ul class="iconlist">
-        {% if object.route_distance and object.avg_speed %}
-        <li class="speed">
-            <span class="old-label">{% trans "Avg Speed" %}:</span>
-            <div style="text-align: right; float: right"> {{ object.avg_speed|floatformat }} {% trans "km/h" %}</div>
-        </li>
-        {% endif %}
+    <hr class="clear">
 
         {% if object.avg_hr %}
-        <li class="heart">
-            <span class="old-label">{% trans "Avg HR" %}:</span>
-            <div style="text-align: right; float: right"> {{ object.avg_hr }} {% trans "BPM" %} {% if object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}){% endif %}</div>
-        </li>
-        {% endif %}
+            <h6 class="pull-left" ><i class="ss_sprite ss_heart"></i>{% trans "Avg HR" %}</h6>
+            <div class="pull-right">{{ object.avg_hr }} {% trans "BPM" %} {% if object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }})<hr class="clear">{% endif %}</div>
+        <hr class="clear">{% endif %}
+        {% if object.avg_speed %}
+        <h6 class="pull-left"><i class="ss_sprite ss_lightning_go"></i>{% trans "Avg Speed" %}</h6>
+        <div class="pull-right"> {{ object.avg_speed|floatformat }} {% trans "km/h" %}</div>
+        <hr class="clear">{% endif %}
 
         {% if object.route.distance %}
-        <li class="route">
-            <span class="old-label">{% trans "Distance" %}:</span>
-            <div style="text-align: right; float: right">{{ object.route.distance|floatformat }} km</div>
-        </li>
-        {% endif %}
+            <h6 class="pull-left"><i class="ss_sprite ss_sum"></i>{% trans "Distance" %}</h6>
+            <div class="pull-right">{{ object.route.distance|floatformat }} km</div>
+        <hr class="clear">{% endif %}
 
         {% if object.duration %} 
-        <li class="duration">
-            <span class="old-label">{% trans "Duration" %}:</span> 
-            <div style="text-align: right; float: right">{{ object.duration }}</div>
-        </li>
-        {% endif %}
+            <h6 class="pull-left"><i class="ss_sprite ss_clock"></i>{% trans "Duration" %}</h6> 
+            <div class="pull-right">{{ object.duration }}</div>
+        <hr class="clear">{% endif %}
 
         {% if object.time %}
-        <li class="time">
-            <span class="old-label">{% trans "Start time" %}:</span>
-            <div style="text-align: right; float: right"> {{ object.time }}</div>
-        </li>
-        {% endif %}
+            <h6 class="pull-left"><i class="ss_sprite ss_time_go"></i>{% trans "Start time" %}</h6>
+            <div class="pull-right"> {{ object.time }}</div>
+        <hr class="clear">{% endif %}
 
-        <li class="date">
-            <span class="old-label">{% trans "Date" %}:</span>
-            <div style="text-align: right; float: right"> {{ object.date }}</div>
-        </li>
+            <h6 class="pull-left"><i class="ss_sprite ss_date"></i>{% trans "Date" %}</h6>
+            <div class="pull-right"> {{ object.date }}</div>
+        <hr class="clear">
 
         {% if object.route.ascent %}
-        <li class="ascent">
-            <span class="old-label">{% trans "Ascent" %}:</span>
-            <div style="text-align: right; float: right"> {{ object.route.ascent }} {% trans "m" %}</div>
-        </li>
-        {% endif %}
+            <h6 class="pull-left"><i class="ss_sprite ss_arrow_up"></i>{% trans "Ascent" %}</h6>
+            <div class="pull-right"> {{ object.route.ascent }} {% trans "m" %}</div>
+        <hr class="clear">{% endif %}
 
         {% if object.avg_pedaling_cad %}
-        <li class="cadence">
-            <span class="old-label">{% trans "Avg Pedaling Cadence" %}:</span>
-            <div style="text-align: right; float: right"> {{ object.avg_pedaling_cad }} {% trans "RPM" %}</div>
-        </li>
-        {% endif %}
+            <h6 class="pull-left"><i class="ss_sprite ss_cog"></i>{% trans "Avg Pedaling Cadence" %}</h6>
+            <div class="pull-right"> {{ object.avg_pedaling_cad }} {% trans "RPM" %}</div>
+        <hr class="clear">{% endif %}
 
         {% if object.avg_pedaling_power %}
-        <li class="power">
-            <span class="old-label">{% trans "Avg Pedaling Power" %}:</span>
-            <div style="text-align: right; float: right"> {{ object.avg_pedaling_power }} {% trans "W" %}</div>
-        </li>
-        {% endif %}
+            <h6 class="pull-left"><i class="ss_sprite ss_ligthning"></i>{% trans "Avg Pedaling Power" %}</h6>
+            <div class="pull-right"> {{ object.avg_pedaling_power }} {% trans "W" %}</div>
+        <hr class="clear">{% endif %}
 
         {% if object.normalized_power %}
-        <li class="power">
-            <span class="old-label">{% trans "Normalized Power" %}:</span>
-            <div style="text-align: right; float: right"> {{ object.normalized_power }} {% trans "W" %}</div>
-        </li>
-        {% endif %}
+            <h6 class="pull-left"><i class="ss_sprite ss_ligthning"></i>{% trans "Normalized Power" %}</h6>
+            <div class="pull-right"> {{ object.normalized_power }} {% trans "W" %}</div>
+        <hr class="clear">{% endif %}
 
         {% if object.kcal %}
-        <li class="kcal" >
-            <span class="old-label">{% trans "Used kcal" %}:</span>
-            <div style="text-align: right; float: right"> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})</div>
-        </li>
-        {% endif %}
+            <h6 class="pull-left"><i class="ss_sprite ss_cake"></i>{% trans "Used kcal" %}</h6>
+            <div class="pull-right"> {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})</div>
+        <hr class="clear">{% endif %}
 
         {% if object.comment %}
-        <li class="comment">
+            <i class="ss_sprite ss_comment"></i>
             {{ object.user.get_profile.name }} {% trans "writes" %}:
             <p>{{ object.comment }}</p>
-        </li>
-        {% endif %}
-    </ul>
-</div>' 
+        <hr class="clear">{% endif %}
+' 
