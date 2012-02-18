@@ -63,7 +63,7 @@ rel='popover' data-placement='right' data-title='{{ object }}' data-content='
 
         {% if object.comment %}
             <i class="ss_sprite ss_comment"></i>
-            {{ object.user.get_profile.name }} {% trans "writes" %}:
+            {{ object.user.get_profile }} {% trans "writes" %}:
             <p>{{ object.comment }}</p>
         <hr class="clear">{% endif %}
 ' 
