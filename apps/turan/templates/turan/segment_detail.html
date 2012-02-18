@@ -200,6 +200,7 @@
     <a class="btn" href="?distinct=user">{% trans "Best individual results" %}</a>
     </div>
         <script language="javascript" type="text/javascript">
+$(function() {
         $('#route_form').bind("submit", function (ev) {
             ev.preventDefault();
             var selectedIds = [];
@@ -246,7 +247,6 @@
 
 var gposFeature = null;
 var lonlats = {{lonlats}};
-$(document).ready(function() {
     if (typeof(Mapper) != "undefined")
         Mapper.map.addControl(new OpenLayers.Control.MousePosition({}));
         Mapper.loadGeoJSON(0, 0);
@@ -306,7 +306,7 @@ $(document).ready(function() {
     };
     $("#gradientzonediv").bind("plothover", gplotHover);
     $("#altdiv").bind("plothover", aplotHover);
-        
+});
 </script>
 {% paginate %}
 {% endif %}
