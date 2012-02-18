@@ -80,27 +80,32 @@ MEDIA_URL = '/site_media/'
 
 # Absolute path to the directory that holds static files like app media.
 # Example: "/home/media/media.lawrence.com/apps/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'static')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 # URL that handles the static files like app media.
 # Example: "http://media.lawrence.com"
-STATIC_URL = '/site_media/'
+STATIC_URL = '/static/'
 
 # Additional directories which hold static files
 STATICFILES_DIRS = (
-    ('turansite', os.path.join(PROJECT_ROOT, 'media')),
+    ('turan', os.path.join(PROJECT_ROOT, 'media')),
+    ('bootstrap', os.path.join(PROJECT_ROOT, 'media', 'bootstrap')),
+    ('silksprites', os.path.join(PROJECT_ROOT, 'media', 'silksprites')),
+    ('flot', os.path.join(PROJECT_ROOT, 'media', 'flot')),
+    ('openlayers', os.path.join(PROJECT_ROOT, 'media', 'openlayers')),
+    ('jquery', os.path.join(PROJECT_ROOT, 'media', 'jquery')),
     ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
 )
 
 STATICFILES_EXTRA_MEDIA = (
     ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
-    ('turansite', os.path.join(PROJECT_ROOT, 'media')),
+    ('turan', os.path.join(PROJECT_ROOT, 'media')),
 )
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'compressor.finders.CompressorFinder',
+    'compressor.finders.CompressorFinder',
 
 )
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
@@ -235,7 +240,7 @@ INSTALLED_APPS = (
     'django_sorting',
     'django_markup',
 
-#    'compressor',
+    'compressor',
 
 # TUUURAN
     'turan',
@@ -261,7 +266,7 @@ INSTALLED_APPS = (
     "pinax.apps.threadedcomments_extras",
   #  'analytics',
     'profiles',
-    'staticfiles',
+    'django.contrib.staticfiles',
   #  'account',
 #    'signup_codes',
     'pinax.apps.tribes',

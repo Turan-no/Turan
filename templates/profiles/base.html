@@ -3,10 +3,6 @@
 {% load i18n %}
 {% block body_class %}profile{% endblock %}
 
-{% block extra_head %}
-<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}turan/base.css" />
-{% endblock %}
-
 {% block oldsubnav %}
     {% if user.is_authenticated %}
             <li><a href="{% url profile_detail user.username %} ">{% trans "Your Profile" %}</a></li>

@@ -3,6 +3,7 @@
     {% localize off %}
     <div id="altdiv" style="height: 150px; clear: both;"></div>
 <script id="source" language="javascript" type="text/javascript">
+$(function() {
     var alt = { data: {{ alt }}, color: 3, lines: { fill: 0.7 } };
     var options = { 
         tooltip: true,
@@ -33,4 +34,5 @@
     alt['label'] = "{% trans "Altitude profile" %}";
     var altitudeprofileplot = $.plot($("#altdiv"), [alt], options);
     {% endlocalize %}
+});
 </script>

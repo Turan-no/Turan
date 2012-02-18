@@ -107,7 +107,7 @@ hr.clearleft {
 
 /* Header area */
 #hd, #hd .content {
-	background: url(/site_media/turan/header2.0.png);
+	background: url(../img/header2.0.png);
 	color: white;
 }
 #hd .content {
@@ -1281,7 +1281,7 @@ body {
     background-color: #fff;
   }
 .navbar .brand {
-    background: url('/site_media/turan/turan.png') 0 40px;
+    background: url('../img/turan.png') 0 40px;
     width: 124px;
     height: 20px;
 }

@@ -13,9 +13,9 @@
 {% block searchenginemeta %}
 {% tags_for_object object as tag_list %}
 {% endblock %}
-{% block extra_head %}
+{% block extra_body %}
 {{ block.super }}
-     <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.crosshair.js"></script>
+     <script type="text/javascript" src="{{STATIC_URL}}flot/jquery.flot.crosshair.js"></script>
 {% with object.route.gpx_file as gpx_file %}
      {% include "turan/maphead.html" %}
 {% endwith %}
@@ -66,11 +66,11 @@
                     <img height="32" width="32" class="floatleft" style="padding: 0 2px" alt="Exerciselogo" src="{{object.icon}}" />
                     <span itemprop="name">{{ object.get_name }}</span>
                     {% ifequal object.exercise_permission "N" %}
-                    <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock.png">
+                    <img title="{% trans "Private exercise"%}" alt="{% trans "Private exercise"%}" src="{{STATIC_URL}}pinax/img/silk/icons/lock.png">
                     {% else %}
                     {% ifequal object.exercise_permission "F" %}
                     {% ifequal user object.user %}
-                    <img title="{% trans "Exercise visible to friends"%}" alt="{% trans "Exercise visible to friends"%}" src="{{MEDIA_URL}}pinax/img/silk/icons/lock_go.png">
+                    <img title="{% trans "Exercise visible to friends"%}" alt="{% trans "Exercise visible to friends"%}" src="{{STATIC_URL}}pinax/img/silk/icons/lock_go.png">
                     {% endifequal %}
                     {% endifequal %}
                     {% endifequal %}
@@ -110,7 +110,7 @@
     <ul class="nav nav-tabs">
         <li class="active">
         <a href="#tabs-1" data-toggle="tab">
-                <img alt="Graph" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_curve.png">{% trans "Graph" %}
+                <img alt="Graph" src="{{STATIC_URL}}pinax/img/silk/icons/chart_curve.png">{% trans "Graph" %}
         </a>
         </li>
         <li id="tabs-select-2">
@@ -122,27 +122,27 @@
         {% if intervals %}
         <li id="tabs-select-3">
         <a href="#tabs-3" data-toggle="tab">
-                <img alt="Intervals" src="{{MEDIA_URL}}pinax/img/silk/icons/timeline_marker.png">
+                <img alt="Intervals" src="{{STATIC_URL}}pinax/img/silk/icons/timeline_marker.png">
                 {% trans "Intervals" %} <span class="label">{{ intervals|length }}</span>
         </a>
         </li>
         {% endif %}
         <li id="tabs-select-4">
         <a href="#tabs-4" data-toggle="tab">
-                <img alt="Zones" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_pie.png">
+                <img alt="Zones" src="{{STATIC_URL}}pinax/img/silk/icons/chart_pie.png">
                 {% trans "Zones" %}
         </a>
         </li>
         <li id="tabs-select-5">
         <a href="#tabs-5" data-toggle="tab">
-                <img alt="Freqs" src="{{MEDIA_URL}}pinax/img/silk/icons/chart_bar.png">
+                <img alt="Freqs" src="{{STATIC_URL}}pinax/img/silk/icons/chart_bar.png">
                 {% trans "Freqs" %}
         </a>
         </li>
         {% if slopes %}
         <li id="tabs-select-6">
             <a href="#tabs-6" data-toggle="tab">
-                <img alt="Slopes" src="{{MEDIA_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
+                <img alt="Slopes" src="{{STATIC_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
                 {% trans "Slopes" %} <span class="label">{{ slopes|length }}</span>
             </a>
         </li>
@@ -150,14 +150,14 @@
         {% ifequal object.exercise_type.altitude 1 %}
         <li id="tabs-select-7">
             <a href="#tabs-7" data-toggle="tab">
-                <img alt="Inclinedata" src="{{MEDIA_URL}}pinax/img/silk/icons/sum.png">
+                <img alt="Inclinedata" src="{{STATIC_URL}}pinax/img/silk/icons/sum.png">
                 {% trans "Inclinedata" %}
             </a>
         </li>
         {% endifequal %}
         <li id="tabs-select-9">
             <a href="#tabs-9" data-toggle="tab">
-                <img alt="Zones" src="{{MEDIA_URL}}pinax/img/silk/icons/table_lightning.png">
+                <img alt="Zones" src="{{STATIC_URL}}pinax/img/silk/icons/table_lightning.png">
                 {% trans "Best Efforts" %}
             </a>
         </li>

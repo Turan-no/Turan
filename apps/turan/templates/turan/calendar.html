@@ -14,10 +14,6 @@
 {% block searchenginemeta %}
 <meta name="description" content="{% trans "Exercise calendar" %}" />
 {% endblock %}
-{% block extra_head %}
-{{ block.super }}
-    <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.stack.js"></script>
-{% endblock %}
 {% block content %}
 <div class="page-header">
 {% if username %}
@@ -50,7 +46,11 @@
     <div id="weeks" style="height:800px"></div>
 </div>
 </div>
-<script id="source" language="javascript" type="text/javascript">
+{% endblock content %}
+{% block extra_body %}
+{{ block.super }}
+    <script type="text/javascript" src="{{MEDIA_URL}}turan/flot/jquery.flot.stack.js"></script>
+    <script type="text/javascript">
 $(function () {
 $("#weeks").css("height", $("#calendar").css("height"));
 
@@ -186,5 +186,5 @@ function duration(time) {
 */
 });
 </script>
-{% endblock content %}
+{% endblock %}
 

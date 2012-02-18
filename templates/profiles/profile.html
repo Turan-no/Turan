@@ -292,8 +292,26 @@
             <h3>{% trans "FTP" %}{{ "FunctionalThresholdPower"|wiki_help }}</h3>
             <div class="well lifted" id="ftpdiv" style="height:150px"></div>
             {% endif %}
-            <script id="source" language="javascript" type="text/javascript">
-            $(function () {
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_body %}
+<script type="text/javascript">
+    $(function() {
+        $('#edit-profile').hide();
+        $('#edit-profile-toggle').click(function() {
+            $('#edit-profile').toggle();
+            $('#edit-profile').autoscroll();
+            return false;
+        });
+        if ($('#edit-profile .errorField').length) {
+            $('#edit-profile').show();
+            $('#edit-profile .errorField').autoscroll();
+        }
                 var d1 = { color: 2, data: [{{pulsedataseries}}], }
                 var d2 = { color: 4, data: [{{bmidataseries}}], }
                 var d3 = { color: 5, data: [{{ftpdataseries}}], }
@@ -327,28 +345,6 @@
                 {% endif %}
 
             });
-            </script>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endblock %}
-
-{% block extra_body %}
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#edit-profile').hide();
-        $('#edit-profile-toggle').click(function() {
-            $('#edit-profile').toggle();
-            $('#edit-profile').autoscroll();
-            return false;
-        });
-        if ($('#edit-profile .errorField').length) {
-            $('#edit-profile').show();
-            $('#edit-profile .errorField').autoscroll();
-        }
-    });
 </script>
 {% endblock %}
 

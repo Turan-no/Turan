@@ -37,12 +37,14 @@
             <td>
                 <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" title="{% trans "Zoom" %}" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
                 <script type="text/javascript">
+                    $(function() {
                     $('#pzoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
                         plot.setSelection({ 
                             xaxis: { 
                                 from: {{effort.pos|unlocalize}}, to: {{effort.pos|unlocalize}}+{{effort.length|unlocalize}}/1000
                             }
                         })
+                    });
                     });
                 </script>
             </td>
@@ -129,6 +131,7 @@
 
 <script type="text/javascript">
 {% localize off %}
+$(function() {
 {% if object.avg_power and power_show %}
 {% spaceless %}
     var best_effort_data = [
@@ -219,5 +222,6 @@
     $.plot($("#besteffortdiv"), best_effort_data, { grid: { show: false } });
 {% endif %}
 {% endlocalize %}
+});
 </script>
 

@@ -1,6 +1,8 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 from django.views.generic.simple import direct_to_template
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 
 from django.contrib import admin
 admin.autodiscover()
@@ -113,7 +115,9 @@ urlpatterns += patterns('',
     url('^bookmarks/friends_bookmarks/$', 'friends_app.views.friends_objects', kwargs=friends_bookmarks_kwargs, name="friends_bookmarks"),
 )
 
-if settings.SERVE_MEDIA:
+if settings.DEBUG:
     urlpatterns += patterns('', 
-        (r'^site_media/(?P<path>.*)$', 'staticfiles.views.serve')
-    )
+            url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
+)
+urlpatterns += staticfiles_urlpatterns()
+

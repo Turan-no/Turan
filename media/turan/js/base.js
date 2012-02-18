@@ -184,3 +184,17 @@ $(function() {
         }
     }
 });
+	$('#listSearch').bind("focus", function (evt) {
+		if ($(this).val() == $(this).data("text")) {
+			$(this).data("text", $(this).val());
+			$(this).val("");
+            $(this).animate({ width: '90px' }, 250);
+		}
+	});
+	$('#listSearch').bind("blur", function (evt) {
+		if ($(this).val().length == 0)
+			$(this).val($(this).data("text"));
+            $(this).animate({ width: '60px' }, 250);
+	});
+	$('#listSearch').data("text", $('#listSearch').val());
+	$('#listSearch').attr("id", "listSearch-" + Math.random());
