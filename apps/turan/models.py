@@ -645,8 +645,10 @@ class ExerciseDetail(models.Model):
     temp       = models.FloatField(blank=True, null=True)
 
     def get_relative_time(self):
-        start_time = datetime(self.time.year, self.time.month, self.time.day, self.trip.time.hour, self.trip.time.minute, self.trip.time.second)
-        return self.time - start_time
+        if self.time and self.trip.time:
+            start_time = datetime(self.time.year, self.time.month, self.time.day, self.trip.time.hour, self.trip.time.minute, self.trip.time.second)
+            return self.time - start_time
+        return 0
 
     class Meta:
         ordering = ('time',)
