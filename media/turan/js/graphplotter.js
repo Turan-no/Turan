@@ -101,13 +101,17 @@ var GraphPlotter = {
         }
 
         if (minIndex != null && maxIndex != null) {
+            // Means ranges were set (a selection)
 
+
+            // Show segment add button
             var segment_link = $("#segment_add");
-            segment_link.attr('href' , segment_link.attr('href')+ '&start=' + minIndex + '&stop=' + maxIndex);
-            $("#segment_add").removeClass("hide");
+            segment_link.attr('href' , segment_link.attr('href')+ '&start=' + minIndex + '&stop=' + maxIndex).removeClass('hide');
 
+            // Save selection range in URL
             window.location.hash = 'graph-zoom-' + min + '-' + max;
 
+            // Get the data for the selection from backend
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
                 var items = $("#averages ul .data");
                 $("#averages h4").removeClass("hide");
@@ -289,6 +293,7 @@ var GraphPlotter = {
             that.setRange({});
             that.plot(); 
             $('#reset_zoom').toggleClass('hide');
+            $('#segment_add').toggleClass('hide');
         });
         $(window).bind("keyup", function(evt) { if (evt.keyCode == 70) { $('#enlarge').click() } });
         $("#enlarge").bind("click", function(evt) {
