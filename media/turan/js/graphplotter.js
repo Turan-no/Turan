@@ -102,6 +102,13 @@ var GraphPlotter = {
 
         if (minIndex != null && maxIndex != null) {
             // Means ranges were set (a selection)
+            //
+            //
+
+
+            // Show the progress bar for loading
+            $('.progressbarcontainer').removeClass('hide');
+            $('.progress .bar').attr('style', 'width: 70%;');
 
 
             // Show segment add button
@@ -111,11 +118,15 @@ var GraphPlotter = {
             // Save selection range in URL
             window.location.hash = 'graph-zoom-' + min + '-' + max;
 
+
             // Get the data for the selection from backend
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
+                // Update progrssbar
                 var items = $("#averages ul .data");
                 $("#averages h4").removeClass("hide");
 
+                $('.progress .bar').attr('style', 'width: 100%;');
+                $('.progressbarcontainer').addClass('hide');
                 $.each(items, function (i, elem) {
                     var classlist = elem.className.split(" ");
                     for (k in classlist) {
@@ -138,12 +149,13 @@ var GraphPlotter = {
             });
             if (typeof(Mapper) != "undefined")
                 Mapper.loadGeoJSON(minIndex, maxIndex);
+
         }
         else {
             if (typeof(Mapper) != "undefined")
                 Mapper.loadGeoJSON(0, 0);
-            $("#averages ul li").addClass("hidden");
-            $("#averages h4").addClass("hidden");
+            $("#averages ul li").addClass("hide");
+            $("#averages h4").addClass("hide");
         }
 
         this.drawGraphText();

@@ -9,6 +9,12 @@
         <img alt="spinner" src="{{STATIC_URL}}turan/turan/img/cyclist.gif">
     </div>
 </div>
+    <div class="hide progressbarcontainer">
+        {% trans "Loading selection information" %}...
+        <div class="progress">
+              <div class="bar" style="width: 20%;"></div>
+        </div>
+    </div>
 <div class="averages" id="averages">
     <ul class="iconlist">
         <!-- Restructure as needed data appears in spans automagic -->
