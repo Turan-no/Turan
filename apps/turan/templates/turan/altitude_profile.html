@@ -33,6 +33,8 @@ $(function() {
 
     alt['label'] = "{% trans "Altitude profile" %}";
     var altitudeprofileplot = $.plot($("#altdiv"), [alt], options);
-    {% endlocalize %}
+    // define plot in namespace
+    TURAN.altitudeprofileplot = altitudeprofileplot;
 });
+    {% endlocalize %}
 </script>

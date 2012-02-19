@@ -14,12 +14,6 @@
 {% block searchenginemeta %}
 <meta name="description" content="{{object.description|truncatewords:20|escape}}" />
 {% endblock %}
-{% block extra_body %}
-{{ block.super }}
-{% with object.gpx_file as gpx_file %}
-    {% include "turan/maphead.html" %}
-{% endwith %}
-{% endblock %}
 {% block content %}
 
 <div class="page-header">
@@ -81,49 +75,6 @@
         {% include "turan/exercise/gradient_tab.html" %}
         {% include "turan/altitude_profile.html" %}
         <div id="durationdiv" style="width:100%;height:100px"></div>
-        <script id="source" language="javascript" type="text/javascript">
-    $(function () {
-
-        var times = [
-            {% for other_user, series in series.items %}
-            {% if series %}
-                {
-                    label: "{{other_user}}",
-                    bars: { show: true },
-                    data: {{series}},
-                    color: {{ forloop.counter }}
-                },
-            {% endif %}
-            {% endfor %}
-        ];
-        var options = { 
-            tooltip: true,
-            tooltipOpts: {
-                xValText: '{% trans "Exerciser" %}: ',
-                yValText: '{% trans "Duration" %}: ',
-                series: false,
-            },
-            yaxis: { 
-                min: {{t_offset}},
-                tickFormatter: axisformatters.duration 
-            },
-            xaxis: { //Enable tickformatter for tooltip
-                tickFormatter: function (val) {
-                   return val;
-               },
-               tickSize: 1
-            },
-            grid: { 
-                hoverable: true, 
-            },
-            legend: {
-                position: "nw",
-                noColumns: 0,
-                },
-            }
-            $.plot($("#durationdiv"), times, options);
-        });
-        </script>
         <form id="route_form">
 
         <table class="fullsize">
@@ -199,8 +150,57 @@
     {% endif %}
     <a class="btn" href="?distinct=user">{% trans "Best individual results" %}</a>
     </div>
-        <script language="javascript" type="text/javascript">
-$(function() {
+{% paginate %}
+{% endif %}
+{% endwith %}
+{% endblock content %}
+{% block extra_body %}
+{{ block.super }}
+{% with object.gpx_file as gpx_file %}
+    {% include "turan/maphead.html" %}
+{% endwith %}
+<script id="source" language="javascript" type="text/javascript">
+    $(function () {
+
+        var times = [
+            {% for other_user, series in series.items %}
+            {% if series %}
+                {
+                    label: "{{other_user}}",
+                    bars: { show: true },
+                    data: {{series}},
+                    color: {{ forloop.counter }}
+                },
+            {% endif %}
+            {% endfor %}
+        ];
+        var options = { 
+            tooltip: true,
+            tooltipOpts: {
+                xValText: '{% trans "Exerciser" %}: ',
+                yValText: '{% trans "Duration" %}: ',
+                series: false,
+            },
+            yaxis: { 
+                min: {{t_offset}},
+                tickFormatter: axisformatters.duration 
+            },
+            xaxis: { //Enable tickformatter for tooltip
+                tickFormatter: function (val) {
+                   return val;
+               },
+               tickSize: 1
+            },
+            grid: { 
+                hoverable: true, 
+            },
+            legend: {
+                position: "nw",
+                noColumns: 0,
+            }
+        };
+        $.plot($("#durationdiv"), times, options);
+
         $('#route_form').bind("submit", function (ev) {
             ev.preventDefault();
             var selectedIds = [];
@@ -247,11 +247,16 @@ $(function() {
 
 var gposFeature = null;
 var lonlats = {{lonlats}};
-    if (typeof(Mapper) != "undefined")
+    if (typeof(Mapper) != "undefined") {
         Mapper.map.addControl(new OpenLayers.Control.MousePosition({}));
-        Mapper.loadGeoJSON(0, 0);
+        try {
+            Mapper.loadGeoJSON(0, 0);
+        }
+        catch(err) {
+            console.log(err);
+        }
 
-    });
+    };
     var moveFeature = function(posIndex) {
         if (!Mapper.posLayer) {
             // Init the marker for graph hover thingy
@@ -269,14 +274,14 @@ var lonlats = {{lonlats}};
                 Mapper.moveFeature(gposFeature, x, y, 0); // Hardcoded to 0 degrees
             }
         }
-    }
+    };
     var gplotHover = function (event, pos, item) {
-        var axes = gradientplot.getAxes(); 
+        var axes = TURAN.gradientplot.getAxes(); 
         if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max || 
             pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) 
             return; 
         var posIndex = 0;
-        var series = gradientzonedata[0]['data'];
+        var series = TURAN.gradientplot.getData()[0]['data'];
         for (key in series) {
             if (series[key][0] >= pos.x) {
                 var posIndex = key;
@@ -288,12 +293,12 @@ var lonlats = {{lonlats}};
         moveFeature(posIndex);
     };
     var aplotHover = function (event, pos, item) {
-        var axes = altitudeprofileplot.getAxes(); 
+        var axes = TURAN.altitudeprofileplot.getAxes(); 
         if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max || 
             pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) 
             return; 
         var posIndex = 0;
-        var series = alt['data'];
+        var series = TURAN.altitudeprofileplot.getData();
         for (key in series) {
             if (series[key][0] >= pos.x) {
                 var posIndex = key;
@@ -308,8 +313,4 @@ var lonlats = {{lonlats}};
     $("#altdiv").bind("plothover", aplotHover);
 });
 </script>
-{% paginate %}
-{% endif %}
-{% endwith %}
-{% endblock content %}
-
+{% endblock %}

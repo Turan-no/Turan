@@ -198,3 +198,5 @@ $(function() {
 	});
 	$('#listSearch').data("text", $('#listSearch').val());
 	$('#listSearch').attr("id", "listSearch-" + Math.random());
+// Declare namespace
+var TURAN = {};

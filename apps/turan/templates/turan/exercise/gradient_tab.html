@@ -74,6 +74,8 @@ $(function () {
         ];
 
         var gradientplot = $.plot($("#gradientzonediv"), gradientzonedata, gradplotoptions);
+        // Define in namesapce
+        TURAN.gradientplot = gradientplot;
 
         $("#gradientzonediv").bind("plotselected", function (event, ranges) {            
             $("#gradientinfo").text(ranges.xaxis.from.toFixed(1) + " {% trans "to" %} " + ranges.xaxis.to.toFixed(1));
