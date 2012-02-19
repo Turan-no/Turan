@@ -579,7 +579,7 @@ class Exercise(models.Model):
     def get_full_start_time(self):
         ''' Used to get date and time '''
 
-        start_time = datetime(self.date.year, self.date.month, self.date.day, self.time.hour, self.time.minute, self.time.second)
+        start_time = datetime.datetime(self.date.year, self.date.month, self.date.day, self.time.hour, self.time.minute, self.time.second)
         return start_time
 
     @property
