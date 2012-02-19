@@ -9,7 +9,7 @@
             {% if object.avg_hr %}
                 <li class="">
                     <a href="#hearttab" data-toggle="tab">
-                        <img src="{{ "heart"|silk_icon }}">
+                        {{ "heart"|silk_sprite }}
                         {% if object.user.get_profile.max_hr %}
                             {{ object.avg_hr|percent:object.user.get_profile.max_hr }}
                         {% else %}
@@ -21,10 +21,10 @@
             {% if object.route %}
                 <li class="">
                     <a href="#2" data-toggle="tab">
-                        <img src="{{ "sum"|silk_icon }}">
+                        {{ "sum"|silk_sprite }}
                         <span class="">{{object.route.distance|floatformat}}</span> km
                         <br>
-                        <img src="{{ "arrow_up"|silk_icon }}">
+                        {{ "arrow_up"|silk_sprite }}
                         <span class="">{{object.route.ascent|floatformat}}</span> m
                     </a>
                 </li>
@@ -32,7 +32,7 @@
             {% if object.duration %} 
                 <li class="">
                     <a href="#3" data-toggle="tab">
-                        <img src="{{ "clock"|silk_icon }}">
+                        {{ "clock"|silk_sprite }}
                         {{ object.duration }}
                     </a>
                 </li>
@@ -40,7 +40,7 @@
             {% if object.avg_speed %}
                 <li class="speed">
                     <a href="#4" data-toggle="tab">
-                        <img src="{{ "lightning_go"|silk_icon }}">
+                        {{ "lightning_go"|silk_sprite }}
                         {{ object.avg_speed|floatformat }} {% trans "km/h" %}
                     </a>
                 </li>
@@ -48,7 +48,7 @@
             {% if object.avg_cadence %}
                 <li class="cadence">
                     <a href="#10" data-toggle="tab">
-                        <img src="{{ "cog"|silk_icon }}">
+                        {{ "cog"|silk_sprite }}
                         {{ object.avg_pedaling_cad }} {% trans "RPM" %}
                     </a>
                 </li>
@@ -56,7 +56,7 @@
             {% if object.avg_power %}
                 <li class="power">
                     <a href="#11" data-toggle="tab">
-                        <img src="{{ "lightbulb"|silk_icon }}">
+                        {{ "lightbulb"|silk_sprite }}
                         {{ object.avg_pedaling_power }} {% trans "W" %}
                     </a>
                 </li>
@@ -64,7 +64,7 @@
             {% if object.url %}
                 <li class="">
                     <a href="#12" data-toggle="tab">
-                        <img src="{{ "link"|silk_icon }}">
+                        {{ "link"|silk_sprite }}
                         {% trans "URL" %}
                     </a>
                 </li>
@@ -72,7 +72,7 @@
             {% if object.temperature %}
                 <li class="temp">
                     <a href="#5" data-toggle="tab">
-                        <img src="{{ "cake"|silk_icon }}">
+                        {{ "cake"|silk_sprite }}
                         {{ object.temperature|floatformat }} {% trans "℃" %}
                         <br>
                         {% if object.kcal %}
@@ -85,7 +85,7 @@
             {% if tag_list %}
                 <li class="">
                     <a href="#13" data-toggle="tab">
-                        <img src="{{ "tag_blue"|silk_icon }}">
+                        {{ "tag_blue"|silk_sprite }}
                         <span class="labelast">{{ tag_list|length }}</span>
                     </a>
                 </li>
@@ -93,7 +93,7 @@
             {% if object.comment %}
                 <li class="comment">
                     <a href="#commenttab" data-toggle="tab">
-                        <img src="{{ "comment"|silk_icon }}">
+                        {{ "comment"|silk_sprite }}
                         {% trans "Comment" %}
                     </a>
                 </li>
@@ -128,7 +128,7 @@
                 {% ifequal object.route.single_serving 1 %}
                 {% ifequal object.user request.user %}
                 <a href="{% url route_update object.route.id %}">
-                    <img alt="modify" src="{{ "wrench"|silk_icon }}">
+                    {{ "wrench"|silk_sprite }}
                 </a>
                 {% else %}
                 {% endifequal %}
