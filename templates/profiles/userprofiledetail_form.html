@@ -5,19 +5,24 @@
 {{ block.super }}
 {% trans "Add profile detail" %}
 {% endblock %}
-{% block extra_head %}
+{% block extra_body %}
+{{ block.super }}
 {{ form.media }}
 <script type="text/javascript" src="{{MEDIA_URL}}jquery.ui.datepicker-no.js"></script>
 {% endblock %}
 {% block content %}
-<h1>{% trans "Add new profile detail" %}</h1>
-<form class="uniForm" enctype="multipart/form-data" method="post">
+<div class="page-header">
+    <h1>{% trans "Add new profile detail" %}</h1>
+</div>
+<form class="form-horizontal uniForm" enctype="multipart/form-data" method="post">
 {{ form|as_uni_form }}
 <input id="id_user" type="hidden" name="user" value="{{user.id}}">
 {% comment %}
 <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
 {% endcomment %}
-<input type="submit" value="{% trans "Submit" %}" />
+<div class="form-actions">
+    <button class="btn btn-primary btn-large" type="submit">{% trans "Submit" %}</button>
+</div>
 </form>
 <script type="text/javascript">
     $(function() {

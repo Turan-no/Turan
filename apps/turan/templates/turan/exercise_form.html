@@ -26,18 +26,19 @@
         </h1>
     {% endif %}
     </div>
-    <form class="" id="form" enctype="multipart/form-data" method="post">
+    <form class="form-horizontal" id="form" enctype="multipart/form-data" method="post">
 
     {% if not object.route %}
-  <div id="div_route" class="ctrlHolder "> 
+      <div id="div_route" class="control-group"> 
         <label for="route"> 
             {% trans "Name/Route" %}
         </label> 
-            <p >{% trans "Name this exercise or start typing to search in existing routes" %}</p>
-        <input id="route" type="text" class="textinput textInput" name="route" /> 
-            <p id="hint_route" class="formHint">{% trans "You can optionally leave this field blank" %}</p>
-        
-    </div> 
+        <div class="controls">
+            <input id="route" type="text" class="textinput textInput" name="route" /> 
+            <p class="help-block">{% trans "Name this exercise or start typing to search in existing routes" %}</p>
+            <p class="help-block">{% trans "You can optionally leave this field blank" %}</p>
+        </div>
+        </div> 
     {% endif %}
  
     {{ form|as_uni_form}}
