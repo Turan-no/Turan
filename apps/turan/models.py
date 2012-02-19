@@ -811,9 +811,12 @@ class Interval(models.Model):
         super(Interval, self).save(*args, **kwargs)
 
     def get_relative_time_in_minutes(self):
-        seconds = (self.start_time - self.exercise.get_full_start_time()).seconds
-        if seconds:
-            return seconds/60
+        try:
+            seconds = (self.start_time - self.exercise.get_full_start_time()).seconds
+            if seconds:
+                return seconds/60
+        except AttributeError: # happens when date is not set, e.g.
+            pass
         return 0
 
 class Segment(models.Model):
