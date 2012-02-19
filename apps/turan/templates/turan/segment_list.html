@@ -17,41 +17,22 @@
 
 <div class="page-header">
         <h1>
-            <a href="#" data-placement="below" rel="popover" data-original-title="{% trans "What are segments" %}?" data-content="{{ "WhatAreSegments"|wiki_content }}">
             {% trans "Segment list" %}
-    </a>
         </h1>
-
-<script>
-            $(function () {
-              $("a[rel=popover]")
-                .popover({
-                    placement: 'below',
-                  offset: 10
-                })
-                .click(function(e) {
-                  e.preventDefault()
-                })
-            })
-</script>
+            <small>{{ "WhatAreSegments"|wiki_content }}</small>
           
-<ul class="">
-    <li class="btn ">
-        <a href="{% url segment_create %}">
-            <img alt="Segment" src="{{MEDIA_URL}}pinax/img/silk/icons/shape_rotate_clockwise.png">
+            <br>
+        <a class="btn" href="{% url segment_create %}">
+            <i class="ss_sprite ss_shape_rotate_clockwise"></i>
             {% trans "Create new segment" %}
         </a>
-    </li>
 {% if request.user.username %}
-        <li class="btn ">
             {% if not username %}
-            <a href="{% url segments %}?username={{request.user.username}}">{% trans "My segment efforts" %}</a>
+            <a class="btn" href="{% url segments %}?username={{request.user.username}}">{% trans "My segment efforts" %}</a>
             {% else %}
-            <a href="{% url segments %}">{% trans "All segments" %}</a>
+            <a class="btn" href="{% url segments %}">{% trans "All segments" %}</a>
             {% endif %}
-        </li>
 {% endif %}
-</ul>
 </div>
 
 <table class="fullsize">
@@ -127,8 +108,10 @@
 {%endfor %}
 </table>
 {% paginate %}
-<script>
-$('#tab_segments').toggleClass('active');
+<script type="text/javascript">
+    $(function() {
+            $('#tab_segments').toggleClass('active');
+    });
 </script>
 {% endblock content %}
 
