@@ -58,7 +58,7 @@
     {% for interval in intervals %}
     <tr id="row{{forloop.counter0}}">
         <td>
-            <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="Zoom" id="izoom{{forloop.counter0}}-link-1" class="zoom-select" />
+            <i class="ss_sprite ss_zoom zoom-select" alt="Zoom" id="izoom{{forloop.counter0}}-link-1"></i>
             <script type="text/javascript">
                 $(function () {
                     $('#izoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 

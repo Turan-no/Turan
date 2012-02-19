@@ -35,7 +35,7 @@
         {% for effort in bestpowerefforts %}
         <tr class="{% cycle odd,even %}">
             <td>
-                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" title="{% trans "Zoom" %}" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select" />
+                <i class="ss_sprite ss_zoom" title="{% trans "Zoom" %}" alt="Zoom" id="pzoom{{forloop.counter0}}-link-1" class="zoom-select"></i>
                 <script type="text/javascript">
                     $(function() {
                     $('#pzoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
@@ -98,13 +98,15 @@
         {% for effort in object.bestspeedeffort_set.all %}
         <tr class="{% cycle odd,even %}">
             <td>
-                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="Zoom" id="szoom{{forloop.counter0}}-link-1" class="zoom-select" />
+                <i class="zoom-select ss_sprite ss_zoom" alt="Zoom" id="szoom{{forloop.counter0}}-link-1"></i>
                 <script type="text/javascript">
+                $(function() {
                     $('#szoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
                         plot.setSelection({ 
                             xaxis: { from: {{effort.pos|unlocalize}}, to: {{effort.pos|unlocalize}}+{{effort.length|unlocalize}}/1000 }
                         })
                     });
+                });
                 </script>
             </td>
             <td> 

@@ -54,8 +54,10 @@
         {% for slope in slopes %}
         <tr id="slopetd{{slope.id}}" class="{% cycle "odd" "even" %}">
             <td style="width: 145px">
-                <img src="{{ MEDIA_URL }}pinax/img/silk/icons/zoom.png" alt="{% trans "Zoom"%}" title="{% trans "Zoom" %}" id="zoom{{forloop.counter0}}-link-1" class="zoom-select floatleft" />
+                <i alt="{% trans "Zoom"%}" title="{% trans "Zoom" %}" id="zoom{{forloop.counter0}}-link-1" class="ss_sprite ss_zoom zoom-select floatleft"></i>
                 <script type="text/javascript">
+                $(function() {
+                    
                     $('#zoom{{forloop.counter0}}-link-1').bind("click", function (evt) { 
                         plot.setSelection({ 
                             xaxis: { 
@@ -73,6 +75,7 @@
                             }
                             );
                 {% endif %}
+                });
                 </script>
 
 
