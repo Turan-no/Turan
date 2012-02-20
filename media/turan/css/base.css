@@ -1480,3 +1480,6 @@ label, .baseLbl, .dataLbl {
     margin-right: 5px;
     */
 }
+.navbar ul.nav>li>a:hover {
+    background-color: black;
+}
