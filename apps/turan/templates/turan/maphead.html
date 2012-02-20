@@ -3,16 +3,17 @@
 {% load compress %}
 {% localize off %}
 {% if gpx_file %}
-    <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
-    <script src="http://maps.google.com/maps/api/js?v=3.3&sensor=false"></script>
     {% compress js %}
     <script type="text/javascript" src="{{ STATIC_URL }}openlayers/OpenLayers.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}turan/turan/js/mapper.js"></script>
     {% endcompress %}
+    <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+    <script src="http://maps.google.com/maps/api/js?v=3.3&sensor=false"></script>
 
     <script type="text/javascript">
 
         var map;
+        $(function() {
             map = Mapper.init(
                 {% if object.get_simplegpx_url %}
                     "{{ MEDIA_URL }}turan/{{ object.get_simplegpx_url }}", 
@@ -27,6 +28,7 @@
                 [{{object.start_lon}}, {{object.start_lat}}], 
                 [{{object.end_lon}}, {{object.end_lat}}]
             );
+        });
     </script>
 {% endif %} 
 {% endlocalize %}
