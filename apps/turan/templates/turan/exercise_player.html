@@ -369,7 +369,7 @@ var play = function() {
                        markers: [ ]
                     };
                     if (iterations > 0) {
-                        TURAN.altitudeprofileplot = $.plot($("#altdiv"), [datasets[player]['altitude']], options);
+                        Turan.altitudeprofileplot = $.plot($("#altdiv"), [datasets[player]['altitude']], options);
                     }
 
                 });
@@ -404,7 +404,7 @@ var play = function() {
             // Highlight the point at thisindex in the first series in the altitudeprofile plot
             var x = datasets[player]['altitude']['data'][thisindex][0];
             var y = datasets[player]['altitude']['data'][thisindex][1];
-            TURAN.altitudeprofileplot.updateMarker(x, y, player);
+            Turan.altitudeprofileplot.updateMarker(x, y, player);
 
             {% if object.avg_hr %}
                 setAndDraw(player, 'hr', 2, thisindex);

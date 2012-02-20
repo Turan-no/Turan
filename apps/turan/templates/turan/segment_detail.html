@@ -276,12 +276,12 @@ var lonlats = {{lonlats}};
         }
     };
     var gplotHover = function (event, pos, item) {
-        var axes = TURAN.gradientplot.getAxes(); 
+        var axes = Turan.gradientplot.getAxes(); 
         if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max || 
             pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) 
             return; 
         var posIndex = 0;
-        var series = TURAN.gradientplot.getData()[0]['data'];
+        var series = Turan.gradientplot.getData()[0]['data'];
         for (key in series) {
             if (series[key][0] >= pos.x) {
                 var posIndex = key;
@@ -293,12 +293,12 @@ var lonlats = {{lonlats}};
         moveFeature(posIndex);
     };
     var aplotHover = function (event, pos, item) {
-        var axes = TURAN.altitudeprofileplot.getAxes(); 
+        var axes = Turan.altitudeprofileplot.getAxes(); 
         if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max || 
             pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) 
             return; 
         var posIndex = 0;
-        var series = TURAN.altitudeprofileplot.getData();
+        var series = Turan.altitudeprofileplot.getData();
         for (key in series) {
             if (series[key][0] >= pos.x) {
                 var posIndex = key;
