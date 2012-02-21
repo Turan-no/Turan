@@ -61,6 +61,7 @@ from wakawaka.models import WikiPage, Revision
 from photos.models import Pool, Image
 from photos.forms import PhotoUploadForm
 from avatar.models import Avatar
+from endless_pagination.decorators import page_template
 
 from datetime import timedelta, datetime
 from datetime import date as datetimedate
@@ -2358,17 +2359,13 @@ def fetchRAAM(request):
     response = simplejson.dumps(req)
     return HttpResponse(response, mimetype="application/json")
 
-def search(request):
+@page_template("turan/search/exercise_page.html")
+@page_template("turan/search/route_page.html", key="route_page")
+def search(request, template='turan/search.html', extra_context=None):
     ''' Global site Search view '''
     search_query = request.GET.get('q', '')
     if not search_query:
         raise Http404
-    start = request.GET.get('start', 0)
-    try:
-        start = int(start)
-    except:
-        start = 0
-    SLICE_SIZE = 20
 
     exercise_list = Exercise.objects.select_related('route', 'tagging_tag', 'tagging_taggeditem', 'exercise_type', 'user__profile', 'user', 'user__avatar', 'avatar')
     comment_list = ThreadedComment.objects.filter(is_public=True).order_by('-date_submitted')
@@ -2384,7 +2381,7 @@ def search(request):
         Q(comment__icontains=search_query) |
         Q(tags__contains=search_query)
     )
-    exercise_list = exercise_list.filter(qset).distinct().order_by('-date')[start:start+SLICE_SIZE]
+    exercise_list = exercise_list.filter(qset).distinct().order_by('-date')
     uqset = (
         Q(username__icontains=search_query) |
         Q(first_name__icontains=search_query) |
@@ -2393,29 +2390,30 @@ def search(request):
     pqset = (
             Q(name__icontains=search_query)
     )
-    profile_list = profile_list.filter(pqset).distinct()[start:start+SLICE_SIZE]
-    user_list = list(user_list.filter(uqset).distinct()[start:start+SLICE_SIZE])
+    profile_list = profile_list.filter(pqset).distinct()
+    user_list = list(user_list.filter(uqset).distinct())
     for profil in profile_list:
         if not profil.user in user_list:
             user_list.append(profil.user)
-    tag_list = tag_list.filter(name__icontains=search_query)[start:start+SLICE_SIZE]
+    tag_list = tag_list.filter(name__icontains=search_query)
     rqset = (
         Q(name__icontains=search_query) |
         Q(description__icontains=search_query)
     )
-    route_list = route_list.filter(rqset).distinct()[start:start+SLICE_SIZE]
+    route_list = route_list.filter(rqset).distinct()
     sset = (
             Q(name__icontains=search_query) |
             Q(description__icontains=search_query)
     )
-    segment_list = segment_list.filter(sset).distinct()[start:start+SLICE_SIZE]
+    segment_list = segment_list.filter(sset).distinct()
+
+    context = locals()
+    if extra_context is not None:
+        context.update(extra_context)
 
 
-
-    if request.is_ajax() or start:
-        return HttpResponse(serializers.serialize('json', exercise_list, indent=4), mimetype='text/javascript')
-
-    return render_to_response('turan/search.html', locals(), context_instance=RequestContext(request))
+    return render_to_response(template, context,
+            context_instance=RequestContext(request))
 
 
 @login_required
