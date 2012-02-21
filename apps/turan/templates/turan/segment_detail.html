@@ -48,7 +48,7 @@
 
     <hr class="clear" />
     {% if object.gpx_file %}
-    <div ><div style="width:100%; height: 500px" class="well" id="map"></div>
+    <div ><div style="width:100%; height: 500px; padding:0" class="well" id="map"></div>
             <a href="{{MEDIA_URL}}turan/{{ object.gpx_file }}" class="detailsShareBoxButton gpxFile">{% trans "GPX File" %}</a>
         </div>
     {% endif %}
@@ -159,7 +159,7 @@
 {% with object.gpx_file as gpx_file %}
     {% include "turan/maphead.html" %}
 {% endwith %}
-<script id="source" language="javascript" type="text/javascript">
+<script type="text/javascript">
     $(function () {
 
         var times = [
