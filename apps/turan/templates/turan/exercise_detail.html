@@ -13,13 +13,6 @@
 {% block searchenginemeta %}
 {% tags_for_object object as tag_list %}
 {% endblock %}
-{% block extra_body %}
-{{ block.super}}
-     <script type="text/javascript" src="{{STATIC_URL}}flot/jquery.flot.crosshair.js"></script>
-{% with object.route.gpx_file as gpx_file %}
-     {% include "turan/maphead.html" %}
-{% endwith %}
-{% endblock %}
 {% block content %}
 
         <div class="content">
@@ -220,7 +213,24 @@
         {% include "turan/exercise/best_effort_tab.html" %}
     </div>
   </div>
+{% else %}
+{% include "turan/commentform.html" %}
+{% endif %}
+          </div>
+        </div>
+      </div>
+{% endblock %}
+{% block extra_body %}
+{{ block.super }}
+     <script type="text/javascript" src="{{STATIC_URL}}flot/jquery.flot.crosshair.js"></script>
+{% with object.route.gpx_file as gpx_file %}
+     {% include "turan/maphead.html" %}
+{% endwith %}
 <script type="text/javascript">
+
+$(function(){
+    // Trigger tab change on page load
+    $("a[href='"+window.location.hash+"']").click();
 
     function selectTab(evt) {
         var id = $(this).attr('href');
@@ -266,12 +276,9 @@
     */
     //$('#tabs-select-2').html('<p>{% trans "Comments" %} <span class="floatright">' + commentcount + '</span></p>');
 
-$(document).ready(function(){
-    // Trigger tab change on page load
-    $("a[href='"+window.location.hash+"']").click();
+    Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
     if (typeof(Mapper) != "undefined" && Mapper.map) {
         // Init the marker for graph hover thingy
-        Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
 
 
         {% localize off %}
@@ -322,11 +329,5 @@ $(document).ready(function(){
     }
 });
 </script>
-{% else %}
-{% include "turan/commentform.html" %}
-{% endif %}
-          </div>
-        </div>
-      </div>
 
 {% endblock%}
