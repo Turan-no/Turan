@@ -12,8 +12,6 @@ from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.datastructures import SortedDict
-import sentry.models as sentry_models
-from sentry.client.models import client
 
 from copy import deepcopy
 import numpy
@@ -41,10 +39,14 @@ import socket
 
 gpxstore = FileSystemStorage(location=settings.GPX_STORAGE)
 
+from celery.signals import task_failure
+
 # Hook up sentry to celery's logging 
 import logging
-from celery.signals import task_failure
-from sentry.client.handlers import SentryHandler
+if 'sentry' in settings.INSTALLED_APPS:
+    import sentry.models as sentry_models
+    from sentry.client.models import client
+    from sentry.client.handlers import SentryHandler
 
 logger = logging.getLogger('task')
 
@@ -1771,13 +1773,15 @@ def current_site_url():
         url += ':%s' % port
     return url
 
-@task
-@receiver(post_save, sender=sentry_models.Message)
-def notify_irc_sentry(sender, instance, created, **kwargs):
-    if created:
-        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client_socket.connect(("localhost", 5050))
-        client_socket.send("#turan Sentry: %s %s%s" % (instance.message, current_site_url(), instance.get_absolute_url()))
-        client_socket.close()
+
+if 'sentry' in settings.INSTALLED_APPS:
+    @task
+    @receiver(post_save, sender=sentry_models.Message)
+    def notify_irc_sentry(sender, instance, created, **kwargs):
+        if created:
+            client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            client_socket.connect(("localhost", 5050))
+            client_socket.send("#turan Sentry: %s %s%s" % (instance.message, current_site_url(), instance.get_absolute_url()))
+            client_socket.close()
 
 

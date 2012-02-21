@@ -70,9 +70,10 @@ urlpatterns += patterns(
     url(r'^oauth/access_token/$','oauth_access_token'),
 )
 
-urlpatterns += patterns('',
-    (r'^sentry/', include('sentry.urls')),
-)
+if 'sentry' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('',
+        (r'^sentry/', include('sentry.urls')),
+    )
 
 handler500 = 'turan.views.internal_server_error'
 ## @@@ for now, we'll use friends_app to glue this stuff together

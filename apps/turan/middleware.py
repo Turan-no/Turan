@@ -3,8 +3,9 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied  
 from django.http import HttpResponseForbidden
 from django.template import RequestContext, Context, loader
-from sentry.client.models import get_client
-from sentry.conf import settings as sentry_settings
+if 'sentry' in settings.INSTALLED_APPS:
+    from sentry.client.models import get_client
+    from sentry.conf import settings as sentry_settings
 import logging
 
 class Http403(Exception):
@@ -31,21 +32,22 @@ class Http403Middleware(object):
             #    raise PermissionDenied
             return render_to_403(context_instance=RequestContext(request))
 
-class TuranSentry404CatchMiddleware(object):
-    def process_response(self, request, response):
-        if response.status_code == 404 and request.META.get('HTTP_REFERER', '') and not sentry_settings.DEBUG:
-            request.META['TURANUSER'] = request.user
-            message_id = get_client().create_from_text('Http 404 %s' %request.path, request=request, level=logging.INFO, logger='http404')
-            request.sentry = {
-                'id': message_id,
-                }
-        return response
+if 'sentry' in settings.INSTALLED_APPS:
+    class TuranSentry404CatchMiddleware(object):
+        def process_response(self, request, response):
+            if response.status_code == 404 and request.META.get('HTTP_REFERER', '') and not sentry_settings.DEBUG:
+                request.META['TURANUSER'] = request.user
+                message_id = get_client().create_from_text('Http 404 %s' %request.path, request=request, level=logging.INFO, logger='http404')
+                request.sentry = {
+                    'id': message_id,
+                    }
+            return response
 
-class TuranSentryMarkup(object):
-    '''Add more information to the sentry log'''
+    class TuranSentryMarkup(object):
+        '''Add more information to the sentry log'''
 
-    def process_exception(self, request, exception):
-        # Make sure the exception signal is fired for Sentry
-        if request.user:
-            request.META['TURANUSER'] = request.user
-        return None
+        def process_exception(self, request, exception):
+            # Make sure the exception signal is fired for Sentry
+            if request.user:
+                request.META['TURANUSER'] = request.user
+            return None
