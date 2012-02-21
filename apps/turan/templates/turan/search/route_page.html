@@ -1,0 +1,8 @@
+{% load i18n %}
+{% load turan_extras %}
+{% load endless %}
+{% paginate 15 route_list using "route_page" %}
+            {% for route in route_list %}
+                <li class=""><img widht="32" height="32" src="{{route.get_png_url}}"><a href="{{ route.get_absolute_url }}">{{ route|truncatechars:"35" }}</a></li>
+            {% endfor %}
+    {% show_more "More routes" %}

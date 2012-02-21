@@ -3,6 +3,8 @@
 {% load i18n %}
 {% load avatar_tags %}
 {% load turan_extras %}
+
+{% block title%}{% trans "Search" %}{%endblock%}
 {% block content %}
 
 <div class="page-header">
@@ -20,32 +22,24 @@
     </ul>
 </div>
 {% endif %}
-
 {% if exercise_list %}
 <div class="span4">
     <h2>{% trans "Exercises" %}</h2>
+    <div class="endless_page_template">
     <ul class="iconlist spacer">
-        {% for exercise in exercise_list %}
-        <li class="exercise"><a href="{{ exercise.get_absolute_url }}"><img width="32" height="32" src="{{exercise.route.get_png_url}}">{{ exercise|truncatechars:"35" }}</a></li>
-        {% endfor %}
+        {% include "turan/search/exercise_page.html"%}
     </ul>
-    {% if exercise_list|length >= 15 %}
-    <a href="#" id="more_exercises">{% trans "Show more" %}</a>
-    {% endif %}
+    </div>
 </div>
 {% endif %}
-
 {% if route_list %}
 <div class="span4 ">
     <h2>{% trans "Routes" %}</h2>
-    <ul class="iconlist spacer">
-            {% for route in route_list %}
-            <li class=""><img widht="32" height="32" src="{{route.get_png_url}}"><a href="{{ route.get_absolute_url }}">{{ route|truncatechars:"35" }}</a></li>
-            {% endfor %}
-    </ul>
-    {% if route_list|length >= 15 %}
-    <a href="#" id="more_routes">{% trans "Show more" %}</a>
-    {% endif %}
+    <div class="endless_page_template">
+        <ul class="iconlist spacer">
+            {% include "turan/search/route_page.html"%}
+        </ul>
+    </div>
 </div>
 {% endif %}
 

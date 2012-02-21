@@ -1,0 +1,7 @@
+{% load endless %}
+{% load turan_extras %}
+{% paginate exercise_list %}
+        {% for exercise in exercise_list %}
+        <li class="exercise"><a href="{{ exercise.get_absolute_url }}"><img width="32" height="32" src="{{exercise.route.get_png_url}}">{{ exercise|truncatechars:"35" }}</a></li>
+        {% endfor %}
+    {% show_more "More exercises" %}
