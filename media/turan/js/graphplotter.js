@@ -100,16 +100,11 @@ var GraphPlotter = {
             });
         }
 
-        if (minIndex != null && maxIndex != null) {
-            // Means ranges were set (a selection)
-            //
-            //
+        if (minIndex != null && maxIndex != null) { // Means ranges were set (a selection)
 
-
-            // Show the progress bar for loading
+            // Show the progress bar for loading selection info
             $('.progressbarcontainer').removeClass('hide');
             $('.progress .bar').attr('style', 'width: 70%;');
-
 
             // Show segment add button
             var segment_link = $("#segment_add");
@@ -117,7 +112,6 @@ var GraphPlotter = {
 
             // Save selection range in URL
             window.location.hash = 'graph-zoom-' + min + '-' + max;
-
 
             // Get the data for the selection from backend
             $.getJSON(this.backendUrl, { start: minIndex, stop: maxIndex }, function (avgs) {
