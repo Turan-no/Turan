@@ -349,7 +349,7 @@ ul.iconlist>li.weight,
 ul.iconlist>li.kcal {
     list-style-image: url('/site_media/pinax/img/silk/icons/cake.png')
 }
-ul.iconlist>li.power {
+ul.iconlist>li.power, ul.iconlist>li.poweravg30s {
     list-style-image: url('/site_media/pinax/img/silk/icons/lightbulb.png')
 }
 

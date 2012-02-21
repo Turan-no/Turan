@@ -194,7 +194,7 @@ var GraphPlotter = {
         } 
     },
     showTooltip: function (x, y, contents) {
-        $('<div class="tooltip" id="gtooltip">' + contents + '</div>').css( {
+        $('<div class="tooltip" id="flotTip">' + contents + '</div>').css( {
             position: 'absolute',
             display: 'none',
             top: y + 5,
@@ -301,7 +301,7 @@ var GraphPlotter = {
         });
         $("#reset_zoom").bind("click", function(evt) {
             evt.preventDefault();
-            $("#gtooltip").remove(); // tooltips messes up pos
+            $("#flotTip").remove(); // tooltips messes up pos
             that.setRange({});
             that.plot(); 
             $('#reset_zoom').toggleClass('hide');
@@ -310,7 +310,7 @@ var GraphPlotter = {
         $(window).bind("keyup", function(evt) { if (evt.keyCode == 70) { $('#enlarge').click() } });
         $("#enlarge").bind("click", function(evt) {
             evt.preventDefault();
-            $("#gtooltip").remove(); // tooltips messes up pos
+            $("#flotTip").remove(); // tooltips messes up pos
             // Press escape to leave fullscreen
             $(window).bind("keyup", function(evt) { if (evt.keyCode == 27) { $('#enlarge').click() } });
             if(!that.fullscreen) {
@@ -361,7 +361,7 @@ var GraphPlotter = {
   //          if (!that.updateLegendTimeout) that.updateLegendTimeout = setTimeout(that.updateLegend, 50); 
             //that.updateLegend(pos);
 
-            $("#gtooltip").remove();
+            $("#flotTip").remove();
             var axes = plot.getAxes(); 
             // Just retrn if we're hovering around outside the graph area
             if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max || 
@@ -420,8 +420,8 @@ var GraphPlotter = {
                     val = tickFormatter(val, plot.getAxes().xaxis);
                 var color = plot.getOptions().colors[series['color']];
                 if(label == highlightedseries) // Highlight if item selected
-                    skey += ' selected'
-                tooltipHtml += '<li class="'+skey+'"><span class="label">' + label + '</span>: ' + val + '</li>';
+                    skey += ' label label-important'
+                tooltipHtml += '<li class="'+skey+'"><span class="old-label">' + label + '</span> ' + val + '</li>';
             }
             tooltipHtml += '</ul>';
             that.showTooltip(pos.pageX, pos.pageY, tooltipHtml);
