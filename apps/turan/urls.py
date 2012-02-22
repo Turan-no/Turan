@@ -84,7 +84,7 @@ urlpatterns += patterns('django.views.generic.list_detail',
     url(r'^segments/?$', segmentdetails, { 'queryset': SegmentDetail.objects.select_related().order_by('-exercise__date','-exercise__time')}, name='segmentdetails'),
     url(r'^segment/?$', segments, { 'queryset': Segment.objects.select_related().extra( select= {'tcount': 'SELECT COUNT(*) FROM turan_segmentdetail WHERE turan_segmentdetail.segment_id = turan_segment.id' }).order_by('-tcount') }, name='segments'),
 
-    url(r'^exercise/?$', turan_object_list, { 'queryset': Exercise.objects.select_related().order_by('-date') }, name='exercises'),
+    url(r'^exercise/?$', exercises, { 'queryset': Exercise.objects.select_related('route', 'auth_user', 'user', 'exercise_type').order_by('-date') }, name='exercises'),
     url(r'^exercise/(?P<object_id>\d+)', exercise, name='exercise'),
     url(r'^exercise/parse/(?P<object_id>\d+)/(?P<task_id>.*)/?$', exercise_parse_progress, name='exercise_parse_progress'),
     url(r'^exercise/parse/(?P<object_id>\d+)/?$', exercise_parse, name='exercise_parse'),

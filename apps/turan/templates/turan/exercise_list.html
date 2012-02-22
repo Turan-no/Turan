@@ -1,122 +1,19 @@
 {% extends "turan/base.html" %}
-{% load humanize %}
 {% load i18n %}
-{% load turan_extras %}
-{% load avatar_tags %}
-{% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
 {% trans "Exercises" %}
 {% endblock %}
 {% block content %}
 <div class="page-header">
-<h1>
-    {% trans "Exercises" %}
-    {% if username %}
-    <small>{% trans "username" %}: {{username}}</small>
-    {% endif %}
-</h1>
+    <h1>
+        {% trans "Exercises" %}
+        {% if username %}
+            <small>{% trans "exerciser" %}: {{page_user}}</small>
+        {% endif %}
+    </h1>
 </div>
 {% autosort object_list %}
-{% autopaginate object_list %}
-
-<table class="fullsize">
-    <tr>
-        <th style="width: 32px">
-        </th>
-        <th>
-            {% anchortrans route__name "Name" %}
-        </th>
-        <th>
-            {% anchortrans route__distance "Distance" %}
-        </th>
-        <th>
-            {% anchortrans route__ascent "Ascent" %}
-        </th>
-        <th>
-            {% anchortrans duration %}
-        </th>
-        <th>
-            {% anchortrans avg_speed "Avg Speed" %}
-        </th>
-        <th>
-            {% anchortrans avg_hr "Avg HR" %}
-        </th>
-        <th>
-            {% anchortrans kcal "kcal" %}
-        </th>
-        <th>
-            {% anchortrans xPower "xPower" %}
-        </th>
-        <th style="width: 32px">
-        </th>
-    </tr>
-{% for object in object_list %}
-<tr class="{% cycle even,odd %} hoverpoint" id="trip_{{object.id}}">
-    <td>
-       
-        <a  {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">
-            <img width="32" height="32" alt="{{ object.exercise_type }}" src="{{ object.icon }}" />
-        </a>
-    </td>
-    <td>
-        <a href="{{ object.get_absolute_url }}">
-            {% if object.route %}
-            {{ object.route.name }}
-            {% else %}
-            {{ object.exercise_type }}
-            {% endif %}
-        </a>
-        <p class="description">
-            {% if object.kcal %}
-                {{ object.kcal }} {% trans "kcal" %},
-            {% endif %}
-            &nbsp;&nbsp;{{ object.date|naturalday }}
-        </p>
-    </td>
-    <td>
-        {% if object.route.distance %}
-            {{ object.route.distance|floatformat }} {% trans "km" %}
-        {% endif %}
-    </td>
-    <td>
-        {% if object.route.ascent %}
-            {{ object.route.ascent|floatformat }} {% trans "m" %}
-        {% endif %}
-    </td>
-    <td>
-        {% if object.duration %}
-            {{ object.duration }} 
-        {% endif %}
-    </td>
-    <td>
-        {% if object.avg_speed %}
-            {{ object.avg_speed|floatformat }}  {% trans "km/h" %}
-        {% endif %}
-    </td>
-    <td>
-        {% if object.avg_hr %}
-            {{ object.avg_hr}}  {% trans "BPM" %}
-        {% endif %}
-    </td>
-    <td>
-        {% if object.kcal %}
-            {{ object.kcal}}  {% trans "kcal" %}
-        {% endif %}
-    </td>
-    <td>
-        {% if object.xPower %}
-            {{ object.xPower}}  {% trans "W" %}
-        {% endif %}
-    </td>
-    <td>
-        <a href="{{ object.user.get_absolute_url }}" title="{{object.user}}">
-            {% avatar object.user 32 %}
-        </a>
-    </td>
-</tr>
-{%endfor %}
-</table>
-{% paginate %}
+{% include page_template %}
 {% endblock content %}
 

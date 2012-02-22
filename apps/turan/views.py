@@ -1736,12 +1736,13 @@ def turan_object_list(request, queryset, extra_context=None, template_name=None)
 
     username = request.GET.get('username', '')
     if username:
-        user = get_object_or_404(User, username=username)
-        queryset = queryset.filter(user=user)
+        page_user = get_object_or_404(User, username=username)
+        queryset = queryset.filter(user=page_user)
 
     context = locals()
     if extra_context:
         context.update(extra_context)
+        
 
     return object_list(request, template_name=template_name, queryset=queryset, extra_context=context)
 
@@ -2032,6 +2033,17 @@ def slopes(request, queryset):
 @cache_page_against_models(Route)
 @page_template('turan/route_list_page.html')
 def routes(request, queryset, template=None, extra_context=None):
+    context = locals()
+    if extra_context:
+        context.update(extra_context)
+    if request.is_ajax(): #override template
+        return turan_object_list(request, template_name=template, queryset=queryset, extra_context=context)
+    return turan_object_list(request, queryset=queryset, extra_context=context)
+
+@vary_on_cookie
+@cache_page_against_models(Exercise)
+@page_template('turan/exercise_list_page.html')
+def exercises(request, queryset, template=None, extra_context=None):
     context = locals()
     if extra_context:
         context.update(extra_context)
