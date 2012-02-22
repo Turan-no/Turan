@@ -3,7 +3,6 @@ html {
 }
 body {
     height: 100%;
-    color: #333;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -105,50 +104,6 @@ hr.clearleft {
         clear: right;
 }
 
-/* Header area */
-#hd, #hd .content {
-	background: url(../img/header2.0.png);
-	color: white;
-}
-#hd .content {
-	padding: 1em;
-	height: 6em;
-}
-#hd a {
-	background: transparent;
-	color: #000;
-	text-decoration: none;
-}
-#hd #title {
-	float: left;
-}
-#hd h1 a:hover {
-	text-decoration: none;
-}
-#hd #sitemenu {
-	float: right;
-    margin: 10px 10px 0 0;
-}
-#hd #sitemenu a:hover {
-	text-decoration: underline;
-}
-#hd #sitemenu ul {
-	margin: 0;
-}
-#hd #sitemenu ul li {
-	display: inline;
-	list-style-type: none;
-	margin: 0;
-	padding-left: 1em;
-}
-
-#bd {
-    background: url(/site_media/turan/bg_white.jpg);
-}
-
-#bd .content {
-	padding: 1em;
-}
 
 .tag-size-1 {
 }
@@ -163,37 +118,9 @@ hr.clearleft {
 }
 
 
-/* Timeframe and navigation menu */
-.menu {
-	margin: 0.5em 0;
-	width: 100%;
-	height: 2em;
-}
-.menu ul {
-	font-size: 100%;
-	margin: 0;
-}
-.menu ul li {
-	display: inline;
-	list-style-type: none;
-	margin: 0;
-}
-.menu .navigation {
-	float: right;
-}
-.menu .timeframe {
-	float: right;
-}
-
 ul.col2 li {
 	float: left;
 	width: 450px;
-}
-h1 a
-{ 
-	background: transparent;
-	color: black;
-	text-decoration: none;
 }
 
 /* Emphasizing */
@@ -662,11 +589,11 @@ div.box h2, div.box h3 {
 
 .drop-shadow {
     position:relative;
-    padding:1em; 
+    /* padding:1em; */
     /*margin:2em 10px 4em; */
-    -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-       -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-            box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.3) ;
+       -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.3) ;
+            box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.3) ;
 }
 
 .drop-shadow:before,
@@ -1260,6 +1187,7 @@ body {
     padding-left: 20px;
     padding-right: 20px;
     margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+    overflow: hidden; /* hide overflowing margins from pushing fotter down */
   }
   .content { 
     background-color: #fff;
@@ -1272,14 +1200,6 @@ body {
     margin: -20px -20px 20px;
   }
 
-  /* Styles you shouldn't keep as they are for displaying this base example only */
-  .content .span10, 
-  .content .span8, 
-  .content .span16,
-  .content .span4 {
-    min-height: 500px;
-    background-color: #fff;
-  }
 .navbar .brand {
     background: url('../img/turan.png') 0 40px;
     width: 124px;
@@ -1305,8 +1225,6 @@ display: none;
 }
 
 footer {
-    background: #609A43;
-    border-top: 1px solid #ddd;
     -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
