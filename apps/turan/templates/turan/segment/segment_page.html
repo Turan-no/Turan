@@ -28,8 +28,8 @@
             # {% anchortrans tcount "Entries" %}
         </th>
     </tr>
-{% paginate object_list %}
 {% autosort object_list %}
+{% paginate object_list %}
 {% for object in object_list %}
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
     <td><img src="{{ object.get_png_url }}"></td>
