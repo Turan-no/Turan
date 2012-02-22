@@ -20,6 +20,7 @@ from microblogging.models import Following
 
 from profiles.models import Profile, UserProfileDetail
 from profiles.forms import ProfileForm
+from endless_pagination.decorators import page_template
 
 from avatar.models import Avatar
 
@@ -42,14 +43,15 @@ def datetime2jstimestamp(obj):
 
 @cache_page_against_models(Profile, Exercise, Avatar)
 @vary_on_cookie
-def profiles(request, template_name="profiles/profiles.html", extra_context=None):
+@page_template('profiles/profiles_page.html')
+def profiles(request, template="profiles/profiles.html", extra_context=None):
     if extra_context is None:
         extra_context = {}
     users = User.objects.all().order_by("-date_joined")
     search_terms = request.GET.get('search', '')
     order = request.GET.get('order')
     if not order:
-        order = 'name'
+        order = 'date'
     else:
         if not order == 'recent':
             users = users.annotate(duration=Sum('exercise__duration'))
@@ -71,7 +73,7 @@ def profiles(request, template_name="profiles/profiles.html", extra_context=None
         users = users.annotate(duration=Sum('exercise__duration')).order_by('-duration')
 
 
-    return render_to_response(template_name, dict({
+    return render_to_response(template, dict({
         'users': users,
         'order': order,
         'search_terms': search_terms,
