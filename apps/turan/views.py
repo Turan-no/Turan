@@ -2061,9 +2061,11 @@ def segmentdetails(request, queryset):
 
 @cache_page_against_models(Segment, SegmentDetail)
 @vary_on_cookie
-def segments(request, queryset):
+@page_template('turan/segment/segment_page.html')
+def segments(request, queryset, template=None, extra_context=None):
     ''' Segment list view, based on turan_object_list. Changed a bit for search
     and filter purposes '''
+    
 
     search_query = request.GET.get('q', '')
     if search_query:
@@ -2095,8 +2097,12 @@ def segments(request, queryset):
         s_list_ids = set(SegmentDetail.objects.filter(exercise__user=other_user).values_list('segment__id',flat=1))
         queryset = queryset.filter(id__in=s_list_ids)
 
-
-    return object_list(request, queryset=queryset, extra_context=locals())
+    context = locals()
+    if extra_context:
+        context.update(extra_context)
+    if request.is_ajax(): #override template
+        return object_list(request, template_name=template, queryset=queryset, extra_context=context)
+    return object_list(request, queryset=queryset, extra_context=context)
 
 def internal_server_error(request, template_name='500.html'):
     ''' Custom http code 500 view, to include Context for MEDIA_URL and such '''

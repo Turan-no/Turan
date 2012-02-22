@@ -1,0 +1,80 @@
+{% load endless %}
+{% load i18n %}
+{% load turan_extras %}
+{% load turanwaka_tags %}
+{% load sorting_tags %}
+<table class="fullsize">
+    <tr>
+        <th>{% trans "Plot" %}</th>
+        <th>
+            {% anchortrans name %}
+        </th>
+        <th>
+            {% trans "Best times" %}
+        <th>
+            {% anchortrans distance "Distance" %}
+        </th>
+        <th>
+            {% anchortrans ascent "Ascent" %}
+        </th>
+        <th>
+            {% anchortrans grade "Incline" %}
+        </th>
+        <th>
+            {% anchortrans category "Category" %}
+            {{ "SlopeCategory"|wiki_help }}
+        </th>
+        <th>
+            # {% anchortrans tcount "Entries" %}
+        </th>
+    </tr>
+{% paginate object_list %}
+{% autosort object_list %}
+{% for object in object_list %}
+<tr class="{% cycle even,odd %}" id="object_{{object.id}}">
+    <td><img src="{{ object.get_png_url }}"></td>
+    <td>
+        <h4><a class="title" href="{{ object.get_absolute_url }}">{{object.name}}</a></h4>
+    </td>
+    <td style="padding: 0">
+        <div class="toplist" style="margin: 0">
+            <ol>
+            {% for other_user in object.get_toplist %}
+                <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
+                    <span class="">
+                        <span class="duration">
+                            {{ other_user.duration|durationformatshort}}
+                        </span>
+                        <a href="{{ other_user.get_absolute_url }}" title="{{ other_user }}">
+                            <span class="{% if username == other_user.username %}selected{%endif%}">
+                                {{ other_user }}
+                            </span>
+                        </a>
+                    </span>
+                </li>
+            {% endfor %}
+            {% with object.get_latest|slice:"1" as latest_list %}
+            {% for latest in latest_list %}
+            <li style="width: 120px; margin-left: 0">
+                <p class="smaller">
+                    {% trans "Newest" %}:
+                    {{ latest.duration|durationformatshort}}:
+                        <a href="{{ latest.exercise.get_absolute_url }}">
+                            {{ latest.exercise.user}}
+                        </a>
+                </p>
+            </li>
+            {% endfor %}
+            {% endwith %}
+            </ol>
+        </div>
+    </td>
+    <td>{{ object.distance|floatformat }} <span class="unit">{% trans "km" %}</span> </td>
+    <td>{{object.ascent}} <span class="unit">{% trans "m" %}</span></td>
+    <td>{{object.grade|floatformat}} <span class="unit">%</span></td>
+    <td><div class="categorybutton">{{object.category}}</div></td> 
+    <td>{{object.tcount}}</td>
+</tr>
+{%endfor %}
+</table>
+{% show_more %}
