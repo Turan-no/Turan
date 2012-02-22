@@ -1713,7 +1713,7 @@ def update_object_user(request, model=None, object_id=None, slug=None,
 
 @cache_page_against_models(ExerciseType, Exercise, Avatar, Route)
 @vary_on_cookie
-def turan_object_list(request, queryset):
+def turan_object_list(request, queryset, extra_context=None, template_name=None):
 
     search_query = request.GET.get('q', '')
     if search_query:
@@ -1739,7 +1739,11 @@ def turan_object_list(request, queryset):
         user = get_object_or_404(User, username=username)
         queryset = queryset.filter(user=user)
 
-    return object_list(request, queryset=queryset, extra_context=locals())
+    context = locals()
+    if extra_context:
+        context.update(extra_context)
+
+    return object_list(request, template_name=template_name, queryset=queryset, extra_context=context)
 
 
 def autocomplete_route(request, app_label, model):
@@ -2023,6 +2027,17 @@ def slopes(request, queryset):
         queryset = queryset.filter(exercise__user=user)
 
     return object_list(request, queryset=queryset, extra_context=locals())
+
+@vary_on_cookie
+@cache_page_against_models(Route)
+@page_template('turan/route_list_page.html')
+def routes(request, queryset, template=None, extra_context=None):
+    context = locals()
+    if extra_context:
+        context.update(extra_context)
+    if request.is_ajax(): #override template
+        return turan_object_list(request, template_name=template, queryset=queryset, extra_context=context)
+    return turan_object_list(request, queryset=queryset, extra_context=context)
 
 @cache_page_against_models(Segment, SegmentDetail, Avatar)
 @vary_on_cookie
