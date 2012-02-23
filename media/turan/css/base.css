@@ -878,18 +878,21 @@ div.tooltip, .tooltip_help_box, #flotTip {
     top: -5px;
     position: fixed;
     background-color: #fff;
-    -webkit-box-shadow: 1px 1px 8px rgb(40, 40, 40);
-    box-shadow: 1px 1px 8px rgb(40, 40, 40);
-    -moz-box-shadow: 1px 1px 8px rgb(40, 40, 40);
-    -o-box-shadow: 1px 1px 8px rgb(40, 40, 40);
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -o-border-radius: 3px;
-    border-radius: 3px;
-    border: 1px solid #4f96ca;
     opacity: 0.9;
     padding: 5px;
     overflow: hidden;
+}
+div.tooltip, .tooltip_help_box, #flotTip, .popover-inner {
+    -webkit-border-radius: 6px;
+       -moz-border-radius: 6px;
+         -o-border-radius: 6px;
+            border-radius: 6px;
+    -webkit-box-shadow: 1px 1px 8px rgb(40, 40, 40);
+       -moz-box-shadow: 1px 1px 8px rgb(40, 40, 40);
+         -o-box-shadow: 1px 1px 8px rgb(40, 40, 40);
+            box-shadow: 1px 1px 8px rgb(40, 40, 40);
+    background-color: #fff;
+    border: 1px solid #4f96ca;
 }
 .tooltip_help_box {
     display: none; 
