@@ -129,6 +129,9 @@ $(document).ready(function() {
     $("#id_exercise_type").msDropDown();
 
     for (var i = 3; i >= 0; i--) {
+        if (exercises_by_count[i] == undefined) {
+            continue;
+        }
         var option = $("#id_exercise_type option[value=" + exercises_by_count[i]["exercise_type__id"] + "]");
         var index = option.index();
         var imgurl = option.attr("title");
