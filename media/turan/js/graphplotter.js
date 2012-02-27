@@ -433,6 +433,7 @@ var GraphPlotter = {
 
 
         $("#exercisegraph").bind("plotselected", function (event, ranges) {
+            $('#tab-graph-link').click();
             $('#reset_zoom.hide').toggleClass('hide');
             that.setRange(ranges);
             that.plot();

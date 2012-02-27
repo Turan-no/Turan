@@ -106,7 +106,7 @@
 {% if object.sensor_file or object.live_state == 'L' %}
     <ul class="nav nav-tabs">
         <li class="active">
-        <a href="#tabs-1" data-toggle="tab">
+        <a href="#tab-graph" id="tab-graph-link" data-toggle="tab">
             {{ "chart_curve"|silk_sprite }}
             {% trans "Graph" %}
         </a>
@@ -162,7 +162,7 @@
     </ul>
 
     <div id="exercise-tab-content" class="tab-content ">
-    <div id="tabs-1" class="active graph tab-pane">
+    <div id="tab-graph" class="active graph tab-pane">
         <div id="graphcontainer">
         {% include "turan/exercise/graph.html" %}
         </div>
