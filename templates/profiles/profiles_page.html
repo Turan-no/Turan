@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load profile_tags %}
 {% load avatar_tags %}
-{% paginate users %}
+{% lazy_paginate users %}
     {% if users %}
 
         {% ifequal order 'date'  %}
