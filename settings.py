@@ -186,6 +186,8 @@ COMBINED_INBOX_COUNT_SOURCES = (
     "notification.context_processors.notification",
 )
 
+    #'sentry',
+    #'sentry.client',
 INSTALLED_APPS = (
     # included
     'django.contrib.auth',
@@ -199,8 +201,6 @@ INSTALLED_APPS = (
     'django.contrib.webdesign',
     'indexer',
     'paging',
-    #'sentry',
-    #'sentry.client',
     'pinax.templatetags',
     
 
