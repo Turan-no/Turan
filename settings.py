@@ -126,7 +126,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
-#    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -136,9 +136,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'django_sorting.middleware.SortingMiddleware',
-    'turan.middleware.TuranSentryMarkup',
-    'sentry.client.middleware.SentryResponseErrorIdMiddleware',
-    'turan.middleware.TuranSentry404CatchMiddleware',
+#    'turan.middleware.TuranSentryMarkup',
+#    'sentry.client.middleware.SentryResponseErrorIdMiddleware',
+#    'turan.middleware.TuranSentry404CatchMiddleware',
     'turan.middleware.Http403Middleware',
     'pinax.middleware.security.HideSensistiveFieldsMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
@@ -199,9 +199,10 @@ INSTALLED_APPS = (
     'django.contrib.webdesign',
     'indexer',
     'paging',
-    'sentry',
-    'sentry.client',
+    #'sentry',
+    #'sentry.client',
     'pinax.templatetags',
+    
 
 #    'devserver',
     # external
@@ -217,6 +218,7 @@ INSTALLED_APPS = (
     'oembed',
     #'djangodblog',
     'pagination',
+    'endless_pagination',
 #    'gravatar',
     'threadedcomments',
     'threadedcomments_extras',
@@ -404,6 +406,11 @@ AUTHENTICATION_BACKENDS = (
 )
 import random
 SOCIAL_AUTH_DEFAULT_USERNAME = lambda: random.choice(['cipo', 'ilpirate', 'elefantino', 'pistelero', 'gruber'])
+
+ENDLESS_PAGINATION_PER_PAGE = 20
+ENDLESS_PAGINATION_PREVIOUS_LABEL = '&larr;'
+ENDLESS_PAGINATION_NEXT_LABEL = '&rarr;'
+ENDLESS_PAGINATION_ADD_NOFOLLOW = True
 
 
 # local_settings.py can be used to override environment-specific settings
