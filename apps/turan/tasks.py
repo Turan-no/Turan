@@ -48,20 +48,19 @@ if 'sentry' in settings.INSTALLED_APPS:
     from sentry.client.models import client
     from sentry.client.handlers import SentryHandler
 
+    @receiver(task_failure)
+    def process_failure_signal(sender, task_id, exception, args, kwargs, traceback,
+                               einfo, **kw):
+      exc_info = (type(exception), exception, traceback)
+      client.create_from_exception(exc_info, logger='task', data={
+          'sender': sender,
+          'task_id': task_id,
+          'args': args,
+          'kwargs': kwargs,
+          'kw': kw
+          })
+
 logger = logging.getLogger('task')
-
-@receiver(task_failure)
-def process_failure_signal(sender, task_id, exception, args, kwargs, traceback,
-                           einfo, **kw):
-  exc_info = (type(exception), exception, traceback)
-  client.create_from_exception(exc_info, logger='task', data={
-      'sender': sender,
-      'task_id': task_id,
-      'args': args,
-      'kwargs': kwargs,
-      'kw': kw
-      })
-
 def find_parser(filename):
     ''' Returns correctly initianted parser-class given a filename '''
     f_lower = filename.lower()
