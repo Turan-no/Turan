@@ -1,0 +1,56 @@
+{% load turan_extras %}
+{% load avatar_tags %}
+{% load humanize %}
+{% load endless %}
+{% load i18n %}
+{% load l10n %}
+{% lazy_paginate object_list %}
+    <table class="fullsize">
+        <tr>
+            <th>{% trans "Trip" %}</th>
+            <th>{% trans "CMP" %}</th>
+            <th>{% anchortrans user Exerciser %}</th>
+            <th>{% anchortrans date Date %}</th>
+            <th>{% anchortrans duration %}</th>
+            <th>{% anchortrans avg_hr "Avg HR" %}</th>
+            <th>{% anchortrans avg_speed "Avg Speed" %}</th>
+            <th>{% trans "Comment" %}</th>
+        </tr>
+        {% for object in object_list %}
+        <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
+            <td>
+                <a {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">
+                    <img src="/site_media/pinax/img/silk/icons/zoom.png" />
+                </a>
+            </td>
+            <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
+            <td>
+                <a href="{{ object.user.get_absolute_url }}" title="{{ object.user }}">
+                {% avatar object.user 32 %}
+                </a>
+            </td>
+            <td><a href="{{ object.get_absolute_url }}">{{object.date|naturalday}}</a></td>
+            <td>{{ object.duration|nbsp }}</td>
+            <td>{{ object.avg_hr }}&nbsp;bpm {% if object.avg_hr and object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}) {% endif %}</td>
+            <td>{{ object.avg_speed|floatformat }}&nbsp;{% trans "km/h" %}</td>
+            <td>{{ object.comment|slice:"70" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% show_more %}
+    </form>
+    <script language="javascript" type="text/javascript">
+    $('#route_form').bind("submit", function (ev) {
+        ev.preventDefault();
+        var selectedIds = [];
+        $(this.selected_routes).each(function (i, elem) {
+            if (elem.checked) {
+                selectedIds.push(elem.value);
+            }
+        });
+        if (selectedIds.length > 1)
+            document.location = "/turan/exercise/compare/" + selectedIds.join("/");
+        else
+            alert("{% trans "Select two or more routes to compare" %}");
+    });
+    </script>

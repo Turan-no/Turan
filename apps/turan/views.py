@@ -185,9 +185,8 @@ class TripsFeed(Feed):
 
 @cache_page_against_models(ExerciseType, Exercise, Avatar, Route)
 @vary_on_cookie
-def events(request, group_slug=None, bridge=None, username=None, latitude=None, longitude=None):
-    object_list = []
-
+@page_template('turan/event_list_page.html')
+def events(request, template='turan/event_list.html', group_slug=None, bridge=None, username=None, latitude=None, longitude=None, extra_context=None):
     if bridge is not None:
         try:
             group = bridge.get_group(group_slug)
@@ -197,34 +196,38 @@ def events(request, group_slug=None, bridge=None, username=None, latitude=None, 
         group = None
 
     if group:
-        exerciseqs = group.content_objects(Exercise)
+        object_list = group.content_objects(Exercise)
     else:
-        exerciseqs = Exercise.objects.select_related().filter(date__isnull=False)
+        object_list = Exercise.objects.select_related().filter(date__isnull=False)
         if username:
             user = get_object_or_404(User, username=username)
-            exerciseqs = exerciseqs.filter(user=user)
+            object_list = exerciseqs.filter(user=user)
 
     if latitude and longitude:
         # A litle aprox box around your area
-        exerciseqs = exerciseqs.filter(route__start_lat__gt=float(latitude) - 0.5)
-        exerciseqs = exerciseqs.filter(route__start_lat__lt=float(latitude) + 0.5)
-        exerciseqs = exerciseqs.filter(route__start_lon__gt=float(longitude) - 1.0)
-        exerciseqs = exerciseqs.filter(route__start_lon__lt=float(longitude) + 1.0)
+        object_list = exerciseqs.filter(route__start_lat__gt=float(latitude) - 0.5)
+        object_list = exerciseqs.filter(route__start_lat__lt=float(latitude) + 0.5)
+        object_list = exerciseqs.filter(route__start_lon__gt=float(longitude) - 1.0)
+        object_list = exerciseqs.filter(route__start_lon__lt=float(longitude) + 1.0)
 
     search_query = request.GET.get('q', '')
     if search_query:
         qset = (
-            Q(route__name__icontains=search_query) |
-            Q(comment__icontains=search_query) |
-            Q(tags__contains=search_query)
-        )
-        exerciseqs = exerciseqs.filter(qset).distinct()
+                Q(route__name__icontains=search_query) |
+                Q(comment__icontains=search_query) |
+                Q(tags__contains=search_query)
+                )
+        object_list = exerciseqs.filter(qset).distinct()
 
-    object_list = exerciseqs
+    context = locals()
+    if extra_context:
+        assert False, extra_context
+        context.update(extra_context)
 
-    return render_to_response('turan/event_list.html', locals(), context_instance=RequestContext(request))
+    return render_to_response(template, context, context_instance=RequestContext(request))
 
-def route_detail(request, object_id):
+@page_template('turan/route_detail_page.html')
+def route_detail(request, object_id, template='turan/route_detail.html', extra_context=None):
     object = get_object_or_404(Route, pk=object_id)
     usertimes = {}
     object_list = object.get_trips()
@@ -252,16 +255,21 @@ def route_detail(request, object_id):
     except UnboundLocalError:
         # no trips found
         pass
-    return render_to_response('turan/route_detail.html', locals(), context_instance=RequestContext(request))
 
-def segment_detail(request, object_id):
+    context = locals()
+    if extra_context:
+        context.update(extra_context)
+    return render_to_response(template, context, context_instance=RequestContext(request))
+
+@page_template('turan/segment_detail_page.html')
+def segment_detail(request, object_id, template='turan/segment_detail.html', extra_context=None):
     ''' View for a single segment '''
     object = get_object_or_404(Segment, pk=object_id)
     # Workaround for http://turan.no/sentry/group/147/messages/3326 and googlebot being persistent.
     if request.GET.get('sort', '') == 'object.exercise.user':
         raise Http404
     usertimes = {}
-    slopes = object.get_slopes().select_related('exercise', 'exercise__route', 'exercise__user__profile', 'segment', 'profile', 'exercise__user')
+    slopes = object.get_slopes().select_related('exercise', 'exercise__route', 'exercise__exercise_type', 'exercise__user__profile', 'segment', 'profile', 'exercise__user')
     if request.GET.get('distinct', ''):
         # I do not know how to trick the ORM to return this directly
         # I think I need a DISTINCT ON patch
@@ -278,27 +286,34 @@ def segment_detail(request, object_id):
         other_user = get_object_or_404(User, username=username)
         slopes = slopes.filter(exercise__user=other_user)
 
+    if not request.is_ajax(): #code not needed for page_template
 
-    series = {}
-    t_offset = 0
-    for i, slope in enumerate(sorted(slopes, key=lambda x:x.duration)[0:20]):
-        other_user = slope.exercise.user
-        if not other_user in series:
-            series[other_user] = []
-        time = slope.duration
-        if not t_offset: # initialize time offsett
-            t_offset = time
-        series[other_user].append((i, time))
-    for key, val in series.items():
-        series[key]= simplejson.dumps(val)
-    if slopes:
-        exercise_type = slope.exercise.exercise_type
+        series = {}
+        t_offset = 0
+        for i, slope in enumerate(sorted(slopes, key=lambda x:x.duration)[0:20]):
+            other_user = slope.exercise.user
+            if not other_user in series:
+                series[other_user] = []
+            time = slope.duration
+            if not t_offset: # initialize time offsett
+                t_offset = time
+            series[other_user].append((i, time))
+        for key, val in series.items():
+            series[key]= simplejson.dumps(val)
+        if slopes:
+            exercise_type = slope.exercise.exercise_type
 
-    gradients = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('xaxis', 'gradient')))
-    alt = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('xaxis', 'altitude')))
-    lonlats = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('lon', 'lat')))
-    alt_max, alt_min = object.segmentaltitudegradient_set.aggregate(max=Max('altitude'),min=Min('altitude')).values()
-    return render_to_response('turan/segment_detail.html', locals(), context_instance=RequestContext(request))
+        gradients = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('xaxis', 'gradient')))
+        alt = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('xaxis', 'altitude')))
+        lonlats = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('lon', 'lat')))
+        alt_max, alt_min = object.segmentaltitudegradient_set.aggregate(max=Max('altitude'),min=Min('altitude')).values()
+
+    context = locals()
+    if extra_context:
+        context.update(extra_context)
+    #if request.is_ajax():
+    #    return HttpResponse(str(slopes))
+    return render_to_response(template, context, context_instance=RequestContext(request))
 
 def week(request, week, user_id='all'):
 

@@ -3,9 +3,7 @@
 {% load i18n %}
 {% load l10n %}
 {% load turan_extras %}
-
 {% load avatar_tags %}
-{% load pagination_tags %}
 {% load sorting_tags %}
 {% block title %}
 {% trans "Route" %} : {{object}} {% if object.distance %} {{ object.distance|floatformat }} km {% endif %}{% if object.ascent %} {{ object.ascent|floatformat }} asc m {% endif %}
@@ -59,7 +57,6 @@
 
 <hr class="clearleft" />
 {% autosort object_list %}
-{% autopaginate object_list %}
 {% if object_list %}
     <h2>{% trans "Average speed" %}</h2>
     <div id="avgspeeddiv" style="height:200px"></div>
@@ -98,60 +95,11 @@
 </div>
     
     {% include "turan/altitude_profile.html" %}
-    <form id="route_form">
     <h2>{% trans "Trips on this route" %}</h2>
     <form id="route_form">
     <input class="btn" type="submit" value="{% trans "Compare"%}">
-    <table class="fullsize">
-        <tr>
-            <th>{% trans "Trip" %}</th>
-            <th>{% trans "CMP" %}</th>
-            <th>{% anchortrans user Exerciser %}</th>
-            <th>{% anchortrans date Date %}</th>
-            <th>{% anchortrans duration %}</th>
-            <th>{% anchortrans avg_hr "Avg HR" %}</th>
-            <th>{% anchortrans avg_speed "Avg Speed" %}</th>
-            <th>{% trans "Comment" %}</th>
-        </tr>
-        {% for object in object_list %}
-        <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
-            <td>
-                <a {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">
-                    <img src="/site_media/pinax/img/silk/icons/zoom.png" />
-                </a>
-            </td>
-            <td><input type="checkbox" name="selected_routes" value="{{ object.id }}"></td>
-            <td>
-                <a href="{{ object.user.get_absolute_url }}" title="{{ object.user }}">
-                {% avatar object.user 32 %}
-                </a>
-            </td>
-            <td><a href="{{ object.get_absolute_url }}">{{object.date|naturalday}}</a></td>
-            <td>{{ object.duration|nbsp }}</td>
-            <td>{{ object.avg_hr }}&nbsp;bpm {% if object.avg_hr and object.user.get_profile.max_hr %} ({{ object.avg_hr|percent:object.user.get_profile.max_hr }}) {% endif %}</td>
-            <td>{{ object.avg_speed|floatformat }}&nbsp;{% trans "km/h" %}</td>
-            <td>{{ object.comment|slice:"70" }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    </form>
-    <script language="javascript" type="text/javascript">
-    $('#route_form').bind("submit", function (ev) {
-        ev.preventDefault();
-        var selectedIds = [];
-        $(this.selected_routes).each(function (i, elem) {
-            if (elem.checked) {
-                selectedIds.push(elem.value);
-            }
-        });
-        if (selectedIds.length > 1)
-            document.location = "/turan/exercise/compare/" + selectedIds.join("/");
-        else
-            alert("{% trans "Select two or more routes to compare" %}");
-    });
-    </script>
-{% paginate %}
 {% endif %}
+{% include page_template %}
 <hr>
 {% include "turan/commentform.html" %}
 {% endblock content %}
