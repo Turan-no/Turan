@@ -69,7 +69,34 @@
         </button>
 </div>
 
+<table class="fullsize">
+    <thead>
+        <tr>
+        <th>
+            {% trans "Plot" %}
+        </th>
+        <th>
+            {% anchortrans name %}
+        </th>
+        <th class="number">
+            {% anchortrans distance %}
+        </th>
+        <th class="number">
+            {% anchortrans ascent %}
+        </th>
+        <th class="number">
+            {% anchortrans descent %}
+        </th>
+        <th>
+            {% anchortrans created %}
+        </th>
+        <th class="number">
+            {% anchortrans tcount "Trip count" %}
+        </th>
+    </tr>
+    </thead>
 {% include page_template %}
+</table>
 
 
 

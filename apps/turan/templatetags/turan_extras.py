@@ -7,6 +7,9 @@ from django.utils.safestring import mark_safe
 from django.template.defaultfilters import floatformat, stringfilter
 from django_sorting.templatetags.sorting_tags import SortAnchorNode
 from friends.models import Friendship
+from endless_pagination import utils
+from endless_pagination import settings as endless_settings
+from endless_pagination.paginator import DefaultPaginator, LazyPaginator, EmptyPage
 from time import mktime
 import simplejson as json
 import re
@@ -322,3 +325,29 @@ def exercise_view_permission(exercise, user):
             else:
                 return False
     return True
+
+@register.inclusion_tag("endless/show_more_table.html", takes_context=True)
+def show_more_table(context, label=None, loading=endless_settings.LOADING):
+    # this can raise a PaginationError 
+    # (you have to call paginate before including the show more template)
+    page = utils.get_page_from_context(context)
+    # show the template only if there is a next page
+    if page.has_next():
+        request = context["request"]
+        page_number = page.next_page_number()
+        # querystring
+        querystring_key = context["endless_querystring_key"]
+        querystring = utils.get_querystring_for_page(request, page_number,
+            querystring_key, default_number=context["endless_default_number"])
+        return {
+            'path': context["endless_override_path"] or request.path,
+            'querystring_key': querystring_key,
+            'querystring': querystring,
+            'loading': loading,
+            'label': label,
+            'request': request,
+        }
+    # no next page, nothing to see
+    return {}
+
+
