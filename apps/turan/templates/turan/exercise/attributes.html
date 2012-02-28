@@ -90,18 +90,21 @@
                     </a>
                 </li>
             {% endif %}
+                {% if object.comment or object|likes_count%}
                 <li class="comment">
                     <a href="#commenttab" data-toggle="tab">
                         {% if object.comment %}
                         {{ "comment"|silk_sprite }}
                         {% trans "Comment" %}
                         {% endif %}
+
                         <br>
                         {% if object|likes_count %}
                         <i class="icon-ok"></i> <span id="likes_widget" class="likes_count">{{ object|likes_count }}</span> {% trans "kudos" %}
                         {% endif %}
                     </a>
                 </li>
+                {% endif %}
         </ul>
         <div id="exercise-attributes" class="tab-content">
             {% if object.avg_hr %}
