@@ -325,7 +325,7 @@ $(function(){
             Mapper.createFeature(sml, {{object.max_cadence_lon}}, {{object.max_cadence_lat}}, 0);
         {% endif %}
         {% if object.max_altitude_lat %}
-            sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max altitude" %}', "{{ "arrow_up"|silk_icon }}", 16);
+            sml  = Mapper.initFeature('{{object.user}}' + ' {% trans "Max altitude" %}', "{{ "bullet_arrow_up"|silk_icon }}", 16);
             Mapper.createFeature(sml, {{object.max_altitude_lon}}, {{object.max_altitude_lat}}, 0);
         {% endif %}
 
