@@ -352,6 +352,8 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=50, end_off
                         break
                 if -500 < found_distance-se.distance*1000 < 500 and not duplicate:
                     segments.append((se, found_start, found_end, started_at_distance, found_distance))
+                else:
+                    print "Distance mismatch, found_distance: %s, segment_distance: %s" %(found_distance, se.distance*1000)
                 found_start, found_end, previous_start, started_at_distance, previous_end = -1, 0, -1, 0, 0
 
     return segments
