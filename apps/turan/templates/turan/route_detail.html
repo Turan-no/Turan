@@ -99,7 +99,20 @@
     <form id="route_form">
     <input class="btn" type="submit" value="{% trans "Compare"%}">
 {% endif %}
+    <table class="fullsize">
+        <tr>
+            <th>{% trans "Trip" %}</th>
+            <th>{% trans "CMP" %}</th>
+            <th>{% anchortrans user Exerciser %}</th>
+            <th>{% anchortrans date Date %}</th>
+            <th>{% anchortrans duration %}</th>
+            <th>{% anchortrans avg_hr "Avg HR" %}</th>
+            <th>{% anchortrans avg_speed "Avg Speed" %}</th>
+            <th>{% trans "Comment" %}</th>
+        </tr>
 {% include page_template %}
+    </table>
+    </form>
 <hr>
 {% include "turan/commentform.html" %}
 {% endblock content %}

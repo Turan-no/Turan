@@ -1,6 +1,7 @@
 {% extends "turan/base.html" %}
 {% load i18n %}
 {% load sorting_tags %}
+{% load turan_extras %}
 {% block title %}
 {% trans "Exercises" %}
 {% endblock %}
@@ -14,6 +15,40 @@
     </h1>
 </div>
 {% autosort object_list %}
+<table class="fullsize">
+    <tr>
+        <th style="width: 32px">
+        </th>
+        <th>
+            {% anchortrans route__name "Name" %}
+        </th>
+        <th>
+            {% anchortrans route__distance "Distance" %}
+        </th>
+        <th>
+            {% anchortrans route__ascent "Ascent" %}
+        </th>
+        <th>
+            {% anchortrans duration %}
+        </th>
+        <th>
+            {% anchortrans avg_speed "Avg Speed" %}
+        </th>
+        <th>
+            {% anchortrans avg_hr "Avg HR" %}
+        </th>
+        <th>
+            {% anchortrans kcal "kcal" %}
+        </th>
+        <th>
+            {% anchortrans xPower "xPower" %}
+        </th>
+        {% if not page_user %}
+        <th style="width: 32px">
+        </th>
+        {% endif %}
+    </tr>
 {% include page_template %}
+</table>
 {% endblock content %}
 

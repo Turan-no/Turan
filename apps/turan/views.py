@@ -221,7 +221,6 @@ def events(request, template='turan/event_list.html', group_slug=None, bridge=No
 
     context = locals()
     if extra_context:
-        assert False, extra_context
         context.update(extra_context)
 
     return render_to_response(template, context, context_instance=RequestContext(request))

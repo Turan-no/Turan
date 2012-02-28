@@ -31,8 +31,35 @@
             {% endif %}
 {% endif %}
 </div>
+<table class="fullsize">
+    <tr>
+        <th>{% trans "Plot" %}</th>
+        <th>
+            {% anchortrans name %}
+        </th>
+        <th>
+            {% trans "Best times" %}
+        <th>
+            {% anchortrans distance "Distance" %}
+        </th>
+        <th>
+            {% anchortrans ascent "Ascent" %}
+        </th>
+        <th>
+            {% anchortrans grade "Incline" %}
+        </th>
+        <th>
+            {% anchortrans category "Category" %}
+            {{ "SlopeCategory"|wiki_help }}
+        </th>
+        <th>
+            # {% anchortrans tcount "Entries" %}
+        </th>
+    </tr>
+{% autosort object_list %}
 
     {% include page_template %}
+</table>
 
 <script type="text/javascript">
     $(function() {

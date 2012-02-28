@@ -3,32 +3,6 @@
 {% load turan_extras %}
 {% load turanwaka_tags %}
 {% load sorting_tags %}
-<table class="fullsize">
-    <tr>
-        <th>{% trans "Plot" %}</th>
-        <th>
-            {% anchortrans name %}
-        </th>
-        <th>
-            {% trans "Best times" %}
-        <th>
-            {% anchortrans distance "Distance" %}
-        </th>
-        <th>
-            {% anchortrans ascent "Ascent" %}
-        </th>
-        <th>
-            {% anchortrans grade "Incline" %}
-        </th>
-        <th>
-            {% anchortrans category "Category" %}
-            {{ "SlopeCategory"|wiki_help }}
-        </th>
-        <th>
-            # {% anchortrans tcount "Entries" %}
-        </th>
-    </tr>
-{% autosort object_list %}
 {% paginate object_list %}
 {% for object in object_list %}
 <tr class="{% cycle even,odd %}" id="object_{{object.id}}">
@@ -76,5 +50,4 @@
     <td>{{object.tcount}}</td>
 </tr>
 {%endfor %}
-</table>
-{% show_more %}
+{% show_more_table %}

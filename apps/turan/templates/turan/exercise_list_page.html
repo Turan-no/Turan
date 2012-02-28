@@ -5,39 +5,6 @@
 {% load avatar_tags %}
 
 {% lazy_paginate object_list %}
-<table class="fullsize">
-    <tr>
-        <th style="width: 32px">
-        </th>
-        <th>
-            {% anchortrans route__name "Name" %}
-        </th>
-        <th>
-            {% anchortrans route__distance "Distance" %}
-        </th>
-        <th>
-            {% anchortrans route__ascent "Ascent" %}
-        </th>
-        <th>
-            {% anchortrans duration %}
-        </th>
-        <th>
-            {% anchortrans avg_speed "Avg Speed" %}
-        </th>
-        <th>
-            {% anchortrans avg_hr "Avg HR" %}
-        </th>
-        <th>
-            {% anchortrans kcal "kcal" %}
-        </th>
-        <th>
-            {% anchortrans xPower "xPower" %}
-        </th>
-        {% if not page_user %}
-        <th style="width: 32px">
-        </th>
-        {% endif %}
-    </tr>
 {% for object in object_list %}
 <tr class="{% cycle even,odd %} hoverpoint" id="trip_{{object.id}}">
     <td>
@@ -105,5 +72,4 @@
     {% endif %}
 </tr>
 {%endfor %}
-</table>
-{% show_more %}
+{% show_more_table %}

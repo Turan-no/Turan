@@ -7,22 +7,6 @@
 {% load sorting_tags %}
 {% load endless %}
 {% lazy_paginate slopes %}
-        <table class="fullsize">
-            <tr>
-                <th>{% trans "CMP" %}</th>
-                <th>{% trans "Trip" %}</th>
-                <th>{% anchortrans exercise__user Exerciser %}</th>
-                <th>{% anchortrans exercise__date "Date" %}</th>
-                <th>{% anchortrans duration %}</th>
-                <th>{% anchortrans avg_hr "Avg HR" %}</th>
-                <th>{% anchortrans avg_speed "Avg Speed" %}</th>
-                <th> {% anchortrans ascent "Ascent" %} </th>
-            <th>{% anchortrans act_power "Power" %}</th>
-            <th>{% anchortrans est_power "Power (est)" %}</th>
-            <th>{% anchortrans power_per_kg "Avg power/kg" %}</th>
-            <th>{% anchortrans vam "VAM" %}{{ "VeloAscMet"|wiki_help }}</th>
-            <th>{% trans "Comment" %}</th>
-            </tr>
             {% for object in slopes %}
             <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
                 <td>
@@ -71,5 +55,4 @@
         </td>
             </tr>
             {% endfor %}
-</table>
-    {% show_more %}
+    {% show_more_table %}

@@ -73,7 +73,24 @@
         {% include "turan/altitude_profile.html" %}
         <div id="durationdiv" style="width:100%;height:100px"></div>
         <form id="route_form">
+        <table class="fullsize">
+            <tr>
+                <th>{% trans "CMP" %}</th>
+                <th>{% trans "Trip" %}</th>
+                <th>{% anchortrans exercise__user Exerciser %}</th>
+                <th>{% anchortrans exercise__date "Date" %}</th>
+                <th>{% anchortrans duration %}</th>
+                <th>{% anchortrans avg_hr "Avg HR" %}</th>
+                <th>{% anchortrans avg_speed "Avg Speed" %}</th>
+                <th> {% anchortrans ascent "Ascent" %} </th>
+            <th>{% anchortrans act_power "Power" %}</th>
+            <th>{% anchortrans est_power "Power (est)" %}</th>
+            <th>{% anchortrans power_per_kg "Avg power/kg" %}</th>
+            <th>{% anchortrans vam "VAM" %}{{ "VeloAscMet"|wiki_help }}</th>
+            <th>{% trans "Comment" %}</th>
+            </tr>
             {% include page_template %}
+            </table>
     <div class="form-actions">
         <input class="btn"  type="submit" value="{% trans "Compare"%}">
         </form>
