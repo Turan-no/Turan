@@ -12,7 +12,7 @@
     </td>
     <td>
         <h4>
-            <a {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">{{ object }}</a>
+            <a {% exercise_mouseover object %} href="{{ object.get_absolute_url }}">{{ object }}</a>
         </h4>
         <p class="comment">
             <small>{{ object.comment|truncatewords:20 }}</small>

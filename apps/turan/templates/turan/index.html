@@ -17,7 +17,11 @@
         {% spaceless %}
         <div class="" id="exercisers">
             {% for exerciser in user_list %}
-            <a {{ exerciser|profile_hover }} class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
+            {% if forloop.counter > 8 %}
+                <a {% profile_hover exerciser "left" %} class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
+            {% else %}
+                <a {% profile_hover exerciser "right" %} class="profilehoverpoint" id="user_{{exerciser.id}}" href="{% url profile_detail exerciser %}">{% avatar exerciser 60 %}</a>
+            {% endif %}
             {% endfor %}
         </div>
         {% endspaceless  %}
@@ -36,7 +40,7 @@
             {% if object.route.gpx_file %}
             <img class="floatright" src="{{ object.route.get_png_url }}" width="32" height="32"/>
             {% endif %}
-            <a {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">
+            <a {% exercise_mouseover object %} href="{{ object.get_absolute_url }}">
                 {{ object.get_name }}
             </a>
             {% if object.segmentdetail_set.exists %}

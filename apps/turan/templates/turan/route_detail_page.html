@@ -8,7 +8,7 @@
         {% for object in object_list %}
         <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
             <td>
-                <a {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">
+                <a {% exercise_mouseover object %} href="{{ object.get_absolute_url }}">
                     <img src="/site_media/pinax/img/silk/icons/zoom.png" />
                 </a>
             </td>

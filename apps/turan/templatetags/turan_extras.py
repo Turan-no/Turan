@@ -271,13 +271,13 @@ def distanceformat(value):
             return str(int(round(value, 0))) + " m"
     return value
 
-@register.filter
-def exercise_mouseover(obj):
-    return render_to_string('turan/exercise/mouseover.html', {'object': obj})
+@register.inclusion_tag("turan/exercise/mouseover.html", takes_context=False)
+def exercise_mouseover(obj, placement='right'):
+    return {'object': obj, 'placement': placement}
 
-@register.filter
-def profile_hover(obj):
-    return render_to_string('profile_hover.html', {'object': obj})
+@register.inclusion_tag("profile_hover.html", takes_context=False)
+def profile_hover(obj, placement="right"):
+    return {'object': obj, 'placement': placement}
 
 @register.filter
 def silk_icon(name):

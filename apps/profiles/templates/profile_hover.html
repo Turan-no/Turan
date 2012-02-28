@@ -3,7 +3,7 @@
 {% load turan_extras %}
 {% with object.get_profile as profile %}
 rel='popover' 
-data-placement='right' 
+data-placement='{{placement}}'
 data-title='{% if profile.name%}{{ profile.name}}{%else%}{{ object }}{%endif%}' data-content='
 {% comment %}
 {% avatar object 80 %}

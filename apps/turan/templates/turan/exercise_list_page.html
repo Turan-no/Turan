@@ -14,7 +14,7 @@
         </a>
     </td>
     <td>
-        <a {{ object|exercise_mouseover }} href="{{ object.get_absolute_url }}">
+        <a {% exercise_mouseover object %} href="{{ object.get_absolute_url }}">
             {% if object.route %}
             {{ object.route.name }}
             {% else %}

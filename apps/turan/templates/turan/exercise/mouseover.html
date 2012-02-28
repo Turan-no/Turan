@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load avatar_tags %}
 {% load turan_extras %}
-rel='popover' data-placement='right' data-title='{{ object }}' data-content='
+rel='popover' data-placement='{{placement}}' data-title='{{ object }}' data-content='
     {% avatar object.user %}
     <div class="pull-right">
         <img alt="Exerciselogo" src="{{object.icon}}" />
