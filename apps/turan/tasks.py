@@ -281,7 +281,7 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=50, end_off
     if not search_in_segments:
         search_in_segments = Segment.objects.all()
     # Only works for exercises with distance
-    details = exercise.get_details().filter(lon__gt=0).filter(lat__gt=0).filter(distance__gt=0).values('distance', 'lon', 'lat')
+    details = exercise.get_details().exclude(lon=0).exclude(lat=0).filter(distance__gt=0).values('distance', 'lon', 'lat')
     i_len = len(details)
     segments = [] #'[(segment, start, stop)...'
     #old_segmentdetails = exercise.segmentdetail_set.all()
