@@ -284,6 +284,7 @@ INSTALLED_APPS = (
 
 
     'groupcache',
+    'phileo', 
 
 # Alternative to fastcgi
 #    'gunicorn',
@@ -411,6 +412,10 @@ ENDLESS_PAGINATION_PER_PAGE = 20
 ENDLESS_PAGINATION_PREVIOUS_LABEL = '&larr;'
 ENDLESS_PAGINATION_NEXT_LABEL = '&rarr;'
 ENDLESS_PAGINATION_ADD_NOFOLLOW = True
+
+PHILEO_LIKABLE_MODELS = [
+        "turan.Exercise",
+        ]
 
 
 # local_settings.py can be used to override environment-specific settings

@@ -100,3 +100,4 @@ django-groups
 django-groupcache
 #openpyxl
 djano-endless-pagination
+phileo==dev

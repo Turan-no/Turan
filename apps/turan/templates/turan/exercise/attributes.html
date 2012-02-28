@@ -3,6 +3,7 @@
 {% load turanwaka_tags %}
 {% load avatar_tags %}
 {% load tagging_tags %}
+{% load phileo_tags %}
 <div class="" style="" itemscope itemtype="http://schema.org/SportsEvent">
     <div class="tabbable tabs-left">
         <ul class="nav nav-tabs">
@@ -246,6 +247,10 @@
                     <p itemprop="description">
                         {{ object.comment|linebreaksbr }}
                     </p>
+                    {% if user %}
+                        {% phileo_widget_js request.user object %}
+                        {% phileo_widget request.user object %}
+                    {% endif %}
             </div>
             {% endif %}
         </div>

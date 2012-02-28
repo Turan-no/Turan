@@ -116,6 +116,12 @@ urlpatterns += patterns('',
     url('^bookmarks/friends_bookmarks/$', 'friends_app.views.friends_objects', kwargs=friends_bookmarks_kwargs, name="friends_bookmarks"),
 )
 
+
+urlpatterns += patterns('',
+    url(r"^likes/", include("phileo.urls")),
+)
+
+
 if settings.DEBUG:
     urlpatterns += patterns('', 
             url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),

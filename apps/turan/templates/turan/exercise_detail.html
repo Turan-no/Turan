@@ -5,7 +5,12 @@
 {% load l10n %}
 {% load tagging_tags %}
 {% load avatar_tags %}
-
+{% load phileo_tags %}
+{% block extra_head %}
+{{ block.super }}
+    {% phileo_css %}
+    {% phileo_js %}
+{% endblock %}
 {% block title %}
 {{block.super}}
  {{ object }}, {{ object.date }}
