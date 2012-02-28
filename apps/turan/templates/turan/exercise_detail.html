@@ -64,7 +64,7 @@
                         {% endif %}
                     {% endif %}
                 </div>
-                <h2>
+                <h1>
                     <img height="32" width="32" class="floatleft" style="padding: 0 2px" alt="Exerciselogo" src="{{object.icon}}" />
                     <span itemprop="name">{{ object.get_name }}</span>
                     {% ifequal object.exercise_permission "N" %}
@@ -76,13 +76,8 @@
                     {% endifequal %}
                     {% endifequal %}
                     {% endifequal %}
-                    {% ifequal user object.user %}
-                    <a href="{% url exercise_update object.id %}">
-                        {{ "wrench"|silk_sprite }}
-                    </a>
-                    {% endifequal %}
                     <small>
-                        {% trans "by" %}
+                         {% trans "by" %}
                         <a href="{{ object.user.get_profile.get_absolute_url }}">
                             {{ object.user }}
                         </a> 
@@ -90,9 +85,8 @@
                         {{ object.date|naturalday }}
                         
 
-
                 </small>
-            </h2>
+            </h1>
         </div>
 
         <div style="clear: right" class="row">
@@ -117,7 +111,7 @@
         </a>
         </li>
         <li id="tabs-select-2">
-        <a href="#tabs-2" data-toggle="tab">
+        <a href="#tabs-comments" data-toggle="tab">
             {{ "comments"|silk_sprite }}
             {% trans "Comments" %}
         </a>
@@ -173,12 +167,13 @@
         </div>
     </div>
 
-    <div id="tabs-2" class="tab-pane">
+    <div id="tabs-comments" class="tab-pane">
         {% if object.comment %}
         <ul>
             <li class="comment">
                 {{ object.user }} {% trans "writes" %}:
                 <p>{{ object.comment|linebreaks }}</p>
+                <hr>
             </li>
         </ul>
         {% endif %}

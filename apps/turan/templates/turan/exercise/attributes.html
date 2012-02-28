@@ -86,19 +86,22 @@
             {% if tag_list %}
                 <li class="">
                     <a href="#13" data-toggle="tab">
-                        {{ "tag_blue"|silk_sprite }}
-                        <span class="labelast">{{ tag_list|length }}</span>
+                        {{ "tag_blue"|silk_sprite }} <span class="labelast">{{ tag_list|length }}</span>
                     </a>
                 </li>
             {% endif %}
-            {% if object.comment %}
                 <li class="comment">
                     <a href="#commenttab" data-toggle="tab">
+                        {% if object.comment %}
                         {{ "comment"|silk_sprite }}
                         {% trans "Comment" %}
+                        {% endif %}
+                        <br>
+                        {% if object|likes_count %}
+                        <i class="icon-ok"></i> <span id="likes_widget" class="likes_count">{{ object|likes_count }}</span> {% trans "kudos" %}
+                        {% endif %}
                     </a>
                 </li>
-            {% endif %}
         </ul>
         <div id="exercise-attributes" class="tab-content">
             {% if object.avg_hr %}
@@ -247,10 +250,9 @@
                     <p itemprop="description">
                         {{ object.comment|linebreaksbr }}
                     </p>
-                    {% if user %}
-                        {% phileo_widget_js request.user object %}
-                        {% phileo_widget request.user object %}
-                    {% endif %}
+                    <hr>
+                        {% phileo_widget_js request.user object "likes_widget" %}
+                        {% phileo_widget request.user object "Kudos|No kudos" "likes_widget" %}
             </div>
             {% endif %}
         </div>
