@@ -29,6 +29,10 @@
                     <meta itemprop="name" content="{{ object.user.username }}" />
                 </div>
                 <div class="btn-group pull-right">
+                    <div class="floatleft">
+                        {% phileo_widget_js request.user object "likes_widget" %}
+                        {% phileo_widget request.user object "Kudos|No kudos" "likes_widget" %}
+                    </div>
                     <a class="btn" href="{% url exercise_player %}?id={{object.id }}">
                         {{ "control_play"|silk_sprite }}
                         {% trans "Play" %}

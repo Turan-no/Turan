@@ -250,9 +250,6 @@
                     <p itemprop="description">
                         {{ object.comment|linebreaksbr }}
                     </p>
-                    <hr>
-                        {% phileo_widget_js request.user object "likes_widget" %}
-                        {% phileo_widget request.user object "Kudos|No kudos" "likes_widget" %}
             </div>
             {% endif %}
         </div>
