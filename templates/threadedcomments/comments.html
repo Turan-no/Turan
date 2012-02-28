@@ -43,10 +43,10 @@
 
 {% if user.is_authenticated %}
 {% trans "Leave a comment" %}:
-    <form class="uniForm" method="post" action="{% get_comment_url object %}">
+    <form class="form-horizontal uniForm" method="post" action="{% get_comment_url object %}">
         <fieldset class="inlineLabels">
             <div class="ctrlHolder">
-                <textarea class="drop-shadow lifted" id="id_comment" rows="2" cols="60" name="comment"></textarea>
+                <textarea class="" id="id_comment" rows="1" cols="40" name="comment"></textarea>
             </div>
             <div class="form_block">
                 <input type="hidden" name="next" value="{{ request.path }}" />
@@ -55,5 +55,5 @@
         </fieldset>
     </form>
 {% else %}
-<h3><a href="{% url acct_login %}">{% trans "Login" %}</a> ({% trans "or" %} <a href="{% url acct_signup %}">{% trans "Sign Up" %}</a>) {% trans "to leave a comment" %}</h3>
+<h5><a href="{% url acct_login %}">{% trans "Login" %}</a> ({% trans "or" %} <a href="{% url acct_signup %}">{% trans "Sign Up" %}</a>) {% trans "to leave a comment" %}</h5>
 {% endif %}
