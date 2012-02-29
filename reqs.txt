@@ -101,3 +101,4 @@ django-groupcache
 #openpyxl
 djano-endless-pagination
 phileo==dev
+django-pjax

@@ -49,6 +49,7 @@
     <script type="text/javascript" src="{{STATIC_URL}}flot/jquery.flot.threshold.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}flot/jquery.flot.resize.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}flot/jquery.flot.tooltip.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}turan/turan/js/jquery.pjax.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}turan/jquery.hoverIntent.minified.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}turan/uni_form/uni-form.jquery.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}endless_pagination/js/endless.js"></script>
@@ -130,7 +131,7 @@
 {% block right_tabs %}
 {% if user.is_authenticated %}
 {% endif %}
-            <li id="tab_exercises"><a href="{% url events %}">{% trans "Exercises" %}</a></li>
+            <li id="tab_exercises"><a data-pjax='#content' href="{% url events %}">{% trans "Exercises" %}</a></li>
             <li id="tab_routes"><a href="{% url routes %}">{% trans "Routes" %}</a></li>
             <li id="tab_segments"><a href="{% url segments %}">{% trans "Segments" %}</a></li>
             <li id="tab_statistics"><a href="{% url statistics %}/2012">{% trans "Statistics" %}</a></li>
@@ -154,6 +155,8 @@
 $(function() {
     // Activate popovers
     $('[rel]="popover"').popover();
+    // Activate pjax
+    $('a[data-pjax]').pjax()
 
     // Stop form from disappearing on clicks in drop dow menu
     $('#loginform').click(function(e) {

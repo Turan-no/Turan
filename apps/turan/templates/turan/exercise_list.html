@@ -16,7 +16,8 @@
 </div>
 {% autosort object_list %}
 <table class="fullsize">
-    <tr>
+    <thead class="">
+    <tr class="">
         <th style="width: 32px">
         </th>
         <th>
@@ -48,7 +49,10 @@
         </th>
         {% endif %}
     </tr>
+    </thead>
+    <tbody>
 {% include page_template %}
+</tbody>
 </table>
 {% endblock content %}
 

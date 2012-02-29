@@ -330,11 +330,6 @@ LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "profile_redirect"
 LOGIN_REDIRECT_URL = '/profiles/redirect/'
 
-INTERNAL_IPS = (
-    '10.2.4.100',
-    '83.242.17.117',
-)
-
 LANGUAGES = (
     ('nn', 'Nynorsk'),
     ('no', u'Bokmål'),

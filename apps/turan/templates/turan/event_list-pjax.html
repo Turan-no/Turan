@@ -1,0 +1,56 @@
+{% load turan_extras %}
+{% load i18n %}
+<div class="page-header">
+{% include "turan/search_head.html" %}
+
+{% if search_query %}
+<h4>{% trans "Search results for " %}{{search_query}} <a class="remove" title="{% trans "Clear search query" %}" href="{% url events %}">[X]</a></h4>
+{% endif %}
+{% if request.user.username %}
+<div class="searchfilters">
+        {% include "turan/geolocation.html" %}
+            {% if not username %}
+            <a class="btn" href="{% url events username=request.user.username %}">{% trans "My events" %}</a>
+            {% else %}
+            <a class="btn" href="{% url events %}">{% trans "All events" %}</a>
+            {% endif %}
+</div>
+{% endif %}
+
+<h1>
+    {% trans "Events" %}
+</h1>
+<a class="btn" href="{% url exercise_create %}">
+    <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/map_add.png" alt="{% trans "Add an exercise" %}" />
+    {% trans "Add an exercise" %}
+</a>
+</div>
+
+<table class="fullsize">
+    <tr class="{% cycle odd,even %}">
+        <th>
+            {% trans "Type" %}
+        </th>
+        <th>
+            {% trans "Name" %}
+        </th>
+        <th>
+            {% trans "Distance" %}
+        </th>
+        <th>
+            {% trans "Duration" %}
+        </th>
+        <th>
+            {% trans "Route plot" %}
+        </th>
+        <th>
+            {% trans "User" %}
+        </th>
+    </tr>
+{% include page_template %}
+</table>
+
+<script>
+$('#right-tabs>li').removeClass('active');
+$('#tab_exercises').addClass('active');
+</script>

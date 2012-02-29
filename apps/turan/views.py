@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanen
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.template import RequestContext, Context, loader
+from django.template.response import TemplateResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.text import compress_string
 
@@ -88,6 +89,9 @@ else:
     notification = None
 
 from friends.models import friend_set_for
+from djpjax import pjax
+
+
 
 def datetime2jstimestamp(obj):
     ''' Helper to generate js timestamp for usage in flot '''
@@ -185,6 +189,7 @@ class TripsFeed(Feed):
 
 @cache_page_against_models(ExerciseType, Exercise, Avatar, Route)
 @vary_on_cookie
+@pjax('turan/event_list-pjax.html')
 @page_template('turan/event_list_page.html')
 def events(request, template='turan/event_list.html', group_slug=None, bridge=None, username=None, latitude=None, longitude=None, extra_context=None):
     if bridge is not None:
@@ -223,7 +228,7 @@ def events(request, template='turan/event_list.html', group_slug=None, bridge=No
     if extra_context:
         context.update(extra_context)
 
-    return render_to_response(template, context, context_instance=RequestContext(request))
+    return TemplateResponse(request, template, context)
 
 @page_template('turan/route_detail_page.html')
 def route_detail(request, object_id, template='turan/route_detail.html', extra_context=None):
