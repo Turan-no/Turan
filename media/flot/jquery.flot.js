@@ -120,7 +120,7 @@
                     aboveData: false,
                     color: "#545454", // primary color used for outline and labels
                     backgroundColor: null, // null for transparent, else color
-                    borderColor: "#ccc", // set if different from the grid color
+                    borderColor: "#ddd", // set if different from the grid color
                     tickColor: null, // color for the ticks, e.g. "rgba(0,0,0,0.15)"
                     labelMargin: 5, // in pixels
                     axisMargin: 8, // in pixels
