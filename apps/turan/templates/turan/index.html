@@ -43,6 +43,10 @@
             <a {% exercise_mouseover object %} href="{{ object.get_absolute_url }}">
                 {{ object.get_name }}
             </a>
+            {% for like in object|likes_list %}
+            <i class="icon-star"></i>
+            {% endfor %}
+
             {% if object.segmentdetail_set.exists %}
             <p class="smaller floatright">
 

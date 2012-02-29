@@ -13,6 +13,8 @@ from endless_pagination.paginator import DefaultPaginator, LazyPaginator, EmptyP
 from time import mktime
 import simplejson as json
 import re
+from django.contrib.contenttypes.models import ContentType
+from phileo.models import Like
 
 register = template.Library()
 
@@ -351,3 +353,12 @@ def show_more_table(context, label=None, loading=endless_settings.LOADING):
     return {}
 
 
+@register.filter
+def likes_list(obj):
+    """
+       Changed from phileo's likes_count tag
+    """
+    return Like.objects.filter(
+        receiver_content_type=ContentType.objects.get_for_model(obj),
+        receiver_object_id=obj.pk
+    )
