@@ -21,7 +21,6 @@ table.fullsize {
 table.fullsize tr th {
     background: #533; 
     color: white;
-    border: 1px solid #AAA;
     -webkit-box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.1);
     -o-box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.1);
