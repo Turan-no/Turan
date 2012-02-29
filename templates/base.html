@@ -59,7 +59,7 @@
                 {% if user.is_authenticated %}
                 <li>
                 <a class="red" title="{% trans "Add an exercise" %}" href="{% url exercise_create %}">
-                    <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/add.png" alt="{% trans "Add and exercise" %}" />
+                    {{ "add"|silk_sprite }}
                     </a>
                 </li>
                 <li class="nav-avatar">
@@ -84,7 +84,8 @@
 
             {% if user.is_authenticated %}
             <ul class="nav pull-right">
-                <li id="tab_inbox"><a href="{% url messages_inbox %}"><img src="{{ "email"|silk_icon }}">{% if combined_inbox_count %}<span class="label">{{ combined_inbox_count }}</span>{% endif %}</a></li>
+                <li id="tab_inbox"><a href="{% url messages_inbox %}">{{ "email"|silk_sprite }}{% if combined_inbox_count %}<span class="label">{{ combined_inbox_count }}</span>{% endif %}</a></li>
+                <li id="tab_calendar"><a href="{% url calendar-index %}?username={{user.username}}" title="{% trans "My calendar" %}">{{ "calendar"|silk_sprite }}</a></li>
             </ul>
             {% endif %}
 
