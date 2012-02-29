@@ -99,6 +99,6 @@ django-piston
 django-groups
 django-groupcache
 #openpyxl
-djano-endless-pagination
+django-endless-pagination
 phileo==dev
 django-pjax
