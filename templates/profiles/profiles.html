@@ -19,7 +19,7 @@
     <h4>
         {% trans "Order by" %}
     </h4>
-    <div class="btn-group">
+    <div class="sortbar btn-group">
         <a class="btn {% if order == 'name'%}disabled{%endif%}" href="{% url profile_list %}?order=name">{% trans "Name" %}</a>
         <a class="btn {% if order == 'date'%}disabled{%endif%}" href="{% url profile_list %}?order=date">{% trans "Date" %}</a>
         <a class="btn {% if order == 'time'%}disabled{%endif%}" href="{% url profile_list %}?order=time">{% trans "Total exercise duration" %}</a>

@@ -128,6 +128,39 @@ $(function() { // Stuff for for search input field
 	});
 	$('#listSearch').data("text", $('#listSearch').val());
 	$('#listSearch').attr("id", "listSearch-" + Math.random());
+
+});
+$(function() { // Scroller thingymagic
+    // fix sub nav on scroll
+    var $win = $(window)
+      , $nav = $('.sortbar')
+      , navTop = $('.sortbar').length && $('.sortbar').offset().top - 40
+      , isFixed = 0
+
+    processScroll()
+
+    $win.on('scroll', processScroll)
+
+    function processScroll() {
+      var i, scrollTop = $win.scrollTop()
+      if (scrollTop >= navTop && !isFixed) {
+        isFixed = 1
+        $nav.addClass('sortbar-fixed')
+
+        /*
+        var $headLength = $(".fullsize thead th").length;
+        $(".fullsize tbody tr:last td").each(function(index) {
+            $thisWidth = $(".fullsize thead th:eq(" + index + ")").width();
+            console.log($thisWidth);
+            $(this).width( $thisWidth);
+        });*/
+      } else if (scrollTop <= navTop && isFixed) {
+        isFixed = 0
+        $nav.removeClass('sortbar-fixed')
+      }
+    }
+
+
 });
 // Declare namespace
 var Turan = {};
