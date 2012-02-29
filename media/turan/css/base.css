@@ -406,6 +406,9 @@ ul.iconlist>li>ul.extra>li {
 
 
 /* Calendar */
+div.calendar-header a.profilehoverpoint img {
+    margin-right: 16px;
+}
 table.month th.sat,
 table.month th.sun {
     background: #999;
@@ -1081,9 +1084,9 @@ a.profilehoverpoint>img {
   div.exercisegraph {
       width: 1160px;
   }
-  a.profilehoverpoint {
-      margin-left: 18px;
-    }
+  #exercisers img {
+      margin-right: 18px;
+  }
 }
 @media (max-width: 980px) { 
     .navbar .brand {/* Fix for turan logo when responsive layout is trigered */
