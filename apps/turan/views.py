@@ -187,7 +187,7 @@ class TripsFeed(Feed):
             pass # Some trips just doesn't have time set
         return
 
-@cache_page_against_models(ExerciseType, Exercise, Avatar, Route)
+@cache_page_against_models(Exercise)
 @vary_on_cookie
 @pjax('turan/event_list-pjax.html')
 @page_template('turan/event_list_page.html')
