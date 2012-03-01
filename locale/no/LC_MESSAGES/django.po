@@ -2,19 +2,19 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-01 01:49+0100\n"
-"PO-Revision-Date: 2011-07-04 21:38\n"
-"Last-Translator: Simen Graat?n <simeng@gmail.com>\n"
+"POT-Creation-Date: 2012-03-01 08:25+0100\n"
+"PO-Revision-Date: 2012-03-01 08:35\n"
+"Last-Translator: Tor Hveem <tor@hveem.no>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "X-Translated-Using: django-rosetta 0.6.0\n"
 
 #: apps/friends_app/views.py:25
@@ -91,7 +91,6 @@ msgid "in kg, used to calculate power"
 msgstr "i kg, brukes til å regne ut effekt"
 
 #: apps/profiles/models.py:26
-#, fuzzy
 msgid "Resting HR"
 msgstr "Hvilepuls"
 
@@ -301,7 +300,8 @@ msgid ""
 "weight in kg when riding, used for power estimations. Include bottles, "
 "clothes, etc"
 msgstr ""
-"vekt i kg ved bruk, brukes til effektestimat. Inkluder flasker, klær, osv"
+"vekt i kg ved bruk, brukes til effektestimat. Inkluder flasker, klær, "
+"osv"
 
 #: apps/turan/models.py:95 apps/turan/models.py:140
 msgid "Notes"
@@ -352,7 +352,7 @@ msgstr "Komponent"
 msgid "Components"
 msgstr "Komponenter"
 
-#: apps/turan/models.py:170 apps/turan/templates/turan/event_list-pjax.html:35
+#: apps/turan/models.py:170 apps/turan/templates/turan/event_list-pjax.html:36
 #: apps/turan/templates/turan/team_list.html:15
 #: apps/turan/templates/turan/exercise/slope_tab.html:8
 #: templates/profiles/profiles.html:23
@@ -365,7 +365,7 @@ msgstr "for eksempel Opsangervatnet"
 
 #: apps/turan/models.py:171
 #: apps/turan/templates/turan/altitude_profile.html:11
-#: apps/turan/templates/turan/event_list-pjax.html:38
+#: apps/turan/templates/turan/event_list-pjax.html:39
 #: apps/turan/templates/turan/exercise/gradient_tab.html:21
 #: apps/turan/templates/turan/exercise/incline_tab.html:14
 #: apps/turan/templates/turan/exercise/mouseover.html:21
@@ -453,7 +453,7 @@ msgstr "Direktesendt"
 msgid "Search existing routes"
 msgstr "Søk i ruter"
 
-#: apps/turan/models.py:402 apps/turan/templates/turan/event_list-pjax.html:41
+#: apps/turan/models.py:402 apps/turan/templates/turan/event_list-pjax.html:42
 #: apps/turan/templates/turan/segment_detail.html:128
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:15
 #: apps/turan/templates/turan/exercise/best_effort_tab.html:81
@@ -467,6 +467,7 @@ msgstr "Tid"
 #: apps/turan/models.py:403
 #: apps/turan/templates/turan/exercise/attributes.html:162
 #: apps/turan/templates/turan/exercise/mouseover.html:35
+#: templates/messages/trash.html:12 templates/messages/view.html:16
 #: templates/profiles/profiles.html:24
 msgid "Date"
 msgstr "Dato"
@@ -501,8 +502,8 @@ msgstr "Treningsfil"
 
 #: apps/turan/models.py:429
 msgid ""
-"File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, .gmd, ."
-"csv, .xml)"
+"File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, "
+".gmd, .csv, .xml)"
 msgstr "Fil fra treningsmonitor Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv)"
 
 #: apps/turan/models.py:431
@@ -511,15 +512,17 @@ msgstr "Tilganger til treningsdata"
 
 #: apps/turan/models.py:432
 msgid ""
-"Interal field used to track live status for upcoming live tracker feature, "
-"always leave at setting \"Finished\""
+"Interal field used to track live status for upcoming live tracker "
+"feature, always leave at setting \"Finished\""
 msgstr ""
 
 #: apps/turan/models.py:433
 msgid ""
-"Select the equipment used for this exercise, for statistics and tracking"
+"Select the equipment used for this exercise, for statistics and "
+"tracking"
 msgstr ""
-"Velg utstyret som ble brukt i denne treningen for statistikk og logging"
+"Velg utstyret som ble brukt i denne treningen for statistikk og "
+"logging"
 
 #: apps/turan/models.py:439 apps/turan/templates/turan/search.html:48
 msgid "Tags"
@@ -559,17 +562,17 @@ msgstr "Legg til på slutten"
 
 #: apps/turan/models.py:706
 msgid ""
-"Merge strategy. Merge = Merge on top of current, Append = Append to end, "
-"Prepend = Insert before current"
+"Merge strategy. Merge = Merge on top of current, Append = Append to "
+"end, Prepend = Insert before current"
 msgstr "Sammenslåingstrategi. Slå sammen = Slå sammen på toppen av denne."
 
 #: apps/turan/models.py:707
 msgid ""
-"File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, .pwx, ."
-"xml, .fit)"
+"File from equipment from Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, "
+".pwx, .xml, .fit)"
 msgstr ""
-"Fil fra treningsmonitor Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, .pwx, ."
-"xml, .fit)"
+"Fil fra treningsmonitor Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv, "
+".pwx, .xml, .fit)"
 
 #: apps/turan/models.py:823
 msgid "for example Alpe d'Huez"
@@ -578,7 +581,8 @@ msgstr "for eksempel Opsangervatnet"
 #: apps/turan/models.py:825
 msgid "Describe where it starts and ends and other noteworthy details"
 msgstr ""
-"Beskriv hvor starten og slutten befinner seg og andre nevneverdige detaljer"
+"Beskriv hvor starten og slutten befinner seg og andre nevneverdige "
+"detaljer"
 
 #: apps/turan/models.py:826
 msgid "E.g. added info for segment in external URL"
@@ -644,8 +648,8 @@ msgid ""
 "Distance: %(distance_sum).1f km, Ascent: %(ascent_sum).0f m, Duration: "
 "%(duration_sum)s, kcal: %(kcal_sum)s"
 msgstr ""
-"Distanse: %(distance_sum).1f km, Klatret: %(ascent_sum).0f m, Varighet: "
-"%(duration_sum)s, kcal: %(kcal_sum)s"
+"Distanse: %(distance_sum).1f km, Klatret: %(ascent_sum).0f m, "
+"Varighet: %(duration_sum)s, kcal: %(kcal_sum)s"
 
 #: apps/turan/turancalendar.py:37
 msgid "Month sums"
@@ -740,11 +744,11 @@ msgstr "<a href=\"%(what_next_url)s\">Hva nå</a>?"
 #: apps/turan/templates/homepage.html:38
 #, python-format
 msgid ""
-"You can <a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s"
-"\">Log in</a> to try out the site."
+"You can <a href=\"%(signup_url)s\">Sign up</a> and <a "
+"href=\"%(login_url)s\">Log in</a> to try out the site."
 msgstr ""
-"Du kan <a href=\"%(signup_url)s\">registrere deg</a> og <a href="
-"\"%(login_url)s\">Logge inn</a> for å prøve sida."
+"Du kan <a href=\"%(signup_url)s\">registrere deg</a> og <a "
+"href=\"%(login_url)s\">Logge inn</a> for å prøve sida."
 
 #: apps/turan/templates/homepage.html:40
 #, python-format
@@ -783,10 +787,11 @@ msgstr "importer data fra en annen nettside"
 
 #: apps/turan/templates/about/what_next.html:22
 msgid ""
-"Got your data stored public on another site? No worries, just import it!"
+"Got your data stored public on another site? No worries, just import "
+"it!"
 msgstr ""
-"Har du treningsdata lagret offentlig på en annen nettside? Ikke noe problem, "
-"bare importer den!"
+"Har du treningsdata lagret offentlig på en annen nettside? Ikke noe "
+"problem, bare importer den!"
 
 #: apps/turan/templates/about/what_next.html:24
 msgid "lost weight?"
@@ -802,8 +807,8 @@ msgstr "bekreft epostadresse"
 
 #: apps/turan/templates/about/what_next.html:28
 msgid ""
-"So you can receive notifications, reset your password and so people can find "
-"you more easily."
+"So you can receive notifications, reset your password and so people can"
+" find you more easily."
 msgstr "slik at du kan få meldinger, nullstille passord, etc."
 
 #: apps/turan/templates/about/what_next.html:30
@@ -849,11 +854,11 @@ msgstr "Så flere kan bli med på moroa."
 #: apps/turan/templates/about/what_next.html:50
 #, python-format
 msgid ""
-"Start by <a href=\"%(signup_url)s\">signing up</a> and <a href="
-"\"%(login_url)s\">logging in</a>."
+"Start by <a href=\"%(signup_url)s\">signing up</a> and <a "
+"href=\"%(login_url)s\">logging in</a>."
 msgstr ""
-"Start ved å <a href=\"%(signup_url)s\">registrere</a> og <a href="
-"\"%(login_url)s\">logge inn</a>."
+"Start ved å <a href=\"%(signup_url)s\">registrere</a> og <a "
+"href=\"%(login_url)s\">logge inn</a>."
 
 #: apps/turan/templates/account/other_services.html:5
 #: apps/turan/templates/account/other_services.html:9
@@ -909,10 +914,11 @@ msgstr "Inviter noen nye til å bli med"
 
 #: apps/turan/templates/friends_app/invitations.html:14
 msgid ""
-"If you'd like to invite someone to join Turan, you can enter their email "
-"address and a message for them below:"
+"If you'd like to invite someone to join Turan, you can enter their "
+"email address and a message for them below:"
 msgstr ""
-"Om du vil invitere noen til Turan, skriv in epostadresse og melding under:"
+"Om du vil invitere noen til Turan, skriv in epostadresse og melding "
+"under:"
 
 #: apps/turan/templates/friends_app/invitations.html:21
 msgid "Someone with this email address has already joined:"
@@ -968,8 +974,8 @@ msgid ""
 "<a href=\"%(user_url)s\">%(user)s</a> has commented on your exercise '<a "
 "href=\"%(exercise_url)s\">%(exercise)s</a>'."
 msgstr ""
-"<a href=\"%(user_url)s\">%(user)s</a> har kommentert treningen din '<a href="
-"\"%(exercise_url)s\">%(exercise)s</a>'."
+"<a href=\"%(user_url)s\">%(user)s</a> har kommentert treningen din '<a "
+"href=\"%(exercise_url)s\">%(exercise)s</a>'."
 
 #: apps/turan/templates/notification/exercise_create/notice.html:3
 msgid "New exercise"
@@ -1127,7 +1133,6 @@ msgid "No routes matching tag"
 msgstr "Ingen ruter med merkelapp"
 
 #: apps/turan/templates/tags/index.html:69
-#: apps/turan/templates/turan/photo_list.html:5
 msgid "Photos"
 msgstr "Foto"
 
@@ -1249,7 +1254,7 @@ msgstr "Bekreft sletting"
 
 #: apps/turan/templates/turan/delete_form.html:14
 msgid "There is no going back!"
-msgstr ""
+msgstr "Det er ingen veg tilbake!"
 
 #: apps/turan/templates/turan/delete_form.html:19
 #, python-format
@@ -1258,6 +1263,7 @@ msgstr "Vil du virkelig slette %(object)s ? "
 
 #: apps/turan/templates/turan/delete_form.html:21
 #: apps/turan/templates/turan/exercise_detail.html:55
+#: templates/messages/view.html:28
 msgid "Delete"
 msgstr "Slett"
 
@@ -1299,28 +1305,28 @@ msgstr "Mine treninger"
 msgid "All events"
 msgstr "Alle treninger"
 
-#: apps/turan/templates/turan/event_list-pjax.html:21
+#: apps/turan/templates/turan/event_list-pjax.html:22
 #: apps/turan/templates/turan/event_list.html:5
 msgid "Events"
 msgstr "Tura"
 
-#: apps/turan/templates/turan/event_list-pjax.html:24
-#: apps/turan/templates/turan/event_list-pjax.html:25 templates/base.html:61
+#: apps/turan/templates/turan/event_list-pjax.html:25
+#: apps/turan/templates/turan/event_list-pjax.html:26 templates/base.html:61
 #: templates/site_base.html:79 templates/profiles/profile.html:231
 #: templates/profiles/profile.html:232
 msgid "Add an exercise"
 msgstr "Legg til trening"
 
-#: apps/turan/templates/turan/event_list-pjax.html:32
+#: apps/turan/templates/turan/event_list-pjax.html:33
 #: apps/turan/templates/turan/exercise/incline_tab.html:11
 msgid "Type"
 msgstr "Type"
 
-#: apps/turan/templates/turan/event_list-pjax.html:44
+#: apps/turan/templates/turan/event_list-pjax.html:45
 msgid "Route plot"
 msgstr "Rutegraf"
 
-#: apps/turan/templates/turan/event_list-pjax.html:47
+#: apps/turan/templates/turan/event_list-pjax.html:48
 msgid "User"
 msgstr "Bruker"
 
@@ -1451,7 +1457,8 @@ msgstr "Navn/Rute"
 #: apps/turan/templates/turan/exercise_form.html:38
 msgid "Name this exercise or start typing to search in existing routes"
 msgstr ""
-"Navngi denne treningen eller begynn å skriv for å søke i eksisterende ruter"
+"Navngi denne treningen eller begynn å skriv for å søke i eksisterende "
+"ruter"
 
 #: apps/turan/templates/turan/exercise_form.html:39
 msgid "You can optionally leave this field blank"
@@ -1517,24 +1524,25 @@ msgstr "Tolker sensordata"
 #: apps/turan/templates/turan/exercise_parse.html:9
 msgid "You can leave this page if you want, your upload will be parsed."
 msgstr ""
-"Du kan forlate denne siden hvis du vil, opplastingen tolkes i bakgrunnen"
+"Du kan forlate denne siden hvis du vil, opplastingen tolkes i "
+"bakgrunnen"
 
 #: apps/turan/templates/turan/exercise_parse.html:10
 msgid ""
-"If this takes a long time there might be a backlog of parsing going on. You "
-"do not have to reupload. The parsing will complete eventually."
+"If this takes a long time there might be a backlog of parsing going on."
+" You do not have to reupload. The parsing will complete eventually."
 msgstr ""
-"Hvis dette tar lang tid så kan det være fordi det er mange tolkejobber i kø. "
-"Du trenger ikke laste opp på nytt da dine opplastinger vil bli tolket når "
-"køen er ferdig."
+"Hvis dette tar lang tid så kan det være fordi det er mange tolkejobber"
+" i kø. Du trenger ikke laste opp på nytt da dine opplastinger vil bli "
+"tolket når køen er ferdig."
 
 #: apps/turan/templates/turan/exercise_parse.html:11
 msgid ""
-"If there is an error during parsing, the admins will take a look at the "
-"error and probably fix the problem."
+"If there is an error during parsing, the admins will take a look at the"
+" error and probably fix the problem."
 msgstr ""
-"Hvis det skjer en feil ved tolking av filene vil en administrator få opp "
-"feilen og antageligvis fikse problemet etterhvert."
+"Hvis det skjer en feil ved tolking av filene vil en administrator få "
+"opp feilen og antageligvis fikse problemet etterhvert."
 
 #: apps/turan/templates/turan/exercise_parse.html:12
 msgid "Any questions can be emailed to turan@turan.no"
@@ -1610,11 +1618,13 @@ msgstr "Lag nytt segment"
 
 #: apps/turan/templates/turan/exercise_segments.html:36
 msgid ""
-"or add to an existing segment by zooming in the graph and clicking the globe "
-"icon in the top right corner of the graph and select the segment you want"
+"or add to an existing segment by zooming in the graph and clicking the "
+"globe icon in the top right corner of the graph and select the segment "
+"you want"
 msgstr ""
-"eller legg til et eksisterende segment ved å forstørre grafen og klikke på "
-"globusikonet i hjørnet øverst til høyre av grafen og velg segmentet du ønsker"
+"eller legg til et eksisterende segment ved å forstørre grafen og "
+"klikke på globusikonet i hjørnet øverst til høyre av grafen og velg "
+"segmentet du ønsker"
 
 #: apps/turan/templates/turan/exercise_segments.html:40
 msgid "Back to exercise"
@@ -1656,9 +1666,11 @@ msgstr "Importer trening fra en annen nettside"
 
 #: apps/turan/templates/turan/import.html:7
 msgid ""
-"Note: You can also upload file .tcx or .fit file directly from Garmin device"
+"Note: You can also upload file .tcx or .fit file directly from Garmin "
+"device"
 msgstr ""
-"Merk: Du kan også laste opp en .tcx eller .fit-fil rett fra Garmin-enheten"
+"Merk: Du kan også laste opp en .tcx eller .fit-fil rett fra Garmin-"
+"enheten"
 
 #: apps/turan/templates/turan/import.html:9
 msgid "Currently supported sites"
@@ -1666,10 +1678,11 @@ msgstr "Støttede nettsteder"
 
 #: apps/turan/templates/turan/import.html:22
 msgid ""
-"Your exercise is not public. It needs to be public for Turan to import it"
+"Your exercise is not public. It needs to be public for Turan to import "
+"it"
 msgstr ""
-"Treningen er ikke offentlig. Den må være offentlig for å kunne bli importert "
-"til Turan."
+"Treningen er ikke offentlig. Den må være offentlig for å kunne bli "
+"importert til Turan."
 
 #: apps/turan/templates/turan/import.html:24
 msgid "Something went wrong while importing trip"
@@ -1735,27 +1748,20 @@ msgstr "Logg"
 #: apps/turan/templates/turan/index.html:118
 msgid ""
 "\n"
-"            <b>T</b>uran is a hobby project created by a few exercise "
-"enthusiasts for logging and analyzing exercise data from heart rate "
-"monitors / cycle computers. It supports a variety of devices.\n"
+"            <b>T</b>uran is a hobby project created by a few exercise enthusiasts for logging and analyzing exercise data from heart rate monitors / cycle computers. It supports a variety of devices.\n"
 "            </p>\n"
 "            <p>\n"
-"            Garmin products are supported with file formats .tcx and .fit. "
-"FIT-format recommended.\n"
-"            Polar from polar online (.xml) or from devices that exports ."
-"hrm\n"
+"            Garmin products are supported with file formats .tcx and .fit. FIT-format recommended.\n"
+"            Polar from polar online (.xml) or from devices that exports .hrm\n"
 "            GPX-files can be used but are often suboptimal.\n"
 "            PWX and CSV also supported, but some features missing.\n"
 "            "
 msgstr ""
 "\n"
-"<b>T</b>uran er et hobbyprosjekt laget av noen treningsentusiaster for "
-"logging og analysering av treningsdata fra pulsklokke / sykkelkomputer. Vi "
-"støtter en rekke enheter.\n"
+"<b>T</b>uran er et hobbyprosjekt laget av noen treningsentusiaster for logging og analysering av treningsdata fra pulsklokke / sykkelkomputer. Vi støtter en rekke enheter.\n"
 "</p>\n"
 "<p>\n"
-"Garminprodukter med filformatene .tcx og .fit støttes, men .fit-formatet "
-"anbefales.\n"
+"Garminprodukter med filformatene .tcx og .fit støttes, men .fit-formatet anbefales.\n"
 "Polar fra Polar online (.xml) eller fra enheter som eksporterer .hrm\n"
 "GPX-filer kan brukes, men er ofte suboptimalt.\n"
 "PWX og CSV støttes også, men de mangler noen funksjoner."
@@ -1763,84 +1769,40 @@ msgstr ""
 #: apps/turan/templates/turan/index.html:129
 msgid ""
 "\n"
-"            <b>T</b>uran is currently categorized into different exercise "
-"types to provide statistics and information for each type separately. The "
-"system will retrieve some of the information directly from the file you "
-"provide, but you will have to enter the comment for the exercise, and maybe "
-"some tags to group it with other similar exercises, such as rainyday-trips, "
-"solo-trips, bunch-sprints, and trips you could've been without.\n"
+"            <b>T</b>uran is currently categorized into different exercise types to provide statistics and information for each type separately. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.\n"
 "            "
 msgstr ""
 "\n"
-"Turan er delt inn i sykkelturer, fotturer og andre treningstyper for å gi "
-"statistikk og informasjon som er spesifikk for hver type. Systemet vil hente "
-"mesteparten av informasjonen rett fra pulsklokkedatafilen, men du må skrive "
-"en liten kommentar og gjerne tagge treningen med f.eks. \"sol\", \"regnvær\" "
-"osv."
+"Turan er delt inn i sykkelturer, fotturer og andre treningstyper for å gi statistikk og informasjon som er spesifikk for hver type. Systemet vil hente mesteparten av informasjonen rett fra pulsklokkedatafilen, men du må skrive en liten kommentar og gjerne tagge treningen med f.eks. \"sol\", \"regnvær\" osv."
 
 #: apps/turan/templates/turan/index.html:137
 msgid ""
 "\n"
-"            Provided you have one of the supported devices you can analyze "
-"your training, kilometre by kilometre, or minute by minute if distance isn't "
-"relevant. You can, again provided your device supports it, graph everything "
-"the device records. Speed, altitude, cadence, heart rate, power, the whole "
-"<a href=\"http://www.urbandictionary.com/define.php?term=shebang\">shebang</"
-"a>. Obviously, analyzing means breaking down a complex issue into smaller "
-"parts, so zooming in on any part of any lenght is supported. Just click and "
-"mark an interesting part of the graph and drool on the immense depth of the "
-"data <strong>you</strong> have produced.\n"
+"            Provided you have one of the supported devices you can analyze your training, kilometre by kilometre, or minute by minute if distance isn't relevant. You can, again provided your device supports it, graph everything the device records. Speed, altitude, cadence, heart rate, power, the whole <a href=\"http://www.urbandictionary.com/define.php?term=shebang\">shebang</a>. Obviously, analyzing means breaking down a complex issue into smaller parts, so zooming in on any part of any lenght is supported. Just click and mark an interesting part of the graph and drool on the immense depth of the data <strong>you</strong> have produced.\n"
 "            "
 msgstr ""
 "\n"
-"    Hvis du har en av de støttede pulsklokkene kan du analysere turene dine "
-"kilometer til kilometer eller minutt til minutt hvis lengde ikke er "
-"relevant. Du kan også grafe alt pulsklokka lagrer. Fart, høyde, kadens, "
-"puls, effekt. Mao. hele <a href=\"http://nn.wikipedia.org/wiki/Sulamitt"
-"\">sulamitten</a>. Når du skal analysere må du såklart kikke på detaljene i "
-"turen og det er derfor støtte for zooming i grafene. Bare marker en "
-"intressant del av grafen og sikle på de saftige detaljene i dataene <u>du</"
-"u> har generert.\n"
+"    Hvis du har en av de støttede pulsklokkene kan du analysere turene dine kilometer til kilometer eller minutt til minutt hvis lengde ikke er relevant. Du kan også grafe alt pulsklokka lagrer. Fart, høyde, kadens, puls, effekt. Mao. hele <a href=\"http://nn.wikipedia.org/wiki/Sulamitt\">sulamitten</a>. Når du skal analysere må du såklart kikke på detaljene i turen og det er derfor støtte for zooming i grafene. Bare marker en intressant del av grafen og sikle på de saftige detaljene i dataene <u>du</u> har generert.\n"
 "\n"
 "    "
 
 #: apps/turan/templates/turan/index.html:146
 msgid ""
 "\n"
-"            The map serves two purposes. First and foremost the function of "
-"showing where you've been. That one's easy. The second is the killer: "
-"intensities during the exercises are embedded in the trace of the trip. The "
-"intensity of your exercise is indicated by the color, showing where which "
-"parts of your trip was relatively speaking the hardest. The levels are also "
-"relative to the user's own max-pulse, so make sure yours is correct.\n"
+"            The map serves two purposes. First and foremost the function of showing where you've been. That one's easy. The second is the killer: intensities during the exercises are embedded in the trace of the trip. The intensity of your exercise is indicated by the color, showing where which parts of your trip was relatively speaking the hardest. The levels are also relative to the user's own max-pulse, so make sure yours is correct.\n"
 "            "
 msgstr ""
 "\n"
-"Kartet har to funksjoner. Først og fremst for å se hvor du har vært. I "
-"tillegg har man killerfunksjonen med å se hvilken intensitet de ulike delene "
-"av turen har hatt. Intensiteten vises med en fargeskala som indikerer hvilke "
-"deler av turen som var den tyngste. Intensiteten lages relativ til brukerens "
-"makspuls så sørg for at denne er rett."
+"Kartet har to funksjoner. Først og fremst for å se hvor du har vært. I tillegg har man killerfunksjonen med å se hvilken intensitet de ulike delene av turen har hatt. Intensiteten vises med en fargeskala som indikerer hvilke deler av turen som var den tyngste. Intensiteten lages relativ til brukerens makspuls så sørg for at denne er rett."
 
 #: apps/turan/templates/turan/index.html:153
 msgid ""
 "\n"
-"            What good is training without progress? After a while you might "
-"want to look at the trends of your training. Turan(tm) provides several. "
-"Apart from the silly BMI-tracking-feature, you can view (and compare) "
-"different runs of the same route, comparing everything, speed, cadence and "
-"heart rate. Turan(tm) will also graph the time-usage of a spesific route as "
-"a function of time. In your profile you can view your own progress in terms "
-"of average speed, BMI and resting pulse.\n"
+"            What good is training without progress? After a while you might want to look at the trends of your training. Turan(tm) provides several. Apart from the silly BMI-tracking-feature, you can view (and compare) different runs of the same route, comparing everything, speed, cadence and heart rate. Turan(tm) will also graph the time-usage of a spesific route as a function of time. In your profile you can view your own progress in terms of average speed, BMI and resting pulse.\n"
 "            "
 msgstr ""
 "\n"
-"Hva er vitsen med trening uten fremgang? Om en stund kan det være lurt å "
-"sjekke trendene i treningen din. Turan(tm) har flere. Utover den lille BMI-"
-"grafefunksjonen kan du se og sammenligne flere turer på samme rute (fart, "
-"kadens og puls). Turan(tm) vil også grafe tidsbruk på en spesifikk rute som "
-"en funksjon av tid. I profilen din kan du se din egen fremgang i "
-"gjennomsnittlig fart, BMI og hvilepuls.\n"
+"Hva er vitsen med trening uten fremgang? Om en stund kan det være lurt å sjekke trendene i treningen din. Turan(tm) har flere. Utover den lille BMI-grafefunksjonen kan du se og sammenligne flere turer på samme rute (fart, kadens og puls). Turan(tm) vil også grafe tidsbruk på en spesifikk rute som en funksjon av tid. I profilen din kan du se din egen fremgang i gjennomsnittlig fart, BMI og hvilepuls.\n"
 "        "
 
 #: apps/turan/templates/turan/index.html:160
@@ -1854,10 +1816,6 @@ msgstr "turer"
 #: apps/turan/templates/turan/index.html:184
 msgid "Latest comments"
 msgstr "Siste kommentarer"
-
-#: apps/turan/templates/turan/photo_list.html:10
-msgid "Photos for "
-msgstr "Foto for "
 
 #: apps/turan/templates/turan/route_detail.html:61
 msgid "Average speed"
@@ -1889,7 +1847,7 @@ msgstr "SML"
 
 #: apps/turan/templates/turan/route_detail_page.html:41
 msgid "Select two or more routes to compare"
-msgstr ""
+msgstr "Velg to eller flere ruter for å sammenligne"
 
 #: apps/turan/templates/turan/route_form.html:12
 msgid "Create new route"
@@ -1897,15 +1855,12 @@ msgstr "Lag ei ny rute"
 
 #: apps/turan/templates/turan/route_form.html:14
 msgid ""
-"Create a named route if you want to have a public shared route that people "
-"can attach their exercises to.<br>\n"
-"You only need to provide Name and Description. The rest of the info will be "
-"populated when the first exercise is added to the route.\n"
+"Create a named route if you want to have a public shared route that people can attach their exercises to.<br>\n"
+"You only need to provide Name and Description. The rest of the info will be populated when the first exercise is added to the route.\n"
 "\n"
 "<br>\n"
 "\n"
-"<p>Note: If your exercise monitor equipment does not include a GPS, you will "
-"have to add a GPX-file manually to the Route to enable the map.</p>"
+"<p>Note: If your exercise monitor equipment does not include a GPS, you will have to add a GPX-file manually to the Route to enable the map.</p>"
 msgstr ""
 
 #: apps/turan/templates/turan/route_form.html:21
@@ -1983,19 +1938,19 @@ msgstr "Oppdater segment"
 
 #: apps/turan/templates/turan/segment_form.html:15
 msgid ""
-"Note: You have to add the first entry on this segment manually using zoom "
-"and the press the globe icon in the top right corner of the graph"
+"Note: You have to add the first entry on this segment manually using "
+"zoom and the press the globe icon in the top right corner of the graph"
 msgstr ""
 "Merk: Du må legge til første biten på dette segmentet manuelt ved å "
 "forstørre og trykke på globeikonet øverst til høyre av grafen"
 
 #: apps/turan/templates/turan/segment_form.html:25
 msgid ""
-"Note: The rest of the data (ascent/grade/distance/etc) will be pull from the "
-"first entry you add to this segment"
+"Note: The rest of the data (ascent/grade/distance/etc) will be pull "
+"from the first entry you add to this segment"
 msgstr ""
-"Merk: Resten av dataene (stigning/gradering/distanse/osv) blir plukket fra "
-"første biten du legger til dette segmentet"
+"Merk: Resten av dataene (stigning/gradering/distanse/osv) blir plukket"
+" fra første biten du legger til dette segmentet"
 
 #: apps/turan/templates/turan/segment_list.html:9
 #: apps/turan/templates/turan/segment_list.html:17
@@ -2590,11 +2545,11 @@ msgstr "Tjenerfeil. Hamsteren slapp løs"
 
 #: templates/500.html:12
 msgid ""
-"We're sorry but a server error has occurred. We've been notified and will "
-"look into it as soon as possible."
+"We're sorry but a server error has occurred. We've been notified and "
+"will look into it as soon as possible."
 msgstr ""
-"Vi beklager, men en tjenerfeil har oppstått. Vi har fått beskjed og et par "
-"intelligente aper har blitt sendt ut for å fikse problemet."
+"Vi beklager, men en tjenerfeil har oppstått. Vi har fått beskjed og et"
+" par intelligente aper har blitt sendt ut for å fikse problemet."
 
 #: templates/500.html:17
 msgid "If you need assistance, you may reference this error as"
@@ -2602,11 +2557,11 @@ msgstr "Du kan referere til denne feilen med"
 
 #: templates/base.html:20
 msgid ""
-"Upload your exercises and analyze them. Play them back and compare them to "
-"prior efforts. Share and comment on your friends exercises."
+"Upload your exercises and analyze them. Play them back and compare them"
+" to prior efforts. Share and comment on your friends exercises."
 msgstr ""
-"Last opp treninger og analyser dem. Spill dem av og sammenlign med tidligere "
-"målinger. Del og kommenter dine venners treninger."
+"Last opp treninger og analyser dem. Spill dem av og sammenlign med "
+"tidligere målinger. Del og kommenter dine venners treninger."
 
 #: templates/base.html:66 templates/site_base.html:78
 msgid "My profile"
@@ -2749,11 +2704,11 @@ msgstr "Eller logg inn med OpenID"
 #: templates/account/login.html:82
 #, python-format
 msgid ""
-"If you have any trouble logging in to your account, contact us at <a href="
-"\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
+"If you have any trouble logging in to your account, contact us at <a "
+"href=\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
 msgstr ""
-"Hvis du har problemer med å logge inn kan du kontakte oss via <a href="
-"\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
+"Hvis du har problemer med å logge inn kan du kontakte oss via <a "
+"href=\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
 
 #: templates/account/signup.html:6 templates/account/signup.html.py:10
 #: templates/account/signup.html:27 templates/account/signup.html.py:39
@@ -2776,11 +2731,11 @@ msgstr "Registrer deg via Facebook"
 #: templates/account/signup.html:82
 #, fuzzy, python-format
 msgid ""
-"If you have any trouble creating your account, contact us at <a href="
-"\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
+"If you have any trouble creating your account, contact us at <a "
+"href=\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
 msgstr ""
-"Hvis du har problemer med å logge inn kan du kontakte oss via <a href="
-"\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
+"Hvis du har problemer med å logge inn kan du kontakte oss via <a "
+"href=\"mailto:%(CONTACT_EMAIL)s\">%(CONTACT_EMAIL)s</a>."
 
 #: templates/account/signup.html:83
 msgid "Already have an account?"
@@ -2793,11 +2748,11 @@ msgstr "Din avatar:"
 #: templates/avatar/change.html:26
 #, python-format
 msgid ""
-"Don&rsquo;t like these avatars? You can <a href=\"%(avatar_delete_url)s"
-"\">choose which ones to delete</a>."
+"Don&rsquo;t like these avatars? You can <a "
+"href=\"%(avatar_delete_url)s\">choose which ones to delete</a>."
 msgstr ""
-"Hvis du ikke liker disse avatarene så kan du <a href=\"%(avatar_delete_url)s"
-"\">velge og slette dem</a>."
+"Hvis du ikke liker disse avatarene så kan du <a "
+"href=\"%(avatar_delete_url)s\">velge og slette dem</a>."
 
 #: templates/avatar/change.html:31
 msgid "Upload an Avatar:"
@@ -2831,15 +2786,16 @@ msgstr "Fjern OpenID-assosiasjon"
 #: templates/django_openid/associations.html:21
 #, python-format
 msgid ""
-"You have not set a password for this user account. You are unable to remove "
-"OpenID associations until you <a href=\"%(acct_passwd_set_url)s\">set a "
-"password</a>."
+"You have not set a password for this user account. You are unable to "
+"remove OpenID associations until you <a "
+"href=\"%(acct_passwd_set_url)s\">set a password</a>."
 msgstr ""
 
 #: templates/django_openid/associations.html:24
 #, python-format
 msgid ""
-"Your account is currently associated with the following OpenID %(buttons)s:"
+"Your account is currently associated with the following OpenID "
+"%(buttons)s:"
 msgstr "Kontoen din er assosiert med følgende OpenID %(buttons)s:"
 
 #: templates/django_openid/associations.html:39
@@ -2863,17 +2819,140 @@ msgstr "Notiser"
 msgid "Compose"
 msgstr "Ny"
 
-#: templates/messages/base.html:11
+#: templates/messages/base.html:11 templates/messages/inbox.html:8
 msgid "Inbox"
 msgstr "Innboks"
 
-#: templates/messages/base.html:12
+#: templates/messages/base.html:12 templates/messages/outbox.html:12
 msgid "Sent"
 msgstr "Sendt"
 
 #: templates/messages/base.html:13
 msgid "Trash"
 msgstr "Søppel"
+
+#: templates/messages/compose.html:7
+msgid "Compose Message"
+msgstr "Skriv ny melding"
+
+#: templates/messages/compose.html:14
+msgid "Send"
+msgstr "Send"
+
+#: templates/messages/inbox.html:12 templates/messages/trash.html:12
+#: templates/messages/view.html:12
+msgid "Sender"
+msgstr "Avsender"
+
+#: templates/messages/inbox.html:12 templates/messages/outbox.html:12
+#: templates/messages/trash.html:12 templates/messages/view.html:14
+msgid "Subject"
+msgstr "Tittel"
+
+#: templates/messages/inbox.html:12
+msgid "Received"
+msgstr "Mottatt"
+
+#: templates/messages/inbox.html:12 templates/messages/outbox.html:12
+#: templates/messages/trash.html:12
+msgid "Action"
+msgstr "Valg"
+
+#: templates/messages/inbox.html:24 templates/messages/outbox.html:21
+#: templates/messages/trash.html:21 templates/messages/view.html:17
+msgid "DATETIME_FORMAT"
+msgstr "DATETIME_FORMAT"
+
+#: templates/messages/inbox.html:25 templates/messages/outbox.html:22
+msgid "delete"
+msgstr "Slett"
+
+#: templates/messages/new_messages.html:4
+#, python-format
+msgid "Sent from %(site_url)s"
+msgstr "Sendt fra %(site_url)s "
+
+#: templates/messages/outbox.html:8
+msgid "Sent Messages"
+msgstr "Sendte meldinger"
+
+#: templates/messages/outbox.html:12 templates/messages/view.html:18
+msgid "Recipient"
+msgstr "Mottaker"
+
+#: templates/messages/trash.html:8
+msgid "Deleted Messages"
+msgstr "Slettede Meldinger"
+
+#: templates/messages/trash.html:22
+msgid "undelete"
+msgstr "gjenopprett"
+
+#: templates/messages/trash.html:28
+#, fuzzy
+msgid ""
+"Deleted Messages are removed from the trash at irregular intervals, "
+"don't rely on this feature for long-time storage."
+msgstr ""
+"Slettede meldinger blir fjernet fra papirkurven med gjevne mellomrom, "
+"ikke bruk denne funksjonen til langtidslagring."
+
+#: templates/messages/view.html:9
+msgid "View Message"
+msgstr "Se melding"
+
+#: templates/messages/view.html:25
+msgid "Reply"
+msgstr "Svar"
+
+#: templates/messages/notification/messages_deleted/notice.html:1
+#, fuzzy, python-format
+msgid "You have deleted the message <a href=\"%(message_url)s\">%(message)s</a>."
+msgstr "Du er ikke medlem av noen <a href=\"%(tribe_url)s\">lag</a> ."
+
+#: templates/messages/notification/messages_received/notice.html:2
+#, fuzzy, python-format
+msgid ""
+"You have received the message <a href=\"%(message_url)s\">%(message)s</a>"
+" from <a href=\"%(sender_url)s\">%(sender_display)s</a>."
+msgstr ""
+"<a href=\"%(user_url)s\">%(user)s</a> har sluttet seg til stammen <a "
+"href=\"%(tribe_url)s\">%(tribe)s</a>."
+
+#: templates/messages/notification/messages_recovered/notice.html:1
+#, fuzzy, python-format
+msgid ""
+"You have recovered the message <a "
+"href=\"%(message_url)s\">%(message)s</a>."
+msgstr "Du er ikke medlem av noen <a href=\"%(tribe_url)s\">lag</a> ."
+
+#: templates/messages/notification/messages_replied/notice.html:2
+#, fuzzy, python-format
+msgid ""
+"You have replied to <a "
+"href=\"%(message_url)s\">%(message_parent_msg)s</a> from <a "
+"href=\"%(recipient_url)s\">%(recipient_display)s</a>."
+msgstr ""
+"<a href=\"%(user_url)s\">%(user)s</a> har sluttet seg til stammen <a "
+"href=\"%(tribe_url)s\">%(tribe)s</a>."
+
+#: templates/messages/notification/messages_reply_received/notice.html:2
+#, fuzzy, python-format
+msgid ""
+"<a href=\"%(sender_url)s\">%(sender_display)s</a> has sent you a reply to"
+" <a href=\"%(message_url)s\">%(message_parent_msg)s</a>."
+msgstr ""
+"<a href=\"%(user_url)s\">%(user)s</a> har kommentert treningen din '<a "
+"href=\"%(exercise_url)s\">%(exercise)s</a>'."
+
+#: templates/messages/notification/messages_sent/notice.html:2
+#, fuzzy, python-format
+msgid ""
+"You have sent the message <a href=\"%(message_url)s\">%(message)s</a> to "
+"<a href=\"%(recipient_url)s\">%(recipient_display)s</a>."
+msgstr ""
+"<a href=\"%(user_url)s\">%(user)s</a> har sluttet seg til stammen <a "
+"href=\"%(tribe_url)s\">%(tribe)s</a>."
 
 #: templates/notification/base.html:15
 msgid "Settings"
@@ -2944,12 +3023,12 @@ msgstr "%(other_user_display)s om å være en venn."
 #: templates/profiles/profile.html:130
 #, python-format
 msgid ""
-"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in "
-"</a> to add this person as a friend and see more of their content."
+"<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in"
+" </a> to add this person as a friend and see more of their content."
 msgstr ""
-"<a href=\"%(signup_url)s\">Registrer deg</a> og <a href=\"%(login_url)s"
-"\">logg inn</a> for å legge til denne personen som en venn og se mer av "
-"innholdet deres."
+"<a href=\"%(signup_url)s\">Registrer deg</a> og <a "
+"href=\"%(login_url)s\">logg inn</a> for å legge til denne personen som "
+"en venn og se mer av innholdet deres."
 
 #: templates/profiles/profile.html:138
 msgid "Profile"
@@ -3054,11 +3133,11 @@ msgstr "Dine venner"
 
 #: templates/profiles/profile_right_panel.html:34
 msgid ""
-"None. You should look at the list of <a href=\"/profiles/\">profiles</a> and "
-"see if there's anyone you know."
+"None. You should look at the list of <a href=\"/profiles/\">profiles</a> "
+"and see if there's anyone you know."
 msgstr ""
-"Ingen. Du bør se på listen over <a href=\"/profiles/\">profiler</a> og se "
-"etter noen du kjenner."
+"Ingen. Du bør se på listen over <a href=\"/profiles/\">profiler</a> og "
+"se etter noen du kjenner."
 
 #: templates/profiles/profile_right_panel.html:41
 #, python-format
@@ -3075,12 +3154,10 @@ msgid "%(other_user_display)s's Friends"
 msgstr " %(other_user_display)s sine venner"
 
 #: templates/profiles/profiles.html:6
-#, fuzzy
 msgid "All exercisers"
-msgstr "Best til å trene"
+msgstr "Alle utøverer"
 
 #: templates/profiles/profiles.html:14
-#, fuzzy
 msgid "Clear Search Terms"
 msgstr "Slett spørring"
 
@@ -3114,9 +3191,8 @@ msgid "Statistics for %(other_user)s"
 msgstr "Statistikk for %(other_user)s "
 
 #: templates/profiles/statistics.html:9
-#, fuzzy
 msgid "Previous year"
-msgstr "Forrige"
+msgstr "Forrige år"
 
 #: templates/profiles/statistics.html:10
 msgid "This year"
@@ -3194,6 +3270,243 @@ msgstr "Post kommentar"
 msgid "to leave a comment"
 msgstr "for å legge inn en kommentar"
 
+#~ msgid "Total Time Spent"
+#~ msgstr "Gj. fart"
+
+#~ msgid "Average Time Spent"
+#~ msgstr "Gj. tur-lengde"
+
+#~ msgid "Score"
+#~ msgstr "BikeScore"
+
+#~ msgid "All time"
+#~ msgstr "Best"
+
+#~ msgid "30 days"
+#~ msgstr " dager"
+
+#~ msgid "7 days"
+#~ msgstr " dager"
+
+#~ msgid "3 days"
+#~ msgstr " dager"
+
+#~ msgid "24 hours"
+#~ msgstr " timer"
+
+#~ msgid "server name"
+#~ msgstr "Brukernavn"
+
+#~ msgid "site"
+#~ msgstr "Vekt"
+
+#~ msgid "grouped messages"
+#~ msgstr "Send en melding"
+
+#~ msgid "grouped message"
+#~ msgstr "Send en melding"
+
+#~ msgid "message"
+#~ msgstr "Melding"
+
+#~ msgid "messages"
+#~ msgstr "Melding"
+
+#~ msgid "Server Name"
+#~ msgstr "Tjenerfeil"
+
+#~ msgid "There are no records recorded for this event."
+#~ msgstr "Ingen kommende hendelser"
+
+#~ msgid "Servers"
+#~ msgstr "Tjenerfeil"
+
+#~ msgid "Site Name"
+#~ msgstr "Navn"
+
+#~ msgid "Sites"
+#~ msgstr "skriver"
+
+#~ msgid "The page you are looking for was not found."
+#~ msgstr "Siden er ikke tilgjengelig for deg."
+
+#~ msgid "Internal Server Error"
+#~ msgstr "Tjenerfeil"
+
+#~ msgid "Select a Project"
+#~ msgstr "Velg måned"
+
+#~ msgid "Your Projects"
+#~ msgstr "Dine bilder"
+
+#~ msgid "No events match your search query."
+#~ msgstr "Slett spørring"
+
+#~ msgid "Account Settings"
+#~ msgstr "Oppsett"
+
+#~ msgid "Save Changes"
+#~ msgstr "Lagre endringer"
+
+#~ msgid "Overview"
+#~ msgstr "Forhåndsvis"
+
+#~ msgid "Environment"
+#~ msgstr "Utstyr"
+
+#~ msgid "Packages"
+#~ msgstr "Side"
+
+#~ msgid "Stats"
+#~ msgstr "Statistikk"
+
+#~ msgid "Daily Events"
+#~ msgstr "Tura"
+
+#~ msgid "Last Event"
+#~ msgstr "Tura"
+
+#~ msgid "There are no active projects in Sentry."
+#~ msgstr "Ingen kommende hendelser"
+
+#~ msgid "Server Version"
+#~ msgstr "Tjenerfeil"
+
+#~ msgid "Configuration"
+#~ msgstr "Tid"
+
+#~ msgid "Views"
+#~ msgstr "Vis"
+
+#~ msgid "Change User"
+#~ msgstr "Endre passord"
+
+#~ msgid "Remove User"
+#~ msgstr "Fjernet"
+
+#~ msgid "Create a new user"
+#~ msgstr "Lag ei ny rute"
+
+#~ msgid "Last Login"
+#~ msgstr "Logg inn"
+
+#~ msgid "There are no active users in Sentry."
+#~ msgstr "Ingen kommende hendelser"
+
+#~ msgid "New User"
+#~ msgstr "Bruker"
+
+#~ msgid "Create New User"
+#~ msgstr "Lag nytt segment"
+
+#~ msgid "Confirm"
+#~ msgstr "Bekreft sletting"
+
+#~ msgid "Cancel"
+#~ msgstr "Avbryt"
+
+#~ msgid "Aggregate Details"
+#~ msgstr "Profildetaljer"
+
+#~ msgid "Avg Duration:"
+#~ msgstr "Tid"
+
+#~ msgid "Details"
+#~ msgstr "Profildetaljer"
+
+#~ msgid "Actions"
+#~ msgstr "Valg"
+
+#~ msgid "Full Message"
+#~ msgstr "Melding"
+
+#~ msgid "No data for %(varname)s"
+#~ msgstr "Treningene til %(username)s"
+
+#~ msgid "Event Details"
+#~ msgstr "Endre detaljer"
+
+#~ msgid "Duration:"
+#~ msgstr "Tid"
+
+#~ msgid "Server:"
+#~ msgstr "Tjenerfeil"
+
+#~ msgid "All Events"
+#~ msgstr "Alle treninger"
+
+#~ msgid "Pause Feed"
+#~ msgstr "Pauset"
+
+#~ msgid "Replay this request"
+#~ msgstr "Svar på denne kommentaren"
+
+#~ msgid "URL:"
+#~ msgstr "URL:"
+
+#~ msgid "Headers:"
+#~ msgstr "Medlemmer:"
+
+#~ msgid "Template Error"
+#~ msgstr "Tjenerfeil"
+
+#~ msgid "Project Details"
+#~ msgstr "Profildetaljer"
+
+#~ msgid "Remove Project"
+#~ msgstr "Fjern OpenID-assosiasjon"
+
+#~ msgid "+ New Member"
+#~ msgstr "Nytt lagmedlem"
+
+#~ msgid "Edit Member"
+#~ msgstr "Medlemmer"
+
+#~ msgid "New Member"
+#~ msgstr "Nytt lagmedlem"
+
+#~ msgid "Remove Member"
+#~ msgstr "Husk meg"
+
+#~ msgid "b"
+#~ msgstr "av"
+
+#~ msgid "k"
+#~ msgstr "km"
+
+#~ msgid "never"
+#~ msgstr "Tilbakestill"
+
+#~ msgid "0 minutes"
+#~ msgstr " minutter"
+
+#~ msgid "1 day"
+#~ msgstr " dag"
+
+#~ msgid "Exception"
+#~ msgstr "Stigning"
+
+#~ msgid "Exceptions"
+#~ msgstr "Steder"
+
+#~ msgid "Message"
+#~ msgstr "Melding"
+
+#~ msgid "Messages"
+#~ msgstr "Melding"
+
+#~ msgid "Old password"
+#~ msgstr "Passord"
+
+#~ msgid "New password"
+#~ msgstr "Sett passord"
+
+#~ msgid "New password confirmation"
+#~ msgstr "Bekreft sletting"
+
+#~ msgid "Photos for "
+#~ msgstr "Foto for "
+
 #~ msgid "slug"
 #~ msgstr "Kortnavn"
 
@@ -3206,7 +3519,6 @@ msgstr "for å legge inn en kommentar"
 #~ msgid "description"
 #~ msgstr "Beskrivelse"
 
-#, fuzzy
 #~ msgid "Power zone"
 #~ msgstr "Effekt"
 
@@ -3222,7 +3534,6 @@ msgstr "for å legge inn en kommentar"
 #~ msgid "Turan: It's what matters."
 #~ msgstr "Turan: Er det som teller."
 
-#, fuzzy
 #~ msgid "Show more"
 #~ msgstr "Vis"
 
@@ -3268,157 +3579,50 @@ msgstr "for å legge inn en kommentar"
 #~ msgid "clear"
 #~ msgstr "visk ut"
 
-#~ msgid "Compose Message"
-#~ msgstr "Skriv ny melding"
-
-#~ msgid "Send"
-#~ msgstr "Send"
-
-#~ msgid "Subject"
-#~ msgstr "Tittel"
-
-#~ msgid "Received"
-#~ msgstr "Mottatt"
-
-#~ msgid "Action"
-#~ msgstr "Valg"
-
-#~ msgid "DATETIME_FORMAT"
-#~ msgstr "DATETIME_FORMAT"
-
-#~ msgid "delete"
-#~ msgstr "Slett"
-
-#~ msgid "Sent from %(site_url)s"
-#~ msgstr "Sendt fra %(site_url)s "
-
-#~ msgid "Sent Messages"
-#~ msgstr "Sendte meldinger"
-
-#~ msgid "Recipient"
-#~ msgstr "Mottaker"
-
-#~ msgid "Deleted Messages"
-#~ msgstr "Slettede Meldinger"
-
-#~ msgid "undelete"
-#~ msgstr "gjenopprett"
-
-#, fuzzy
-#~ msgid ""
-#~ "Deleted Messages are removed from the trash at irregular intervals, don't "
-#~ "rely on this feature for long-time storage."
-#~ msgstr ""
-#~ "Slettede meldinger blir fjernet fra papirkurven med gjevne mellomrom, "
-#~ "ikke bruk denne funksjonen til langtidslagring."
-
-#~ msgid "View Message"
-#~ msgstr "Se melding"
-
-#~ msgid "Reply"
-#~ msgstr "Svar"
-
-#, fuzzy
-#~ msgid ""
-#~ "You have deleted the message <a href=\"%(message_url)s\">%(message)s</a>."
-#~ msgstr "Du er ikke medlem av noen <a href=\"%(tribe_url)s\">lag</a> ."
-
-#, fuzzy
-#~ msgid ""
-#~ "You have recovered the message <a href=\"%(message_url)s\">%(message)s</"
-#~ "a>."
-#~ msgstr "Du er ikke medlem av noen <a href=\"%(tribe_url)s\">lag</a> ."
-
-#, fuzzy
-#~ msgid ""
-#~ "You have replied to <a href=\"%(message_url)s\">%(message_parent_msg)s</"
-#~ "a> from <a href=\"%(recipient_url)s\">%(recipient_display)s</a>."
-#~ msgstr ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> har sluttet seg til stammen <a href="
-#~ "\"%(tribe_url)s\">%(tribe)s</a>."
-
-#, fuzzy
-#~ msgid ""
-#~ "<a href=\"%(sender_url)s\">%(sender_display)s</a> has sent you a reply to "
-#~ "<a href=\"%(message_url)s\">%(message_parent_msg)s</a>."
-#~ msgstr ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> har kommentert treningen din '<a "
-#~ "href=\"%(exercise_url)s\">%(exercise)s</a>'."
-
-#, fuzzy
-#~ msgid ""
-#~ "You have sent the message <a href=\"%(message_url)s\">%(message)s</a> to "
-#~ "<a href=\"%(recipient_url)s\">%(recipient_display)s</a>."
-#~ msgstr ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> har sluttet seg til stammen <a href="
-#~ "\"%(tribe_url)s\">%(tribe)s</a>."
-
-#~ msgid "Preview"
-#~ msgstr "Forhåndsvis"
-
-#, fuzzy
 #~ msgid "Admin CP"
 #~ msgstr "Sjefe"
 
-#, fuzzy
 #~ msgid "Topics"
 #~ msgstr "Tråder:"
 
-#, fuzzy
 #~ msgid "views"
 #~ msgstr "Forhåndsvis"
 
-#, fuzzy
 #~ msgid "reply"
 #~ msgstr "Svar"
 
-#, fuzzy
 #~ msgid "topics "
 #~ msgstr "Tråder:"
 
-#, fuzzy
 #~ msgid "Total number of topics:"
 #~ msgstr "Antall tura"
 
-#, fuzzy
-#~ msgid "Pages:"
-#~ msgstr "Side"
-
-#, fuzzy
 #~ msgid ""
 #~ "\n"
-#~ "    You must <a href=\"%(login_url)s\">log in</a> or <a href="
-#~ "\"%(register_url)s\">register</a> to post a new topic\n"
+#~ "    You must <a href=\"%(login_url)s\">log in</a> or <a href=\"%(register_url)s\">register</a> to post a new topic\n"
 #~ "    "
 #~ msgstr ""
-#~ "Du kan <a href=\"%(signup_url)s\">registrere deg</a> og <a href="
-#~ "\"%(login_url)s\">Logge inn</a> for å prøve sida."
+#~ "Du kan <a href=\"%(signup_url)s\">registrere deg</a> og <a "
+#~ "href=\"%(login_url)s\">Logge inn</a> for å prøve sida."
 
-#, fuzzy
 #~ msgid "Post reply"
 #~ msgstr "Svar"
 
-#, fuzzy
 #~ msgid "Posts"
 #~ msgstr "Send"
 
-#, fuzzy
 #~ msgid "Go to %(username)s profile"
 #~ msgstr "Treningene til %(username)s"
 
-#, fuzzy
 #~ msgid "Posts:"
 #~ msgstr "Send"
 
-#, fuzzy
 #~ msgid "Delete post?"
 #~ msgstr "Slett kommentar"
 
-#, fuzzy
 #~ msgid "Topic options"
 #~ msgstr "Steder"
 
-#, fuzzy
 #~ msgid "Quick reply to this topic"
 #~ msgstr "Svar på denne kommentaren"
 
@@ -3434,9 +3638,6 @@ msgstr "for å legge inn en kommentar"
 #~ msgid "Created:"
 #~ msgstr "Opprettet:"
 
-#~ msgid "Edit details"
-#~ msgstr "Endre detaljer"
-
 #~ msgid "updated"
 #~ msgstr "oppdatert"
 
@@ -3446,8 +3647,7 @@ msgstr "for å legge inn en kommentar"
 #~ msgid "Delete Tribe"
 #~ msgstr "Slett lag"
 
-#~ msgid ""
-#~ "You are not the only member of the tribe so you can't delete the tribe."
+#~ msgid "You are not the only member of the tribe so you can't delete the tribe."
 #~ msgstr "Det er flere medlemmer i laget så det kan ikke slettes."
 
 #~ msgid "You are the creator of this tribe so can't leave (yet)."
@@ -3460,27 +3660,24 @@ msgstr "for å legge inn en kommentar"
 #~ msgstr "bli medlem"
 
 #~ msgid ""
-#~ "<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log "
-#~ "in </a> to join this tribe."
+#~ "<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in"
+#~ " </a> to join this tribe."
 #~ msgstr ""
-#~ "<a href=\"%(signup_url)s\">Registrer deg</a> og <a href=\"%(login_url)s"
-#~ "\">Logg inn </a> for å bli med."
+#~ "<a href=\"%(signup_url)s\">Registrer deg</a> og <a "
+#~ "href=\"%(login_url)s\">Logg inn </a> for å bli med."
 
 #~ msgid ""
 #~ "a short version of the name consisting only of letters, numbers, "
 #~ "underscores and hyphens."
 #~ msgstr ""
-#~ "en kortversjon av navnet som bare består av bokstaver, tall, under- og "
-#~ "bindestrek."
+#~ "en kortversjon av navnet som bare består av bokstaver, tall, under- og"
+#~ " bindestrek."
 
 #~ msgid "A team already exists with that slug."
 #~ msgstr "Det fins allerede et lag med det kortnavnet."
 
 #~ msgid "A team already exists with that name."
 #~ msgstr "Det fins allerede et lag med det navnet."
-
-#~ msgid "New Team Member"
-#~ msgstr "Nytt lagmedlem"
 
 #~ msgid "a team you are a member of has a new member"
 #~ msgstr "et lag du er medlem av har fått et nytt medlem"
@@ -3516,14 +3713,13 @@ msgstr "for å legge inn en kommentar"
 #~ msgstr "Du er allerede med i laget %(tribe_name)s "
 
 #~ msgid ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> has joined the tribe <a href="
-#~ "\"%(tribe_url)s\">%(group)s</a>."
+#~ "<a href=\"%(user_url)s\">%(user)s</a> has joined the tribe <a "
+#~ "href=\"%(tribe_url)s\">%(group)s</a>."
 #~ msgstr ""
-#~ "<a href=\"%(user_url)s\">%(user)s</a> har blitt med på laget <a href="
-#~ "\"%(tribe_url)s\">%(group)s</a>'."
+#~ "<a href=\"%(user_url)s\">%(user)s</a> har blitt med på laget <a "
+#~ "href=\"%(tribe_url)s\">%(group)s</a>'."
 
-#~ msgid ""
-#~ "A new group <a href=\"%(group_url)s\">%(group)s</a> has been created."
+#~ msgid "A new group <a href=\"%(group_url)s\">%(group)s</a> has been created."
 #~ msgstr "En ny gruppe <a href=\"%(group_url)s\">%(group)s</a> ble opprettet."
 
 #~ msgid "Unnamed trip"
@@ -3538,8 +3734,8 @@ msgstr "for å legge inn en kommentar"
 #~ "you received a private message from %(sender)s with\n"
 #~ "the following contents:"
 #~ msgstr ""
-#~ "Hei %(recipient)s, du har mottatt en privat melding fra %(sender)s med "
-#~ "følgende innhold:"
+#~ "Hei %(recipient)s, du har mottatt en privat melding fra %(sender)s med"
+#~ " følgende innhold:"
 
 #~ msgid "Create a Tribe"
 #~ msgstr "Opprett et lag"
@@ -3557,17 +3753,14 @@ msgstr "for å legge inn en kommentar"
 #~ msgstr "opprett"
 
 #~ msgid ""
-#~ "<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log "
-#~ "in </a> to create your own tribe or join an existing one."
+#~ "<a href=\"%(signup_url)s\">Sign up</a> and <a href=\"%(login_url)s\">log in"
+#~ " </a> to create your own tribe or join an existing one."
 #~ msgstr ""
-#~ "<a href=\"%(signup_url)s\">Registrer deg</a> og <a href=\"%(login_url)s"
-#~ "\">Logg inn </a> for lagendringer."
+#~ "<a href=\"%(signup_url)s\">Registrer deg</a> og <a "
+#~ "href=\"%(login_url)s\">Logg inn </a> for lagendringer."
 
 #~ msgid "Slogan:"
 #~ msgstr "Motto:"
-
-#~ msgid "URL:"
-#~ msgstr "URL:"
 
 #~ msgid "Discussion Topics"
 #~ msgstr "Diskusjoner"
@@ -3580,8 +3773,7 @@ msgstr "for å legge inn en kommentar"
 
 #~ msgid ""
 #~ "\n"
-#~ "                        None yet. Go to the <a href=\"%(wiki_url)s\" "
-#~ "title=\"wiki\">wiki</a> to start a new article.\n"
+#~ "                        None yet. Go to the <a href=\"%(wiki_url)s\" title=\"wiki\">wiki</a> to start a new article.\n"
 #~ "                    "
 #~ msgstr ""
 #~ "\n"
@@ -3595,16 +3787,11 @@ msgstr "for å legge inn en kommentar"
 
 #~ msgid ""
 #~ "\n"
-#~ "                        There are no photos associated to this tribe. You "
-#~ "can <a href=\"%(photo_upload_url)s\">add a photo</a>.</a>\n"
+#~ "                        There are no photos associated to this tribe. You can <a href=\"%(photo_upload_url)s\">add a photo</a>.</a>\n"
 #~ "                    "
 #~ msgstr ""
 #~ "\n"
-#~ "Ingen lagfoto. Du kan <a href=\"%(photo_upload_url)s\">legge til foto</a>."
-#~ "</a>"
-
-#~ msgid "Members:"
-#~ msgstr "Medlemmer:"
+#~ "Ingen lagfoto. Du kan <a href=\"%(photo_upload_url)s\">legge til foto</a>.</a>"
 
 #~ msgid "These are the tribes you participate in."
 #~ msgstr "Dine lag."
@@ -3619,16 +3806,16 @@ msgstr "for å legge inn en kommentar"
 #~ "Segments are parts of exercises that are public and shared between "
 #~ "exercisers. You can for example "
 #~ msgstr ""
-#~ "Segmenter er deler av øvelser som er offentlige og deles mellom utøvere. "
-#~ "Du kan for eksempel"
+#~ "Segmenter er deler av øvelser som er offentlige og deles mellom "
+#~ "utøvere. Du kan for eksempel"
 
 #~ msgid ""
 #~ "create a segment</a> for your favourite climb, and then using GPS data "
-#~ "Turan will find all rides for the segment and list the ride. Use this to "
-#~ "compete with yourself or others."
+#~ "Turan will find all rides for the segment and list the ride. Use this "
+#~ "to compete with yourself or others."
 #~ msgstr ""
-#~ "opprette et segment for din favorittbakke, og Turan vil deretter bruke "
-#~ "GPS-data til å finne alle turer langs segmentet. Bruk denne til å "
+#~ "opprette et segment for din favorittbakke, og Turan vil deretter bruke"
+#~ " GPS-data til å finne alle turer langs segmentet. Bruk denne til å "
 #~ "konkurrere med deg selv og andre."
 
 #~ msgid "Profile for %(other_user)s"
@@ -3684,9 +3871,6 @@ msgstr "for å legge inn en kommentar"
 #~ msgid "All Tribes Matching <i>&quot;%(tag)s&quot;</i>"
 #~ msgstr "Alle lag med merkelapp <i>&quot;%(tag)s&quot;</i>"
 
-#~ msgid "Cancel"
-#~ msgstr "Avbryt"
-
 #~ msgid "Uploading"
 #~ msgstr "Laster opp"
 
@@ -3708,15 +3892,6 @@ msgstr "for å legge inn en kommentar"
 #~ msgid "You are editing an revision which is not the latest!"
 #~ msgstr "Du redigerer en revisjon som er ikke den siste!"
 
-#~ msgid "The page is locked for you."
-#~ msgstr "Siden er ikke tilgjengelig for deg."
-
-#~ msgid "Save changes"
-#~ msgstr "Lagre endringer"
-
-#~ msgid "Please confirm deletion"
-#~ msgstr "Bekreft sletting"
-
 #~ msgid "Revisions for this page"
 #~ msgstr "Revisjoner for denne siden"
 
@@ -3729,17 +3904,8 @@ msgstr "for å legge inn en kommentar"
 #~ msgid "Changed"
 #~ msgstr "Endret"
 
-#~ msgid "Message"
-#~ msgstr "Melding"
-
 #~ msgid "Modified by"
 #~ msgstr "Endret av"
-
-#~ msgid "View"
-#~ msgstr "Vis"
-
-#~ msgid "Revert"
-#~ msgstr "Tilbakestill"
 
 #~ msgid "Compare revisions"
 #~ msgstr "Sammenlign revisjoner"
@@ -3750,10 +3916,10 @@ msgstr "for å legge inn en kommentar"
 #~ msgid "Log, analyze and graph your exercises"
 #~ msgstr "Logg, analyser og graf treninger"
 
-#~ msgid ""
-#~ "This value must contain only letters, numbers, underscores and hyphens."
+#~ msgid "This value must contain only letters, numbers, underscores and hyphens."
 #~ msgstr ""
-#~ "Denne verdien skal kun inneholde bokstaver, tall, under- og bindestreker."
+#~ "Denne verdien skal kun inneholde bokstaver, tall, under- og "
+#~ "bindestreker."
 
 #~ msgid "All Tribe Topics Matching <i>%(tag)s</i>"
 #~ msgstr "Alle lagdiskusjonar med merkelapp <i>%(tag)s</i>"
@@ -3767,9 +3933,6 @@ msgstr "for å legge inn en kommentar"
 #~ msgid "Upcoming Events"
 #~ msgstr "Kommende hendelser"
 
-#~ msgid "There are no upcoming events."
-#~ msgstr "Ingen kommende hendelser"
-
 #~ msgid "calendar..."
 #~ msgstr "kalender..."
 
@@ -3781,18 +3944,11 @@ msgstr "for å legge inn en kommentar"
 
 #~ msgid ""
 #~ "\n"
-#~ "            Turan is a hobby project driven mostly by coffee and frozen "
-#~ "pizzas, but also by xt, N`Grath and si-m1. It supports a variety of "
-#~ "training computers, preferrably with a gps-module. If you want to, you "
-#~ "can use several devices and combine it here, as long as you're able to "
-#~ "retrieve the .tcx, .gpx, and/or .hrm from the device.\n"
+#~ "            Turan is a hobby project driven mostly by coffee and frozen pizzas, but also by xt, N`Grath and si-m1. It supports a variety of training computers, preferrably with a gps-module. If you want to, you can use several devices and combine it here, as long as you're able to retrieve the .tcx, .gpx, and/or .hrm from the device.\n"
 #~ "            "
 #~ msgstr ""
 #~ "\n"
-#~ "        Turan er et hobbyprosjekt drevet mest av kaffe og frossenpizzaer, "
-#~ "men også av xt, N`Grath og si-m1. Det støtter en rekke pulsklokker, som "
-#~ "helst har GPS. Du kan også bruke flere enheter og kombinere data fra dem "
-#~ "så lenge du får hentet ut tcx, .gpx, og/eller .hrm fra enhetene.\n"
+#~ "        Turan er et hobbyprosjekt drevet mest av kaffe og frossenpizzaer, men også av xt, N`Grath og si-m1. Det støtter en rekke pulsklokker, som helst har GPS. Du kan også bruke flere enheter og kombinere data fra dem så lenge du får hentet ut tcx, .gpx, og/eller .hrm fra enhetene.\n"
 #~ "        "
 
 #~ msgid "The supported devices are"
@@ -3806,9 +3962,6 @@ msgstr "for å legge inn en kommentar"
 
 #~ msgid "Longest total distance"
 #~ msgstr "Lengste totallengde"
-
-#~ msgid "Average hike length"
-#~ msgstr "Gj. tur-lengde"
 
 #~ msgid "Most time hiking"
 #~ msgstr "Mest tid på fottur"
@@ -3872,62 +4025,26 @@ msgstr "for å legge inn en kommentar"
 
 #~ msgid ""
 #~ "\n"
-#~ "\t<p>Turan is a hobby project driven mostly by coffee and frozen pizzas, "
-#~ "but also by xt, N`Grath and si-m1. It supports a variety of training "
-#~ "computers, preferrably with a gps-module. If you want to, you can use "
-#~ "several devices and combine it here, as long as you're able to retrieve "
-#~ "the .tcx, .gpx, and/or .hrm from the device. The supported devices are:</"
-#~ "p>\n"
+#~ "\t<p>Turan is a hobby project driven mostly by coffee and frozen pizzas, but also by xt, N`Grath and si-m1. It supports a variety of training computers, preferrably with a gps-module. If you want to, you can use several devices and combine it here, as long as you're able to retrieve the .tcx, .gpx, and/or .hrm from the device. The supported devices are:</p>\n"
 #~ "\t<ul>\n"
-#~ "\t\t<li><img src=\"http://img.gfx.no/351/351865/garmin-edge-705-2.22x40!."
-#~ "jpg\" height=\"30\"><a href=\"http://www.hardware.no/sok/?query=garmin"
-#~ "+edge\">Garmin Edge</a></li>\n"
-#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/"
-#~ "medium/443/175/51840314640600011209892338671996175443.jpg\" height="
-#~ "\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?"
-#~ "siteSearchQuery=polar+rs\">Polar RS</a></li>\n"
-#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/"
-#~ "medium/795/523/3972572682238954048978020975365523795.jpg\" height="
-#~ "\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?"
-#~ "siteSearchQuery=powertap\">PowerTap</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.gfx.no/351/351865/garmin-edge-705-2.22x40!.jpg\" height=\"30\"><a href=\"http://www.hardware.no/sok/?query=garmin+edge\">Garmin Edge</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/medium/443/175/51840314640600011209892338671996175443.jpg\" height=\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=polar+rs\">Polar RS</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/medium/795/523/3972572682238954048978020975365523795.jpg\" height=\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=powertap\">PowerTap</a></li>\n"
 #~ "\t</ul>\n"
-#~ "    <p>Turan is currently categorized into cycletrips, hikes and other "
-#~ "exercises. Spinning and other indoor activity ends up in the latter "
-#~ "category. The system will retrieve some of the information directly from "
-#~ "the file you provide, but you will have to enter the comment for the "
-#~ "exercise, and maybe some tags to group it with other similar exercises, "
-#~ "such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've "
-#~ "been without.</p>\n"
+#~ "    <p>Turan is currently categorized into cycletrips, hikes and other exercises. Spinning and other indoor activity ends up in the latter category. The system will retrieve some of the information directly from the file you provide, but you will have to enter the comment for the exercise, and maybe some tags to group it with other similar exercises, such as rainyday-trips, solo-trips, bunch-sprints, and trips you could've been without.</p>\n"
 #~ "    \n"
 #~ "    \n"
 #~ "        \n"
 #~ "        "
 #~ msgstr ""
 #~ "\n"
-#~ "\t<p>Turan er et hobbyprosjekt som stort sett er drevet av kaffe og "
-#~ "frossenpizza, men også av xt, N`Grath og si-m1. Det støtter en rekke "
-#~ "pulsklokker, helst med GPS. Du kan også bruke forskjellig utstyr og "
-#~ "kombinere dem her så lenge du får tak i .tcx, .gpx, og/eller .hrm fra "
-#~ "utstyret. De støttede enhetene er bl.a.:</p>\n"
+#~ "\t<p>Turan er et hobbyprosjekt som stort sett er drevet av kaffe og frossenpizza, men også av xt, N`Grath og si-m1. Det støtter en rekke pulsklokker, helst med GPS. Du kan også bruke forskjellig utstyr og kombinere dem her så lenge du får tak i .tcx, .gpx, og/eller .hrm fra utstyret. De støttede enhetene er bl.a.:</p>\n"
 #~ "\t<ul>\n"
-#~ "\t\t<li><img src=\"http://img.gfx.no/351/351865/garmin-edge-705-2.22x40!."
-#~ "jpg\" height=\"30\"><a href=\"http://www.hardware.no/sok/?query=garmin"
-#~ "+edge\">Garmin Edge</a></li>\n"
-#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/"
-#~ "medium/443/175/51840314640600011209892338671996175443.jpg\" height="
-#~ "\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?"
-#~ "siteSearchQuery=polar+rs\">Polar RS</a></li>\n"
-#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/"
-#~ "medium/795/523/3972572682238954048978020975365523795.jpg\" height="
-#~ "\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?"
-#~ "siteSearchQuery=powertap\">PowerTap</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.gfx.no/351/351865/garmin-edge-705-2.22x40!.jpg\" height=\"30\"><a href=\"http://www.hardware.no/sok/?query=garmin+edge\">Garmin Edge</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/medium/443/175/51840314640600011209892338671996175443.jpg\" height=\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=polar+rs\">Polar RS</a></li>\n"
+#~ "\t\t<li><img src=\"http://img.kelkoo.com/no/medium/795/523/3972572682238954048978020975365523795.jpg\" height=\"30\"><a href=\"http://shopping.kelkoo.no/ctl/do/search?siteSearchQuery=powertap\">PowerTap</a></li>\n"
 #~ "\t</ul>\n"
-#~ "    <p>Turan er fortiden delt inn i sykkelturer, gåturer og andre "
-#~ "treninger. Spinning og andre innendørsaktiviteter havner i siste "
-#~ "kategorien. Systemet vil hente noe av informasjonen rett fra filen du "
-#~ "laster opp, men du må skrive en kommentar til treningen, og gjerne noen "
-#~ "merkelapper for å gruppere den med andre treninger som regntur, solotur, "
-#~ "gruppesprint og turer du aldri skulle tatt.</p>\n"
+#~ "    <p>Turan er fortiden delt inn i sykkelturer, gåturer og andre treninger. Spinning og andre innendørsaktiviteter havner i siste kategorien. Systemet vil hente noe av informasjonen rett fra filen du laster opp, men du må skrive en kommentar til treningen, og gjerne noen merkelapper for å gruppere den med andre treninger som regntur, solotur, gruppesprint og turer du aldri skulle tatt.</p>\n"
 #~ "    \n"
 #~ "    \n"
 #~ "        \n"
