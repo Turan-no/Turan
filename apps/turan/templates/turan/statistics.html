@@ -12,6 +12,9 @@
 {% block content %}
 <div class="page-header">
     <h1> {% trans "Exercise Statistics" %} <small>{% trans "Showing statistics for" %} {{now.year}}{% if month %}.{{ month|default:"" }}{% endif %}</small></h1>
+    {% if user.is_authenticated %}
+    <a class="btn pull-right" href="{% url profile_statistics user%}">{% trans "My statistics"%}</a>
+    {% endif %}
     <h5>{% trans "Select month" %}</h5>
     <div class="btn-group">
     <a class="btn" href="{% url statistics-month previous_month.year previous_month.month %}">
