@@ -10,29 +10,22 @@
             {% for object in slopes %}
             <tr class="{% cycle odd,even %} hoverpoint" id="trip_{{object.id}}">
                 <td>
-                    <input type="checkbox" name="selected_routes" value="{{ object.exercise.id }}-{{object.id}}">
+                    <input type="checkbox" class="selected_routes" value="{{ object.exercise.id }}-{{object.id}}">
                     <input type="hidden" id="start{{object.exercise.id}}-{{object.id}}" value="{{object.start|unlocalize}}">
-                </td>
-                <td>
-                        {% if object.exercise.user == request.user or request.user.is_superuser %}
-                        <a href="{% url segmentdetail_update object.id %}">
-                        <img title="{% trans "Modify segment entry"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
-                        </a>
-                        <a href="{% url segmentdetail_delete object.id %}">
-                        <img title="{% trans "Delete segment entry"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
-                        </a>
-                        {% endif%}
-                    <a href="{{ object.exercise.get_absolute_url }}#graph-zoom-{{object.start|unlocalize}}-{{object.end|unlocalize}}">
-                        <img src="/site_media/pinax/img/silk/icons/zoom.png" />
-                        {{ object.exercise.route|truncatechars:"15" }}
+                    {% if object.exercise.user == request.user %}
+                    <a href="{% url segmentdetail_update object.id %}">
+                    <img title="{% trans "Modify segment entry"%}" alt ="modify" src="{{ "wrench"|silk_icon}}">
                     </a>
-                </td>
-                <td>
+                    <a href="{% url segmentdetail_delete object.id %}">
+                    <img title="{% trans "Delete segment entry"%}" alt ="delete" src="{{ "cross"|silk_icon}}">
+                    </a>
+                    {% endif%}
                     <a href="{{ object.exercise.user.get_absolute_url }}" title="{{ object.exercise.user }}">
                     {% avatar object.exercise.user 32 %}
                     </a>
+                    <a {% exercise_mouseover object.exercise %} href="{{ object.exercise.get_absolute_url }}#graph-zoom-{{object.start|unlocalize}}-{{object.end|unlocalize}}">
+                    {{object.exercise.date|date:"SHORT_DATE_FORMAT" }}</a>
                 </td>
-                <td><a href="{{ object.get_absolute_url }}">{{object.exercise.date|naturalday}}</a></td>
                 <td>{{ object.duration|durationformatshort }}</td>
                 <td>
                     {% if object.avg_hr and object.exercise.user.get_profile.max_hr %} {{ object.avg_hr|percent:object.exercise.user.get_profile.max_hr }} 
@@ -48,9 +41,9 @@
         <td>{{object.est_power|floatformat}} {% trans "W" %} </td>
         <td>{{object.power_per_kg|floatformat}}</td>
         <td>{% if object.vam %}{{object.vam}}{% endif %}</td>
-        <td>
+        <td title="{{object.comment}}">
             {% if object.comment %}
-            {{ object.comment|slice:"70" }}
+            {{ object.comment|slice:"50" }}
             {% endif %}
         </td>
             </tr>

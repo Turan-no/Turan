@@ -73,12 +73,16 @@
         {% include "turan/altitude_profile.html" %}
         <div id="durationdiv" style="width:100%;height:100px"></div>
         <form id="route_form">
+        <div class="form-actions">
+            <button id="compare_btn" class="btn"  type="submit">{% trans "Compare"%}</button>
+        {% if request.user.username %}
+        <a class="btn" href="?username={{request.user.username}}">{% trans "My results" %}</a>
+        {% endif %}
+        <a class="btn" href="?distinct=user">{% trans "Best individual results" %}</a>
+        </div>
         <table class="fullsize">
             <tr>
-                <th>{% trans "CMP" %}</th>
-                <th>{% trans "Trip" %}</th>
-                <th>{% anchortrans exercise__user Exerciser %}</th>
-                <th>{% anchortrans exercise__date "Date" %}</th>
+                <th>{% anchortrans exercise__date "Trip" %}</th>
                 <th>{% anchortrans duration %}</th>
                 <th>{% anchortrans avg_hr "Avg HR" %}</th>
                 <th>{% anchortrans avg_speed "Avg Speed" %}</th>
@@ -91,14 +95,6 @@
             </tr>
             {% include page_template %}
             </table>
-    <div class="form-actions">
-        <input class="btn"  type="submit" value="{% trans "Compare"%}">
-        </form>
-    {% if request.user.username %}
-    <a class="btn" href="?username={{request.user.username}}">{% trans "My results" %}</a>
-    {% endif %}
-    <a class="btn" href="?distinct=user">{% trans "Best individual results" %}</a>
-    </div>
 {% endif %}
 {% endblock content %}
 {% block extra_body %}
@@ -148,12 +144,12 @@
         };
         $.plot($("#durationdiv"), times, options);
 
-        $('#route_form').bind("submit", function (ev) {
+        $('#compare_btn').click(function (ev) {
             ev.preventDefault();
             var selectedIds = [];
             var selectedSegmentIds = [];
             var selectedStarts = [];
-            $(this.selected_routes).each(function (i, elem) {
+            $('.selected_routes').each(function (i, elem) {
                 if (elem.checked) {
                     var object_id = elem.value.split('-')[0];
                     var segment_id = elem.value.split('-')[1];
@@ -176,6 +172,9 @@
                 document.location = player_url;
             else
                 alert("{% trans "Select two or more segments to compare" %}");
+
+            // Prevent default
+            return false;
 
         });
 
