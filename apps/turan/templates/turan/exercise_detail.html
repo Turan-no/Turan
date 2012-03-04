@@ -273,12 +273,12 @@ $(function(){
 
     /*
 
+    */
     var commentcount = $('.bulk').size();
     {% if object.comment %}
     commentcount += 1;
     {% endif %}
-    */
-    //$('#tabs-select-2').html('<p>{% trans "Comments" %} <span class="floatright">' + commentcount + '</span></p>');
+     $('a[href=#tabs-comments]').html($('a[href=#tabs-comments]').html() + '<span class="label">' + commentcount + '</span>');
 
     Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
     if (typeof(Mapper) != "undefined" && Mapper.map) {
