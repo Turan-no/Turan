@@ -67,7 +67,7 @@ $(function () {
                             show: true,
                             radius: 1,
                             formatter: function(label, series){
-                                return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                                return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;"><a href="{% url exercises %}?username={{other_user}}&exercise_type='+label.split(':')[0]+'">'+label+'<br/>'+Math.round(series.percent)+'%</a></div>';
                             },
                             background: { opacity: 0.8 }
                         }

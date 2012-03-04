@@ -2066,6 +2066,9 @@ def exercises(request, queryset, template=None, extra_context=None):
     context = locals()
     if extra_context:
         context.update(extra_context)
+    exercise_type = request.GET.getlist('exercise_type')
+    if exercise_type:
+        queryset = queryset.filter(exercise_type__name__in=exercise_type)
     if request.is_ajax(): #override template
         return turan_object_list(request, template_name=template, queryset=queryset, extra_context=context)
     return turan_object_list(request, queryset=queryset, extra_context=context)
