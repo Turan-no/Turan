@@ -1782,7 +1782,7 @@ msgstr "Siste segment"
 
 #: apps/turan/templates/turan/index.html:170
 msgid "efforts"
-msgstr "gjennomføringar"
+msgstr "turar"
 
 #: apps/turan/templates/turan/index.html:184
 msgid "Latest comments"
