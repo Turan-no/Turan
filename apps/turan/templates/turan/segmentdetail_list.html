@@ -17,24 +17,20 @@
 
     <h1>
         {% trans "Segment efforts" %}
+        <small>{% trans "Segment efforts are the individual results for a segment"%}</small>
     </h1>
     {% include "turan/search_head.html" %}
 
     {% if search_query %}
     <h4>{% trans "Search results for " %}{{search_query}} <a class="remove" title="{% trans "Clear search query" %}" href="{% url segmentdetails %}">[X]</a></h4>
     {% endif %}
-        <ul class="">
             {% include "turan/geolocation.html" %}
     {% if request.user.username %}
-            <li class="btn floatleft">
-                {% if not username %}
-                <a class="" href="{% url segmentdetails %}?username={{request.user.username}}">{% trans "My segment efforts" %}</a>
-                {% else %}
-                <a class="" href="{% url segmentdetails %}">{% trans "All segment efforts" %}</a>
-                {% endif %}
-            </li>
+        <a class="btn" href="{% url segmentdetails %}?username={{request.user.username}}">{% trans "My segment efforts" %}</a>
+    {% else %}
+        <a class="btn" href="{% url segmentdetails %}">{% trans "All segment efforts" %}</a>
     {% endif %}
-        </ul>
+        <a class="btn" href="{% url segments %}">{% trans "All segments" %}</a>
 </div>
 <table class="fullsize">
     <tr class="{% cycle odd,even %}">
@@ -54,7 +50,7 @@
             {% anchortrans ascent "Ascent" %}
         </th>
         <th>
-            {% anchortrans grade "Grade" %}
+            {% anchortrans grade "%" %}
         </th>
         <th>
             {% anchortrans duration "Duration" %}
