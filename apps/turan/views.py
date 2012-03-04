@@ -142,6 +142,7 @@ def index(request):
     days = timedelta(days=14)
     begin = today - days
     user_list = User.objects.filter(**u_lookup_kwargs).filter(exercise__date__range=(begin, today)).annotate(Sum('exercise__duration')).exclude(exercise__duration__isnull=True).order_by('-exercise__duration__sum')[:15]
+    team_list = Tribe.objects.all()
 
     return render_to_response('turan/index.html', locals(), context_instance=RequestContext(request))
 

@@ -199,6 +199,14 @@
     <hr class="clear" />
 </div>
 
+        {% if user.is_authenticated %}
+        <h5>
+            <a href="?friends">{% trans "Front page by friends" %}</a>
+            {% for team in team_list %}
+            {% trans "Front page for team"%} <a href="?team={{team}}">{{ team }}</a>
+            {% endfor  %}
+        </h5>
+        {% endif %}
 </div>
 
 
