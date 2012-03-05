@@ -24,7 +24,7 @@
                     {% avatar object.exercise.user 32 %}
                     </a>
                     <a {% exercise_mouseover object.exercise %} href="{{ object.exercise.get_absolute_url }}#graph-zoom-{{object.start|unlocalize}}-{{object.end|unlocalize}}">
-                    {{object.exercise.date|date:"SHORT_DATE_FORMAT" }}</a>
+                    {{object.exercise.date|naturalday}}</a>
                 </td>
                 <td>{{ object.duration|durationformatshort }}</td>
                 <td>
