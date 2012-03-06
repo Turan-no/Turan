@@ -850,7 +850,7 @@ def wikijson(request, slug, rev_id=None):
     except WikiPage.DoesNotExist:
         raise Http404
 
-    return HttpResponse(serializers.serialize('json', [rev], indent=4), mimetype='text/javascript')
+    return HttpResponse(serializers.serialize('json', [rev], indent=4), mimetype='application/json')
 
 #@decorator_from_middleware(GZipMiddleware)
 #@cache_page(86400*7)
@@ -875,7 +875,7 @@ def exercise_geojson(request, object_id):
     if not start and not stop:
         gjstr = cache.get(cache_key)
         if gjstr:
-            response = HttpResponse(gjstr, mimetype='text/javascript')
+            response = HttpResponse(gjstr, mimetype='application/json')
             response['Content-Encoding'] = 'gzip'
             response['Content-Length'] = len(gjstr)
             return response
@@ -922,7 +922,7 @@ def exercise_geojson(request, object_id):
     if not start and not stop:
         cache.set(cache_key, gjstr, 86400)
 
-    response = HttpResponse(gjstr, mimetype='text/javascript')
+    response = HttpResponse(gjstr, mimetype='application/json')
     response['Content-Encoding'] = 'gzip'
     response['Content-Length'] = len(gjstr)
     return response
@@ -938,7 +938,7 @@ def segment_geojson(request, object_id):
     cache_key = 'segment_geojson_%s' %object_id
     gjstr = cache.get(cache_key)
     if gjstr:
-        response = HttpResponse(gjstr, mimetype='text/javascript')
+        response = HttpResponse(gjstr, mimetype='application/json')
         response['Content-Encoding'] = 'gzip'
         response['Content-Length'] = len(gjstr)
         return response
@@ -1022,7 +1022,7 @@ def segment_geojson(request, object_id):
     if not start and not stop:
         cache.set(cache_key, gjstr, 86400)
 
-    response = HttpResponse(gjstr, mimetype='text/javascript')
+    response = HttpResponse(gjstr, mimetype='application/json')
     response['Content-Encoding'] = 'gzip'
     response['Content-Length'] = len(gjstr)
     return response
@@ -1117,12 +1117,12 @@ def json_trip_series(request, object_id, start=False):
             time_xaxis = True
         js = js_trip_series(request, exercise, details, start=start, time_xaxis=time_xaxis, smooth=smooth, use_constraints = False)
         if not js: # if start and no elements returner, we get None
-            return HttpResponse('{}', mimetype='text/javascript')
+            return HttpResponse('{}', mimetype='application/javascript')
         js = js.encode('UTF-8')
         js = compress_string(js)
         if not start and not exercise.live_state == 'L': # Do not cache slices or live exercises
             cache.set(cache_key, js, 86400)
-    response = HttpResponse(js, mimetype='text/javascript')
+    response = HttpResponse(js, mimetype='application/javascript')
     response['Content-Encoding'] = 'gzip'
     response['Content-Length'] = len(js)
     return response
@@ -1569,7 +1569,7 @@ def json_serializer(request, queryset, root_name = None, relations = (), extras 
     if root_name == None:
         root_name = queryset.model._meta.verbose_name_plural
     #hardcoded relations and extras while testing
-    return HttpResponse(serializers.serialize('json', queryset, indent=4, relations=relations, extras=extras), mimetype='text/javascript')
+    return HttpResponse(serializers.serialize('json', queryset, indent=4, relations=relations, extras=extras), mimetype='application/json')
 
 
 def create_exercise_with_route(request):
@@ -1791,7 +1791,7 @@ def autocomplete_route(request, app_label, model):
     routes = Route.objects.filter(qset).exclude(single_serving=1).annotate( tcount=Count('exercise') ).order_by('-tcount')[:limit]
     route_list = [{'id': f.pk, 'name': f.__unicode__(), 'description': f.description, 'tcount': f.tcount, 'icon': f.get_png_url()} for f in routes]
 
-    return HttpResponse(simplejson.dumps(route_list), mimetype='text/javascript')
+    return HttpResponse(simplejson.dumps(route_list), mimetype='application/json')
 
 def ical(request, username):
 
@@ -2504,7 +2504,7 @@ def json_altitude_gradient(request, object_id):
     gradients = simplejson.dumps(list(object.exercisealtitudegradient_set.values_list('xaxis', 'gradient')))
     #js = compress_string(gradients)
     js = gradients
-    response = HttpResponse(js, mimetype='text/javascript')
+    response = HttpResponse(js, mimetype='application/json')
     #response['Content-Encoding'] = 'gzip'
     response['Content-Length'] = len(js)
     return response

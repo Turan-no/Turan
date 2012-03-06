@@ -1437,3 +1437,6 @@ label, .baseLbl, .dataLbl {
 .navbar ul.nav>li>a:hover {
     background-color: black;
 }
+.tab-content ul {
+    float: left;
+}
