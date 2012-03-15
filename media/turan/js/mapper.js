@@ -64,9 +64,11 @@ var Mapper = {
               '<a href="http://www.statkart.no/nor/Land/Fagomrader/Geovekst/">Geovekst</a> og ' +
               '<a href="http://www.statkart.no/?module=Articles;action=Article.publicShow;ID=14194">kommuner</a>'});
 
-        var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+        var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Openstreetmap");
+        /*
         var layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
         var layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
+        */
         var gphy = new OpenLayers.Layer.Google(
             "Google Physical",
             {type: google.maps.MapTypeId.TERRAIN}
@@ -87,10 +89,10 @@ var Mapper = {
         this.FKB = FKB;
 
 
-        var defaultlayers = [layerMapnik, layerCycleMap, layerTilesAtHome, FKB, FKBraster, gphy, gmap, ghyb, gsat];
+        var defaultlayers = [layerMapnik,  FKB, FKBraster, gphy, gmap, ghyb, gsat];
         if (start) {
             if (start[0] > 4 && start[1] > 57) { // Quickfix for checking for norwegian maps or not
-                defaultlayers = [FKB, FKBraster, layerMapnik, layerCycleMap, layerTilesAtHome, gphy, gmap, ghyb, gsat];
+                defaultlayers = [FKB, FKBraster, layerMapnik, gphy, gmap, ghyb, gsat];
             }
         }
         this.defaultlayers = defaultlayers;
