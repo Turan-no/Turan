@@ -205,7 +205,7 @@
             {% for zone in hrzone|slice:":10" %}
                 <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> 
                 <span class="old-label">{{ zone }}:</span>   
-                {{zone.duration|durationformat}}
+                <div class="floatright">{{zone.duration|durationformat}}</div>
             </li>
             {% endfor %}
             </ol>
@@ -228,8 +228,10 @@
                 <ol>
                 {% endif %}
                     <li class="{% ifequal forloop.counter 1 %}first{% endifequal %}{% ifequal forloop.counter 2 %}second{% endifequal %}{% ifequal forloop.counter 3 %}third{% endifequal %}"> <span class="old-label">{{ b }}:</span>   
-                    {{b.max_power}} {% trans "W" %},
-                    {{power_per_kg|floatformat}} {% trans "W/kg" %}
+                    <div class="floatright">
+                        {{b.max_power}} {% trans "W" %},
+                        {{power_per_kg|floatformat}} {% trans "W/kg" %}
+                    </div>
                 </li>
                 {% endfor %}
                 </ol>
