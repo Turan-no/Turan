@@ -586,7 +586,9 @@ div.box h2, div.box h3 {
 .statbox>h4 {
     margin-bottom: 5px;
 }
-
+.statbox>ol>li {
+    clear: right;
+}
 
 /* nicolasgallagher.com/css-drop-shadows-without-images/demo/*/
 
