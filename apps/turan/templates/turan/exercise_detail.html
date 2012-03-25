@@ -282,7 +282,8 @@ $(function(){
     {% endif %}
      $('a[href=#tabs-comments]').html($('a[href=#tabs-comments]').html() + '<span class="label">' + commentcount + '</span>');
 
-    Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
+    if (typeof(Mapper) != "undefined")
+	Mapper.posLayer = Mapper.initFeature('{{object.user}}' + ' {% trans "Position" %}', "{{5|player_icon_huge:object.exercise_type}}", 48);
     if (typeof(Mapper) != "undefined" && Mapper.map) {
         // Init the marker for graph hover thingy
 
