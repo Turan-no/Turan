@@ -376,6 +376,14 @@ class Route(models.Model):
                             max_lon, max_lat = this_lon, this_lat
                 return max_lon, max_lat
 
+    def gpx_valid(self):
+        if self.gpx_file and \
+                self.start_lon != 0.0 and \
+                self.start_lat != 0.0 and \
+                self.end_lon != 0.0 and \
+                self.end_lat != 0.0:
+            return True
+        return False
 
 class ExerciseManager(models.Manager):
     ''' Some permission related purposes '''
