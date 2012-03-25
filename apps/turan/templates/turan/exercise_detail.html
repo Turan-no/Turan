@@ -6,6 +6,7 @@
 {% load tagging_tags %}
 {% load avatar_tags %}
 {% load phileo_tags %}
+{% load account_tags %}
 {% block extra_head %}
 {{ block.super }}
     {% phileo_css %}
@@ -83,7 +84,7 @@
                     <small>
                          {% trans "by" %}
                         <a href="{{ object.user.get_profile.get_absolute_url }}">
-                            {{ object.user }}
+                            {% user_display object.user %}
                         </a> 
                          
                         {{ object.date|naturalday }}
@@ -175,7 +176,7 @@
         {% if object.comment %}
         <ul>
             <li class="comment">
-                {{ object.user }} {% trans "writes" %}:
+                {% user_display object.user %} {% trans "writes" %}:
                 <p>{{ object.comment|linebreaks }}</p>
                 <hr>
             </li>
