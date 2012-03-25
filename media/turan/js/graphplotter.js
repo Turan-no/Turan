@@ -287,10 +287,13 @@ var GraphPlotter = {
                 checked = ''
             if (key == 'power') 
                 checked = ''
+            var btn_class = "active";
+            if (checked == '')
+                btn_class = ''
 
             if (key != 'lon' && key != 'lat') {
 
-                that.choiceContainer.append('<button class="btn" name="' + key + '" ' + checked + ' id="chk_' + key + '">' + val.label + '</button>');
+                that.choiceContainer.append('<button class="btn ' + btn_class + '" name="' + key + '" ' + checked + ' id="chk_' + key + '">' + val.label + '</button>');
             }
         });
         $("#reset_zoom").bind("click", function(evt) {
