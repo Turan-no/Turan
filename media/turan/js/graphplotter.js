@@ -337,6 +337,9 @@ var GraphPlotter = {
         });
         this.choiceContainer.find("button").bind("click", function(evt) {
                 evt.stopPropagation(); // Stop bootstrap event from firing
+                if ($("#choices>button[checked=checked]").length == 1 && $(this).hasClass("active")) {
+                    return;
+                }
                 $(this).toggleClass('active'); // Handle bootstrap event ourselves before we plot so class is set
                 $(this).attr("checked", !$(this).attr("checked"));
                 that.plot(); 
