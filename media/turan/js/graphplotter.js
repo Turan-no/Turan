@@ -335,6 +335,7 @@ var GraphPlotter = {
         this.choiceContainer.find("button").bind("click", function(evt) {
                 evt.stopPropagation(); // Stop bootstrap event from firing
                 $(this).toggleClass('active'); // Handle bootstrap event ourselves before we plot so class is set
+                $(this).attr("checked", !$(this).attr("checked"));
                 that.plot(); 
         });
         $('.legendColorBox > div').each(function(i){
