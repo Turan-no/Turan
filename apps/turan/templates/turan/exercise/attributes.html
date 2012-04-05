@@ -70,7 +70,7 @@
                     </a>
                 </li>
             {% endif %}
-            {% if object.temperature %}
+            {% if object.temperature or object.kcal %}
                 <li class="temp">
                     <a href="#5" data-toggle="tab">
                         {{ "cake"|silk_sprite }}
@@ -171,8 +171,9 @@
                 {% endif %}
             </div>
             {% endif %}
-            {% if object.temperature %}
+            {% if object.temperature or object.kcal %}
             <div class="tab-pane" id="5">
+                    {% if object.temperature %}
                     <h6>{% trans "Temperature" %}</h6> {{ object.temperature|floatformat }} {% trans "℃" %}
 
                     {% if object.min_temperature %}
@@ -182,7 +183,12 @@
                     {% if object.max_temperature %}
                         <h6>{% trans "Max Temperature" %}</h6> {{ object.max_temperature|floatformat }} {% trans "℃" %}
                     {% endif %}
+                    {% endif %}
+
+                    {% if object.kcal %}
+                    <h6>{% trans "Calories" %}</h6>
                     {{ object.kcal }} {% trans "kcal" %} ({{object.kcal|bodyfat|floatformat}} kg {% trans "bodyfat" %})
+                    {% endif %}
             </div>
             {% endif %}
             {% if object.avg_cadence %}
