@@ -1442,3 +1442,6 @@ label, .baseLbl, .dataLbl {
 .tab-content ul {
     float: left;
 }
+li .ss_sprite {
+    padding-left: 24px;
+}
