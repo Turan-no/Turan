@@ -74,8 +74,8 @@
                 <li class="temp">
                     <a href="#5" data-toggle="tab">
                         {{ "cake"|silk_sprite }}
-                        {{ object.temperature|floatformat }} {% trans "℃" %}
-                        <br>
+                        {% if object.temperature %}{{ object.temperature|floatformat }} {% trans "℃" %}
+                        <br>{% endif %}
                         {% if object.kcal %}
                             {{ object.kcal }} {% trans "kcal" %} 
                         {% endif %}
