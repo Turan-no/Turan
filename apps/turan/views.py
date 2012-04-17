@@ -307,6 +307,8 @@ def segment_detail(request, object_id, template='turan/segment_detail.html', ext
             series[key]= simplejson.dumps(val)
         if slopes:
             exercise_type = slope.exercise.exercise_type
+        else:
+            exercise_type = ExerciseType.objects.get(name="Running")
 
         gradients = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('xaxis', 'gradient')))
         alt = simplejson.dumps(list(object.segmentaltitudegradient_set.values_list('xaxis', 'altitude')))
