@@ -207,14 +207,14 @@ def events(request, template='turan/event_list.html', group_slug=None, bridge=No
         object_list = Exercise.objects.select_related().filter(date__isnull=False)
         if username:
             user = get_object_or_404(User, username=username)
-            object_list = exerciseqs.filter(user=user)
+            object_list = object_list.filter(user=user)
 
     if latitude and longitude:
         # A litle aprox box around your area
-        object_list = exerciseqs.filter(route__start_lat__gt=float(latitude) - 0.5)
-        object_list = exerciseqs.filter(route__start_lat__lt=float(latitude) + 0.5)
-        object_list = exerciseqs.filter(route__start_lon__gt=float(longitude) - 1.0)
-        object_list = exerciseqs.filter(route__start_lon__lt=float(longitude) + 1.0)
+        object_list = object_list.filter(route__start_lat__gt=float(latitude) - 0.5)
+        object_list = object_list.filter(route__start_lat__lt=float(latitude) + 0.5)
+        object_list = object_list.filter(route__start_lon__gt=float(longitude) - 1.0)
+        object_list = object_list.filter(route__start_lon__lt=float(longitude) + 1.0)
 
     search_query = request.GET.get('q', '')
     if search_query:
@@ -223,7 +223,7 @@ def events(request, template='turan/event_list.html', group_slug=None, bridge=No
                 Q(comment__icontains=search_query) |
                 Q(tags__contains=search_query)
                 )
-        object_list = exerciseqs.filter(qset).distinct()
+        object_list = object_list.filter(qset).distinct()
 
     context = locals()
     if extra_context:
