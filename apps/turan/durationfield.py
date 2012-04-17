@@ -2,6 +2,7 @@ import datetime
 from durationformfield import DurationField as FDurationField
 from durationformfield import TimeDelta
 from django.db.models.fields import Field
+from django.db.models import SubfieldBase
 from django.core.exceptions import ValidationError
 from django.db import connection
 
@@ -27,6 +28,9 @@ class DurationProxy(object):
         instance.__dict__[self.field_name] = value
 
 class DurationField(Field):
+
+    __metaclass__ = SubfieldBase
+
     def __init__(self, *args, **kwargs):
         super(DurationField, self).__init__(*args, **kwargs)
         self.max_digits, self.decimal_places = 20, 6
