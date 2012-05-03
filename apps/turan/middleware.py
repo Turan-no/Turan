@@ -35,6 +35,8 @@ class Http403Middleware(object):
 if 'sentry' in settings.INSTALLED_APPS:
     class TuranSentry404CatchMiddleware(object):
         def process_response(self, request, response):
+            if not hasattr(response, "status_code"):
+                return response
             if response.status_code == 404 and request.META.get('HTTP_REFERER', '') and not sentry_settings.DEBUG:
                 request.META['TURANUSER'] = request.user
                 message_id = get_client().create_from_text('Http 404 %s' %request.path, request=request, level=logging.INFO, logger='http404')
