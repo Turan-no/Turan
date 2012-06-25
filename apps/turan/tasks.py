@@ -293,7 +293,13 @@ def search_trip_for_possible_segments_matches(exercise, start_offset=50, end_off
         found_end = 0
         for i, d in enumerate(details):
             if found_start < 0:
-                start_distance = proj_distance(se.start_lat, se.start_lon, d['lat'], d['lon'])
+                try:
+                    start_distance = proj_distance(se.start_lat, se.start_lon, d['lat'], d['lon'])
+                except Exception, e:
+                    # If any segment has faulty lon/lat-data, this call will fail and segment parsing stop
+                    # just continue here instead of breaking
+                    print "Skipped segment, start distance call failed, error was: %s" %e
+                    continue
                 if start_distance < start_offset:
                     print i, start_distance
                     if previous_start >= 0:

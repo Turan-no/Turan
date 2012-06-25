@@ -22,6 +22,9 @@ var Mapper = {
             this.lgpx = lgpx;
         }
 
+	OpenLayers._getScriptLocation = function() {
+	    return "http://static.turan.no/site_media/";
+	};
 
         this.map = new OpenLayers.Map ({
             controls:[
