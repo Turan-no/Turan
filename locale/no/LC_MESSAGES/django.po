@@ -502,9 +502,10 @@ msgstr "Treningsfil"
 
 #: apps/turan/models.py:429
 msgid ""
-"File from equipment from Garmin/Polar/other (.fit, .tcx, .gpx, .hrm, "
+"File from equipment from Garmin/Polar/other (.fit, .gpx. .tcx, .hrm,"
 ".gmd, .csv, .xml)"
-msgstr "Fil fra treningsmonitor Garmin/Polar (.gpx, .tcx, .hrm, .gmd, .csv)"
+msgstr "Fil fra treningsmonitor Garmin/Polar (.fit, .gpx, .tcx, .hrm,"
+".gmd, .csv, .xml)"
 
 #: apps/turan/models.py:431
 msgid "Exercise permission"
