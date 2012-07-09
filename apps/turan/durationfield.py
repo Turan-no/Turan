@@ -59,6 +59,8 @@ class DurationField(Field):
             raise ValidationError('The value must be an integer.')
         except OverflowError:
             raise ValidationError('The maximum allowed value is %s' % TimeDelta.max)
+        except ValueError:
+            return TimeDelta.from_string(value)
 
     def formfield(self, form_class=FDurationField, **kwargs):
         return super(DurationField, self).formfield(form_class, **kwargs)
