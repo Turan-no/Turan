@@ -337,7 +337,7 @@ def week(request, week, user_id='all'):
 
 @cache_page_against_models(Exercise, Profile, User, UserProfileDetail)
 @vary_on_cookie
-def statistics(request, year=None, month=None, day=None, week=None):
+def statistics(request, year=None, month=None, day=None, week=None, alltime=False):
 
     month_format = '%m'
     date_field = 'date'
@@ -394,10 +394,11 @@ def statistics(request, year=None, month=None, day=None, week=None):
             last_day = date + timedelta(days=7)
             datefilter= {"user__exercise__date__gte":  first_day, 'user__exercise__date__lt': last_day}
     else:
-        # silly, but can't find a suitable noop for filter, and ** can't unpack
-        # empty dict into zero arguments - wah
-        dummystart = datetime(1970,1,1)
-        datefilter = { "user__exercise__date__gte": dummystart }
+        if alltime:
+            start = datetime(1970,1,1)
+        else:
+            start = date
+        datefilter = { "user__exercise__date__gte": start }
 
     teamname = request.GET.get('team')
     statsprofiles = Profile.objects.all()

@@ -11,7 +11,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h1> {% trans "Exercise Statistics" %} <small>{% trans "Showing statistics for" %} {{now.year}}{% if month %}.{{ month|default:"" }}{% endif %}</small></h1>
+    <h1> {% trans "Exercise Statistics" %} <small>{% trans "Showing statistics for" %} {% if alltime %} all time!{% endif %}{% if year %}{{year|default:""}}{% endif %}{% if month %}.{{ month|default:"" }}{% endif %}</small></h1>
     {% if user.is_authenticated %}
     <a class="btn pull-right" href="{% url profile_statistics user%}">{% trans "My statistics"%}</a>
     {% endif %}
@@ -28,6 +28,10 @@
     <a class="btn" href="{% url statistics-month next_month.year next_month.month %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_next.png" alt="{% trans "Next"%}" />
         {% trans "Next" %}
+    </a>
+    <a class="btn" href="{% url statistics-alltime %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/book_open.png" alt="{% trans "All Time High"%}" />
+        {% trans "All Time High" %}
     </a>
     </div>
     <h3>{% trans "Filter by team" %}</h3>
