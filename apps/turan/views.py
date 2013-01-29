@@ -454,9 +454,9 @@ def statistics(request, year=None, month=None, day=None, week=None, alltime=Fals
             avg_avg_hr = Avg('user__exercise__avg_hr'),
             )
 
-    maxavgspeeds = userstats.filter(max_avg_speed__gt=0.0).order_by('max_avg_speed').reverse()
-    maxspeeds = userstats.filter(max_speed__gt=0.0).order_by('max_speed').reverse()
-    avgspeeds = userstats.filter(avg_avg_speed__gt=0.0).order_by('-avg_avg_speed')
+    maxavgspeeds = userstats.filter(max_avg_speed__gt=0.0).exclude(max_avg_speed__gt=200.0).order_by('max_avg_speed').reverse()
+    maxspeeds = userstats.filter(max_speed__gt=0.0).exclude(max_speed__gt=200.0).order_by('max_speed').reverse()
+    avgspeeds = userstats.filter(avg_avg_speed__gt=0.0).exclude(avg_avg_speed__gt=200.0).order_by('-avg_avg_speed')
     numtrips = userstats.filter(num_trips__gt=0).order_by('num_trips').reverse()
     distsums = userstats.filter(sum_distance__gt=0).order_by('sum_distance').reverse()
     dursums = userstats.filter(sum_duration__gt=0).order_by('sum_duration').reverse()
