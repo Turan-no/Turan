@@ -38,6 +38,9 @@
                         {{ "control_play"|silk_sprite }}
                         {% trans "Play" %}
                     </a>
+		    {% if object.route.gpx_valid %}
+		    <a href="{{MEDIA_URL}}turan/{{ object.route.gpx_file }}" class="btn">{% trans "GPX File" %}</a>
+		    {% endif %}
                     {% if user == object.user %}
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                         <span class="ss_sprite ss_cog"></span>
