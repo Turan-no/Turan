@@ -254,7 +254,11 @@ class FITParser(object):
         local_msg_types = {}
         hdr = f.read(12)
         (hdr_size,proto_ver,prof_ver,data_size) = struct.unpack('BBHI',hdr[0:8])
-        data_type = hdr[8:]
+        if hdr_size > 12:
+            # XXX: Maybe do something sensible with this. Ensures we
+            # handle FIT files with optional CRC at least.
+            f.read(hdr_size - 12)
+        data_type = hdr[8:12]
 
         if data_type != '.FIT':
             return
