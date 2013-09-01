@@ -2511,7 +2511,7 @@ msgid "Server Error"
 msgstr "Tenarfeil"
 
 #: templates/500.html:9
-msgid "Server Error Occured"
+msgid "Server Error Occurred"
 msgstr "Tenarfeil oppstod"
 
 #: templates/500.html:12
