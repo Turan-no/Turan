@@ -2541,7 +2541,7 @@ msgid "Server Error"
 msgstr "Tjenerfeil"
 
 #: templates/500.html:9
-msgid "Server Error Occured"
+msgid "Server Error Occurred"
 msgstr "Tjenerfeil. Hamsteren slapp løs"
 
 #: templates/500.html:12
