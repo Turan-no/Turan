@@ -399,6 +399,7 @@ def statistics(request, year=None, month=None, day=None, week=None, alltime=Fals
         else:
             start = date
             year = date.year
+            month = date.month
         datefilter = { "user__exercise__date__gte": start }
 
     teamname = request.GET.get('team')

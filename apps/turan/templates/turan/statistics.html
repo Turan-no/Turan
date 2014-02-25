@@ -25,13 +25,17 @@
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_magnify.png" alt="{% trans "Current month"%}" />
         {% trans "Current" %}
     </a>
-    <a class="btn" href="{% url statistics-month next_month.year next_month.month %}">
+    <a class="{% if now.month == month %}disabled {% endif %}btn" href="{% if now.month == month %}#{% else %}{% url statistics-month next_month.year next_month.month %}{% endif %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/date_next.png" alt="{% trans "Next"%}" />
         {% trans "Next" %}
     </a>
     <a class="btn" href="{% url statistics-alltime %}">
         <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/book_open.png" alt="{% trans "All Time High"%}" />
         {% trans "All Time High" %}
+    </a>
+    <a class="btn" href="{% url statistics-year now.year %}">
+        <img class="icons" src="{{ MEDIA_URL }}pinax/img/silk/icons/book_open.png" alt="{% trans "This Year"%}" />
+        {% trans "This Year" %}
     </a>
     </div>
     <h3>{% trans "Filter by team" %}</h3>
