@@ -1,6 +1,6 @@
 {% extends "turan/base.html" %}
 {% load i18n %}
-{% load uni_form_tags %}
+{% load crispy_forms_tags %}
 
 {% block title %}
 {{ block.super }}
@@ -41,7 +41,7 @@
         </div> 
     {% endif %}
  
-    {{ form|as_uni_form}}
+    {{ form|as_crispy_form}}
     <div class="form-actions">
         <button class="btn btn-large btn-primary" id="submit_btn" type="submit">{% trans "Save exercise" %}</button>
         {% comment %}

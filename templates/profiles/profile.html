@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load avatar_tags %}
 {% load account_tags %}
-{% load uni_form_tags %}
+{% load crispy_forms_tags %}
 {% load microblogging_tags %}
 {% load turan_extras %}
 {% load humanize %}
@@ -108,7 +108,7 @@
                                     <h2>{% trans "Add As Friend" %}</h2>
                                     <form class="uniForm" method="post" action="">
                                         <fieldset class="inlineLabels">  
-                                            {{ invite_form|as_uni_form }}
+                                            {{ invite_form|as_crispy_form }}
                                             <div class="form_block">
                                                 <input type="hidden" name="action" value="invite" />
                                                 <input type="submit" value="{% trans "invite" %}"/>
@@ -208,7 +208,7 @@
                             
                             <form class="uniForm" id="edit-profile" method="post" action="" style="display: none;">
                                 <fieldset class="inlineLabels">
-                                    {{ profile_form|as_uni_form }}
+                                    {{ profile_form|as_crispy_form }}
                                     <div class="form_block">
                                     <input type="hidden" name="action" value="update" />
                                     <input type="submit" value="{% trans "update" %}"/>

@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
-# Django settings for complete pinax project.
 
 import os.path
 import posixpath
-import pinax
 
-PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-
-# tells Pinax to use the default theme
-PINAX_THEME = 'default'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+ALLOWED_HOSTS = []
 
 SERIALIZATION_MODULES = {
     'json': 'wadofstuff.django.serializers.json'
@@ -27,12 +23,12 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'dev.db'       # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(PROJECT_ROOT, 'dev.db.sqlite3'),
+    }
+}
 
 CACHE_MIDDLEWARE_KEY_PREFIX = 'turan'
 CACHES = {
@@ -68,6 +64,7 @@ SITE_ID = 1
 
 USE_I18N = True
 USE_L10N = True
+USE_TZ = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -93,11 +90,9 @@ STATICFILES_DIRS = (
     ('silksprites', os.path.join(PROJECT_ROOT, 'media', 'silksprites')),
     ('flot', os.path.join(PROJECT_ROOT, 'media', 'flot')),
     ('openlayers', os.path.join(PROJECT_ROOT, 'media', 'openlayers')),
-    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
 )
 
 STATICFILES_EXTRA_MEDIA = (
-    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
     ('turan', os.path.join(PROJECT_ROOT, 'media')),
 )
 
@@ -125,30 +120,30 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django_openid.consumer.SessionConsumer',
-    "pinax.apps.account.middleware.LocaleMiddleware",
     'django.middleware.doc.XViewMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'django_sorting.middleware.SortingMiddleware',
 #    'turan.middleware.TuranSentryMarkup',
 #    'sentry.client.middleware.SentryResponseErrorIdMiddleware',
 #    'turan.middleware.TuranSentry404CatchMiddleware',
     'turan.middleware.Http403Middleware',
-    'pinax.middleware.security.HideSensistiveFieldsMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
 )
 
 ROOT_URLCONF = 'turansite.urls'
 
+WSGI_APPLICATION = 'turan.wsgi.application'
+
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates"),
-    os.path.join(PINAX_ROOT, "templates", PINAX_THEME),
 )
 
 
@@ -162,18 +157,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
-#    "staticfiles.context_processors.static_url",
-#    "social_auth.context_processors.facebook_api_key",
-
-#"pinax.core.context_processors.contact_email",
-#"pinax.core.context_processors.site_name",
-    "pinax.core.context_processors.pinax_settings",
-
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
-    "pinax.apps.account.context_processors.account",
-    #"account.context_processors.openid",
-    #"account.context_processors.account",
     "messages.context_processors.inbox",
     "friends_app.context_processors.invitations",
     "turansite.context_processors.combined_inbox_count",
@@ -186,67 +171,42 @@ COMBINED_INBOX_COUNT_SOURCES = (
     "notification.context_processors.notification",
 )
 
-    #'sentry',
-    #'sentry.client',
 INSTALLED_APPS = (
     # included
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'django.contrib.humanize',
-    'django.contrib.markup',
-    'django.contrib.messages',
     'django.contrib.webdesign',
-    'indexer',
+    'microblogging',
     'paging',
-    'pinax.templatetags',
-    
-
-#    'devserver',
     # external
     'notification', # must be first
-    'django_openid',
-    'emailconfirmation',
     'django_extensions',
     'robots',
-    'friends',
-    'mailer',
-    'messages',
+    'apps.friends',
     'announcements',
     'oembed',
-    #'djangodblog',
     'pagination',
     'endless_pagination',
-#    'gravatar',
     'threadedcomments',
-    'threadedcomments_extras',
-#    'wiki',
-#    'swaps',
     'timezones',
-#    'app_plugins',
     'voting',
-    'voting_extras',
     'tagging',
-#    'bookmarks',
-    'blog',
     'ajax_validation',
-    'photologue',
     'avatar',
-    'flag',
-    'microblogging',
-#    'locations',
-    'uni_form',
+    'crispy_forms',
     'django_sorting',
-    'django_markup',
-
     'compressor',
 
 # TUUURAN
-    'turan',
+    'apps.turan',
     'piston',
-    'api', # turan piston API
     'rosetta',
     'south',
     'debug_toolbar',
@@ -256,45 +216,18 @@ INSTALLED_APPS = (
     #
     'social_auth',
 
-    "pinax.apps.account",
-    "pinax.apps.signup_codes",
-    "pinax.apps.analytics",
-    #"pinax.apps.profiles",
-    #"pinax.apps.blog",
-    #"pinax.apps.tribes",
-    "pinax.apps.photos",
-    "pinax.apps.topics",
-    "pinax.apps.threadedcomments_extras",
-  #  'analytics',
-    'profiles',
-    'django.contrib.staticfiles',
-  #  'account',
-#    'signup_codes',
-    'pinax.apps.tribes',
-    #'tribes',
-   # 'photos',
-    'tag_app',
-   # 'topics',
-    'groups',
-
-#    'djkombu',
+    'apps.profiles',
+    'apps.tag_app',
+    'apps.api', # turan piston API
+    # 'groups',
     'djcelery',
-    'django.contrib.admin',
     'wakawaka',
-
 
     'groupcache',
     'phileo', 
-
-# Alternative to fastcgi
-#    'gunicorn',
-
 )
 
 GPX_STORAGE = '/home/turan.no/turansite/site_media/turan'
-#DEFAULT_FILE_STORAGE = GPX_STORAGE
-
-
 
 ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profiles/%s/" % o.username,
@@ -376,7 +309,6 @@ import djcelery
 djcelery.setup_loader()
 
 BROKER_HOST = "localhost"
-#BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 BROKER_PORT = 5672
 BROKER_USER = "turan"
 BROKER_PASSWORD = "tur4n"
@@ -389,14 +321,8 @@ CELERY_ALWAYS_EAGER = False
 AUTHENTICATION_BACKENDS = (
     'social_auth.backends.twitter.TwitterBackend',
     'social_auth.backends.facebook.FacebookBackend',
-#    'social_auth.backends.google.GoogleOAuthBackend',
-#    'social_auth.backends.google.GoogleOAuth2Backend',
     'social_auth.backends.google.GoogleBackend',
-#    'social_auth.backends.yahoo.YahooBackend',
     'social_auth.backends.contrib.linkedin.LinkedinBackend',
-#    'social_auth.backends.contrib.LiveJournalBackend',
-#    'social_auth.backends.contrib.orkut.OrkutBackend',
-#    'social_auth.backends.contrib.orkut.FoursquareBackend',
     'social_auth.backends.OpenIDBackend',
     'django.contrib.auth.backends.ModelBackend',
 )

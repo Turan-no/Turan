@@ -1,7 +1,7 @@
 {% extends "site_base.html" %}
 
 {% load i18n %}
-{% load uni_form_tags %}
+{% load crispy_forms_tags %}
 {% load ifsetting_tag %}
 {% load account_tags %}
 
@@ -31,7 +31,7 @@
             <div class="form_block">
                 <a href="{% url acct_passwd_reset %}">{% trans "Forgot password?" %}</a>
             </div>
-            {{ form|as_uni_form }}
+            {{ form|as_crispy_form }}
             <div class="actions">
             {% if redirect_field_value %}
                 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />

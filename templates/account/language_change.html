@@ -1,7 +1,7 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
-{% load uni_form_tags %}
+{% load crispy_forms_tags %}
 
 {% block head_title %}{% trans "Language" %}{% endblock %}
 
@@ -13,7 +13,7 @@
     <form method="POST" action="" class="uniForm">
         {% csrf_token %}
         <fieldset class="inlineLabels">
-            {{ form|as_uni_form }}
+            {{ form|as_crispy_form }}
              <div class = "form-actions">
                  <input class="btn" type="submit" value="{% trans "Change my language" %}" />
             </div>

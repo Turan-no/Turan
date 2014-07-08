@@ -1,7 +1,7 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
 {% load i18n %}
-{% load uni_form_tags %}
+{% load crispy_forms_tags %}
 {% block title %}
 {{ block.super }}
 {% trans "Segment" %}
@@ -16,7 +16,7 @@
 {% endif %}
 </div>
 <form class="form-horizontal uniForm" enctype="multipart/form-data" method="post">
-{{ form|as_uni_form}}
+{{ form|as_crispy_form}}
 <div class="form-actions">
     <button class="btn btn-large btn-primary" type="submit"> {% trans "Save" %}</button>
 </div>

@@ -5,7 +5,6 @@
 
 {% load tribes_tags %}
 {% load avatar_tags %}
-{% load blog_tags %}
 {% load voting_tags %} 
 {% load extra_voting_tags %}
 {% load extra_tagging_tags %}
@@ -83,21 +82,6 @@
     {% endif %}
 
 
-    {% if alltags %}
-    <div class="spacer">
-        <h2>{% trans "Blog Posts" %}</h2>
-
-        {% if alltags %}
-            <p>{% trans "These are blog posts from everyone:" %}</p>
-            {% for blog_post in alltags %}
-                {% show_blog_post blog_post %}
-            {% endfor %}
-        {% else %}
-            No blog posts matching tag.
-        {% endif %}
-    </div>
-    {% endif %}
-    
     {% if tribe_tags %}
     <div class="spacer">
         <h2>{% trans "Tribes" %}</h2>

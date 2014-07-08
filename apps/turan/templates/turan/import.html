@@ -1,6 +1,6 @@
 {% extends "turan/base.html" %}
 {% load i18n %}
-{% load uni_form_tags %}
+{% load crispy_forms_tags %}
 {% block content %}
 <div class="page-header">
 <h2>{% trans "Import exercise from external site" %}</h2>
@@ -26,7 +26,7 @@
 </div>
 {% endif %}
 <form class="uniForm" action="" method="post">
-    {{ form|as_uni_form }}
+    {{ form|as_crispy_form }}
     <input class="btn" type="submit" value="{% trans "Import exercise"%}" />
 </form>
 
@@ -34,7 +34,7 @@
 <h2>{% trans "Bulk import" %}</h2>
 <p>{% trans "Zip all your exercise files into a .zip-file and upload." %}</p>
 <form enctype="multipart/form-data" class="uniForm" action="{% url import_bulk %}" method="post">
-    {{ bulkform|as_uni_form }}
+    {{ bulkform|as_crispy_form }}
     <input class="btn" type="submit" value="{% trans "Import exercises"%}" />
 </form>
 {% endblock %}

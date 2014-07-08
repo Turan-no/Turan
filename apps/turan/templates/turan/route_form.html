@@ -1,6 +1,6 @@
 {% extends "turan/base.html" %}
 {% load humanize %}
-{% load uni_form_tags %}
+{% load crispy_forms_tags %}
 {% load i18n %}
 {% block title %}
 {{ block.super }}
@@ -22,7 +22,7 @@ You only need to provide Name and Description. The rest of the info will be popu
 {% endif %}
 </div>
 <form class="form-horizontal uniForm" enctype="multipart/form-data" method="post">
-{{ form|as_uni_form}}
+{{ form|as_crispy_form}}
 {% comment %}
 <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />
 {% endcomment %}

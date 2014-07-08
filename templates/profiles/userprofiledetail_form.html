@@ -1,5 +1,5 @@
 {% extends "turan/base.html" %}
-{% load uni_form_tags %}
+{% load crispy_forms_tags %}
 {% load i18n %}
 {% block title %}
 {{ block.super }}
@@ -15,7 +15,7 @@
     <h1>{% trans "Add new profile detail" %}</h1>
 </div>
 <form class="form-horizontal uniForm" enctype="multipart/form-data" method="post">
-{{ form|as_uni_form }}
+{{ form|as_crispy_form }}
 <input id="id_user" type="hidden" name="user" value="{{user.id}}">
 {% comment %}
 <input type="reset" value="{% trans "Cancel" %}" onClick="document.location='/turan/';" />

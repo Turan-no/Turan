@@ -8,13 +8,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 from account.openid_consumer import PinaxConsumer
-from blog.feeds import BlogFeedAll, BlogFeedUser
 from bookmarks.feeds import BookmarkFeed
 
-blogs_feed_dict = {"feed_dict": {
-    'all': BlogFeedAll,
-    'only': BlogFeedUser,
-}}
 
 bookmarks_feed_dict = {"feed_dict": { '': BookmarkFeed }}
 
@@ -38,7 +33,6 @@ urlpatterns = patterns('',
     (r'^bbauth/', include('bbauth.urls')),
     (r'^authsub/', include('authsub.urls')),
     (r'^profiles/', include('profiles.urls')),
-    (r'^blog/', include('blog.urls')),
     (r'^tags/', include('tag_app.urls')),
     (r'^invitations/', include('friends_app.urls')),
     (r'^notices/', include('notification.urls')),
@@ -54,10 +48,8 @@ urlpatterns = patterns('',
 
     (r'^photos/', include('photos.urls')),
     (r'^avatar/', include('avatar.urls')),
-    (r'^flag/', include('flag.urls')),
     (r'^wiki/', include('wakawaka.urls.authenticated')),
     
-    (r'^feeds/posts/(.*)/$', 'django.contrib.syndication.views.feed', blogs_feed_dict),
     (r'^feeds/bookmarks/(.*)/?$', 'django.contrib.syndication.views.feed', bookmarks_feed_dict),
     (r'', include('turan.urls')),
 
@@ -85,14 +77,6 @@ friends_photos_kwargs = {
     "friends_objects_function": lambda users: Image.objects.filter(member__in=users),
 }
 
-from blog.models import Post
-
-friends_blogs_kwargs = {
-    "template_name": "blog/friends_posts.html",
-    "friends_objects_function": lambda users: Post.objects.filter(author__in=users),
-}
-
-
 if 'rosetta' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
     url(r'^rosetta/', include('rosetta.urls')),
@@ -112,7 +96,6 @@ friends_bookmarks_kwargs = {
 
 urlpatterns += patterns('',
     url('^photos/friends_photos/$', 'friends_app.views.friends_objects', kwargs=friends_photos_kwargs, name="friends_photos"),
-    url('^blog/friends_blogs/$', 'friends_app.views.friends_objects', kwargs=friends_blogs_kwargs, name="friends_blogs"),
     url('^bookmarks/friends_bookmarks/$', 'friends_app.views.friends_objects', kwargs=friends_bookmarks_kwargs, name="friends_bookmarks"),
 )
 

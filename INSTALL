@@ -1,40 +1,16 @@
-Turan uses Pinax which is a Django extension that uses a contained virtual 
-environment that has/will have everything you need to run your app.
-
 None of this should be run as root except apt-get.
 
 ~$ git clone git://github.com/torhve/Turan.git turansite
 
-~$ sudo apt-get install python-sqlite
-~$ sudo apt-get install python-dev
-~$ sudo apt-get install python-virtualenv
+~$ sudo apt-get install python-sqlite python-dev python-virtualenv python-django python-django-celery python-markdown python-bs4 python-django-south python-django-social-auth python-django-debug-toolbar python-django-rosetta python-django-piston python-compressor python-django-threadedcomments python-django-pagination python-django-extensions python-django-notification
 
 ~$ virtualenv turan-env
 
 ~$ . turan-env/bin/activate
 
-(pinax-env) ~$ pip install Pinax
+(turan-env) ~$ cd turansite
 
-# Alternativly you can clone their git repo and link it into
-# turan-env/lib/python*/site-packages
-
-# You might need export CFLAGS="-fpermissive" for this to work. (aggdraw)
-(pinax-env) ~$ pip install -r turansite/reqs.txt
-
-# Wait for a while until the installation of the entire world is done.
-
-# reqs.txt should be upgraded with correct req.cd :
-# (pinax-env) ~$ pip install -U django-celery
-# (pinax-env) ~$ pip install -U django-social-auth
-# (pinax-env) ~$ pip install -U South
-
-# You need to install numpy and openpyxl unless you have theses
-# (pinax-env) ~$ pip install -U numpy
-# (pinax-env) ~$ pip install -U openpyxl
-
-(pinax-env) ~$ cd turansite
-
-(pinax-env) ~/turansite$ vim local_settings.py
+(turan-env) ~/turansite$ vim local_settings.py
 
   Add database settings ex:
    o DATABASE_ENGINE = 'sqlite3'
