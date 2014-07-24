@@ -9,7 +9,7 @@ from django_sorting.templatetags.sorting_tags import SortAnchorNode
 from apps.friends.models import Friendship
 from endless_pagination import utils
 from endless_pagination import settings as endless_settings
-from endless_pagination.paginator import DefaultPaginator, LazyPaginator, EmptyPage
+from endless_pagination.paginators import DefaultPaginator, LazyPaginator, EmptyPage
 from time import mktime
 import simplejson as json
 import re

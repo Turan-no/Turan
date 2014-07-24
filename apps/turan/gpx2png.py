@@ -2,7 +2,8 @@
 
 from xml.etree import ElementTree as ET
 import math
-import Image, aggdraw
+# Aggdraw seems abandoned, need to replace with something else
+# import Image, aggdraw
 from cStringIO import StringIO
 
 
@@ -19,6 +20,8 @@ class GPX2PNG(object):
     image = None
 
     def __init__(self, filename, xsize=64, ysize=64):
+        # Disabled until rewrite away from aggdraw
+        return None
         self.image = Image.new("RGBA", (xsize,ysize))
         self.draw = aggdraw.Draw(self.image)
 

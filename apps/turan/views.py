@@ -59,8 +59,6 @@ from tagging.models import Tag
 from tribes.models import Tribe
 from friends.models import Friendship
 from wakawaka.models import WikiPage, Revision
-from photos.models import Pool, Image
-from photos.forms import PhotoUploadForm
 from avatar.models import Avatar
 from endless_pagination.decorators import page_template
 
@@ -2476,27 +2474,6 @@ def search(request, template='turan/search.html', extra_context=None):
     return render_to_response(template, context,
             context_instance=RequestContext(request))
 
-
-@login_required
-def photo_add(request, content_type, object_id):
-    content_type = get_model('turan', content_type)
-    object = get_object_or_404(content_type, pk=object_id)
-    photo_form = form_class()
-
-    if request.method == "POST":
-        if request.POST.get("action") == "upload":
-            photo_form = form_class(request.user, request.POST, request.FILES)
-            if photo_form.is_valid():
-                photo = photo_form.save(commit=False)
-                photo.member = request.user
-                photo.save()
-                pool = Pool(content_object=content_object, image=photo)
-                pool.photo = photo
-                pool.save()
-                #messages.add_message(request, messages.SUCCESS,
-                #    ugettext(_"Successfully uploaded photo '%s'") % photo.title
-                #)
-    return redirect(object.get_absolute_url())
 
 
 def json_altitude_gradient(request, object_id):
