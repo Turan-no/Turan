@@ -1,6 +1,7 @@
+https://www.djangoproject.com/download/1.7c1/tarball/
 phileo
-groupcache
-wakawaka
+django-groupcache
+django-wakawaka
 django-sorting
 django-microblogging
 django-avatar
