@@ -138,7 +138,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
 )
 
-ROOT_URLCONF = 'turansite.urls'
+ROOT_URLCONF = 'urls'
 
 WSGI_APPLICATION = 'turan.wsgi.application'
 
