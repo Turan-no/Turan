@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import floatformat, stringfilter
 from django_sorting.templatetags.sorting_tags import SortAnchorNode
-from friends.models import Friendship
+from apps.friends.models import Friendship
 from endless_pagination import utils
 from endless_pagination import settings as endless_settings
 from endless_pagination.paginator import DefaultPaginator, LazyPaginator, EmptyPage

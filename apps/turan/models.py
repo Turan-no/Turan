@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday
 from django.core.urlresolvers import reverse
 #from django.template.defaultfilters import slugify
-from turan.templatetags.turan_extras import u_slugify as slugify
+from apps.turan.templatetags.turan_extras import u_slugify as slugify
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.contrib.contenttypes import generic
