@@ -8,6 +8,7 @@ django-compressor
 django-rosetta
 django-debug-toolbar
 django-social-auth
+django-piston
 phileo
 django-groupcache
 django-wakawaka

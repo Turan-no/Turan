@@ -1,5 +1,5 @@
 from django.contrib import admin
-from profiles.models import Profile, UserProfileDetail
+from apps.profiles.models import Profile, UserProfileDetail
 
 class ProfileAdmin(admin.ModelAdmin):
     exclude = ('user',)

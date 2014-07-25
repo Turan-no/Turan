@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from friends.models import Contact
-from friends.models import Friendship, FriendshipInvitation, FriendshipInvitationHistory
-from friends.models import JoinInvitation
+from apps.friends.models import Contact
+from apps.friends.models import Friendship, FriendshipInvitation, FriendshipInvitationHistory
+from apps.friends.models import JoinInvitation
 
 
 class ContactAdmin(admin.ModelAdmin):

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.db.models import Count
 from django.utils.translation import ugettext_lazy as _
-from django.utils import simplejson
+import simplejson
 from django.utils.safestring import mark_safe
 
 from timezones.fields import TimeZoneField

@@ -124,6 +124,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
@@ -140,7 +141,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-WSGI_APPLICATION = 'turan.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates"),
@@ -190,7 +191,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'robots',
     'apps.friends',
-    'announcements',
+    #'announcements', # this breaks something in django 1.8 i think
     'oembed',
     'pagination',
     'endless_pagination',
