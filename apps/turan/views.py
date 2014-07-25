@@ -5,7 +5,7 @@ from tasks import smoothListGaussian, power_30s_average \
         create_gpx_from_details, smoothList
 from itertools import groupby, islice
 from forms import ExerciseForm, ImportForm, BulkImportForm
-from profiles.models import Profile, UserProfileDetail
+from apps.profiles.models import Profile, UserProfileDetail
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseForbidden, Http404, HttpResponseServerError
 from django.utils.translation import ugettext_lazy as _
@@ -20,7 +20,7 @@ from django import forms
 from django.forms.models import inlineformset_factory
 from django.core.urlresolvers import reverse
 from django.db.models import Avg, Max, Min, Count, Variance, StdDev, Sum
-from django.contrib.syndication.feeds import Feed
+from django.contrib.syndication.views import Feed
 from threadedcomments.models import ThreadedComment
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile

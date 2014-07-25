@@ -2,15 +2,21 @@ from django import forms
 from models import Route, Exercise, Segment, Slope, SegmentDetail, ExerciseType, permission_choices, Equipment
 from django.conf import settings
 from django.utils.safestring import mark_safe
-from django.utils.text import truncate_words
+from django.utils.text import Truncator
+from django.utils.functional import allow_lazy
 from django.core.urlresolvers import reverse
 #from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import StrAndUnicode, force_unicode
+from django.utils.encoding import force_unicode
 from django.utils.html import escape, conditional_escape
 from cStringIO import StringIO
 import zipfile
 
+def truncate_words(s, num, end_text='...'):
+    truncate = end_text and ' %s' % end_text or ''
+    return Truncator(s).words(num, truncate=truncate)
+
+truncate_words = allow_lazy(truncate_words, unicode)
 
 class ImageSelect(forms.Select):
 

@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url, include
 from models import Route, Exercise
 from views import *
 from forms import *
