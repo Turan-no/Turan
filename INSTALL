@@ -2,7 +2,7 @@ None of this should be run as root except apt-get.
 
 ~$ git clone git://github.com/torhve/Turan.git turansite
 
-~$ sudo apt-get install python-sqlite python-dev python-virtualenv python-django python-django-celery python-markdown python-bs4 python-django-south python-django-social-auth python-django-debug-toolbar python-django-rosetta python-django-piston python-compressor python-django-threadedcomments python-django-pagination python-django-extensions python-django-notification python-simplejson python-pyproj python-beautifulsoup python-openpyxl
+~$ sudo apt-get install python-sqlite python-dev python-virtualenv python-markdown python-bs4 python-simplejson python-pyproj python-beautifulsoup python-openpyxl
 
 ~$ virtualenv turan-env
 

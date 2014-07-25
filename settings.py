@@ -208,7 +208,6 @@ INSTALLED_APPS = (
     'apps.turan',
     'piston',
     'rosetta',
-    'south',
     'debug_toolbar',
     
     # internal (for now)

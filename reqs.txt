@@ -1,4 +1,13 @@
 https://www.djangoproject.com/download/1.7c1/tarball/
+django-celery
+django-extensions
+django-threadedcomments
+django-voting
+django-crispy-forms
+django-compressor
+django-rosetta
+django-debug-toolbar
+django-social-auth
 phileo
 django-groupcache
 django-wakawaka
