@@ -2,11 +2,13 @@
 from datetime import datetime, timedelta
 import struct
 
+dev_types = {}
+
 fit_file_id = {
     'type': 0,
     'serial': 3,
     'manufacturer': 1,
-    'time_created': 3,
+    'time_created': 4,
     'product': 2,
     'number': 5}
 
@@ -123,24 +125,28 @@ fit_msg_type = {
     39: 'field capabilities',
     49: 'file creator',
     51: 'blood pressure',
+    79: 'HR-zone settings from device',
     int('0xFF00', 16): 'mfg range min',
     int('0xFFFE', 16): 'mfg range max'}
 
 fit_base_types = {
-    0:  {'number':  0, 'endian': 0, 'field': int('0x00' ,16), 'type': 'enum',    'invalid': int('0xFF' ,16),               'size': 1},
-    1:  {'number':  1, 'endian': 0, 'field': int('0x01' ,16), 'type': 'sint8',   'invalid': int('0x7F' ,16),               'size': 1},
-    2:  {'number':  2, 'endian': 0, 'field': int('0x02' ,16), 'type': 'uint8',   'invalid': int('0xFF' ,16),               'size': 1},
-    3:  {'number':  3, 'endian': 1, 'field': int('0x83' ,16), 'type': 'sint16',  'invalid': int('0x7FFF' ,16),             'size': 2},
-    4:  {'number':  4, 'endian': 1, 'field': int('0x84' ,16), 'type': 'uint16',  'invalid': int('0xFFFF' ,16),             'size': 2},
-    5:  {'number':  5, 'endian': 1, 'field': int('0x85' ,16), 'type': 'sint32',  'invalid': int('0x7FFFFFFF' ,16),         'size': 4},
-    6:  {'number':  6, 'endian': 1, 'field': int('0x86' ,16), 'type': 'uint32',  'invalid': int('0xFFFFFFFF' ,16),         'size': 4},
-    7:  {'number':  7, 'endian': 0, 'field': int('0x07' ,16), 'type': 'string',  'invalid': int('0x00' ,16),               'size': 1},
-    8:  {'number':  8, 'endian': 1, 'field': int('0x88' ,16), 'type': 'float32', 'invalid': int('0xFFFFFFFF' ,16),         'size': 2},
-    9:  {'number':  9, 'endian': 1, 'field': int('0x89' ,16), 'type': 'float64', 'invalid': int('0xFFFFFFFFFFFFFFFF' ,16), 'size': 4},
-    10: {'number': 10, 'endian': 0, 'field': int('0x0A' ,16), 'type': 'uint8z',  'invalid': int('0x00' ,16),               'size': 1},
-    11: {'number': 11, 'endian': 1, 'field': int('0x8B' ,16), 'type': 'uint16z', 'invalid': int('0x0000' ,16),             'size': 2},
-    12: {'number': 12, 'endian': 1, 'field': int('0x8C' ,16), 'type': 'uint32z', 'invalid': int('0x00000000' ,16),         'size': 4},
-    13: {'number': 13, 'endian': 0, 'field': int('0x0D' ,16), 'type': 'byte',    'invalid': int('0xFF' ,16),               'size': 1}}
+    0:   {'number':  0, 'endian': 0, 'field': int('0x00' ,16), 'type': 'enum',    'invalid': int('0xFF' ,16),               'size': 1},
+    1:   {'number':  1, 'endian': 0, 'field': int('0x01' ,16), 'type': 'sint8',   'invalid': int('0x7F' ,16),               'size': 1},
+    2:   {'number':  2, 'endian': 0, 'field': int('0x02' ,16), 'type': 'uint8',   'invalid': int('0xFF' ,16),               'size': 1},
+    131: {'number':  3, 'endian': 1, 'field': int('0x83' ,16), 'type': 'sint16',  'invalid': int('0x7FFF' ,16),             'size': 2},
+    132: {'number':  4, 'endian': 1, 'field': int('0x84' ,16), 'type': 'uint16',  'invalid': int('0xFFFF' ,16),             'size': 2},
+    133: {'number':  5, 'endian': 1, 'field': int('0x85' ,16), 'type': 'sint32',  'invalid': int('0x7FFFFFFF' ,16),         'size': 4},
+    134: {'number':  6, 'endian': 1, 'field': int('0x86' ,16), 'type': 'uint32',  'invalid': int('0xFFFFFFFF' ,16),         'size': 4},
+    7:   {'number':  7, 'endian': 0, 'field': int('0x07' ,16), 'type': 'string',  'invalid': int('0x00' ,16),               'size': 1},
+    136: {'number':  8, 'endian': 1, 'field': int('0x88' ,16), 'type': 'float32', 'invalid': int('0xFFFFFFFF' ,16),         'size': 4},
+    137: {'number':  9, 'endian': 1, 'field': int('0x89' ,16), 'type': 'float64', 'invalid': int('0xFFFFFFFFFFFFFFFF' ,16), 'size': 8},
+    10:  {'number': 10, 'endian': 0, 'field': int('0x0A' ,16), 'type': 'uint8z',  'invalid': int('0x00' ,16),               'size': 1},
+    139: {'number': 11, 'endian': 1, 'field': int('0x8B' ,16), 'type': 'uint16z', 'invalid': int('0x0000' ,16),             'size': 2},
+    140: {'number': 12, 'endian': 1, 'field': int('0x8C' ,16), 'type': 'uint32z', 'invalid': int('0x00000000' ,16),         'size': 4},
+    13:  {'number': 13, 'endian': 0, 'field': int('0x0D' ,16), 'type': 'byte',    'invalid': int('0xFF' ,16),               'size': 1},
+    142: {'number': 14, 'endian': 1, 'field': int('0x8E' ,16), 'type': 'sint64',  'invalid': int('0x7FFFFFFFFFFFFFFF' ,16), 'size': 8},
+    143: {'number': 15, 'endian': 1, 'field': int('0x8F' ,16), 'type': 'uint64',  'invalid': int('0xFFFFFFFFFFFFFFFF' ,16), 'size': 8},
+    144: {'number': 16, 'endian': 1, 'field': int('0x90' ,16), 'type': 'uint64z', 'invalid': int('0x0000000000000000' ,16), 'size': 8}}
 
 fit_type_unpack = {
     'enum':    'B',
@@ -150,13 +156,16 @@ fit_type_unpack = {
     'uint16':  'H',
     'sint32':  'i',
     'uint32':  'I',
-    'string':  'c',
+    'string':  's',
     'float32': 'f',
     'float64': 'd',
     'uint8z':  'B',
     'uint16z': 'H',
     'uint32z': 'I',
-    'byte':    'c'}
+    'byte':    'c',
+    'sint64':  'q',
+    'uint64':  'Q',
+    'uint64z': 'Q'}
 
 '''Timestamps are referenced from 1989-12-31 00:00 UTC,
    so we have to add the bit missing from where 0 timestamp normally is.'''
@@ -249,6 +258,8 @@ class FITParser(object):
         self.temperature = 0
         self.kcal_sum = 0
         self.laps = []
+        self.compressed_ts_accumulator = 0
+
 
     def parse_uploaded_file(self, f):
         local_msg_types = {}
@@ -263,23 +274,30 @@ class FITParser(object):
         if data_type != '.FIT':
             return
 
+
         record_last_time = 0
         records = 0
         while f.tell() < data_size + hdr_size:
+
             (hdr,) = struct.unpack('B',f.read(1))
             hdr_type = (hdr >> 7) & 1
 
             if hdr_type == 0:
                 msg_type = (hdr >> 6) & 1
-                local_msg_type = (hdr) & int('1111',2)
+                is_developer_data = (hdr >> 5) & 1
+                local_msg_type = (hdr) & int('11111',2)
+                time_offset = None
             elif hdr_type == 1:
                 '''
                 TODO
                 Compressed timestamp headers are not invalid,
                 but not really handled properly either.
                 '''
-                continue
+
+                msg_type = 0
                 local_msg_type = (hdr >> 5) & int('11',2)
+                time_offset = (hdr) & int('11111', 2)
+                is_developer_data = False
             else:
                 print hdr_type
                 '''
@@ -296,23 +314,33 @@ class FITParser(object):
                 for field in local_msg_types[local_msg_type]['fields']:
                     base_type = fit_base_types[field['base_type']]
                     endian = local_msg_types[local_msg_type]['endian']
-                    unpack_string = fit_type_unpack[base_type['type']]
-                    field_data = f.read(base_type['size'])
-                    if field['endian']:
-                        unpack_string = endian + unpack_string
-                    (field_value,) = struct.unpack(unpack_string, field_data)
-                    fields[field['def_num']] = {'value': field_value, 'base_type': base_type}
+                    unpack_string = str(field['size'] / base_type['size'])  + fit_type_unpack[base_type['type']]
+                    unpack_string = endian + unpack_string
+                    fmt_size = struct.calcsize(unpack_string)
+                    field_data = f.read(fmt_size)
+
+                    try:
+                        (field_value,) = struct.unpack(unpack_string, field_data)
+                        fields[field['def_num']] = {'value': field_value, 'base_type': base_type}
+                    except ValueError:
+                        values = struct.unpack(unpack_string, field_data) # What are these for...
+                        # NOOP
+
+                if field['def_num'] == get_field_value(fields, fit_record, 'timestamp'):
+                    self.compressed_ts_accumulator = field_value
+
                 if global_msg_type == 0:
                     if get_field_value(fields, fit_file_id, 'type') != 4:
                         '''
                         Will only parse activity files.
                         '''
                         return
-                elif global_msg_type == 18:
+                elif global_msg_type == 18: # session
                     self.distance_sum = get_field_value(fields, fit_session, 'distance')
                     if self.distance_sum != None:
                         self.distance_sum = self.distance_sum / 100.
-                    self.duration = ('%ss') % (int(round(get_field_value(fields, fit_session, 'timer_time')/1000.)))
+
+                    self.duration = ('%ss') % (int(round(get_field_value(fields, fit_session, 'elapsed_time')/1000.)))
                     self.start_lat = get_field_value(fields, fit_session, 'start_lat')
                     self.start_lon = get_field_value(fields, fit_session, 'start_lon')
                     if self.start_lat != None and self.start_lon != None:
@@ -330,14 +358,14 @@ class FITParser(object):
                     self.avg_power = get_field_value(fields, fit_session, 'avg_power')
                     self.max_power = get_field_value(fields, fit_session, 'max_power')
                     self.kcal_sum = get_field_value(fields, fit_session, 'calories')
-                elif global_msg_type == 19:
+                elif global_msg_type == 19: # lap
                     '''
                     print '%i: %s %s %s' % (global_msg_type, fit_msg_type[global_msg_type],
                                             get_field_value(fields, fit_lap, 'event'),
                                             get_field_value(fields, fit_lap, 'event_type'))
                     '''
 
-                    if (int(round(get_field_value(fields, fit_lap, 'timer_time')/1000.)) <= 1):
+                    if (not get_field_value(fields, fit_lap, 'timer_time') or int(round(get_field_value(fields, fit_lap, 'timer_time')/1000.)) <= 1):
                         '''
                         Lets not bother with intervals of 1s or less. They tend to have
                         no sensible values anyways.
@@ -389,7 +417,7 @@ class FITParser(object):
                                             avg_hr, avg_cadence, max_cadence,
                                             avg_power, max_power, avg_temp, max_temp,
                                             min_temp, calories))
-                elif global_msg_type == 20:
+                elif global_msg_type == 20: # record
                     time = datetime.fromtimestamp(get_field_value(fields, fit_record, 'timestamp'))
                     if time == None:
                         '''
@@ -439,17 +467,28 @@ class FITParser(object):
                     #    continue
 
                     self.entries.append(FITEntry(time,hr,spd,cad,pwr,temp,alt, lat, lon, distance))
-                elif global_msg_type == 21:
+                elif global_msg_type == 21 or global_msg_type == 49:
                     '''
-                    print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
+                    print '%i: %s' % (global_msg_type, fit_msg_type[local_msg_type])
                     for field in fields:
                         print '%i: %s' % (field, fields[field])
                     '''
                     pass
-                '''
+                elif global_msg_type == 79:
+                    '''
+                    print '%i: %s' % (global_msg_type, fit_msg_type[local_msg_type])
+                    for field in fields:
+                        print '%i: %s' % (field, fields[field])
+                    '''
+                    pass
                 else:
-                    print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
-                '''
+                    '''
+                    try:
+                        print '%i: %s' % (global_msg_type, fit_msg_type[global_msg_type])
+                    except KeyError:
+                        pass
+                    '''
+
             elif msg_type == 1:
                 def_hdr = f.read(5)
                 (arch,) = struct.unpack('B',def_hdr[1:2])
@@ -462,11 +501,28 @@ class FITParser(object):
 
                 fields = []
                 for i in range(n_fields):
-                    (field_def_num,field_size,base_type) = struct.unpack('BBB',f.read(3))
+                    (field_def_num,field_size,base_type) = struct.unpack(endian + 'BBB',f.read(3))
                     field_endian = (base_type >> 7) & 1
-                    field_base_type = (base_type) & int('11111', 2)
+                    field_base_type = (base_type) #& int('111111', 2)
                     fields.append({'def_num': field_def_num, 'size': field_size, 'endian': field_endian, 'base_type': field_base_type})
+
                 local_msg_types[local_msg_type] = {'arch': arch, 'endian': endian, 'global_msg_number': global_msg_number, 'fields': fields}
+
+                dev_field_defs = []
+                if is_developer_data:
+                    (num_fields,) = struct.unpack(endian + 'B', f.read(1))
+                    for n in range(num_fields):
+                        field_def_num, field_size, dev_data_index = struct.unpack(endian + 'BBB', f.read(3))
+                        print "devs: ", dev_data_index
+                        # this has to be read, but we don't have to store it, SDK says not to trust it
+                        #field = get_dev_type(dev_data_index, field_def_num)
+                        #dev_field_defs.append(DevFieldDefinition(
+                        #    field=field,
+                        #    dev_data_index=dev_data_index,
+                        #    def_num=field_def_num,
+                        #    size=field_size
+                        #)
+
 
         if self.entries:
             self.start_time = self.entries[0].time.time()
