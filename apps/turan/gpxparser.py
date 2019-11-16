@@ -17,7 +17,7 @@ def proj_distance(lat1, lon1, lat2, lon2, elev1=None, elev2=None):
 
 class GPXEntry(object):
 
-    def __init__(self, time, hr, speed, cadence, altitude, lon, lat, distance):
+    def __init__(self, time, hr, speed, cadence, altitude, lon, lat, distance, power):
         self.time = time
         self.hr = hr
         self.speed = speed
@@ -28,6 +28,7 @@ class GPXEntry(object):
         self.lat = lat
         self.lon = lon
         self.distance = distance
+        self.power = power
 
 class GPXParser(object):
 
@@ -65,6 +66,8 @@ class GPXParser(object):
         self.avg_hr = 0
         self.avg_cadence = 0
         self.max_cadence = 0
+        self.avg_power = 0
+        self.max_power = 0
         self.kcal_sum = 0
         # self.comment = '' Fixme
         if filename:
@@ -139,6 +142,16 @@ class GPXParser(object):
                     except AttributeError:
                         pass # no hr in file
 
+                    # extensions (power)
+                    power = 0
+                    try:
+                        power_ele = trkpt.find('.//' + self.ns + 'power')
+                        power = int(float(power_ele.text))
+                        self.avg_power += power
+                        self.max_power = max(power, self.max_power)
+                    except AttributeError:
+                        pass # no hr in file
+
                     if self.entries:
                         # Check for missing elevation, this happens in endomondo export for exmaple
                         if ele == None:
@@ -162,7 +175,7 @@ class GPXParser(object):
                             if time_d:
                                 speed = 3.6 * this_distance/time_d
 
-                    e = GPXEntry(time, hr, speed, cad, ele, lon, lat, self.distance)
+                    e = GPXEntry(time, hr, speed, cad, ele, lon, lat, self.distance, power)
                     self.avg_speed += speed
                     self.max_speed = max(self.max_speed, speed)
 
@@ -184,6 +197,8 @@ class GPXParser(object):
                 self.avg_hr = self.avg_hr/len(self.entries)
             if self.avg_cadence:
                 self.avg_cadence = self.avg_cadence/len(self.entries)
+            if self.avg_power:
+                self.avg_power = self.avg_power/len(self.entries)
             s_t = self.entries[0].time
             self.start_time = datetime.time(s_t.hour, s_t.minute, s_t.second)
             self.duration = '%ss' %((self.entries[-1].time - s_t).seconds)
@@ -200,7 +215,7 @@ if __name__ == '__main__':
 
     for e in g.entries:
         #if 'speed' in e and 'altitude' in e:
-        print e.time, e.lon, e.lat, e.altitude, e.speed, e.distance
+        print e.time, e.lon, e.lat, e.altitude, e.speed, e.distance, e.power
         #else:
         #    print e['time'], e['lon'], e['lat']
     print 'distance: ', g.distance
@@ -209,5 +224,6 @@ if __name__ == '__main__':
     print 'avg_hr: ', g.avg_hr
     print 'avg_cadence: ', g.avg_cadence
     print 'avg_speed: ', g.avg_speed
+    print 'avg_power: ', g.avg_power
 
 
